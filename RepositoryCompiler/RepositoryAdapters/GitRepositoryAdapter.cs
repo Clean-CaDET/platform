@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using LibGit2Sharp;
+﻿using LibGit2Sharp;
 using Microsoft.Extensions.Configuration;
 using RepositoryCompiler.CodeParsers.CaDETModel;
 using RepositoryCompiler.CodeParsers.Data;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace RepositoryCompiler.RepositoryAdapters
 {
@@ -12,10 +12,12 @@ namespace RepositoryCompiler.RepositoryAdapters
     {
         private readonly string _gitSourcePath;
         private readonly string _gitDestinationPath;
+        private readonly string _mainBranchName;
         public GitRepositoryAdapter(IConfigurationSection settings)
         {
             _gitSourcePath = settings.GetSection("GitSourcePath").Value;
             _gitDestinationPath = settings.GetSection("GitDestinationPath").Value;
+            _mainBranchName = settings.GetSection("MainBranchName").Value;
         }
 
         public void CloneRepository()
@@ -23,10 +25,15 @@ namespace RepositoryCompiler.RepositoryAdapters
             Repository.Clone(_gitSourcePath, _gitDestinationPath);
         }
 
+        public IEnumerable<CommitId> GetCommits(int numOfPreviousCommits)
+        {
+            return GetRepository().Commits.Take(numOfPreviousCommits).Select(commit => new CommitId(commit.Sha));
+        }
+
         public CaDETProject ParseProjectCode(CommitId commit)
         {
-            if(commit != null) CheckoutCommit(commit);
-            //specific to C# - should extract to C# language compiler when appropriate
+            CheckoutCommit(commit);
+            //specific to C# - should extract to C# file identifier when appropriate
             string[] allFiles = Directory.GetFiles(_gitDestinationPath, "*.cs", SearchOption.AllDirectories);
             
             return new CaDETProject(_gitDestinationPath, allFiles.Select(s => new CaDETDocument(s, File.ReadAllText(s))));
@@ -34,8 +41,13 @@ namespace RepositoryCompiler.RepositoryAdapters
 
         private void CheckoutCommit(CommitId commit)
         {
-            var repo = new Repository(_gitDestinationPath);
-            Commands.Checkout(repo, commit.Hash);
+            if (commit != null) Commands.Checkout(GetRepository(), commit.Hash);
+            else Commands.Checkout(GetRepository(), _mainBranchName);
+        }
+
+        private Repository GetRepository()
+        {
+            return new Repository(_gitDestinationPath);
         }
     }
 }

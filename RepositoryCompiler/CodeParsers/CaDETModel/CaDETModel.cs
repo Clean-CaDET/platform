@@ -3,15 +3,20 @@ using RepositoryCompiler.CodeParsers.Data;
 
 namespace RepositoryCompiler.CodeParsers.CaDETModel
 {
-    class CaDETModel
+    public class CaDETModel
     {
         public CaDETProject LatestSolutionState { get; private set; }
         public Dictionary<CommitId, CaDETProject> ProjectHistory { get; private set; }
 
         public CaDETModel(CaDETProject solution)
         {
-            this.LatestSolutionState = solution;
+            LatestSolutionState = solution;
             ProjectHistory = new Dictionary<CommitId, CaDETProject>();
+        }
+
+        public CaDETModel(): this(null)
+        {
+
         }
     }
 }

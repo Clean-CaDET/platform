@@ -1,5 +1,6 @@
 ﻿using RepositoryCompiler.CodeParsers.CaDETModel;
 using RepositoryCompiler.CodeParsers.Data;
+using System.Collections.Generic;
 
 namespace RepositoryCompiler.RepositoryAdapters
 {
@@ -7,5 +8,6 @@ namespace RepositoryCompiler.RepositoryAdapters
     {
         void CloneRepository();
         CaDETProject ParseProjectCode(CommitId commit);
+        IEnumerable<CommitId> GetCommits(int numOfPreviousCommits);
     }
 }

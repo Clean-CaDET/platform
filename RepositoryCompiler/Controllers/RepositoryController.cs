@@ -14,10 +14,23 @@ namespace RepositoryCompiler.Controllers
             _repositoryService = repositoryService;
         }
 
-        [HttpGet]
-        public CaDETProject Get()
+        [HttpGet("clone")]
+        public string SetupRepository()
         {
-            return _repositoryService.BuildModel(null);
+            _repositoryService.SetupRepository();
+            return "done";
+        }
+
+        [HttpGet("parse")]
+        public CaDETProject GetCurrentCommitModel()
+        {
+            return _repositoryService.BuildProjectModel((string)null);
+        }
+            
+        [HttpGet("multiple/{numOfCommits}")]
+        public CaDETModel GetMultipleCommitModel(int numOfCommits)
+        {
+            return _repositoryService.BuildModel(numOfCommits);
         }
     }
 }

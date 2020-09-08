@@ -9,9 +9,9 @@
             Hash = hash;
         }
 
-        public override string ToString()
+        internal static CommitId Create(string commitHash)
         {
-            return Hash;
+            return commitHash == null ? null : new CommitId(commitHash);
         }
     }
 }
