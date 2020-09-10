@@ -32,5 +32,11 @@ namespace RepositoryCompiler.Controllers
         {
             return _repositoryService.BuildModel(numOfCommits);
         }
+
+        [HttpGet("pull")]
+        public bool UpdateRepository()
+        {
+            return _repositoryService.UpdateRepository();
+        }
     }
 }

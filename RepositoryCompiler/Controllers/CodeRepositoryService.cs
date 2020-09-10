@@ -1,6 +1,6 @@
 ﻿using RepositoryCompiler.CodeParsers.CaDETModel;
-using RepositoryCompiler.CodeParsers.Data;
 using RepositoryCompiler.RepositoryAdapters;
+using System;
 using System.Collections.Generic;
 
 namespace RepositoryCompiler.Controllers
@@ -37,6 +37,11 @@ namespace RepositoryCompiler.Controllers
                 model.ProjectHistory.Add(commit, BuildProjectModel(commit));
             }
             return model;
+        }
+
+        public bool UpdateRepository()
+        {
+            return _codeRepositoryAdapter.CheckForNewCommits();
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using LibGit2Sharp;
+﻿using System;
+using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
 using Microsoft.Extensions.Configuration;
 using RepositoryCompiler.CodeParsers.CaDETModel;
-using RepositoryCompiler.CodeParsers.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,35 @@ namespace RepositoryCompiler.RepositoryAdapters
             Repository.Clone(_gitSourcePath, _gitDestinationPath);
         }
 
+        public bool CheckForNewCommits()
+        {
+            CheckoutMasterBranch();
+            CommitId localCommit = GetActiveCommit();
+            PullChanges();
+            bool changesOccurred = !localCommit.Equals(GetActiveCommit());
+            return changesOccurred;
+        }
+
+        private void PullChanges()
+        {
+            //The current code only works with public repositories.
+            //The nonsensical options below should be refactored and extracted into a function
+            //That will be called by this function as well as CloneRepository.
+            PullOptions options = new PullOptions();
+            options.FetchOptions = new FetchOptions();
+            options.FetchOptions.CredentialsProvider = new CredentialsHandler(
+                (url, usernameFromUrl, types) =>
+                    new UsernamePasswordCredentials() { Username = "TODO", Password = "TODO" });
+            var signature = new LibGit2Sharp.Signature(new Identity("TODO", "TODO"), DateTime.Now);
+
+            Commands.Pull(GetRepository(), signature, options);
+        }
+
+        public CommitId GetActiveCommit()
+        {
+            return GetCommits(1).First();
+        }
+        
         public IEnumerable<CommitId> GetCommits(int numOfPreviousCommits)
         {
             return GetRepository().Commits.Take(numOfPreviousCommits).Select(commit => new CommitId(commit.Sha));
@@ -37,6 +67,11 @@ namespace RepositoryCompiler.RepositoryAdapters
             string[] allFiles = Directory.GetFiles(_gitDestinationPath, "*.cs", SearchOption.AllDirectories);
             
             return new CaDETProject(_gitDestinationPath, allFiles.Select(s => new CaDETDocument(s, File.ReadAllText(s))));
+        }
+
+        private void CheckoutMasterBranch()
+        {
+            CheckoutCommit(null);
         }
 
         private void CheckoutCommit(CommitId commit)
