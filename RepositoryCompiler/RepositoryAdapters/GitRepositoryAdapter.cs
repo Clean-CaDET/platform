@@ -63,10 +63,14 @@ namespace RepositoryCompiler.RepositoryAdapters
         public CaDETProject ParseProjectCode(CommitId commit)
         {
             CheckoutCommit(commit);
+            return new CaDETProject(_gitDestinationPath, ParseDocuments());
+        }
+
+        private IEnumerable<CaDETDocument> ParseDocuments()
+        {
             //specific to C# - should extract to C# file identifier when appropriate
             string[] allFiles = Directory.GetFiles(_gitDestinationPath, "*.cs", SearchOption.AllDirectories);
-            
-            return new CaDETProject(_gitDestinationPath, allFiles.Select(s => new CaDETDocument(s, File.ReadAllText(s))));
+            return allFiles.Select(s => new CaDETDocument(s, File.ReadAllText(s), LanguageEnum.CSharp));
         }
 
         private void CheckoutMasterBranch()
