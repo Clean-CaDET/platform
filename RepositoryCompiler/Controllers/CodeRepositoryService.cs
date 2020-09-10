@@ -1,7 +1,6 @@
-﻿using RepositoryCompiler.CodeParsers.CaDETModel;
-using RepositoryCompiler.RepositoryAdapters;
-using System;
+﻿using RepositoryCompiler.RepositoryAdapters;
 using System.Collections.Generic;
+using RepositoryCompiler.CodeModel.CaDETModel;
 
 namespace RepositoryCompiler.Controllers
 {

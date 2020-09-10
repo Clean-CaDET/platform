@@ -1,4 +1,4 @@
-﻿namespace RepositoryCompiler.CodeParsers.CaDETModel
+﻿namespace RepositoryCompiler.CodeModel.CaDETModel
 {
     public class CaDETDocument
     {

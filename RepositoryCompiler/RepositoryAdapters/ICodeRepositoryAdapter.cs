@@ -1,5 +1,5 @@
-﻿using RepositoryCompiler.CodeParsers.CaDETModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using RepositoryCompiler.CodeModel.CaDETModel;
 
 namespace RepositoryCompiler.RepositoryAdapters
 {

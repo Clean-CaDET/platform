@@ -2,10 +2,10 @@
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
 using Microsoft.Extensions.Configuration;
-using RepositoryCompiler.CodeParsers.CaDETModel;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CaDETModel;
 
 namespace RepositoryCompiler.RepositoryAdapters
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RepositoryCompiler.CodeParsers.CaDETModel
+namespace RepositoryCompiler.CodeModel.CaDETModel
 {
     public class CaDETProject
     {

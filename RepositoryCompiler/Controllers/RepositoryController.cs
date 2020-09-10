@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepositoryCompiler.CodeParsers.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel;
 
 namespace RepositoryCompiler.Controllers
 {
