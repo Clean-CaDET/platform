@@ -5,16 +5,16 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
 {
     public class CaDETDocument
     {
-        public string Name { get; private set; }
+        public string FilePath { get; private set; }
         
         private readonly string _sourceCode;
         private readonly LanguageEnum _language;
 
         public IEnumerable<CaDETClass> Classes { get; private set; }
         
-        public CaDETDocument(string name, string sourceCode, LanguageEnum language)
+        public CaDETDocument(string filePath, string sourceCode, LanguageEnum language)
         {
-            Name = name;
+            FilePath = filePath;
             _sourceCode = sourceCode;
             _language = language;
             BuildSyntaxModel();
