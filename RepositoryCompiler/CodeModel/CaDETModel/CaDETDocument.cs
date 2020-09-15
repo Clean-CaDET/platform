@@ -7,7 +7,6 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
     {
         public string FilePath { get; private set; }
         
-        private readonly string _sourceCode;
         private readonly LanguageEnum _language;
 
         public IEnumerable<CaDETClass> Classes { get; private set; }
@@ -15,14 +14,13 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public CaDETDocument(string filePath, string sourceCode, LanguageEnum language)
         {
             FilePath = filePath;
-            _sourceCode = sourceCode;
             _language = language;
-            BuildSyntaxModel();
+            BuildSyntaxModel(sourceCode);
         }
 
-        public void BuildSyntaxModel()
+        public void BuildSyntaxModel(string sourceCode)
         {
-            Classes = SimpleParserFactor.CreateParser(_language).ParseClasses(_sourceCode);
+            Classes = SimpleParserFactor.CreateParser(_language).ParseClasses(sourceCode);
         }
     }
 }

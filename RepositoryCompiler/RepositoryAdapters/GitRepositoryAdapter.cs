@@ -21,8 +21,12 @@ namespace RepositoryCompiler.RepositoryAdapters
             _gitSourcePath = settings["CodeRepository:GitSourcePath"];
             _gitDestinationPath = settings["CodeRepository:GitDestinationPath"];
             _mainBranchName = settings["CodeRepository:MainBranchName"];
-            _uname = settings["CodeRepository:Username"] ?? "TODO";
-            _pass = settings["CodeRepository:Password"] ?? "TODO";
+            _uname = settings.ContainsKey("CodeRepository:Username")
+                ? settings["CodeRepository:Username"]
+                : "TODO";
+            _pass = settings.ContainsKey("CodeRepository:Password")
+                ? settings["CodeRepository:Password"]
+                : "TODO";
         }
 
         public void CloneRepository()
@@ -50,10 +54,14 @@ namespace RepositoryCompiler.RepositoryAdapters
             //The current code only works with public repositories.
             //The nonsensical options below should be refactored and extracted into a function
             //That will be called by this function as well as CloneRepository.
-            PullOptions options = new PullOptions();
-            options.FetchOptions = new FetchOptions();
-            options.FetchOptions.CredentialsProvider = (url, usernameFromUrl, types) =>
-                new UsernamePasswordCredentials() { Username = _uname, Password = _pass };
+            PullOptions options = new PullOptions
+            {
+                FetchOptions = new FetchOptions
+                {
+                    CredentialsProvider = (url, usernameFromUrl, types) =>
+                        new UsernamePasswordCredentials() { Username = _uname, Password = _pass }
+                }
+            };
             var signature = new Signature(new Identity(_uname, _uname), DateTime.Now);
 
             Commands.Pull(GetRepository(), signature, options);
