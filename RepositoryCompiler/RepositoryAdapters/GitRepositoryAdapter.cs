@@ -14,16 +14,26 @@ namespace RepositoryCompiler.RepositoryAdapters
         private readonly string _gitSourcePath;
         private readonly string _gitDestinationPath;
         private readonly string _mainBranchName;
-        public GitRepositoryAdapter(IConfigurationSection settings)
+        private readonly string _uname;
+        private readonly string _pass;
+        public GitRepositoryAdapter(Dictionary<string, string> settings)
         {
-            _gitSourcePath = settings.GetSection("GitSourcePath").Value;
-            _gitDestinationPath = settings.GetSection("GitDestinationPath").Value;
-            _mainBranchName = settings.GetSection("MainBranchName").Value;
+            _gitSourcePath = settings["CodeRepository:GitSourcePath"];
+            _gitDestinationPath = settings["CodeRepository:GitDestinationPath"];
+            _mainBranchName = settings["CodeRepository:MainBranchName"];
+            _uname = settings["CodeRepository:Username"] ?? "TODO";
+            _pass = settings["CodeRepository:Password"] ?? "TODO";
         }
 
         public void CloneRepository()
         {
-            Repository.Clone(_gitSourcePath, _gitDestinationPath);
+            //Requires refactoring along with the rest of the configuration.
+            //TODO: Rework once RepositoryRepository is established.
+            var co = new CloneOptions
+            {
+                CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials { Username = _uname, Password = _pass }
+            };
+            Repository.Clone(_gitSourcePath, _gitDestinationPath, co);
         }
 
         public bool CheckForNewCommits()
@@ -42,10 +52,9 @@ namespace RepositoryCompiler.RepositoryAdapters
             //That will be called by this function as well as CloneRepository.
             PullOptions options = new PullOptions();
             options.FetchOptions = new FetchOptions();
-            options.FetchOptions.CredentialsProvider = new CredentialsHandler(
-                (url, usernameFromUrl, types) =>
-                    new UsernamePasswordCredentials() { Username = "TODO", Password = "TODO" });
-            var signature = new LibGit2Sharp.Signature(new Identity("TODO", "TODO"), DateTime.Now);
+            options.FetchOptions.CredentialsProvider = (url, usernameFromUrl, types) =>
+                new UsernamePasswordCredentials() { Username = _uname, Password = _pass };
+            var signature = new Signature(new Identity(_uname, _uname), DateTime.Now);
 
             Commands.Pull(GetRepository(), signature, options);
         }

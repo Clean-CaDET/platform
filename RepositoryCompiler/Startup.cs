@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,8 +22,9 @@ namespace RepositoryCompiler
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            services.Add(new ServiceDescriptor(typeof(CodeRepositoryService), new CodeRepositoryService(new GitRepositoryAdapter(Configuration.GetSection("CodeRepository")))));
+            
+            var repo = new GitRepositoryAdapter(new Dictionary<string, string>(Configuration.GetSection("CodeRepository").AsEnumerable()));
+            services.Add(new ServiceDescriptor(typeof(CodeRepositoryService), new CodeRepositoryService(repo)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
