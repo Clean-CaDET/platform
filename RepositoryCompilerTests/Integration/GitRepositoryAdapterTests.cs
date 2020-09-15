@@ -12,7 +12,7 @@ namespace RepositoryCompilerTests.Integration
         private readonly char _separator = Path.DirectorySeparatorChar;
 
         [Fact]
-        public void Clones_repository_successfully()
+        public void Clones_repository()
         {
             CleanTestDirectory();
             ICodeRepositoryAdapter gitAdapter = new GitRepositoryAdapter(GetTestConfiguration());
