@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel;
@@ -10,10 +11,38 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
 {
     public class CSharpSyntaxParser : ISyntaxParser
     {
+        /*private SemanticModel _semanticModel;
+        private void CreateSemanticModel(SyntaxTree ast)
+        {
+            var c = CSharpCompilation.Create(new Guid().ToString());
+            c = c.AddSyntaxTrees(ast);
+            _semanticModel = c.GetSemanticModel(ast);
+        } STANDALONE*/ 
+        /*TAKEN FROM PARSE METHOD
+            var invokedMethods = method.DescendantNodes().OfType<InvocationExpressionSyntax>();
+            foreach (var invoked in invokedMethods)
+            {
+                var a = invoked;
+            }
+            
+            string methodName = "A";
+
+
+            var symbols = from node in root.DescendantNodes()
+                       .OfType<InvocationExpressionSyntax>()
+            let symbol = model.GetSymbolInfo(node.Expression).Symbol as IMethodSymbol
+            where symbol != null
+            where symbol.Name = methodName
+            select symbol;
+        */
+
         public IEnumerable<CaDETClass> ParseClasses(string sourceCode)
         {
             SyntaxTree ast = CSharpSyntaxTree.ParseText(sourceCode);
             SyntaxNode root = ast.GetRoot();
+
+            //CreateSemanticModel(ast);
+
             var classNodes = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
 
             return classNodes.Select(ParseClass).ToList();
@@ -101,8 +130,44 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
                 IsConstructor = false,
                 Name = method.Identifier.Text,
                 SourceCode = method.ToString(),
-                Parent = parent
+                Parent = parent,
+                MetricCYCLO = CalculateCyclomaticComplexity(method)
             };
+        }
+
+        private int CalculateCyclomaticComplexity(MethodDeclarationSyntax method)
+        {
+            //Concretely, in C# the CC of a method is 1 + {the number of following expressions found in the body of the method}:
+            //if | while | for | foreach | case | default | continue | goto | && | || | catch | ternary operator ?: | ??
+            //https://www.ndepend.com/docs/code-metrics#CC
+            int count = method.DescendantNodes().OfType<IfStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<CaseSwitchLabelSyntax>().Count();
+            count += method.DescendantNodes().OfType<DefaultSwitchLabelSyntax>().Count();
+            count += method.DescendantNodes().OfType<ContinueStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<GotoStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ConditionalExpressionSyntax>().Count();
+            count += method.DescendantNodes().OfType<CatchClauseSyntax>().Count();
+
+            count += CountOccurrences(method.ToString(), "&&");
+            count += CountOccurrences(method.ToString(), "||");
+            count += CountOccurrences(method.ToString(), "??");
+            
+            return count + 1;
+        }
+
+        private int CountOccurrences(string text, string pattern)
+        {
+            var count = 0;
+            var i = 0;
+            while ((i = text.IndexOf(pattern, i)) != -1)
+            {
+                i += pattern.Length;
+                count++;
+            }
+            return count;
         }
 
         private CaDETMethod ParseConstructor(ConstructorDeclarationSyntax constructor, CaDETClass parent)

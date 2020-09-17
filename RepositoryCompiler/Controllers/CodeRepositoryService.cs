@@ -33,7 +33,7 @@ namespace RepositoryCompiler.Controllers
             CaDETModel model = new CaDETModel();
             foreach(CommitId commit in previousCommits)
             {
-                model.ProjectHistory.Add(commit, BuildProjectModel(commit));
+                model.AddProject(commit, BuildProjectModel(commit));
             }
             return model;
         }

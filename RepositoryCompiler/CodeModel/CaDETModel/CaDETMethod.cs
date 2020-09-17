@@ -10,8 +10,9 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public bool IsConstructor { get; set; }
         public bool IsAccessor { get; set; }
         public CaDETClass Parent { get; set; }
+        public int MetricCYCLO { get; set; }
 
-        public int GetMetricLOC()
+        public int MetricLOC()
         {
             _linesOfCode ??= SourceCode.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
             return _linesOfCode.Value;
