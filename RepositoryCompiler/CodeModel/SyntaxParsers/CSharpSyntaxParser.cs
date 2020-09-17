@@ -21,14 +21,15 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
 
         private CaDETClass ParseClass(ClassDeclarationSyntax node)
         {
-            return new CaDETClass
+            var parsedClass = new CaDETClass
             {
                 Name = node.Identifier.Text,
                 FullName = GetFullName(node),
-                SourceCode = node.ToString(),
-                Methods = ParseMethods(node.Members),
-                Fields = ParseFields(node.Members)
+                SourceCode = node.ToString()
             };
+            parsedClass.Methods = ParseMethods(node.Members, parsedClass);
+            parsedClass.Fields = ParseFields(node.Members, parsedClass);
+            return parsedClass;
         }
 
         private string GetFullName(ClassDeclarationSyntax node)
@@ -58,19 +59,20 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
             return retVal.Name + ".";
         }
 
-        private List<CaDETField> ParseFields(IEnumerable<MemberDeclarationSyntax> nodeMembers)
+        private List<CaDETField> ParseFields(IEnumerable<MemberDeclarationSyntax> nodeMembers, CaDETClass parent)
         {
             List<CaDETField> fields = new List<CaDETField>();
             foreach (var node in nodeMembers)
             {
                 if (!(node is FieldDeclarationSyntax fieldDeclaration)) continue;
-                fields.AddRange(fieldDeclaration.Declaration.Variables.Select(field => new CaDETField {Name = field.Identifier.Text}));
+                fields.AddRange(fieldDeclaration.Declaration.Variables.Select(
+                    field => new CaDETField {Name = field.Identifier.Text, Parent = parent}));
             }
             
             return fields;
         }
 
-        private List<CaDETMethod> ParseMethods(IEnumerable<MemberDeclarationSyntax> nodeMembers)
+        private List<CaDETMethod> ParseMethods(IEnumerable<MemberDeclarationSyntax> nodeMembers, CaDETClass parent)
         {
             var methods = new List<CaDETMethod>();
             foreach (var node in nodeMembers)
@@ -78,50 +80,52 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
                 switch (node)
                 {
                     case PropertyDeclarationSyntax property:
-                        methods.Add(ParseProperty(property));
+                        methods.Add(ParseProperty(property, parent));
                         break;
                     case ConstructorDeclarationSyntax constructor:
-                        methods.Add(ParseConstructor(constructor));
+                        methods.Add(ParseConstructor(constructor, parent));
                         break;
                     case MethodDeclarationSyntax method:
-                        methods.Add(ParseMethod(method));
+                        methods.Add(ParseMethod(method, parent));
                         break;
                 }
             }
-
             return methods;
         }
 
-        private CaDETMethod ParseMethod(MethodDeclarationSyntax method)
+        private CaDETMethod ParseMethod(MethodDeclarationSyntax method, CaDETClass parent)
         {
             return new CaDETMethod
             {
                 IsAccessor = false,
                 IsConstructor = false,
                 Name = method.Identifier.Text,
-                SourceCode = method.ToString()
+                SourceCode = method.ToString(),
+                Parent = parent
             };
         }
 
-        private CaDETMethod ParseConstructor(ConstructorDeclarationSyntax constructor)
+        private CaDETMethod ParseConstructor(ConstructorDeclarationSyntax constructor, CaDETClass parent)
         {
             return new CaDETMethod
             {
                 IsAccessor = false,
                 IsConstructor = true,
                 Name = constructor.Identifier.Text,
-                SourceCode = constructor.ToString()
+                SourceCode = constructor.ToString(),
+                Parent = parent
             };
         }
 
-        private CaDETMethod ParseProperty(PropertyDeclarationSyntax property)
+        private CaDETMethod ParseProperty(PropertyDeclarationSyntax property, CaDETClass parent)
         {
             return new CaDETMethod
             {
                 IsAccessor = true,
                 IsConstructor = false,
                 Name = property.Identifier.Text,
-                SourceCode = property.ToString()
+                SourceCode = property.ToString(),
+                Parent = parent
             };
         }
     }
