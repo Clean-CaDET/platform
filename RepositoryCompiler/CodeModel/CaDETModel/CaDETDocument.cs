@@ -6,7 +6,6 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
     public class CaDETDocument
     {
         public string FilePath { get; private set; }
-        
         private readonly LanguageEnum _language;
 
         public IEnumerable<CaDETClass> Classes { get; private set; }

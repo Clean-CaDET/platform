@@ -6,7 +6,7 @@ namespace RepositoryCompiler.RepositoryAdapters
     public interface ICodeRepositoryAdapter
     {
         void CloneRepository();
-        CaDETProject ParseProjectCode(CommitId commit);
+        IEnumerable<CaDETDocument> ParseProjectCode(CommitId commit);
         IEnumerable<CommitId> GetCommits(int numOfPreviousCommits);
         bool CheckForNewCommits();
     }

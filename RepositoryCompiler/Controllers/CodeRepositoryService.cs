@@ -17,12 +17,12 @@ namespace RepositoryCompiler.Controllers
             _codeRepositoryAdapter.CloneRepository();
         }
 
-        public CaDETProject BuildProjectModel(string commitHash)
+        public IEnumerable<CaDETDocument> BuildProjectModel(string commitHash)
         {
             return BuildProjectModel(CommitId.Create(commitHash));
         }
 
-        public CaDETProject BuildProjectModel(CommitId commit)
+        public IEnumerable<CaDETDocument> BuildProjectModel(CommitId commit)
         {
             return _codeRepositoryAdapter.ParseProjectCode(commit);
         }

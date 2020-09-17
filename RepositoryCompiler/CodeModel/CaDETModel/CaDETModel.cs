@@ -4,13 +4,13 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
 {
     public class CaDETModel
     {
-        public CaDETProject LatestState { get; private set; }
-        public Dictionary<CommitId, CaDETProject> ProjectHistory { get; private set; }
+        public IEnumerable<CaDETDocument> WorkingTreeState { get; private set; }
+        public Dictionary<CommitId, IEnumerable<CaDETDocument>> ProjectHistory { get; private set; }
 
-        public CaDETModel(CaDETProject project)
+        public CaDETModel(IEnumerable<CaDETDocument> activeState)
         {
-            LatestState = project;
-            ProjectHistory = new Dictionary<CommitId, CaDETProject>();
+            WorkingTreeState = activeState;
+            ProjectHistory = new Dictionary<CommitId, IEnumerable<CaDETDocument>>();
         }
 
         public CaDETModel(): this(null)

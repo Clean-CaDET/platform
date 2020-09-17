@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RepositoryCompiler.CodeModel.CaDETModel;
+using System.Collections.Generic;
 
 namespace RepositoryCompiler.Controllers
 {
@@ -22,7 +23,7 @@ namespace RepositoryCompiler.Controllers
         }
 
         [HttpGet("parse")]
-        public CaDETProject GetCurrentCommitModel()
+        public IEnumerable<CaDETDocument> GetCurrentCommitModel()
         {
             return _repositoryService.BuildProjectModel((string)null);
         }

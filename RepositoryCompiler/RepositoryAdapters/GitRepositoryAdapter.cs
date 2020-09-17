@@ -77,10 +77,10 @@ namespace RepositoryCompiler.RepositoryAdapters
             return GetRepository().Commits.Take(numOfPreviousCommits).Select(commit => new CommitId(commit.Sha));
         }
 
-        public CaDETProject ParseProjectCode(CommitId commit)
+        public IEnumerable<CaDETDocument> ParseProjectCode(CommitId commit)
         {
             CheckoutCommit(commit);
-            return new CaDETProject(_gitDestinationPath, ParseDocuments());
+            return ParseDocuments();
         }
 
         private IEnumerable<CaDETDocument> ParseDocuments()
