@@ -135,7 +135,7 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
             };
         }
 
-        private int CalculateCyclomaticComplexity(MethodDeclarationSyntax method)
+        private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
         {
             //Concretely, in C# the CC of a method is 1 + {the number of following expressions found in the body of the method}:
             //if | while | for | foreach | case | default | continue | goto | && | || | catch | ternary operator ?: | ??
@@ -178,7 +178,8 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
                 IsConstructor = true,
                 Name = constructor.Identifier.Text,
                 SourceCode = constructor.ToString(),
-                Parent = parent
+                Parent = parent,
+                MetricCYCLO = CalculateCyclomaticComplexity(constructor)
             };
         }
 

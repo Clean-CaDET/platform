@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel
 {
@@ -12,20 +13,25 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public List<CaDETMethod> Methods { get; set; }
         public List<CaDETField> Fields { get; set; }
 
-        public int GetMetricLOC()
+        public int MetricLOC()
         {
             _linesOfCode ??= SourceCode.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
             return _linesOfCode.Value;
         }
 
-        public int GetMetricNMD()
+        public int MetricNMD()
         {
             return Methods.Count;
         }
 
-        public int GetMetricNAD()
+        public int MetricNAD()
         {
             return Fields.Count;
+        }
+
+        public int MetricWMC()
+        {
+            return Methods.Sum(method => method.MetricCYCLO);
         }
     }
 }

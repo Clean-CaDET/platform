@@ -20,8 +20,8 @@ namespace RepositoryCompilerTests.Unit
 
             document.Classes.ShouldHaveSingleItem();
             var doctorClass = document.Classes.First();
-            doctorClass.GetMetricNAD().ShouldBe(0);
-            doctorClass.GetMetricNMD().ShouldBe(5);
+            doctorClass.MetricNAD().ShouldBe(0);
+            doctorClass.MetricNMD().ShouldBe(5);
             doctorClass.Methods.ShouldContain(method => method.IsAccessor && method.Name.Equals("Email"));
             doctorClass.Methods.ShouldContain(method => method.IsConstructor);
             doctorClass.Methods.ShouldContain(method =>
@@ -35,7 +35,7 @@ namespace RepositoryCompilerTests.Unit
             var doc = new CaDETDocument("", _testDataFactory.GetDoctorClassText(), LanguageEnum.CSharp);
             var doctorClass = doc.Classes.First();
 
-            doctorClass.GetMetricLOC().ShouldBe(22);
+            doctorClass.MetricLOC().ShouldBe(22);
             doctorClass.Methods.Find(method => method.Name.Equals("Email")).MetricLOC().ShouldBe(1);
             doctorClass.Methods.Find(method => method.Name.Equals("IsAvailable")).MetricLOC().ShouldBe(8);
         }
@@ -47,6 +47,15 @@ namespace RepositoryCompilerTests.Unit
 
             gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).MetricCYCLO.ShouldBe(2);
             gitClass.Methods.Find(method => method.Name.Equals("ParseDocuments")).MetricCYCLO.ShouldBe(4);
+        }
+
+        [Fact]
+        public void Calculates_weighted_methods_per_class()
+        {
+            var git = new CaDETDocument("", _testDataFactory.GetGitAdapterClassText(), LanguageEnum.CSharp);
+            var gitClass = git.Classes.First();
+
+            gitClass.MetricWMC().ShouldBe(17);
         }
     }
 }
