@@ -1,11 +1,14 @@
 ﻿using RepositoryCompiler.RepositoryAdapters;
 using System.Collections.Generic;
+using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
 
 namespace RepositoryCompiler.Controllers
 {
     public class CodeRepositoryService
     {
+        //This should be restructured. The codeRepoAdapter should be retrieved from a factory based on the information in the
+        //RepositoryRepository which can be injected. In general this service should be reworked as it has many functions that might not be necessary.
         private readonly ICodeRepositoryAdapter _codeRepositoryAdapter;
         public CodeRepositoryService(ICodeRepositoryAdapter codeRepositoryAdapter)
         {
@@ -17,14 +20,16 @@ namespace RepositoryCompiler.Controllers
             _codeRepositoryAdapter.CloneRepository();
         }
 
-        public IEnumerable<CaDETDocument> BuildProjectModel(string commitHash)
+        public CaDETProject BuildProjectModel(string commitHash)
         {
             return BuildProjectModel(CommitId.Create(commitHash));
         }
 
-        public IEnumerable<CaDETDocument> BuildProjectModel(CommitId commit)
+        public CaDETProject BuildProjectModel(CommitId commit)
         {
-            return _codeRepositoryAdapter.ParseProjectCode(commit);
+            _codeRepositoryAdapter.CheckoutCommit(commit);
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            return builder.ParseFiles("C:/repo");
         }
 
         public CaDETModel BuildModel(int numOfPreviousCommits)

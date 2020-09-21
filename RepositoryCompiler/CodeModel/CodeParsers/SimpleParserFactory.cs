@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
 
-namespace RepositoryCompiler.CodeModel.SyntaxParsers
+namespace RepositoryCompiler.CodeModel.CodeParsers
 {
-    public class SimpleParserFactor
+    public class SimpleParserFactory
     {
-        public static ISyntaxParser CreateParser(LanguageEnum language)
+        public static ICodeParser CreateParser(LanguageEnum language)
         {
             switch (language)
             {
-                case LanguageEnum.CSharp: return new CSharpSyntaxParser();
+                case LanguageEnum.CSharp: return new CSharpCodeParser();
                 default: throw new InvalidEnumArgumentException();
             }
         }

@@ -1,4 +1,3 @@
-using RepositoryCompiler.CodeModel.CaDETModel;
 using RepositoryCompiler.RepositoryAdapters;
 using Shouldly;
 using System.Collections.Generic;
@@ -23,25 +22,25 @@ namespace RepositoryCompilerTests.Integration
         }
 
         [Fact]
-        public void Parses_basic_project_structure_from_master()
+        public void Checks_content_of_master_commit()
         {
             ICodeRepositoryAdapter gitAdapter = new GitRepositoryAdapter(GetTestConfiguration());
             string presentFile = GetTestPath() + _separator + "LibGit2Sharp" + _separator + "BlameOptions.cs";
 
-            IEnumerable<CaDETDocument> projectFiles = gitAdapter.ParseProjectCode(null);
+            gitAdapter.CheckoutCommit(null);
 
-            projectFiles.ShouldContain(doc => doc.FilePath.Equals(presentFile));
+            File.Exists(presentFile).ShouldBeTrue();
         }
 
         [Fact]
-        public void Parses_basic_project_structure_from_commit()
+        public void Checks_content_of_commit()
         {
             ICodeRepositoryAdapter gitAdapter = new GitRepositoryAdapter(GetTestConfiguration());
             string missingFile = GetTestPath() + _separator + "LibGit2Sharp" + _separator + "BlameOptions.cs";
 
-            IEnumerable<CaDETDocument> projectFiles = gitAdapter.ParseProjectCode(new CommitId("a3f95fc9e92aa4bec32f4c4a535b0316ec2ea470"));
+            gitAdapter.CheckoutCommit(new CommitId("a3f95fc9e92aa4bec32f4c4a535b0316ec2ea470"));
 
-            projectFiles.ShouldNotContain(doc => doc.FilePath.Equals(missingFile));
+            File.Exists(missingFile).ShouldBeFalse();
         }
 
         [Fact]

@@ -23,7 +23,7 @@ namespace RepositoryCompiler.Controllers
         }
 
         [HttpGet("parse")]
-        public IEnumerable<CaDETDocument> GetCurrentCommitModel()
+        public CaDETProject GetCurrentCommitModel()
         {
             return _repositoryService.BuildProjectModel((string)null);
         }

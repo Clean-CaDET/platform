@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using RepositoryCompiler.RepositoryAdapters;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel
 {
     public class CaDETModel
     {
-        private readonly IEnumerable<CaDETDocument> _workingTreeState;
-        private readonly Dictionary<CommitId, IEnumerable<CaDETDocument>> _projectHistory;
+        public Guid Id { get; }
+        private readonly Dictionary<CommitId, CaDETProject> _projectHistory;
 
-        public CaDETModel(IEnumerable<CaDETDocument> activeState)
+        public CaDETModel(): this(new Guid()) {}
+
+        public CaDETModel(Guid id)
         {
-            _workingTreeState = activeState ?? new List<CaDETDocument>();
-            _projectHistory = new Dictionary<CommitId, IEnumerable<CaDETDocument>>();
+            Id = id;
+            _projectHistory = new Dictionary<CommitId, CaDETProject>();
         }
 
-        public CaDETModel(): this(null) { }
-
-        public void AddProject(CommitId commit, IEnumerable<CaDETDocument> project)
+        public void AddProject(CommitId commit, CaDETProject project)
         {
             _projectHistory.Add(commit, project);
         }

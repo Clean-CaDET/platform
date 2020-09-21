@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel
 {
@@ -11,6 +12,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public bool IsAccessor { get; set; }
         public CaDETClass Parent { get; set; }
         public int MetricCYCLO { get; set; }
+        public List<CaDETMethod> InvokedMethods { get; set; }
 
         public int MetricLOC()
         {

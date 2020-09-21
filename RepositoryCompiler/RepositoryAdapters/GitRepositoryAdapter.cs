@@ -1,8 +1,6 @@
 ﻿using LibGit2Sharp;
-using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace RepositoryCompiler.RepositoryAdapters
@@ -75,25 +73,12 @@ namespace RepositoryCompiler.RepositoryAdapters
             return GetRepository().Commits.Take(numOfPreviousCommits).Select(commit => new CommitId(commit.Sha));
         }
 
-        public IEnumerable<CaDETDocument> ParseProjectCode(CommitId commit)
-        {
-            CheckoutCommit(commit);
-            return ParseDocuments();
-        }
-
-        private IEnumerable<CaDETDocument> ParseDocuments()
-        {
-            //specific to C# - should extract to C# file identifier when appropriate
-            string[] allFiles = Directory.GetFiles(_gitDestinationPath, "*.cs", SearchOption.AllDirectories);
-            return allFiles.Select(s => new CaDETDocument(s, File.ReadAllText(s), LanguageEnum.CSharp));
-        }
-
         private void CheckoutMasterBranch()
         {
             CheckoutCommit(null);
         }
 
-        private void CheckoutCommit(CommitId commit)
+        public void CheckoutCommit(CommitId commit)
         {
             if (commit != null) Commands.Checkout(GetRepository(), commit.Hash);
             else Commands.Checkout(GetRepository(), _mainBranchName);

@@ -1,4 +1,4 @@
-﻿namespace RepositoryCompiler.CodeModel.CaDETModel
+﻿namespace RepositoryCompiler.RepositoryAdapters
 {
     public class CommitId
     {

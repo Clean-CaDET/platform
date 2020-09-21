@@ -1,10 +1,14 @@
-﻿namespace RepositoryCompilerTests.Unit
+﻿using System.Collections.Generic;
+
+namespace RepositoryCompilerTests.Unit
 {
     public class CodeModelTestDataFactory
     {
-        public string GetDoctorClassText()
+        public IEnumerable<string> GetDoctorClassText()
         {
-            return @"
+            return new[]
+            {
+                @"
             using System.Collections.Generic;
             namespace DoctorApp.Model.Data
             {
@@ -30,12 +34,15 @@
                         return true;
                     }
                 }
-            }";
+            }"
+            };
         }
 
-        public string GetGitAdapterClassText()
+        public IEnumerable<string> GetGitAdapterClassText()
         {
-            return @"
+            return new[]
+            {
+                @"
                 using LibGit2Sharp;
                 using RepositoryCompiler.CodeModel.CaDETModel;
                 using System;
@@ -113,21 +120,21 @@
                             return GetRepository().Commits.Take(numOfPreviousCommits).Select(commit => new CommitId(commit.Sha));
                         }
 
-                        public IEnumerable<CaDETDocument> ParseProjectCode(CommitId commit)
+                        public IEnumerable<CaDETProject> ParseProjectCode(CommitId commit)
                         {
                             CheckoutCommit(commit);
                             return ParseDocuments();
                         }
 
-                        private IEnumerable<CaDETDocument> ParseDocuments()
+                        private IEnumerable<CaDETProject> ParseDocuments()
                         {
                             //specific to C# - should extract to C# file identifier when appropriate
                             string[] allFiles = Directory.GetFiles(_gitDestinationPath, ""*.cs"", SearchOption.AllDirectories);
-                            var retVal = List<CaDETDocument>();
+                            var retVal = List<CaDETProject>();
                             foreach(var file in allFiles) {
                                 if(file != null && file != """")
                                 {
-                                    retVal.Add(new CaDETDocument(s, File.ReadAllText(s), LanguageEnum.CSharp));
+                                    retVal.Add(new CaDETProject(s, File.ReadAllText(s), LanguageEnum.CSharp));
                                 }
                             }
                             return retVal;
@@ -151,7 +158,81 @@
                     }
                 }
 
-            ";
+            "
+            };
+        }
+
+        public string GetSimpleDoctorClassText()
+        {
+            return @"
+            using System.Collections.Generic;
+            using DoctorApp.Model.Data.DateR;
+            namespace DoctorApp.Model.Data
+            {
+                public class Doctor
+                {
+                    public string Name { get; set; }
+                    public string Email { get; set; }
+                    public List<DateRange> HolidayDates { get; set; }
+
+                    public Doctor(string name, string email)
+                    {
+                        Name = name;
+                        Email = email;
+                        HolidayDates = new List<DateRange>();
+                    }
+                }
+            }";
+        }
+
+        public string GetServiceClassText()
+        {
+            return @"
+            using System.Collections.Generic;
+            using DoctorApp.Model.Data.DateR;
+            using DoctorApp.Model.Data;
+            namespace DoctorApp.Model
+            {
+                public class DoctorService
+                {
+                    private List<Doctor> _doctors;
+                    public Doctor FindAvailableDoctor(DateRange timeSpan)
+                    {
+                        foreach (Doctor d in _doctors)
+                        {
+                            foreach(DateRange holiday in d.HolidayDates)
+                            {
+                                if (!holiday.OverlapsWith(timeSpan)) return d;
+                            }
+                        }
+                        return null;
+                    }
+                }
+            }";
+        }
+
+        public string GetDateRangeClassText()
+        {
+            return @"
+            using System.Collections.Generic;
+            namespace DoctorApp.Model.Data.DateR
+            {
+                public class DateRange
+                {
+                    public DateTime From { get; set; }
+                    public DateTime To { get; set; }
+
+                    public DateRange(DateTime from, DateTime to)
+                    {
+                        From = from;
+                        To = to;
+                    }
+                    public bool OverlapsWith(DateRange timeSpan)
+                    {
+                        return !(From > timeSpan.To || To < timeSpan.From);
+                    }
+                }
+            }";
         }
     }
 }

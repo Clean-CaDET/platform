@@ -1,47 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace RepositoryCompiler.CodeModel.SyntaxParsers
+namespace RepositoryCompiler.CodeModel.CodeParsers
 {
-    public class CSharpSyntaxParser : ISyntaxParser
+    public class CSharpCodeParser : ICodeParser
     {
-        /*private SemanticModel _semanticModel;
+        private readonly CSharpCompilation _compilation; 
+
+        public CSharpCodeParser()
+        {
+            _compilation = CSharpCompilation.Create(new Guid().ToString());
+        }
         private void CreateSemanticModel(SyntaxTree ast)
         {
-            var c = CSharpCompilation.Create(new Guid().ToString());
-            c = c.AddSyntaxTrees(ast);
-            _semanticModel = c.GetSemanticModel(ast);
-        } STANDALONE*/ 
-        /*TAKEN FROM PARSE METHOD
-            var invokedMethods = method.DescendantNodes().OfType<InvocationExpressionSyntax>();
+            var semanticModel = _compilation.GetSemanticModel(ast);
+
+
+            /*var invokedMethods = method.DescendantNodes().OfType<InvocationExpressionSyntax>();
             foreach (var invoked in invokedMethods)
             {
                 var a = invoked;
-            }
-            
-            string methodName = "A";
+                var symbol = _semanticModel.GetSymbolInfo(a.Expression).Symbol as IMethodSymbol;
+                var test = symbol;
+            }*/
+        }
 
-
-            var symbols = from node in root.DescendantNodes()
-                       .OfType<InvocationExpressionSyntax>()
-            let symbol = model.GetSymbolInfo(node.Expression).Symbol as IMethodSymbol
-            where symbol != null
-            where symbol.Name = methodName
-            select symbol;
-        */
-
-        public IEnumerable<CaDETClass> ParseClasses(string sourceCode)
+        public List<CaDETClass> ParseClasses(string sourceCode)
         {
             SyntaxTree ast = CSharpSyntaxTree.ParseText(sourceCode);
-            SyntaxNode root = ast.GetRoot();
+            _compilation.AddSyntaxTrees(ast);
 
-            //CreateSemanticModel(ast);
+            SyntaxNode root = ast.GetRoot();
 
             var classNodes = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
 
@@ -122,19 +117,6 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
             return methods;
         }
 
-        private CaDETMethod ParseMethod(MethodDeclarationSyntax method, CaDETClass parent)
-        {
-            return new CaDETMethod
-            {
-                IsAccessor = false,
-                IsConstructor = false,
-                Name = method.Identifier.Text,
-                SourceCode = method.ToString(),
-                Parent = parent,
-                MetricCYCLO = CalculateCyclomaticComplexity(method)
-            };
-        }
-
         private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
         {
             //Concretely, in C# the CC of a method is 1 + {the number of following expressions found in the body of the method}:
@@ -156,6 +138,19 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
             count += CountOccurrences(method.ToString(), "??");
             
             return count + 1;
+        }
+
+        private CaDETMethod ParseMethod(MethodDeclarationSyntax method, CaDETClass parent)
+        {
+            return new CaDETMethod
+            {
+                IsAccessor = false,
+                IsConstructor = false,
+                Name = method.Identifier.Text,
+                SourceCode = method.ToString(),
+                Parent = parent,
+                MetricCYCLO = CalculateCyclomaticComplexity(method)
+            };
         }
 
         private int CountOccurrences(string text, string pattern)
@@ -193,6 +188,11 @@ namespace RepositoryCompiler.CodeModel.SyntaxParsers
                 SourceCode = property.ToString(),
                 Parent = parent
             };
+        }
+
+        public List<CaDETClass> CalculateSemanticMetrics(List<CaDETClass> classes)
+        {
+            throw new NotImplementedException();
         }
     }
 }
