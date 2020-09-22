@@ -34,16 +34,7 @@ namespace RepositoryCompiler.CodeModel
         public List<CaDETClass> BuildCodeModel(IEnumerable<string> codeTexts)
         {
             ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
-            List<CaDETClass> retVal = new List<CaDETClass>();
-
-            foreach (var text in codeTexts)
-            {
-                retVal.AddRange(codeParser.ParseClasses(text));
-            }
-            //Semantic metrics can only be calculated after all classes are parsed.
-            //retVal = codeParser.CalculateSemanticMetrics(retVal);
-
-            return retVal;
+            return codeParser.GetParsedClasses(codeTexts);
         }
     }
 }

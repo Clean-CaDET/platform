@@ -1,8 +1,10 @@
 ﻿namespace RepositoryCompiler.CodeModel.CaDETModel
 {
-    public class CaDETField
+    public enum CaDETMemberType
     {
-        public string Name { get; set; }
-        public CaDETClass Parent { get; set; }
+        Method,
+        Property,
+        Constructor,
+        Field
     }
 }

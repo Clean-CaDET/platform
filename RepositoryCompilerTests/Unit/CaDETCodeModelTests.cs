@@ -24,10 +24,9 @@ namespace RepositoryCompilerTests.Unit
             var doctorClass = classes.First();
             doctorClass.MetricNAD().ShouldBe(0);
             doctorClass.MetricNMD().ShouldBe(5);
-            doctorClass.Methods.ShouldContain(method => method.IsAccessor && method.Name.Equals("Email"));
-            doctorClass.Methods.ShouldContain(method => method.IsConstructor);
-            doctorClass.Methods.ShouldContain(method =>
-                !method.IsConstructor && !method.IsAccessor && method.Name.Equals("IsAvailable"));
+            doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Property) && method.Name.Equals("Email"));
+            doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Constructor));
+            doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Method) && method.Name.Equals("IsAvailable"));
             doctorClass.Methods.First().Parent.SourceCode.ShouldBe(doctorClass.SourceCode);
         }
         [Fact]
@@ -62,6 +61,22 @@ namespace RepositoryCompilerTests.Unit
 
             var gitClass = classes.First();
             gitClass.MetricWMC().ShouldBe(17);
+        }
+
+        [Fact]
+        public void Calculates_invoked_methods_for_multiple_classes()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetMultipleClassTexts());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var overlapsWith = dateRange.Methods.Find(m => m.Name.Equals("OverlapsWith"));
+            var holidayDates = doctor.Fields.Find(m => m.Name.Equals("HolidayDates"));
+            var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
+            findDoctors.InvokedMethods.ShouldContain(overlapsWith);
         }
     }
 }

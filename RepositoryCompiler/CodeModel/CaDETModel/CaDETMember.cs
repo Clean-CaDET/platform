@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel
 {
-    public class CaDETMethod
+    public class CaDETMember
     {
         private int? _linesOfCode;
         public string Name { get; set; }
+        public CaDETMemberType Type { get; set; }
         public string SourceCode { get; set; }
-        public bool IsConstructor { get; set; }
-        public bool IsAccessor { get; set; }
         public CaDETClass Parent { get; set; }
         public int MetricCYCLO { get; set; }
-        public List<CaDETMethod> InvokedMethods { get; set; }
+        public List<CaDETMember> InvokedMethods { get; set; }
+        public List<CaDETMember> AccessedFields { get; set; }
 
         public int MetricLOC()
         {

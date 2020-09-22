@@ -5,7 +5,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
 {
     public interface ICodeParser
     {
-        List<CaDETClass> ParseClasses(string sourceCode);
-        List<CaDETClass> CalculateSemanticMetrics(List<CaDETClass> classes);
+        List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode);
     }
 }
