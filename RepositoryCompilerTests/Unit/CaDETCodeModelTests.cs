@@ -64,19 +64,32 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
-        public void Calculates_invoked_methods_for_multiple_classes()
+        public void Calculates_invoked_methods()
         {
             CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
 
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetMultipleClassTexts());
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
-            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
             var overlapsWith = dateRange.Methods.Find(m => m.Name.Equals("OverlapsWith"));
-            var holidayDates = doctor.Fields.Find(m => m.Name.Equals("HolidayDates"));
+            var logChecked = service.Methods.Find(m => m.Name.Equals("LogChecked"));
             var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
             findDoctors.InvokedMethods.ShouldContain(overlapsWith);
+            findDoctors.InvokedMethods.ShouldContain(logChecked);
+        }
+        [Fact]
+        public void Calculates_accessed_fields()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetMultipleClassTexts());
+
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var holidayDates = doctor.Methods.Find(m => m.Name.Equals("HolidayDates") && m.Type.Equals(CaDETMemberType.Property));
+            var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
+            findDoctors.AccessedFields.ShouldContain(holidayDates);
         }
     }
 }

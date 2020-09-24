@@ -224,9 +224,14 @@ namespace RepositoryCompilerTests.Unit
                             {
                                 d.Test = null;
                                 if (!holiday.OverlapsWith(timeSpan)) return d;
+                                LogChecked();
                             }
                         }
                         return null;
+                    }
+                    private void LogChecked()
+                    {
+                        return;
                     }
                 }
             }"

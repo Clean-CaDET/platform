@@ -5,12 +5,16 @@ using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers
 {
+    //TODO: Refactor to extract metric calculation or rename class as it does more than code parsing.
+    //TODO: Consider separating class parsing from method parsing.
     public class CSharpCodeParser : ICodeParser
     {
-        private CSharpCompilation _compilation; 
+        private CSharpCompilation _compilation;
+        private const string _separator = ".";
 
         public CSharpCodeParser()
         {
@@ -31,24 +35,27 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 foreach (var method in c.Methods)
                 {
                     if(method.InvokedMethods == null) continue;
-                    method.InvokedMethods = LinkInvokedMethods(classes, method);
+                    method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
+                    method.AccessedFields = LinkInvokedMembers(classes, method.AccessedFields);
                 }
             }
             return classes;
         }
 
-        private List<CaDETMember> LinkInvokedMethods(List<CaDETClass> classes, CaDETMember method)
+        private List<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, List<CaDETMember> stubMembers)
         {
-            List<CaDETMember> linkedInvokedMethods = new List<CaDETMember>();
-            foreach (var invoked in method.InvokedMethods)
+            List<CaDETMember> linkedMembers = new List<CaDETMember>();
+            foreach (var member in stubMembers)
             {
-                string className = invoked.Name.Split("|").First();
-                string methodName = invoked.Name.Split("|").Last();
+                string[] nameParts = member.Name.Split(_separator);
+                string className = string.Join(_separator, nameParts, 0, nameParts.Length-1);
+                string memberName = nameParts.Last();
                 var linkingClass = classes.Find(c => c.FullName.Equals(className));
-                linkedInvokedMethods.Add(linkingClass.Methods.Find(m => m.Name.Equals(methodName)));
+                linkedMembers.Add(linkingClass.Methods.Find(m => m.Name.Equals(memberName)));
+                linkedMembers.Add(linkingClass.Fields.Find(m => m.Name.Equals(memberName)));
             }
 
-            return linkedInvokedMethods;
+            return linkedMembers;
         }
 
         private void ParseSyntaxTrees(IEnumerable<string> sourceCode)
@@ -132,9 +139,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
             foreach (var invoked in invokedMethods)
             {
                 var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
-                if(symbol == null) continue; //Invoked method is a system or library call and not part of our code.
+                if(symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
                 //Create stub method that will be replaced when all classes are parsed.
-                methods.Add(new CaDETMember { Name = symbol.ContainingType + "|" + symbol.Name });
+                methods.Add(new CaDETMember { Name = symbol.ContainingType + _separator + symbol.Name });
             }
 
             return methods;
@@ -142,24 +149,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
         private List<CaDETMember> CalculateAccessedFields(MemberDeclarationSyntax member, SemanticModel semanticModel)
         {
             List<CaDETMember> fields = new List<CaDETMember>();
-            /*var accessedFields = member.DescendantNodes().OfType<MemberAccessExpressionSyntax>();
+            var accessedFields = semanticModel.GetOperation(member).Descendants().OfType<IMemberReferenceOperation>();
             foreach (var field in accessedFields)
             {
-                var symbol = semanticModel.GetSymbolInfo(field.Expression).Symbol;
-                switch(symbol)
-                {
-                    case ILocalSymbol local:
-                        fields.Add(new CaDETMember { Name = local.Type + "|" + local.Name });
-                        break;
-                    case IPropertySymbol prop:
-                        fields.Add(new CaDETMember { Name = prop.ContainingSymbol + "|" + field.ToString() });
-                        break;
-                    case IParameterSymbol param:
-                        fields.Add(new CaDETMember { Name = param.Type + "|" + field. });
-                        break;
-                };
-            }*/
-            //FDP, LAA, ATFD (http://www.simpleorientedarchitecture.com/how-to-identify-feature-envy-using-ndepend/) se može računati kada se uvežu ova polja
+                fields.Add(new CaDETMember {Name = field.Member.ToDisplayString()});
+            }
             return fields;
         }
 
@@ -173,7 +167,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 _ => null
             };
         }
-
         private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
         {
             //Concretely, in C# the CC of a method is 1 + {the number of following expressions found in the body of the method}:
