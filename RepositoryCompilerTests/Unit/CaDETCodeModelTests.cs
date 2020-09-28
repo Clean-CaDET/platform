@@ -10,7 +10,7 @@ namespace RepositoryCompilerTests.Unit
     public class CaDETCodeModelTests
     {
         private readonly CodeModelTestDataFactory _testDataFactory = new CodeModelTestDataFactory();
-        
+
         //This test is a safety net for the C# SyntaxParser and serves to check
         //the understanding of the API. It should probably be removed in the long run.
         [Fact]
@@ -24,34 +24,39 @@ namespace RepositoryCompilerTests.Unit
             var doctorClass = classes.First();
             doctorClass.MetricNAD().ShouldBe(0);
             doctorClass.MetricNMD().ShouldBe(5);
-            doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Property) && method.Name.Equals("Email"));
+            doctorClass.Methods.ShouldContain(method =>
+                method.Type.Equals(CaDETMemberType.Property) && method.Name.Equals("Email"));
             doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Constructor));
-            doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Method) && method.Name.Equals("IsAvailable"));
+            doctorClass.Methods.ShouldContain(method =>
+                method.Type.Equals(CaDETMemberType.Method) && method.Name.Equals("IsAvailable"));
             doctorClass.Methods.First().Parent.SourceCode.ShouldBe(doctorClass.SourceCode);
         }
+
         [Fact]
         public void Calculates_lines_of_code_for_CSharp_class_elements()
         {
             CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
 
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetDoctorClassText());
-            
+
             var doctorClass = classes.First();
-            doctorClass.MetricLOC().ShouldBe(22);
-            doctorClass.Methods.Find(method => method.Name.Equals("Email")).MetricLOC().ShouldBe(1);
-            doctorClass.Methods.Find(method => method.Name.Equals("IsAvailable")).MetricLOC().ShouldBe(8);
+            doctorClass.MetricLOC.ShouldBe(22);
+            doctorClass.Methods.Find(method => method.Name.Equals("Email")).MetricLOC.ShouldBe(1);
+            doctorClass.Methods.Find(method => method.Name.Equals("IsAvailable")).MetricLOC.ShouldBe(8);
         }
+
         [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
             CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
 
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
-            
+
             var gitClass = classes.First();
             gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).MetricCYCLO.ShouldBe(2);
             gitClass.Methods.Find(method => method.Name.Equals("ParseDocuments")).MetricCYCLO.ShouldBe(4);
         }
+
         [Fact]
         public void Calculates_weighted_methods_per_class()
         {
@@ -78,6 +83,7 @@ namespace RepositoryCompilerTests.Unit
             findDoctors.InvokedMethods.ShouldContain(overlapsWith);
             findDoctors.InvokedMethods.ShouldContain(logChecked);
         }
+
         [Fact]
         public void Calculates_accessed_fields()
         {
@@ -87,9 +93,20 @@ namespace RepositoryCompilerTests.Unit
 
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
-            var holidayDates = doctor.Methods.Find(m => m.Name.Equals("HolidayDates") && m.Type.Equals(CaDETMemberType.Property));
+            var holidayDates = doctor.Methods.Find(m =>
+                m.Name.Equals("HolidayDates") && m.Type.Equals(CaDETMemberType.Property));
             var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
             findDoctors.AccessedFields.ShouldContain(holidayDates);
+        }
+
+        [Fact]
+        public void Calculates_lack_of_cohesion()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetCohesionClasses());
+
+
         }
     }
 }

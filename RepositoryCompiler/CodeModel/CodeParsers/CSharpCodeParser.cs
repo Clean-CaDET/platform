@@ -28,36 +28,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
             return LinkClasses(retVal);
         }
 
-        private List<CaDETClass> LinkClasses(List<CaDETClass> classes)
-        {
-            foreach (var c in classes)
-            {
-                foreach (var method in c.Methods)
-                {
-                    if(method.InvokedMethods == null) continue;
-                    method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
-                    method.AccessedFields = LinkInvokedMembers(classes, method.AccessedFields);
-                }
-            }
-            return classes;
-        }
-
-        private List<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, List<CaDETMember> stubMembers)
-        {
-            List<CaDETMember> linkedMembers = new List<CaDETMember>();
-            foreach (var member in stubMembers)
-            {
-                string[] nameParts = member.Name.Split(_separator);
-                string className = string.Join(_separator, nameParts, 0, nameParts.Length-1);
-                string memberName = nameParts.Last();
-                var linkingClass = classes.Find(c => c.FullName.Equals(className));
-                linkedMembers.Add(linkingClass.Methods.Find(m => m.Name.Equals(memberName)));
-                linkedMembers.Add(linkingClass.Fields.Find(m => m.Name.Equals(memberName)));
-            }
-
-            return linkedMembers;
-        }
-
         private void ParseSyntaxTrees(IEnumerable<string> sourceCode)
         {
             foreach (var code in sourceCode)
@@ -93,8 +63,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
             };
             parsedClass.Methods = ParseMethods(node.Members, parsedClass, semanticModel);
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
+            //TODO: Extract into method CalculateClassMetrics. Consider creating ClassMetrics object.
+            parsedClass.MetricLOC = CalculateLinesOfCode(node.ToString());
+            parsedClass.MetricLCOM = CalculateLackOfCohesion();
 
             return parsedClass;
+        }
+
+        private double CalculateLackOfCohesion()
+        {
+
+            return null;
         }
 
         private List<CaDETMember> ParseFields(IEnumerable<MemberDeclarationSyntax> nodeMembers, CaDETClass parent)
@@ -114,7 +93,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
             
             return fields;
         }
-
         private List<CaDETMember> ParseMethods(IEnumerable<MemberDeclarationSyntax> members, CaDETClass parent, SemanticModel semanticModel)
         {
             var methods = new List<CaDETMember>();
@@ -125,11 +103,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 method.SourceCode = member.ToString();
                 method.Parent = parent;
                 method.MetricCYCLO = CalculateCyclomaticComplexity(member);
+                method.MetricLOC = CalculateLinesOfCode(member.ToString());
                 method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
                 method.AccessedFields = CalculateAccessedFields(member, semanticModel);
                 methods.Add(method);
             }
             return methods;
+        }
+
+        private int CalculateLinesOfCode(string code)
+        {
+            return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
         }
 
         private List<CaDETMember> CalculateInvokedMethods(MemberDeclarationSyntax member, SemanticModel semanticModel)
@@ -224,6 +208,36 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 Type = CaDETMemberType.Property,
                 Name = property.Identifier.Text
             };
+        }
+
+        private List<CaDETClass> LinkClasses(List<CaDETClass> classes)
+        {
+            foreach (var c in classes)
+            {
+                foreach (var method in c.Methods)
+                {
+                    if (method.InvokedMethods == null) continue;
+                    method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
+                    method.AccessedFields = LinkInvokedMembers(classes, method.AccessedFields);
+                }
+            }
+            return classes;
+        }
+
+        private List<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, List<CaDETMember> stubMembers)
+        {
+            List<CaDETMember> linkedMembers = new List<CaDETMember>();
+            foreach (var member in stubMembers)
+            {
+                string[] nameParts = member.Name.Split(_separator);
+                string className = string.Join(_separator, nameParts, 0, nameParts.Length - 1);
+                string memberName = nameParts.Last();
+                var linkingClass = classes.Find(c => c.FullName.Equals(className));
+                linkedMembers.Add(linkingClass.Methods.Find(m => m.Name.Equals(memberName)));
+                linkedMembers.Add(linkingClass.Fields.Find(m => m.Name.Equals(memberName)));
+            }
+
+            return linkedMembers;
         }
     }
 }
