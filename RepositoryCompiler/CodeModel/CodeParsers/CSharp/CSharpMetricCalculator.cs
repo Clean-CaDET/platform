@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Operations;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel;
+using System;
+using System.Linq;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
     public class CSharpMetricCalculator
     {
-        private readonly string _separator;
-
-        public CSharpMetricCalculator(string separator)
-        {
-            _separator = separator;
-        }
-
         public CaDETClassMetrics CalculateClassMetrics(ClassDeclarationSyntax node, CaDETClass parsedClass)
         {
             return new CaDETClassMetrics
@@ -29,46 +18,18 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             };
         }
 
-        public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member, SemanticModel semanticModel)
+        public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member)
         {
             return new CaDETMemberMetrics
             {
                 CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = CalculateLinesOfCode(member.ToString()),
-                InvokedMethods = CalculateInvokedMethods(member, semanticModel),
-                AccessedFieldsAndAccessors = CalculateAccessedFieldsAndAccessors(member, semanticModel)
+                LOC = CalculateLinesOfCode(member.ToString())
             };
         }
 
         private int CalculateLinesOfCode(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
-        }
-
-        private List<CaDETMember> CalculateInvokedMethods(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            List<CaDETMember> methods = new List<CaDETMember>();
-            var invokedMethods = member.DescendantNodes().OfType<InvocationExpressionSyntax>();
-            foreach (var invoked in invokedMethods)
-            {
-                var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
-                if(symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
-                //Create stub method that will be replaced when all classes are parsed.
-                methods.Add(new CaDETMember { Name = symbol.ContainingType + _separator + symbol.Name });
-            }
-
-            return methods;
-        }
-
-        private List<CaDETMember> CalculateAccessedFieldsAndAccessors(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            List<CaDETMember> fields = new List<CaDETMember>();
-            var accessedFields = semanticModel.GetOperation(member).Descendants().OfType<IMemberReferenceOperation>();
-            foreach (var field in accessedFields)
-            {
-                fields.Add(new CaDETMember {Name = field.Member.ToDisplayString()});
-            }
-            return fields;
         }
 
         private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)

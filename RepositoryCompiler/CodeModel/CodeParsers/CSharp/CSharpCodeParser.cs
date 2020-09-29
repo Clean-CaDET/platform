@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Operations;
 using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         public CSharpCodeParser()
         {
             _compilation = CSharpCompilation.Create(new Guid().ToString());
-            _metricCalculator = new CSharpMetricCalculator(_separator);
+            _metricCalculator = new CSharpMetricCalculator();
         }
 
         public List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode)
@@ -93,7 +94,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 if(method == null) continue;
                 method.SourceCode = member.ToString();
                 method.Parent = parent;
-                method.Metrics = _metricCalculator.CalculateMemberMetrics(member, semanticModel);
+                method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
+                method.AccessedFieldsAndAccessors = CalculateAccessedFieldsAndAccessors(member, semanticModel);
+                method.Metrics = _metricCalculator.CalculateMemberMetrics(member);
                 methods.Add(method);
             }
             return methods;
@@ -135,15 +138,41 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             };
         }
 
+        private List<CaDETMember> CalculateInvokedMethods(MemberDeclarationSyntax member, SemanticModel semanticModel)
+        {
+            List<CaDETMember> methods = new List<CaDETMember>();
+            var invokedMethods = member.DescendantNodes().OfType<InvocationExpressionSyntax>();
+            foreach (var invoked in invokedMethods)
+            {
+                var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
+                if (symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
+                //Create stub method that will be replaced when all classes are parsed.
+                methods.Add(new CaDETMember { Name = symbol.ContainingType + _separator + symbol.Name });
+            }
+
+            return methods;
+        }
+
+        private List<CaDETMember> CalculateAccessedFieldsAndAccessors(MemberDeclarationSyntax member, SemanticModel semanticModel)
+        {
+            List<CaDETMember> fields = new List<CaDETMember>();
+            var accessedFields = semanticModel.GetOperation(member).Descendants().OfType<IMemberReferenceOperation>();
+            foreach (var field in accessedFields)
+            {
+                fields.Add(new CaDETMember { Name = field.Member.ToDisplayString() });
+            }
+            return fields;
+        }
+
         private List<CaDETClass> LinkClasses(List<CaDETClass> classes)
         {
             foreach (var c in classes)
             {
                 foreach (var method in c.Methods)
                 {
-                    if (method.Metrics.InvokedMethods == null) continue;
-                    method.Metrics.InvokedMethods = LinkInvokedMembers(classes, method.Metrics.InvokedMethods);
-                    method.Metrics.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.Metrics.AccessedFieldsAndAccessors);
+                    if (method.InvokedMethods == null) continue;
+                    method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
+                    method.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.AccessedFieldsAndAccessors);
                 }
             }
             return classes;
