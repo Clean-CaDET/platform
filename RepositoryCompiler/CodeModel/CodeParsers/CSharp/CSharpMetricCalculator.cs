@@ -7,15 +7,65 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
     public class CSharpMetricCalculator
     {
-        public CaDETClassMetrics CalculateClassMetrics(ClassDeclarationSyntax node, CaDETClass parsedClass)
+        //TODO: See how this class will change with new metrics and try to decouple it from CSharp (e.g., by moving to CaDETClassMetric constructor)
+        public CaDETClassMetrics CalculateClassMetrics(CaDETClass parsedClass)
         {
             return new CaDETClassMetrics
             {
-                LOC = CalculateLinesOfCode(node.ToString()),
-                NMD = parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Method)),
-                NAD = parsedClass.Fields.Count,
-                WMC = parsedClass.Methods.Sum(method => method.Metrics.CYCLO)
+                LOC = GetLinesOfCode(parsedClass.SourceCode),
+                NMD = GetNumberOfMethodsDeclared(parsedClass),
+                NAD = GetNumberOfAttributesDefined(parsedClass),
+                WMC = GetWeightedMethodCount(parsedClass),
+                LCOM = GetLackOfCohesionOfMethods(parsedClass)
             };
+        }
+
+        private double? GetLackOfCohesionOfMethods(CaDETClass parsedClass)
+        {
+            //TODO: Will need to reexamine the way we look at accessors and fields
+            double maxCohesion = (GetNumberOfAttributesDefined(parsedClass) + GetNumberOfAccessors(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
+            if (maxCohesion == 0) return null;
+
+            double methodFieldAccess = 0;
+            foreach (var method in parsedClass.Methods.Where(method => method.Type.Equals(CaDETMemberType.Method)))
+            {
+                methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
+            }
+            return 1 - methodFieldAccess/maxCohesion;
+        }
+
+        private int GetNumberOfAccessors(CaDETClass parsedClass)
+        {
+            return parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Property));
+        }
+
+        private int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
+        {
+            int counter = 0;
+            foreach (var fieldOrAccessor in method.AccessedFieldsAndAccessors)
+            {
+                if (Enumerable.Contains(parsedClass.Fields, fieldOrAccessor) || Enumerable.Contains(parsedClass.Methods, fieldOrAccessor))
+                {
+                    counter++;
+                }
+            }
+
+            return counter;
+        }
+
+        private int GetWeightedMethodCount(CaDETClass parsedClass)
+        {
+            return parsedClass.Methods.Sum(method => method.Metrics.CYCLO);
+        }
+
+        private int GetNumberOfAttributesDefined(CaDETClass parsedClass)
+        {
+            return parsedClass.Fields.Count;
+        }
+
+        private int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
+        {
+            return parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Method));
         }
 
         public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member)
@@ -23,11 +73,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return new CaDETMemberMetrics
             {
                 CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = CalculateLinesOfCode(member.ToString())
+                LOC = GetLinesOfCode(member.ToString())
             };
         }
 
-        private int CalculateLinesOfCode(string code)
+        private int GetLinesOfCode(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
         }

@@ -109,7 +109,7 @@ namespace RepositoryCompilerTests.Unit
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             dateRange.Metrics.LCOM.ShouldBe(0);
-            doctor.Metrics.LCOM.ShouldBe(1);
+            doctor.Metrics.LCOM.ShouldBe(0.75);
         }
     }
 }

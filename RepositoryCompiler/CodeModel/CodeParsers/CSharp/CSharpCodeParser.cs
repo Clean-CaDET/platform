@@ -63,7 +63,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             };
             parsedClass.Methods = ParseMethods(node.Members, parsedClass, semanticModel);
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
-            parsedClass.Metrics = _metricCalculator.CalculateClassMetrics(node, parsedClass);
 
             return parsedClass;
         }
@@ -138,9 +137,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             };
         }
 
-        private List<CaDETMember> CalculateInvokedMethods(MemberDeclarationSyntax member, SemanticModel semanticModel)
+        private ISet<CaDETMember> CalculateInvokedMethods(MemberDeclarationSyntax member, SemanticModel semanticModel)
         {
-            List<CaDETMember> methods = new List<CaDETMember>();
+            ISet<CaDETMember> methods = new HashSet<CaDETMember>();
             var invokedMethods = member.DescendantNodes().OfType<InvocationExpressionSyntax>();
             foreach (var invoked in invokedMethods)
             {
@@ -153,9 +152,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return methods;
         }
 
-        private List<CaDETMember> CalculateAccessedFieldsAndAccessors(MemberDeclarationSyntax member, SemanticModel semanticModel)
+        private ISet<CaDETMember> CalculateAccessedFieldsAndAccessors(MemberDeclarationSyntax member, SemanticModel semanticModel)
         {
-            List<CaDETMember> fields = new List<CaDETMember>();
+            ISet<CaDETMember> fields = new HashSet<CaDETMember>();
             var accessedFields = semanticModel.GetOperation(member).Descendants().OfType<IMemberReferenceOperation>();
             foreach (var field in accessedFields)
             {
@@ -174,24 +173,31 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                     method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
                     method.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.AccessedFieldsAndAccessors);
                 }
+                c.Metrics = _metricCalculator.CalculateClassMetrics(c);
             }
             return classes;
         }
 
-        private List<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, List<CaDETMember> stubMembers)
+        private ISet<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, ISet<CaDETMember> stubMembers)
         {
-            List<CaDETMember> linkedMembers = new List<CaDETMember>();
+            ISet<CaDETMember> linkedMembers = new HashSet<CaDETMember>();
             foreach (var member in stubMembers)
             {
                 string[] nameParts = member.Name.Split(_separator);
                 string className = string.Join(_separator, nameParts, 0, nameParts.Length - 1);
                 string memberName = nameParts.Last();
                 var linkingClass = classes.Find(c => c.FullName.Equals(className));
-                linkedMembers.Add(linkingClass.Methods.Find(m => m.Name.Equals(memberName)));
-                linkedMembers.Add(linkingClass.Fields.Find(m => m.Name.Equals(memberName)));
+                var linkedMember = FindLinkedMember(linkingClass, memberName);
+                if (linkedMember != null) linkedMembers.Add(linkedMember);
             }
 
             return linkedMembers;
+        }
+
+        private CaDETMember FindLinkedMember(CaDETClass linkingClass, string memberName)
+        {
+            var linkedMember = linkingClass.Methods.Find(m => m.Name.Equals(memberName));
+            return linkedMember ?? linkingClass.Fields.Find(m => m.Name.Equals(memberName));
         }
     }
 }
