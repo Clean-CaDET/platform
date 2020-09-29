@@ -80,8 +80,8 @@ namespace RepositoryCompilerTests.Unit
             var overlapsWith = dateRange.Methods.Find(m => m.Name.Equals("OverlapsWith"));
             var logChecked = service.Methods.Find(m => m.Name.Equals("LogChecked"));
             var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
-            findDoctors.InvokedMethods.ShouldContain(overlapsWith);
-            findDoctors.InvokedMethods.ShouldContain(logChecked);
+            findDoctors.Metrics.InvokedMethods.ShouldContain(overlapsWith);
+            findDoctors.Metrics.InvokedMethods.ShouldContain(logChecked);
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace RepositoryCompilerTests.Unit
             var holidayDates = doctor.Methods.Find(m =>
                 m.Name.Equals("HolidayDates") && m.Type.Equals(CaDETMemberType.Property));
             var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
-            findDoctors.AccessedFieldsAndAccessors.ShouldContain(holidayDates);
+            findDoctors.Metrics.AccessedFieldsAndAccessors.ShouldContain(holidayDates);
         }
 
         [Fact]

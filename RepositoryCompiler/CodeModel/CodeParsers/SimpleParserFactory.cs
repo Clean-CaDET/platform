@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using RepositoryCompiler.CodeModel.CaDETModel;
+﻿using RepositoryCompiler.CodeModel.CodeParsers.CSharp;
+using System.ComponentModel;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers
 {

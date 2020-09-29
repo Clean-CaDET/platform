@@ -5,20 +5,19 @@ using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis.Operations;
 
-namespace RepositoryCompiler.CodeModel.CodeParsers
+namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
-    //TODO: Refactor to extract metric calculation or rename class as it does more than code parsing.
-    //TODO: Consider separating class parsing from method parsing.
     public class CSharpCodeParser : ICodeParser
     {
         private CSharpCompilation _compilation;
+        private readonly CSharpMetricCalculator _metricCalculator;
         private const string _separator = ".";
 
         public CSharpCodeParser()
         {
             _compilation = CSharpCompilation.Create(new Guid().ToString());
+            _metricCalculator = new CSharpMetricCalculator(_separator);
         }
 
         public List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode)
@@ -63,21 +62,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
             };
             parsedClass.Methods = ParseMethods(node.Members, parsedClass, semanticModel);
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
-            //TODO: Extract into method CalculateClassMetrics. Consider creating ClassMetrics object.
-            parsedClass.Metrics = CalculateClassMetrics(node, parsedClass);
+            parsedClass.Metrics = _metricCalculator.CalculateClassMetrics(node, parsedClass);
 
             return parsedClass;
-        }
-
-        private CaDETClassMetrics CalculateClassMetrics(ClassDeclarationSyntax node, CaDETClass parsedClass)
-        {
-            return new CaDETClassMetrics
-            {
-                LOC = CalculateLinesOfCode(node.ToString()),
-                NMD = parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Method)),
-                NAD = parsedClass.Fields.Count,
-                WMC = parsedClass.Methods.Sum(method => method.Metrics.CYCLO)
-            };
         }
 
         private List<CaDETMember> ParseFields(IEnumerable<MemberDeclarationSyntax> nodeMembers, CaDETClass parent)
@@ -106,51 +93,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 if(method == null) continue;
                 method.SourceCode = member.ToString();
                 method.Parent = parent;
-                method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
-                method.AccessedFieldsAndAccessors = CalculateAccessedFieldsAndAccessors(member, semanticModel);
-                method.Metrics = CalculateMemberMetrics(member);
+                method.Metrics = _metricCalculator.CalculateMemberMetrics(member, semanticModel);
                 methods.Add(method);
             }
             return methods;
-        }
-
-        private CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member)
-        {
-            return new CaDETMemberMetrics
-            {
-                CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = CalculateLinesOfCode(member.ToString())
-            };
-        }
-
-        private int CalculateLinesOfCode(string code)
-        {
-            return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
-        }
-
-        private List<CaDETMember> CalculateInvokedMethods(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            List<CaDETMember> methods = new List<CaDETMember>();
-            var invokedMethods = member.DescendantNodes().OfType<InvocationExpressionSyntax>();
-            foreach (var invoked in invokedMethods)
-            {
-                var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
-                if(symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
-                //Create stub method that will be replaced when all classes are parsed.
-                methods.Add(new CaDETMember { Name = symbol.ContainingType + _separator + symbol.Name });
-            }
-
-            return methods;
-        }
-        private List<CaDETMember> CalculateAccessedFieldsAndAccessors(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            List<CaDETMember> fields = new List<CaDETMember>();
-            var accessedFields = semanticModel.GetOperation(member).Descendants().OfType<IMemberReferenceOperation>();
-            foreach (var field in accessedFields)
-            {
-                fields.Add(new CaDETMember {Name = field.Member.ToDisplayString()});
-            }
-            return fields;
         }
 
         private CaDETMember CreateMethodBasedOnMemberType(MemberDeclarationSyntax member)
@@ -163,40 +109,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 _ => null
             };
         }
-        private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
-        {
-            //Concretely, in C# the CC of a method is 1 + {the number of following expressions found in the body of the method}:
-            //if | while | for | foreach | case | default | continue | goto | && | || | catch | ternary operator ?: | ??
-            //https://www.ndepend.com/docs/code-metrics#CC
-            int count = method.DescendantNodes().OfType<IfStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<CaseSwitchLabelSyntax>().Count();
-            count += method.DescendantNodes().OfType<DefaultSwitchLabelSyntax>().Count();
-            count += method.DescendantNodes().OfType<ContinueStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<GotoStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<ConditionalExpressionSyntax>().Count();
-            count += method.DescendantNodes().OfType<CatchClauseSyntax>().Count();
 
-            count += CountOccurrences(method.ToString(), "&&");
-            count += CountOccurrences(method.ToString(), "||");
-            count += CountOccurrences(method.ToString(), "??");
-            
-            return count + 1;
-        }
-
-        private int CountOccurrences(string text, string pattern)
-        {
-            var count = 0;
-            var i = 0;
-            while ((i = text.IndexOf(pattern, i)) != -1)
-            {
-                i += pattern.Length;
-                count++;
-            }
-            return count;
-        }
         private CaDETMember ParseMethod(MethodDeclarationSyntax method)
         {
             return new CaDETMember
@@ -228,9 +141,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
             {
                 foreach (var method in c.Methods)
                 {
-                    if (method.InvokedMethods == null) continue;
-                    method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
-                    method.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.AccessedFieldsAndAccessors);
+                    if (method.Metrics.InvokedMethods == null) continue;
+                    method.Metrics.InvokedMethods = LinkInvokedMembers(classes, method.Metrics.InvokedMethods);
+                    method.Metrics.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.Metrics.AccessedFieldsAndAccessors);
                 }
             }
             return classes;
