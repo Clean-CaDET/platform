@@ -23,7 +23,7 @@ namespace RepositoryCompilerTests.Unit
             classes.ShouldHaveSingleItem();
             var doctorClass = classes.First();
             doctorClass.MetricNAD().ShouldBe(0);
-            doctorClass.MetricNMD().ShouldBe(5);
+            doctorClass.MetricNMD().ShouldBe(1);
             doctorClass.Methods.ShouldContain(method =>
                 method.Type.Equals(CaDETMemberType.Property) && method.Name.Equals("Email"));
             doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Constructor));
@@ -96,7 +96,7 @@ namespace RepositoryCompilerTests.Unit
             var holidayDates = doctor.Methods.Find(m =>
                 m.Name.Equals("HolidayDates") && m.Type.Equals(CaDETMemberType.Property));
             var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
-            findDoctors.AccessedFields.ShouldContain(holidayDates);
+            findDoctors.AccessedFieldsAndAccessors.ShouldContain(holidayDates);
         }
 
         [Fact]
@@ -106,7 +106,10 @@ namespace RepositoryCompilerTests.Unit
 
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetCohesionClasses());
 
-
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            dateRange.MetricLCOM().ShouldBe(0);
+            doctor.MetricLCOM().ShouldBe(1);
         }
     }
 }

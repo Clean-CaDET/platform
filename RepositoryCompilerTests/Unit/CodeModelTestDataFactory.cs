@@ -262,7 +262,7 @@ namespace RepositoryCompilerTests.Unit
                         return !(From > timeSpan.To || To < timeSpan.From);
                     }
                 }
-            }", 
+            }",
                 @"
             using System.Collections.Generic;
             using DoctorApp.Model.Data.DateR;
@@ -281,33 +281,20 @@ namespace RepositoryCompilerTests.Unit
                         Email = email;
                         HolidayDates = new List<DateRange>();
                     }
-                }
-            }",
-                @"
-            using System.Collections.Generic;
-            using DoctorApp.Model.Data.DateR;
-            using DoctorApp.Model.Data;
-            namespace DoctorApp.Model
-            {
-                public class DoctorService
-                {
-                    private List<Doctor> _doctors;
-                    public Doctor FindAvailableDoctor(DateRange timeSpan)
+
+                    public void ProcessTest()
                     {
-                        foreach (Doctor d in _doctors)
-                        {
-                            foreach(DateRange holiday in d.HolidayDates)
-                            {
-                                d.Test = null;
-                                if (!holiday.OverlapsWith(timeSpan)) return d;
-                                LogChecked();
-                            }
-                        }
-                        return null;
+                        Test = null;
                     }
-                    private void LogChecked()
+
+                    public string GetTwoNames()
                     {
-                        return;
+                        return Name + Name;
+                    }
+
+                    public string GetThreeEmails()
+                    {
+                        return Email + Email + Email;
                     }
                 }
             }"
