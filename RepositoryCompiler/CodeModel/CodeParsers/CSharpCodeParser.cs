@@ -64,16 +64,20 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
             parsedClass.Methods = ParseMethods(node.Members, parsedClass, semanticModel);
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
             //TODO: Extract into method CalculateClassMetrics. Consider creating ClassMetrics object.
-            parsedClass.MetricLOC = CalculateLinesOfCode(node.ToString());
-            parsedClass.MetricLCOM = CalculateLackOfCohesion();
+            parsedClass.Metrics = CalculateClassMetrics(node, parsedClass);
 
             return parsedClass;
         }
 
-        private double CalculateLackOfCohesion()
+        private CaDETClassMetrics CalculateClassMetrics(ClassDeclarationSyntax node, CaDETClass parsedClass)
         {
-
-            return null;
+            return new CaDETClassMetrics
+            {
+                LOC = CalculateLinesOfCode(node.ToString()),
+                NMD = parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Method)),
+                NAD = parsedClass.Fields.Count,
+                WMC = parsedClass.Methods.Sum(method => method.Metrics.CYCLO)
+            };
         }
 
         private List<CaDETMember> ParseFields(IEnumerable<MemberDeclarationSyntax> nodeMembers, CaDETClass parent)
@@ -102,13 +106,21 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 if(method == null) continue;
                 method.SourceCode = member.ToString();
                 method.Parent = parent;
-                method.MetricCYCLO = CalculateCyclomaticComplexity(member);
-                method.MetricLOC = CalculateLinesOfCode(member.ToString());
                 method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
-                method.AccessedFields = CalculateAccessedFields(member, semanticModel);
+                method.AccessedFieldsAndAccessors = CalculateAccessedFieldsAndAccessors(member, semanticModel);
+                method.Metrics = CalculateMemberMetrics(member);
                 methods.Add(method);
             }
             return methods;
+        }
+
+        private CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member)
+        {
+            return new CaDETMemberMetrics
+            {
+                CYCLO = CalculateCyclomaticComplexity(member),
+                LOC = CalculateLinesOfCode(member.ToString())
+            };
         }
 
         private int CalculateLinesOfCode(string code)
@@ -130,7 +142,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
 
             return methods;
         }
-        private List<CaDETMember> CalculateAccessedFields(MemberDeclarationSyntax member, SemanticModel semanticModel)
+        private List<CaDETMember> CalculateAccessedFieldsAndAccessors(MemberDeclarationSyntax member, SemanticModel semanticModel)
         {
             List<CaDETMember> fields = new List<CaDETMember>();
             var accessedFields = semanticModel.GetOperation(member).Descendants().OfType<IMemberReferenceOperation>();
@@ -218,7 +230,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers
                 {
                     if (method.InvokedMethods == null) continue;
                     method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
-                    method.AccessedFields = LinkInvokedMembers(classes, method.AccessedFields);
+                    method.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.AccessedFieldsAndAccessors);
                 }
             }
             return classes;

@@ -22,8 +22,8 @@ namespace RepositoryCompilerTests.Unit
 
             classes.ShouldHaveSingleItem();
             var doctorClass = classes.First();
-            doctorClass.MetricNAD().ShouldBe(0);
-            doctorClass.MetricNMD().ShouldBe(1);
+            doctorClass.Metrics.NAD.ShouldBe(0);
+            doctorClass.Metrics.NMD.ShouldBe(1);
             doctorClass.Methods.ShouldContain(method =>
                 method.Type.Equals(CaDETMemberType.Property) && method.Name.Equals("Email"));
             doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Constructor));
@@ -40,9 +40,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetDoctorClassText());
 
             var doctorClass = classes.First();
-            doctorClass.MetricLOC.ShouldBe(22);
-            doctorClass.Methods.Find(method => method.Name.Equals("Email")).MetricLOC.ShouldBe(1);
-            doctorClass.Methods.Find(method => method.Name.Equals("IsAvailable")).MetricLOC.ShouldBe(8);
+            doctorClass.Metrics.LOC.ShouldBe(22);
+            doctorClass.Methods.Find(method => method.Name.Equals("Email")).Metrics.LOC.ShouldBe(1);
+            doctorClass.Methods.Find(method => method.Name.Equals("IsAvailable")).Metrics.LOC.ShouldBe(8);
         }
 
         [Fact]
@@ -53,8 +53,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).MetricCYCLO.ShouldBe(2);
-            gitClass.Methods.Find(method => method.Name.Equals("ParseDocuments")).MetricCYCLO.ShouldBe(4);
+            gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).Metrics.CYCLO.ShouldBe(2);
+            gitClass.Methods.Find(method => method.Name.Equals("ParseDocuments")).Metrics.CYCLO.ShouldBe(4);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.MetricWMC().ShouldBe(17);
+            gitClass.Metrics.WMC.ShouldBe(17);
         }
 
         [Fact]
@@ -108,8 +108,8 @@ namespace RepositoryCompilerTests.Unit
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
-            dateRange.MetricLCOM().ShouldBe(0);
-            doctor.MetricLCOM().ShouldBe(1);
+            dateRange.Metrics.LCOM.ShouldBe(0);
+            doctor.Metrics.LCOM.ShouldBe(1);
         }
     }
 }
