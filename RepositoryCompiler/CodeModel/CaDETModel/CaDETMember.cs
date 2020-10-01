@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel
 {
@@ -23,6 +24,13 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public bool IsSimpleAccessor()
+        {
+            return Type.Equals(CaDETMemberType.Property)
+                   && (InvokedMethods == null || InvokedMethods.Count == 0)
+                   && (AccessedFieldsAndAccessors == null || AccessedFieldsAndAccessors.Count < 2);
         }
     }
 }

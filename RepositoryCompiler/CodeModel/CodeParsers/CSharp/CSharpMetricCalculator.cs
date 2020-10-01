@@ -23,7 +23,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private double? GetLackOfCohesionOfMethods(CaDETClass parsedClass)
         {
             //TODO: Will need to reexamine the way we look at accessors and fields
-            double maxCohesion = (GetNumberOfAttributesDefined(parsedClass) + GetNumberOfAccessors(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
+            double maxCohesion = (GetNumberOfAttributesDefined(parsedClass) + GetNumberOfSimpleAccessors(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
             if (maxCohesion == 0) return null;
 
             double methodFieldAccess = 0;
@@ -34,9 +34,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return 1 - methodFieldAccess/maxCohesion;
         }
 
-        private int GetNumberOfAccessors(CaDETClass parsedClass)
+        private int GetNumberOfSimpleAccessors(CaDETClass parsedClass)
         {
-            return parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Property));
+            return parsedClass.Methods.Count(method => method.IsSimpleAccessor());
         }
 
         private int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
