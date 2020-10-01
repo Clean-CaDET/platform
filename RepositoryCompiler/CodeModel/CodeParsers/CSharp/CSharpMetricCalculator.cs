@@ -2,6 +2,8 @@
 using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
 using System.Linq;
+using System.Threading;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
@@ -31,7 +33,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
-            return 1 - methodFieldAccess/maxCohesion;
+            return Math.Round(1 - methodFieldAccess/maxCohesion, 3);
         }
 
         private int GetNumberOfSimpleAccessors(CaDETClass parsedClass)
@@ -98,11 +100,18 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             count += method.DescendantNodes().OfType<ConditionalExpressionSyntax>().Count();
             count += method.DescendantNodes().OfType<CatchClauseSyntax>().Count();
 
-            count += CountOccurrences(method.ToString(), "&&");
-            count += CountOccurrences(method.ToString(), "||");
-            count += CountOccurrences(method.ToString(), "??");
+            count += CountLogicalOperators(method, "&&");
+            count += CountLogicalOperators(method, "||");
+            count += CountLogicalOperators(method, "??");
             
             return count + 1;
+        }
+
+        private int CountLogicalOperators(MemberDeclarationSyntax method, string pattern)
+        {
+            var comments = method.DescendantTrivia();
+            int commentOperatorCount = comments.Sum(comment => CountOccurrences(comment.ToString(), pattern));
+            return CountOccurrences(method.ToString(), pattern) - commentOperatorCount;
         }
 
         private int CountOccurrences(string text, string pattern)

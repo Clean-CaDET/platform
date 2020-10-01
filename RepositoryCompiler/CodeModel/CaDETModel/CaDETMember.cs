@@ -30,7 +30,8 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         {
             return Type.Equals(CaDETMemberType.Property)
                    && (InvokedMethods == null || InvokedMethods.Count == 0)
-                   && (AccessedFieldsAndAccessors == null || AccessedFieldsAndAccessors.Count < 2);
+                   && (AccessedFieldsAndAccessors == null || AccessedFieldsAndAccessors.Count == 0)
+                   && (!SourceCode.Contains("return "));//THIS IS A WORKAROUND THAT SHOULD BE REWORKED https://stackoverflow.com/questions/64009302/roslyn-c-how-to-get-all-fields-and-properties-and-their-belonging-class-acce
         }
     }
 }

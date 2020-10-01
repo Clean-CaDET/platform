@@ -22,7 +22,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
 
         public override string ToString()
         {
-            return FullName.ToString();
+            return FullName;
         }
     }
 }
