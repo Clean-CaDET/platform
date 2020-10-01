@@ -187,11 +187,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 string className = string.Join(_separator, nameParts, 0, nameParts.Length - 1);
                 string memberName = nameParts.Last();
                 var linkingClass = classes.Find(c => c.FullName.Equals(className));
+                if(IsEnumeration(linkingClass)) continue;
                 var linkedMember = FindLinkedMember(linkingClass, memberName);
                 if (linkedMember != null) linkedMembers.Add(linkedMember);
             }
 
             return linkedMembers;
+        }
+
+        private bool IsEnumeration(CaDETClass linkingClass)
+        {
+            return linkingClass == null;
         }
 
         private CaDETMember FindLinkedMember(CaDETClass linkingClass, string memberName)

@@ -19,5 +19,10 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         {
             return base.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return FullName.ToString();
+        }
     }
 }

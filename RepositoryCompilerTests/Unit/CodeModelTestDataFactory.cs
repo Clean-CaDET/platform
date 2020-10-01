@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using RepositoryCompiler.CodeModel;
+using RepositoryCompiler.CodeModel.CaDETModel;
+using Shouldly;
+using Xunit;
 
 namespace RepositoryCompilerTests.Unit
 {
