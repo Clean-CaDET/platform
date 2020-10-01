@@ -36,5 +36,10 @@ namespace RepositoryCompiler.CodeModel
             ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
             return codeParser.GetParsedClasses(codeTexts);
         }
+
+        public List<CaDETClass> BuildCodeModel(string sourceCode)
+        {
+            return BuildCodeModel(new List<string> {sourceCode});
+        }
     }
 }

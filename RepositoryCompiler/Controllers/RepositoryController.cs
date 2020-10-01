@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepositoryCompiler.CodeModel.CaDETModel;
-using System.Collections.Generic;
 
 namespace RepositoryCompiler.Controllers
 {
@@ -15,29 +13,11 @@ namespace RepositoryCompiler.Controllers
             _repositoryService = repositoryService;
         }
 
-        [HttpGet("clone")]
-        public string SetupRepository()
+        [HttpPost("parse/class")]
+        public CaDETClassDTO GetBasicClassMetrics([FromBody] string classCode)
         {
-            _repositoryService.SetupRepository();
-            return "done";
-        }
-
-        [HttpGet("parse")]
-        public CaDETProject GetCurrentCommitModel()
-        {
-            return _repositoryService.BuildProjectModel((string)null);
-        }
-            
-        [HttpGet("multiple/{numOfCommits}")]
-        public CaDETModel GetMultipleCommitModel(int numOfCommits)
-        {
-            return _repositoryService.BuildModel(numOfCommits);
-        }
-
-        [HttpGet("pull")]
-        public bool UpdateRepository()
-        {
-            return _repositoryService.UpdateRepository();
+            var retVal = new CaDETClassDTO(_repositoryService.BuildClassModel(classCode));
+            return retVal;
         }
     }
 }

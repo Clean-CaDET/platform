@@ -1,5 +1,6 @@
 ﻿using RepositoryCompiler.RepositoryAdapters;
 using System.Collections.Generic;
+using System.Linq;
 using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
 
@@ -14,6 +15,8 @@ namespace RepositoryCompiler.Controllers
         {
             _codeRepositoryAdapter = codeRepositoryAdapter;
         }
+
+        public CodeRepositoryService() { }
 
         public void SetupRepository()
         {
@@ -46,6 +49,12 @@ namespace RepositoryCompiler.Controllers
         public bool UpdateRepository()
         {
             return _codeRepositoryAdapter.CheckForNewCommits();
+        }
+
+        public CaDETClass BuildClassModel(string sourceCode)
+        {
+            CodeModelBuilder codeBuilder = new CodeModelBuilder(LanguageEnum.CSharp);
+            return codeBuilder.BuildCodeModel(sourceCode).First();
         }
     }
 }
