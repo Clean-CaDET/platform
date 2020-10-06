@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RepositoryCompiler.CodeModel;
+﻿using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
 using Shouldly;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace RepositoryCompilerTests.Unit
@@ -111,6 +110,20 @@ namespace RepositoryCompilerTests.Unit
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             dateRange.Metrics.LCOM.ShouldBe(0);
             doctor.Metrics.LCOM.ShouldBe(0.75);
+        }
+        [Fact]
+        public void Determines_if_is_data_class()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetMultipleClassTexts());
+
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            dateRange.IsDataClass().ShouldBeFalse();
+            doctor.IsDataClass().ShouldBeTrue();
+            service.IsDataClass().ShouldBeFalse();
         }
     }
 }
