@@ -2,6 +2,7 @@
 using RepositoryCompilerTests.Unit;
 using Shouldly;
 using System.Linq;
+using RepositoryCompiler.Controllers.DTOs;
 using Xunit;
 
 namespace RepositoryCompilerTests.Integration
@@ -14,10 +15,10 @@ namespace RepositoryCompilerTests.Integration
             RepositoryController ctrl = new RepositoryController(new CodeRepositoryService());
             CodeModelTestDataFactory factory = new CodeModelTestDataFactory();
 
-            CaDETClassDTO dto = ctrl.GetBasicClassMetrics(factory.GetDoctorClassText().First());
+            ClassMetricsDTO metricsDto = ctrl.GetBasicClassMetrics(factory.GetDoctorClassText().First());
 
-            dto.ShouldNotBeNull();
-            dto.FullName.ShouldBe("DoctorApp.Model.Data.Doctor");
+            metricsDto.ShouldNotBeNull();
+            metricsDto.FullName.ShouldBe("DoctorApp.Model.Data.Doctor");
         }
     }
 }

@@ -30,7 +30,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
                 m.Name.Contains("tostring", StringComparison.CurrentCultureIgnoreCase) ||
                 m.Name.Contains("equals", StringComparison.CurrentCultureIgnoreCase) ||
                 m.Name.Contains("hashcode", StringComparison.CurrentCultureIgnoreCase)));
-    }
+        }
 
         public override bool Equals(object other)
         {

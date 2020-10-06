@@ -1,8 +1,8 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel;
 
-namespace RepositoryCompiler.Controllers
+namespace RepositoryCompiler.Controllers.DTOs
 {
-    public class CaDETClassDTO
+    public class ClassMetricsDTO
     {
         public string FullName { get; set; }
         public string LOC { get; set; }
@@ -11,7 +11,7 @@ namespace RepositoryCompiler.Controllers
         public string NAD { get; set; }
         public string WMC { get; set; }
 
-        public CaDETClassDTO(CaDETClass parsedClass)
+        public ClassMetricsDTO(CaDETClass parsedClass)
         {
             FullName = parsedClass.FullName;
             LCOM = parsedClass.Metrics.LCOM.ToString();
