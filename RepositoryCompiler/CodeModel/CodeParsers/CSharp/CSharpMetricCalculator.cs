@@ -2,14 +2,13 @@
 using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
 using System.Linq;
-using System.Threading;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
     public class CSharpMetricCalculator
     {
         //TODO: See how this class will change with new metrics and try to decouple it from CSharp (e.g., by moving to CaDETClassMetric constructor)
+        //TODO: Currently we see feature envy for CaDETClass.
         public CaDETClassMetrics CalculateClassMetrics(CaDETClass parsedClass)
         {
             return new CaDETClassMetrics
@@ -17,7 +16,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 LOC = GetLinesOfCode(parsedClass.SourceCode),
                 NMD = GetNumberOfMethodsDeclared(parsedClass),
                 NAD = GetNumberOfAttributesDefined(parsedClass),
-                WMC = GetWeightedMethodCount(parsedClass),
+                WMC = GetWeightedMethodPerClass(parsedClass),
                 LCOM = GetLackOfCohesionOfMethods(parsedClass)
             };
         }
@@ -54,14 +53,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
             return counter;
         }
-
-        private int GetWeightedMethodCount(CaDETClass parsedClass)
+        
+        private int GetWeightedMethodPerClass(CaDETClass parsedClass)
         {
+            //Defined based on 10.1109/32.295895
             return parsedClass.Methods.Sum(method => method.Metrics.CYCLO);
         }
-
+        
         private int GetNumberOfAttributesDefined(CaDETClass parsedClass)
         {
+            //TODO: Probably should expand to include simple accessors that do not have a related field.
+            //TODO: It is C# specific, but this is the CSSharpMetricCalculator
             return parsedClass.Fields.Count;
         }
 
@@ -86,9 +88,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
         {
-            //Concretely, in C# the CC of a method is 1 + {the number of following expressions found in the body of the method}:
-            //if | while | for | foreach | case | default | continue | goto | && | || | catch | ternary operator ?: | ??
-            //https://www.ndepend.com/docs/code-metrics#CC
+            //Defined based on https://www.ndepend.com/docs/code-metrics#CC
             int count = method.DescendantNodes().OfType<IfStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
