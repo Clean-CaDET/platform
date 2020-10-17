@@ -55,6 +55,7 @@ namespace RepositoryCompilerTests.Unit
             var gitClass = classes.First();
             gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).Metrics.CYCLO.ShouldBe(2);
             gitClass.Methods.Find(method => method.Name.Equals("ParseDocuments")).Metrics.CYCLO.ShouldBe(4);
+
         }
 
         [Fact]
@@ -125,5 +126,31 @@ namespace RepositoryCompilerTests.Unit
             doctor.IsDataClass().ShouldBeTrue();
             service.IsDataClass().ShouldBeFalse();
         }
+
+        [Fact]
+        public void Calculates_number_of_parameters()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
+
+            var gitClass = classes.First();
+            gitClass.Methods.Find(method => method.Name.Equals("PullChanges")).Metrics.NOP.ShouldBe(0);
+            gitClass.Methods.Find(method => method.Name.Equals("ParseProjectCode")).Metrics.NOP.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Calculates_number_of_local_variables()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
+
+            var gitClass = classes.First();
+            gitClass.Methods.Find(method => method.Name.Equals("CheckForNewCommits")).Metrics.NOLV.ShouldBe(2);
+            gitClass.Methods.Find(method => method.Name.Equals("GetActiveCommit")).Metrics.NOLV.ShouldBe(0);
+        }
+
+
     }
 }
