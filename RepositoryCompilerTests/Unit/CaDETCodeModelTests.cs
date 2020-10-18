@@ -135,8 +135,11 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
+            gitClass.Methods.Find(method => method.Name.Equals("CheckForNewCommits")).Metrics.NOP.ShouldBe(0);
             gitClass.Methods.Find(method => method.Name.Equals("PullChanges")).Metrics.NOP.ShouldBe(0);
-            gitClass.Methods.Find(method => method.Name.Equals("ParseProjectCode")).Metrics.NOP.ShouldBe(1);
+            gitClass.Methods.Find(method => method.Name.Equals("GetCommits")).Metrics.NOP.ShouldBe(1);
+            gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).Metrics.NOP.ShouldBe(1);
+
         }
 
         [Fact]

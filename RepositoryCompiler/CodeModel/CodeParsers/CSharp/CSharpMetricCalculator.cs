@@ -1,7 +1,9 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
@@ -77,8 +79,22 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return new CaDETMemberMetrics
             {
                 CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = GetLinesOfCode(member.ToString())
+                LOC = GetLinesOfCode(member.ToString()),
+                NOP = GetNumberOfParameters(member),
+                NOLV = GetNumberOfLocalVariables(member)
             };
+        }
+
+        private int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
+        {
+            // TODO: Change this also to real value
+            return 10;
+        }
+
+        private int GetNumberOfParameters(MemberDeclarationSyntax method)
+        {
+            // First because of structure type of 'OfType<ParameterListSyntax>()'
+            return method.DescendantNodes().OfType<ParameterListSyntax>().First().Parameters.Count;
         }
 
         private int GetLinesOfCode(string code)
