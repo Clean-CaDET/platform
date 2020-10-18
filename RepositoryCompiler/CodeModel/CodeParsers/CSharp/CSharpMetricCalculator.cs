@@ -87,8 +87,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
         {
-            // TODO: Change this also to real value
-            return 10;
+            return method.DescendantNodes().OfType<VariableDeclarationSyntax>().Count();
         }
 
         private int GetNumberOfParameters(MemberDeclarationSyntax method)
