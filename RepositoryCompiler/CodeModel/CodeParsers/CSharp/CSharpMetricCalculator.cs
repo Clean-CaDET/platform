@@ -1,9 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
