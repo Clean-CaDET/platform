@@ -24,8 +24,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         public List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode)
         {
             ParseSyntaxTrees(sourceCode);
-            List<CaDETClass> retVal = ParseClasses();
-            return LinkClasses(retVal);
+            var parsedClasses = ParseClasses();
+            var linkedClasses = LinkClasses(parsedClasses);
+            return AddClassMetrics(linkedClasses);
         }
 
         private void ParseSyntaxTrees(IEnumerable<string> sourceCode)
@@ -61,7 +62,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 FullName = symbol.ToDisplayString(),
                 SourceCode = node.ToString()
             };
-            parsedClass.Methods = ParseMethods(node.Members, parsedClass, semanticModel);
+            parsedClass.Methods = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
 
             return parsedClass;
@@ -84,7 +85,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             
             return fields;
         }
-        private List<CaDETMember> ParseMethods(IEnumerable<MemberDeclarationSyntax> members, CaDETClass parent, SemanticModel semanticModel)
+        private List<CaDETMember> ParseMethodsAndCalculateMetrics(IEnumerable<MemberDeclarationSyntax> members, CaDETClass parent, SemanticModel semanticModel)
         {
             var methods = new List<CaDETMember>();
             foreach (var member in members)
@@ -173,7 +174,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                     method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
                     method.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.AccessedFieldsAndAccessors);
                 }
-                c.Metrics = _metricCalculator.CalculateClassMetrics(c);
             }
             return classes;
         }
@@ -204,6 +204,16 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             var linkedMember = linkingClass.FindMethod(memberName);
             return linkedMember ?? linkingClass.Fields.Find(m => m.Name.Equals(memberName));
+        }
+
+        private List<CaDETClass> AddClassMetrics(List<CaDETClass> linkedClasses)
+        {
+            foreach (var c in linkedClasses)
+            {
+                c.Metrics = _metricCalculator.CalculateClassMetrics(c);
+            }
+
+            return linkedClasses;
         }
     }
 }
