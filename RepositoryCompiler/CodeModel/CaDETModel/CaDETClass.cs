@@ -9,6 +9,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public string Name { get; set; }
         public string FullName { get; set; }
         public string SourceCode { get; set; }
+        public CaDETClass Parent { get; set; }
         public List<CaDETMember> Methods { get; set; }
         public List<CaDETMember> Fields { get; set; }
         public CaDETClassMetrics Metrics { get; set; }

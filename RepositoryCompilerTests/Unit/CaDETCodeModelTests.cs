@@ -124,5 +124,21 @@ namespace RepositoryCompilerTests.Unit
             doctor.IsDataClass().ShouldBeTrue();
             service.IsDataClass().ShouldBeFalse();
         }
+        [Fact]
+        public void Establishes_correct_class_hierarchy()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetClassesWithHierarchy());
+
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var employee = classes.Find(c => c.Name.Equals("Employee"));
+            var entity = classes.Find(c => c.Name.Equals("Entity"));
+            doctor.Parent.ShouldBe(employee);
+            employee.Parent.ShouldBe(entity);
+            entity.Parent.ShouldBeNull();
+            doctor.FindMethod("Doctor").AccessedFieldsAndAccessors.ShouldContain(employee.FindMethod("Email"));
+            employee.FindMethod("Employee").AccessedFieldsAndAccessors.ShouldContain(entity.FindMethod("Id"));
+        }
     }
 }

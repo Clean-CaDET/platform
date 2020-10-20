@@ -55,13 +55,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private CaDETClass ParseClass(SemanticModel semanticModel, ClassDeclarationSyntax node)
         {
             var symbol = semanticModel.GetDeclaredSymbol(node);
-
             var parsedClass = new CaDETClass
             {
                 Name = symbol.Name,
                 FullName = symbol.ToDisplayString(),
                 SourceCode = node.ToString()
             };
+            parsedClass.Parent = new CaDETClass {Name = symbol.BaseType.ToString()};
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
             parsedClass.Methods = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
 
@@ -168,6 +168,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             foreach (var c in classes)
             {
+                c.Parent = LinkParent(classes, c.Parent);
                 foreach (var method in c.Methods)
                 {
                     if (method.InvokedMethods == null) continue;
@@ -176,6 +177,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 }
             }
             return classes;
+        }
+
+        private CaDETClass LinkParent(List<CaDETClass> classes, CaDETClass parent)
+        {
+            if (parent.Name.Equals("object")) return null;
+            foreach (var c in classes)
+            {
+                if (c.FullName.Equals(parent.Name)) return c;
+            }
+
+            return null;
         }
 
         private ISet<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, ISet<CaDETMember> stubMembers)
