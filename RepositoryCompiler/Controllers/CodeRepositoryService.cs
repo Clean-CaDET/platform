@@ -1,8 +1,7 @@
-﻿using RepositoryCompiler.RepositoryAdapters;
-using System.Collections.Generic;
-using System.Linq;
-using RepositoryCompiler.CodeModel;
+﻿using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.RepositoryAdapters;
+using System.Collections.Generic;
 
 namespace RepositoryCompiler.Controllers
 {
@@ -54,7 +53,7 @@ namespace RepositoryCompiler.Controllers
         public CaDETClass BuildClassModel(string sourceCode)
         {
             CodeModelBuilder codeBuilder = new CodeModelBuilder(LanguageEnum.CSharp);
-            return codeBuilder.BuildCodeModel(sourceCode).First();
+            return codeBuilder.BuildCodeModel(sourceCode);
         }
     }
 }

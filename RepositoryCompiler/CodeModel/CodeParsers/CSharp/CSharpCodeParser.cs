@@ -62,8 +62,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 FullName = symbol.ToDisplayString(),
                 SourceCode = node.ToString()
             };
-            parsedClass.Methods = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
+            parsedClass.Methods = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
 
             return parsedClass;
         }
@@ -146,7 +146,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
                 if (symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
-                //Create stub method that will be replaced when all classes are parsed.
+                //The code below creates a stub method that will be replaced when all classes are parsed and linking is performed.
                 methods.Add(new CaDETMember { Name = symbol.ContainingType + _separator + symbol.Name });
             }
 
