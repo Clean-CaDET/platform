@@ -13,6 +13,11 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public List<CaDETMember> Fields { get; set; }
         public CaDETClassMetrics Metrics { get; set; }
 
+        public CaDETMember FindMethod(string name)
+        {
+            return Methods.Find(method => method.Name.Equals(name));
+        }
+
         public bool IsDataClass()
         {
             double numOfAccessors = Methods.Count(m => m.IsSimpleAccessor());

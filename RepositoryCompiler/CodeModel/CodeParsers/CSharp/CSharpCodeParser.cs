@@ -202,7 +202,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private CaDETMember FindLinkedMember(CaDETClass linkingClass, string memberName)
         {
-            var linkedMember = linkingClass.Methods.Find(m => m.Name.Equals(memberName));
+            var linkedMember = linkingClass.FindMethod(memberName);
             return linkedMember ?? linkingClass.Fields.Find(m => m.Name.Equals(memberName));
         }
     }
