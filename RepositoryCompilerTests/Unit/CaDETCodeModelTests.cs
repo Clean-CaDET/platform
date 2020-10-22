@@ -111,6 +111,23 @@ namespace RepositoryCompilerTests.Unit
             dateRange.Metrics.LCOM.ShouldBe(0);
             doctor.Metrics.LCOM.ShouldBe(0.75);
         }
+
+        [Fact]
+        public void Calculates_tight_class_cohesion()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetTCCMultipleClassTexts());
+
+            var class6 = classes.Find(c => c.Name.Equals("Class6"));
+            var class7 = classes.Find(c => c.Name.Equals("Class7"));
+            var class8 = classes.Find(c => c.Name.Equals("Class8"));
+
+            class6.Metrics.TCC.ShouldBe(0.6666666666666666);
+            class7.Metrics.TCC.ShouldBe(0.5);
+            class8.Metrics.TCC.ShouldBe(0.5);
+        }
+     
         [Fact]
         public void Determines_if_is_data_class()
         {
