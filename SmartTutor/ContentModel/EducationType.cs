@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.CodeModel
+﻿namespace SmartTutor.ContentModel
 {
     public class EducationType
     {
