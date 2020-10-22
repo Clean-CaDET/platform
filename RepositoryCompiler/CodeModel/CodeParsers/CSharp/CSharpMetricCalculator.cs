@@ -100,7 +100,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         /// <returns></returns>
         private int GetNumberOfParameters(MemberDeclarationSyntax method)
         {
-            //TODO: Figure out why is paramLists.FIRST() ?
+            // We use First because we have others lambda expressions in this parsed paramLists
+            // they(lambda expression) are second, third... 
+            // But we only need function params and we take it from FIRST
             var paramLists = method.DescendantNodes().OfType<ParameterListSyntax>().ToList();
             return !paramLists.Any() ? 0 : paramLists.First().Parameters.Count;
         }
