@@ -8,7 +8,8 @@ namespace SmartTutor.ContentModel
     public class EducationSnippet
     {
         public int SnippetQuaility { get; set; }
-        public EducationType Snippet { get; set; }
+        public EducationType EducationType { get; set; }
         public List<Tag> Tags { get; set; }
+        public string Content { get; set; }
     }
 }
