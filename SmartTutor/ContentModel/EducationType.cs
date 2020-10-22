@@ -6,6 +6,7 @@
         LongText,
         ShortText,
         Video,
+        Image,
         Diagram
     }
 }
