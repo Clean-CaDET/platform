@@ -72,13 +72,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Method));
         }
 
-        public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member)
+        public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member, CaDETMember method)
         {
             return new CaDETMemberMetrics
             {
                 CYCLO = CalculateCyclomaticComplexity(member),
                 LOC = GetLinesOfCode(member.ToString()),
-                NOP = GetNumberOfParameters(member),
+                NOP = GetNumberOfParameters(method),
                 NOLV = GetNumberOfLocalVariables(member)
             };
         }
@@ -98,13 +98,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        private int GetNumberOfParameters(MemberDeclarationSyntax method)
+        private int GetNumberOfParameters(CaDETMember method)
         {
-            // We use First because we have others lambda expressions in this parsed paramLists
-            // they(lambda expression) are second, third... 
-            // But we only need function params and we take it from FIRST
-            var paramLists = method.DescendantNodes().OfType<ParameterListSyntax>().ToList();
-            return !paramLists.Any() ? 0 : paramLists.First().Parameters.Count;
+            return method.Params.Count;
         }
 
         private int GetLinesOfCode(string code)
