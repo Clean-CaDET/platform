@@ -30,6 +30,8 @@ namespace RepositoryCompilerTests.Unit
             doctorClass.Methods.ShouldContain(method =>
                 method.Type.Equals(CaDETMemberType.Method) && method.Name.Equals("IsAvailable"));
             doctorClass.Methods.First().Parent.SourceCode.ShouldBe(doctorClass.SourceCode);
+            doctorClass.FindMethod("Email").Modifiers.First().Value.ShouldBe(CaDETModifierValue.Public);
+            doctorClass.FindMethod("IsAvailable").Modifiers.First().Value.ShouldBe(CaDETModifierValue.Internal);
         }
 
         [Fact]
@@ -134,11 +136,10 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.Methods.Find(method => method.Name.Equals("CheckForNewCommits")).Metrics.NOP.ShouldBe(0);
-            gitClass.Methods.Find(method => method.Name.Equals("PullChanges")).Metrics.NOP.ShouldBe(0);
-            gitClass.Methods.Find(method => method.Name.Equals("GetCommits")).Metrics.NOP.ShouldBe(1);
-            gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).Metrics.NOP.ShouldBe(1);
-
+            gitClass.FindMethod("CheckForNewCommits").Metrics.NOP.ShouldBe(0);
+            gitClass.FindMethod("PullChanges").Metrics.NOP.ShouldBe(0);
+            gitClass.FindMethod("GetCommits").Metrics.NOP.ShouldBe(1);
+            gitClass.FindMethod("CheckoutCommit").Metrics.NOP.ShouldBe(1);
         }
 
         [Fact]
@@ -149,8 +150,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.Methods.Find(method => method.Name.Equals("CheckForNewCommits")).Metrics.NOLV.ShouldBe(2);
-            gitClass.Methods.Find(method => method.Name.Equals("GetActiveCommit")).Metrics.NOLV.ShouldBe(0);
+            gitClass.FindMethod("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);
+            gitClass.FindMethod("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
         }
 
 

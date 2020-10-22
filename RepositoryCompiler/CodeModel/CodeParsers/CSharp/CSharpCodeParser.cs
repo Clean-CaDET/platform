@@ -62,6 +62,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 FullName = symbol.ToDisplayString(),
                 SourceCode = node.ToString()
             };
+            parsedClass.Modifiers = GetModifiers(node);
             parsedClass.Parent = new CaDETClass {Name = symbol.BaseType.ToString()};
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
             parsedClass.Methods = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
@@ -80,7 +81,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                     {
                         Name = field.Identifier.Text,
                         Parent = parent,
-                        Type = CaDETMemberType.Field
+                        Type = CaDETMemberType.Field,
+                        Modifiers = GetModifiers(node)
                     }));
             }
             
@@ -93,6 +95,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 CaDETMember method = CreateMethodBasedOnMemberType(member);
                 if(method == null) continue;
+                method.Modifiers = GetModifiers(member);
                 method.SourceCode = member.ToString();
                 method.Parent = parent;
                 method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
@@ -104,30 +107,23 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return methods;
         }
 
-        private List<string> GetMethodParams(MemberDeclarationSyntax member)
+        private List<CaDETModifier> GetModifiers(MemberDeclarationSyntax member)
         {
-            List<String> memberParams = new List<String>();
-            // We use First because we have others lambda expressions in this parsed paramLists
-            // they(lambda expression) are second, third... 
-            // But we only need function params and we take it from FIRST
-            var paramLists = member.DescendantNodes().OfType<ParameterListSyntax>().ToList();
-   
-            if (paramLists.Any())
-            {
-                var parameters = paramLists.First().Parameters;
-                foreach (var parameter in parameters)
-                {
-                    // Place for adding more info about parameter
-                    memberParams.Add(parameter.Identifier.ValueText);
-                }
-            }
-            
-
-            return memberParams;
+            return member.Modifiers.Select(modifier => new CaDETModifier(modifier.ValueText)).ToList();
         }
 
-        
+        private List<string> GetMethodParams(MemberDeclarationSyntax member)
+        {
+            List<string> memberParams = new List<string>();
+            // We use First because we have others lambda expressions in this parsed paramLists
+            // lambda expressions are second, third... but we only need function params and we take it from FIRST
+            var paramLists = member.DescendantNodes().OfType<ParameterListSyntax>().ToList();
+            if (!paramLists.Any()) return memberParams;
 
+            var parameters = paramLists.First().Parameters;
+            memberParams.AddRange(parameters.Select(parameter => parameter.Identifier.ValueText));
+            return memberParams;
+        }
 
         private CaDETMember CreateMethodBasedOnMemberType(MemberDeclarationSyntax member)
         {

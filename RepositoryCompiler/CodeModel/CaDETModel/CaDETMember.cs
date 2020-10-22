@@ -8,14 +8,12 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public CaDETMemberType Type { get; set; }
         public string SourceCode { get; set; }
         public CaDETClass Parent { get; set; }
-        public CaDETMemberMetrics Metrics { get; set; }
-        // TODO: Make model for Params
         public List<string> Params { get; set; }
+        public List<CaDETModifier> Modifiers { get; set; }
         public ISet<CaDETMember> InvokedMethods { get; set; }
-        //TODO: FDP, LAA, ATFD (http://www.simpleorientedarchitecture.com/how-to-identify-feature-envy-using-ndepend/) can be calculated
-        //Contains fields and properties accessed by method belonging to this and other objects
         public ISet<CaDETMember> AccessedFieldsAndAccessors { get; set; }
-        
+        public CaDETMemberMetrics Metrics { get; set; }
+
         public override bool Equals(object? other)
         {
             if(!(other is CaDETMember otherMember)) return false;
