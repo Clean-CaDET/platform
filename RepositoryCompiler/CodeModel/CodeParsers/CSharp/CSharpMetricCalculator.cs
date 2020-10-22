@@ -83,13 +83,24 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             };
         }
 
+        /// <summary>
+        /// DOI: 10.1002/smr.2255
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
         private int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<VariableDeclarationSyntax>().Count();
         }
 
+        /// <summary>
+        /// DOI: 10.1002/smr.2255
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
         private int GetNumberOfParameters(MemberDeclarationSyntax method)
         {
+            //TODO: Figure out why is paramLists.FIRST() ?
             var paramLists = method.DescendantNodes().OfType<ParameterListSyntax>().ToList();
             return !paramLists.Any() ? 0 : paramLists.First().Parameters.Count;
         }
