@@ -90,8 +90,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int GetNumberOfParameters(MemberDeclarationSyntax method)
         {
-            // First because of structure type of 'OfType<ParameterListSyntax>()'
-            // return method.DescendantNodes().OfType<ParameterListSyntax>().First().Parameters.Count;
             var paramLists = method.DescendantNodes().OfType<ParameterListSyntax>().ToList();
             return !paramLists.Any() ? 0 : paramLists.First().Parameters.Count;
         }
