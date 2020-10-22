@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
@@ -17,7 +18,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NMD = GetNumberOfMethodsDeclared(parsedClass),
                 NAD = GetNumberOfAttributesDefined(parsedClass),
                 WMC = GetWeightedMethodPerClass(parsedClass),
-                LCOM = GetLackOfCohesionOfMethods(parsedClass)
+                LCOM = GetLackOfCohesionOfMethods(parsedClass),
+                TCC = GetTightOfCohesion(parsedClass)
             };
         }
 
@@ -33,6 +35,60 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
             return Math.Round(1 - methodFieldAccess/maxCohesion, 3);
+        }
+
+        private double? GetTightOfCohesion(CaDETClass parsedClass)
+        {
+            int N = GetNumberOfMethodsDeclared(parsedClass);
+            double NP = (N * (N - 1)) / 2;
+            if (NP == 0) return null;
+
+            return NumberOfDirectConnections(parsedClass) / NP;
+        }
+
+        private int NumberOfDirectConnections(CaDETClass parsedClass)
+        {
+            int mapIndex = 1;
+            var map = new Dictionary<int, List<CaDETMember>>();
+
+            foreach (var method in parsedClass.Methods)
+            {
+                map.Add(mapIndex, OwnAccessedFieldsAndAccessors(method));
+                mapIndex++;
+            }
+
+            int countDirectConnections = 0;
+
+            foreach (var pair1 in map)
+            {
+                List<CaDETMember> ownAccessedFieldsAndAccessors1 = pair1.Value;
+                foreach (var pair2 in map)
+                {
+                    List<CaDETMember> ownAccessedFieldsAndAccessors2 = pair2.Value;
+                    bool hasSameElements = ownAccessedFieldsAndAccessors1.Intersect(ownAccessedFieldsAndAccessors2).Any();
+
+                    if (hasSameElements && (pair1.Key != pair2.Key))
+                    {
+                        countDirectConnections++;
+                        break;
+                    }
+                }
+            }
+            return countDirectConnections;
+        }
+
+        private List<CaDETMember> OwnAccessedFieldsAndAccessors(CaDETMember method)
+        {
+            List<CaDETMember> ownAccessedFieldsAndAccessors = new List<CaDETMember>();
+
+            foreach (var accessedFieldAndAccessor in method.AccessedFieldsAndAccessors)
+            {
+                if (accessedFieldAndAccessor.Parent == method.Parent)
+                {
+                    ownAccessedFieldsAndAccessors.Add(accessedFieldAndAccessor);
+                }
+            }
+            return ownAccessedFieldsAndAccessors;
         }
 
         private int GetNumberOfSimpleAccessors(CaDETClass parsedClass)

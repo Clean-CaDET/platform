@@ -153,8 +153,6 @@ namespace RepositoryCompilerTests.Unit
             gitClass.Methods.Find(method => method.Name.Equals("GetActiveCommit")).Metrics.NOLV.ShouldBe(0);
         }
 
-
-
         [Fact]
         public void Establishes_correct_class_hierarchy()
         {

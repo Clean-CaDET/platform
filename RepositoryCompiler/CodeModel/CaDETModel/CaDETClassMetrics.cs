@@ -7,5 +7,6 @@
         public int NMD { get; set; }
         public int NAD { get; set; }
         public int WMC { get; set; }
+        public double? TCC { get; set; }
     }
 }
