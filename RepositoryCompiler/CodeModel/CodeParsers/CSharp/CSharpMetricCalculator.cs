@@ -72,13 +72,35 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Method));
         }
 
-        public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member)
+        public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member, CaDETMember method)
         {
             return new CaDETMemberMetrics
             {
                 CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = GetLinesOfCode(member.ToString())
+                LOC = GetLinesOfCode(member.ToString()),
+                NOP = GetNumberOfParameters(method),
+                NOLV = GetNumberOfLocalVariables(member)
             };
+        }
+
+        /// <summary>
+        /// DOI: 10.1002/smr.2255
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        private int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<VariableDeclarationSyntax>().Count();
+        }
+
+        /// <summary>
+        /// DOI: 10.1002/smr.2255
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        private int GetNumberOfParameters(CaDETMember method)
+        {
+            return method.Params.Count;
         }
 
         private int GetLinesOfCode(string code)

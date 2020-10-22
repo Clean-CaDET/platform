@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
     public class CSharpCodeParser : ICodeParser
@@ -96,11 +97,37 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 method.Parent = parent;
                 method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
                 method.AccessedFieldsAndAccessors = CalculateAccessedFieldsAndAccessors(member, semanticModel);
-                method.Metrics = _metricCalculator.CalculateMemberMetrics(member);
+                method.Params = GetMethodParams(member); // It's important to first get methods params and at end calculate metrics, because of NOP (example)
+                method.Metrics = _metricCalculator.CalculateMemberMetrics(member, method);
                 methods.Add(method);
             }
             return methods;
         }
+
+        private List<string> GetMethodParams(MemberDeclarationSyntax member)
+        {
+            List<String> memberParams = new List<String>();
+            // We use First because we have others lambda expressions in this parsed paramLists
+            // they(lambda expression) are second, third... 
+            // But we only need function params and we take it from FIRST
+            var paramLists = member.DescendantNodes().OfType<ParameterListSyntax>().ToList();
+   
+            if (paramLists.Any())
+            {
+                var parameters = paramLists.First().Parameters;
+                foreach (var parameter in parameters)
+                {
+                    // Place for adding more info about parameter
+                    memberParams.Add(parameter.Identifier.ValueText);
+                }
+            }
+            
+
+            return memberParams;
+        }
+
+        
+
 
         private CaDETMember CreateMethodBasedOnMemberType(MemberDeclarationSyntax member)
         {
