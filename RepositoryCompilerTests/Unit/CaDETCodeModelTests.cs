@@ -41,8 +41,8 @@ namespace RepositoryCompilerTests.Unit
 
             var doctorClass = classes.First();
             doctorClass.Metrics.LOC.ShouldBe(22);
-            doctorClass.Methods.Find(method => method.Name.Equals("Email")).Metrics.LOC.ShouldBe(1);
-            doctorClass.Methods.Find(method => method.Name.Equals("IsAvailable")).Metrics.LOC.ShouldBe(8);
+            doctorClass.FindMethod("Email").Metrics.LOC.ShouldBe(1);
+            doctorClass.FindMethod("IsAvailable").Metrics.LOC.ShouldBe(8);
         }
 
         [Fact]
@@ -53,9 +53,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.Methods.Find(method => method.Name.Equals("CheckoutCommit")).Metrics.CYCLO.ShouldBe(2);
-            gitClass.Methods.Find(method => method.Name.Equals("ParseDocuments")).Metrics.CYCLO.ShouldBe(4);
 
+            gitClass.FindMethod("CheckoutCommit").Metrics.CYCLO.ShouldBe(2);
+            gitClass.FindMethod("ParseDocuments").Metrics.CYCLO.ShouldBe(4);
         }
 
         [Fact]
@@ -78,9 +78,9 @@ namespace RepositoryCompilerTests.Unit
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
-            var overlapsWith = dateRange.Methods.Find(m => m.Name.Equals("OverlapsWith"));
-            var logChecked = service.Methods.Find(m => m.Name.Equals("LogChecked"));
-            var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
+            var overlapsWith = dateRange.FindMethod("OverlapsWith");
+            var logChecked = service.FindMethod("LogChecked");
+            var findDoctors = service.FindMethod("FindAvailableDoctor");
             findDoctors.InvokedMethods.ShouldContain(overlapsWith);
             findDoctors.InvokedMethods.ShouldContain(logChecked);
         }
@@ -94,9 +94,8 @@ namespace RepositoryCompilerTests.Unit
 
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
-            var holidayDates = doctor.Methods.Find(m =>
-                m.Name.Equals("HolidayDates") && m.Type.Equals(CaDETMemberType.Property));
-            var findDoctors = service.Methods.Find(m => m.Name.Equals("FindAvailableDoctor"));
+            var holidayDates = doctor.FindMethod("HolidayDates");
+            var findDoctors = service.FindMethod("FindAvailableDoctor");
             findDoctors.AccessedFieldsAndAccessors.ShouldContain(holidayDates);
         }
 
@@ -155,5 +154,22 @@ namespace RepositoryCompilerTests.Unit
         }
 
 
+
+        [Fact]
+        public void Establishes_correct_class_hierarchy()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetClassesWithHierarchy());
+
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var employee = classes.Find(c => c.Name.Equals("Employee"));
+            var entity = classes.Find(c => c.Name.Equals("Entity"));
+            doctor.Parent.ShouldBe(employee);
+            employee.Parent.ShouldBe(entity);
+            entity.Parent.ShouldBeNull();
+            doctor.FindMethod("Doctor").AccessedFieldsAndAccessors.ShouldContain(employee.FindMethod("Email"));
+            employee.FindMethod("Employee").AccessedFieldsAndAccessors.ShouldContain(entity.FindMethod("Id"));
+        }
     }
 }

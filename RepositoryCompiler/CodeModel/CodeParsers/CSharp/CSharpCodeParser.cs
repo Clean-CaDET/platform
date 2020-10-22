@@ -25,8 +25,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         public List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode)
         {
             ParseSyntaxTrees(sourceCode);
-            List<CaDETClass> retVal = ParseClasses();
-            return LinkClasses(retVal);
+            var parsedClasses = ParseClasses();
+            var linkedClasses = LinkClasses(parsedClasses);
+            return AddClassMetrics(linkedClasses);
         }
 
         private void ParseSyntaxTrees(IEnumerable<string> sourceCode)
@@ -55,15 +56,15 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private CaDETClass ParseClass(SemanticModel semanticModel, ClassDeclarationSyntax node)
         {
             var symbol = semanticModel.GetDeclaredSymbol(node);
-
             var parsedClass = new CaDETClass
             {
                 Name = symbol.Name,
                 FullName = symbol.ToDisplayString(),
                 SourceCode = node.ToString()
             };
-            parsedClass.Methods = ParseMethods(node.Members, parsedClass, semanticModel);
+            parsedClass.Parent = new CaDETClass {Name = symbol.BaseType.ToString()};
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
+            parsedClass.Methods = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
 
             return parsedClass;
         }
@@ -85,7 +86,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             
             return fields;
         }
-        private List<CaDETMember> ParseMethods(IEnumerable<MemberDeclarationSyntax> members, CaDETClass parent, SemanticModel semanticModel)
+        private List<CaDETMember> ParseMethodsAndCalculateMetrics(IEnumerable<MemberDeclarationSyntax> members, CaDETClass parent, SemanticModel semanticModel)
         {
             var methods = new List<CaDETMember>();
             foreach (var member in members)
@@ -172,7 +173,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
                 if (symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
-                //Create stub method that will be replaced when all classes are parsed.
+                //The code below creates a stub method that will be replaced when all classes are parsed and linking is performed.
                 methods.Add(new CaDETMember { Name = symbol.ContainingType + _separator + symbol.Name });
             }
 
@@ -194,15 +195,26 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             foreach (var c in classes)
             {
+                c.Parent = LinkParent(classes, c.Parent);
                 foreach (var method in c.Methods)
                 {
                     if (method.InvokedMethods == null) continue;
                     method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
                     method.AccessedFieldsAndAccessors = LinkInvokedMembers(classes, method.AccessedFieldsAndAccessors);
                 }
-                c.Metrics = _metricCalculator.CalculateClassMetrics(c);
             }
             return classes;
+        }
+
+        private CaDETClass LinkParent(List<CaDETClass> classes, CaDETClass parent)
+        {
+            if (parent.Name.Equals("object")) return null;
+            foreach (var c in classes)
+            {
+                if (c.FullName.Equals(parent.Name)) return c;
+            }
+
+            return null;
         }
 
         private ISet<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, ISet<CaDETMember> stubMembers)
@@ -229,8 +241,18 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private CaDETMember FindLinkedMember(CaDETClass linkingClass, string memberName)
         {
-            var linkedMember = linkingClass.Methods.Find(m => m.Name.Equals(memberName));
+            var linkedMember = linkingClass.FindMethod(memberName);
             return linkedMember ?? linkingClass.Fields.Find(m => m.Name.Equals(memberName));
+        }
+
+        private List<CaDETClass> AddClassMetrics(List<CaDETClass> linkedClasses)
+        {
+            foreach (var c in linkedClasses)
+            {
+                c.Metrics = _metricCalculator.CalculateClassMetrics(c);
+            }
+
+            return linkedClasses;
         }
     }
 }

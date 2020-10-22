@@ -16,6 +16,17 @@ namespace RepositoryCompiler.CodeModel
             _language = language;
         }
 
+        public List<CaDETClass> BuildCodeModel(IEnumerable<string> codeTexts)
+        {
+            ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
+            return codeParser.GetParsedClasses(codeTexts);
+        }
+
+        public CaDETClass BuildCodeModel(string sourceCode)
+        {
+            return BuildCodeModel(new List<string> { sourceCode }).First();
+        }
+
         public CaDETProject ParseFiles(string sourceCodeLocation)
         {
             string[] allFiles = Directory.GetFiles(sourceCodeLocation, GetLanguageExtension(), SearchOption.AllDirectories);
@@ -29,17 +40,6 @@ namespace RepositoryCompiler.CodeModel
                 case LanguageEnum.CSharp: return "*.cs";
                 default: throw new InvalidEnumArgumentException();
             }
-        }
-
-        public List<CaDETClass> BuildCodeModel(IEnumerable<string> codeTexts)
-        {
-            ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
-            return codeParser.GetParsedClasses(codeTexts);
-        }
-
-        public List<CaDETClass> BuildCodeModel(string sourceCode)
-        {
-            return BuildCodeModel(new List<string> {sourceCode});
         }
     }
 }

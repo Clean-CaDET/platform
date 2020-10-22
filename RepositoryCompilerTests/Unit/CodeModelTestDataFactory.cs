@@ -1,8 +1,4 @@
 ﻿using System.Collections.Generic;
-using RepositoryCompiler.CodeModel;
-using RepositoryCompiler.CodeModel.CaDETModel;
-using Shouldly;
-using Xunit;
 
 namespace RepositoryCompilerTests.Unit
 {
@@ -282,6 +278,77 @@ namespace RepositoryCompilerTests.Unit
                     public Doctor(string name, string email)
                     {
                         Name = name;
+                        Email = email;
+                        HolidayDates = new List<DateRange>();
+                    }
+
+                    public void ProcessTest()
+                    {
+                        Test = null;
+                    }
+
+                    public string GetTwoNames()
+                    {
+                        return Name + Name;
+                    }
+
+                    public string GetThreeEmails()
+                    {
+                        return Email + Email + Email;
+                    }
+                }
+            }"
+            };
+        }
+
+        public IEnumerable<string> GetClassesWithHierarchy()
+        {
+            return new[]
+            {
+                @"
+            using System.Collections.Generic;
+            namespace DoctorApp.Model.Data
+            {
+                public class Entity
+                {
+                    public int Id { get; set; }
+
+                    public Entity() {}
+                    
+                    public Entity(int id)
+                    {
+                        Id = id;
+                    }
+                }
+            }",
+                @"
+            using System.Collections.Generic;
+            namespace DoctorApp.Model.Data
+            {
+                public class Employee: Entity
+                {
+                    public string Name { get; set; }
+                    public string Email { get; set; }
+                    
+                    public Employee(int id, string name)
+                    {
+                        Id = id;
+                        Name = name;
+                    }
+                }
+            }",
+                @"
+            using System.Collections.Generic;
+            namespace DoctorApp.Model.Data
+            {
+                public class Doctor: Employee
+                {
+                    public string Test;
+                    public List<DateRange> HolidayDates { get; set; }
+
+                    public Doctor(string name, string email, int id)
+                    {
+                        base(id, name);
                         Email = email;
                         HolidayDates = new List<DateRange>();
                     }
