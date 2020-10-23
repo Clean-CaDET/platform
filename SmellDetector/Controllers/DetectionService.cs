@@ -5,13 +5,13 @@ public class DetectionService
 {
     public DetectionService() { }
 
-    public SmellType classCheck(ClassMetricsDTO metrics)
+    public SmellType classCheck(MetricsDTO metrics)
     {
         // TODO: Add check for class
         throw new NotImplementedException();
     }
 
-    public SmellType functionCheck(FunctionMetricsDTO metrics)
+    public SmellType functionCheck(MetricsDTO metrics)
     {
         // TODO: Add check for functions
         throw new NotImplementedException();
