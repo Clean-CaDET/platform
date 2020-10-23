@@ -5,6 +5,7 @@ public class LongParamLists : SmellRule
 {
     public override bool isBadSmell(MetricsDTO metrics)
     {
-        throw new NotImplementedException();
+        if (metrics.NOP > 5) return true;
+        return false;
     }
 }
