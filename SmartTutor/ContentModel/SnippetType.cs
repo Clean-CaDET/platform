@@ -1,6 +1,6 @@
 ﻿namespace SmartTutor.ContentModel
 {
-    public enum EducationType
+    public enum SnippetType
     {
         CodeSnippet,
         LongText,
