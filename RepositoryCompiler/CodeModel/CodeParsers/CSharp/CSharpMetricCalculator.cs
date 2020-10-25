@@ -19,7 +19,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NAD = GetNumberOfAttributesDefined(parsedClass),
                 WMC = GetWeightedMethodPerClass(parsedClass),
                 LCOM = GetLackOfCohesionOfMethods(parsedClass),
-                TCC = GetTightOfCohesion(parsedClass)
+                TCC = GetTightClassCohesion(parsedClass)
             };
         }
 
@@ -37,7 +37,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return Math.Round(1 - methodFieldAccess/maxCohesion, 3);
         }
 
-        private double? GetTightOfCohesion(CaDETClass parsedClass)
+        private double? GetTightClassCohesion(CaDETClass parsedClass)
         {
             int N = GetNumberOfMethodsDeclared(parsedClass);
             double NP = (N * (N - 1)) / 2;
