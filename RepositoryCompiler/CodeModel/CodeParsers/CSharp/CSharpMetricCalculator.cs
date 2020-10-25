@@ -40,41 +40,43 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private double? GetTightClassCohesion(CaDETClass parsedClass)
         {
             int N = GetNumberOfMethodsDeclared(parsedClass);
+           
             double NP = (N * (N - 1)) / 2;
             if (NP == 0) return null;
 
-            return NumberOfDirectConnections(parsedClass) / NP;
+            return GetNumberOfDirectConnections(parsedClass) / NP;
         }
 
-        private int NumberOfDirectConnections(CaDETClass parsedClass)
+        private int GetNumberOfDirectConnections(CaDETClass parsedClass)
         {
-            int mapIndex = 1;
-            var map = new Dictionary<int, List<CaDETMember>>();
+            var ownAccessedFieldsAndAccessors = new Dictionary<string, List<CaDETMember>>();
 
             foreach (var method in parsedClass.Methods)
             {
-                map.Add(mapIndex, OwnAccessedFieldsAndAccessors(method));
-                mapIndex++;
+                ownAccessedFieldsAndAccessors.Add(method.Name, OwnAccessedFieldsAndAccessors(method));
             }
 
-            int countDirectConnections = 0;
+            return CountNumberOfDirectConnections(ownAccessedFieldsAndAccessors);
+        }
 
-            foreach (var pair1 in map)
+        private static int CountNumberOfDirectConnections(Dictionary<string, List<CaDETMember>> ownAccessedFieldsAndAccessors)
+        {
+            int directConnections = 0;
+
+            foreach (var ownAccessedFieldAndAccessor1 in ownAccessedFieldsAndAccessors)
             {
-                List<CaDETMember> ownAccessedFieldsAndAccessors1 = pair1.Value;
-                foreach (var pair2 in map)
-                {
-                    List<CaDETMember> ownAccessedFieldsAndAccessors2 = pair2.Value;
-                    bool hasSameElements = ownAccessedFieldsAndAccessors1.Intersect(ownAccessedFieldsAndAccessors2).Any();
+                foreach (var ownAccessedFieldAndAccessor2 in ownAccessedFieldsAndAccessors)
+                {      
+                    bool hasSameElements = ownAccessedFieldAndAccessor1.Value.Intersect(ownAccessedFieldAndAccessor2.Value).Any();
 
-                    if (hasSameElements && (pair1.Key != pair2.Key))
+                    if (hasSameElements && !(ownAccessedFieldAndAccessor1.Key.Equals(ownAccessedFieldAndAccessor2.Key)))
                     {
-                        countDirectConnections++;
+                        directConnections++;
                         break;
                     }
                 }
             }
-            return countDirectConnections;
+            return directConnections;
         }
 
         private List<CaDETMember> OwnAccessedFieldsAndAccessors(CaDETMember method)
