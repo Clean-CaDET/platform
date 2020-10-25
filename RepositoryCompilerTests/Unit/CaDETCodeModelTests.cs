@@ -1,6 +1,7 @@
 ﻿using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -123,7 +124,7 @@ namespace RepositoryCompilerTests.Unit
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
             var class8 = classes.Find(c => c.Name.Equals("Class8"));
 
-            class6.Metrics.TCC.ShouldBe(0.6666666666666666);
+            Math.Round((double)class6.Metrics.TCC, 2).ShouldBe(0.67);
             class7.Metrics.TCC.ShouldBe(0.5);
             class8.Metrics.TCC.ShouldBe(0.5);
         }
