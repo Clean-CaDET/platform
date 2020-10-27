@@ -29,7 +29,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             if (maxCohesion == 0) return null;
 
             double methodFieldAccess = 0;
-            foreach (var method in parsedClass.Methods.Where(method => method.Type.Equals(CaDETMemberType.Method)))
+            foreach (var method in parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)))
             {
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
@@ -38,19 +38,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int GetNumberOfSimpleAccessors(CaDETClass parsedClass)
         {
-            return parsedClass.Methods.Count(method => method.IsSimpleAccessor());
+            return parsedClass.Members.Count(method => method.IsSimpleAccessor());
         }
 
         private int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
         {
-            int counter = 0;
-            foreach (var fieldOrAccessor in method.AccessedFieldsAndAccessors)
-            {
-                if (Enumerable.Contains(parsedClass.Fields, fieldOrAccessor) || Enumerable.Contains(parsedClass.Methods, fieldOrAccessor))
-                {
-                    counter++;
-                }
-            }
+            int counter = method.AccessedFields.Count(field => Enumerable.Contains(parsedClass.Fields, field));
+            counter += method.AccessedAccessors.Count(accessor => Enumerable.Contains(parsedClass.Members, accessor));
 
             return counter;
         }
@@ -58,7 +52,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int GetWeightedMethodPerClass(CaDETClass parsedClass)
         {
             //Defined based on 10.1109/32.295895
-            return parsedClass.Methods.Sum(method => method.Metrics.CYCLO);
+            return parsedClass.Members.Sum(method => method.Metrics.CYCLO);
         }
         
         private int GetNumberOfAttributesDefined(CaDETClass parsedClass)
@@ -70,7 +64,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
         {
-            return parsedClass.Methods.Count(method => method.Type.Equals(CaDETMemberType.Method));
+            return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method));
         }
 
         public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member, CaDETMember method)

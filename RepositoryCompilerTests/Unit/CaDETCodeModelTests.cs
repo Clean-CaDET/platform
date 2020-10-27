@@ -24,14 +24,14 @@ namespace RepositoryCompilerTests.Unit
             var doctorClass = classes.First();
             doctorClass.Metrics.NAD.ShouldBe(0);
             doctorClass.Metrics.NMD.ShouldBe(1);
-            doctorClass.Methods.ShouldContain(method =>
+            doctorClass.Members.ShouldContain(method =>
                 method.Type.Equals(CaDETMemberType.Property) && method.Name.Equals("Email"));
-            doctorClass.Methods.ShouldContain(method => method.Type.Equals(CaDETMemberType.Constructor));
-            doctorClass.Methods.ShouldContain(method =>
+            doctorClass.Members.ShouldContain(method => method.Type.Equals(CaDETMemberType.Constructor));
+            doctorClass.Members.ShouldContain(method =>
                 method.Type.Equals(CaDETMemberType.Method) && method.Name.Equals("IsAvailable"));
-            doctorClass.Methods.First().Parent.SourceCode.ShouldBe(doctorClass.SourceCode);
-            doctorClass.FindMethod("Email").Modifiers.First().Value.ShouldBe(CaDETModifierValue.Public);
-            doctorClass.FindMethod("IsAvailable").Modifiers.First().Value.ShouldBe(CaDETModifierValue.Internal);
+            doctorClass.Members.First().Parent.SourceCode.ShouldBe(doctorClass.SourceCode);
+            doctorClass.FindMember("Email").Modifiers.First().Value.ShouldBe(CaDETModifierValue.Public);
+            doctorClass.FindMember("IsAvailable").Modifiers.First().Value.ShouldBe(CaDETModifierValue.Internal);
         }
 
         [Fact]
@@ -43,8 +43,8 @@ namespace RepositoryCompilerTests.Unit
 
             var doctorClass = classes.First();
             doctorClass.Metrics.LOC.ShouldBe(22);
-            doctorClass.FindMethod("Email").Metrics.LOC.ShouldBe(1);
-            doctorClass.FindMethod("IsAvailable").Metrics.LOC.ShouldBe(8);
+            doctorClass.FindMember("Email").Metrics.LOC.ShouldBe(1);
+            doctorClass.FindMember("IsAvailable").Metrics.LOC.ShouldBe(8);
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace RepositoryCompilerTests.Unit
 
             var gitClass = classes.First();
 
-            gitClass.FindMethod("CheckoutCommit").Metrics.CYCLO.ShouldBe(2);
-            gitClass.FindMethod("ParseDocuments").Metrics.CYCLO.ShouldBe(4);
+            gitClass.FindMember("CheckoutCommit").Metrics.CYCLO.ShouldBe(2);
+            gitClass.FindMember("ParseDocuments").Metrics.CYCLO.ShouldBe(4);
         }
 
         [Fact]
@@ -80,9 +80,9 @@ namespace RepositoryCompilerTests.Unit
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
-            var overlapsWith = dateRange.FindMethod("OverlapsWith");
-            var logChecked = service.FindMethod("LogChecked");
-            var findDoctors = service.FindMethod("FindAvailableDoctor");
+            var overlapsWith = dateRange.FindMember("OverlapsWith");
+            var logChecked = service.FindMember("LogChecked");
+            var findDoctors = service.FindMember("FindAvailableDoctor");
             findDoctors.InvokedMethods.ShouldContain(overlapsWith);
             findDoctors.InvokedMethods.ShouldContain(logChecked);
         }
@@ -96,10 +96,10 @@ namespace RepositoryCompilerTests.Unit
 
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
-            var holidayDates = doctor.FindMethod("HolidayDates");
-            var findDoctors = service.FindMethod("FindAvailableDoctor");
-            findDoctors.AccessedFieldsAndAccessors.ShouldContain(holidayDates);
-            findDoctors.AccessedFieldsAndAccessors.ShouldContain(doctor.Fields.Find(f => f.Name.Equals("Test")));
+            var holidayDates = doctor.FindMember("HolidayDates");
+            var findDoctors = service.FindMember("FindAvailableDoctor");
+            findDoctors.AccessedAccessors.ShouldContain(holidayDates);
+            findDoctors.AccessedFields.ShouldContain(doctor.Fields.Find(f => f.Name.Equals("Test")));
         }
 
         [Fact]
@@ -137,10 +137,10 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.FindMethod("CheckForNewCommits").Metrics.NOP.ShouldBe(0);
-            gitClass.FindMethod("PullChanges").Metrics.NOP.ShouldBe(0);
-            gitClass.FindMethod("GetCommits").Metrics.NOP.ShouldBe(1);
-            gitClass.FindMethod("CheckoutCommit").Metrics.NOP.ShouldBe(1);
+            gitClass.FindMember("CheckForNewCommits").Metrics.NOP.ShouldBe(0);
+            gitClass.FindMember("PullChanges").Metrics.NOP.ShouldBe(0);
+            gitClass.FindMember("GetCommits").Metrics.NOP.ShouldBe(1);
+            gitClass.FindMember("CheckoutCommit").Metrics.NOP.ShouldBe(1);
         }
 
         [Fact]
@@ -151,8 +151,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.FindMethod("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);
-            gitClass.FindMethod("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
+            gitClass.FindMember("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);
+            gitClass.FindMember("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
         }
 
 
@@ -170,8 +170,8 @@ namespace RepositoryCompilerTests.Unit
             doctor.Parent.ShouldBe(employee);
             employee.Parent.ShouldBe(entity);
             entity.Parent.ShouldBeNull();
-            doctor.FindMethod("Doctor").AccessedFieldsAndAccessors.ShouldContain(employee.FindMethod("Email"));
-            employee.FindMethod("Employee").AccessedFieldsAndAccessors.ShouldContain(entity.FindMethod("Id"));
+            doctor.FindMember("Doctor").AccessedAccessors.ShouldContain(employee.FindMember("Email"));
+            employee.FindMember("Employee").AccessedAccessors.ShouldContain(entity.FindMember("Id"));
         }
     }
 }

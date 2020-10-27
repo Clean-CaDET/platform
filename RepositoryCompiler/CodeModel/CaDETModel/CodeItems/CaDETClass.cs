@@ -12,29 +12,34 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public string SourceCode { get; set; }
         public CaDETClass Parent { get; set; }
         public List<CaDETModifier> Modifiers { get; set; }
-        public List<CaDETMember> Methods { get; set; }
-        public List<CaDETMember> Fields { get; set; }
+        public List<CaDETMember> Members { get; set; }
+        public List<CaDETField> Fields { get; set; }
         public CaDETClassMetrics Metrics { get; set; }
 
-        public CaDETMember FindMethod(string name)
+        public CaDETMember FindMember(string name)
         {
-            return Methods.Find(method => method.Name.Equals(name));
+            return Members.Find(method => method.Name.Equals(name));
+        }
+
+        public CaDETField FindField(string name)
+        {
+            return Fields.Find(field => field.Name.Equals(name));
         }
 
         public bool IsDataClass()
         {
-            double numOfAccessors = Methods.Count(m => m.IsSimpleAccessor());
-            double numOfConstructors = Methods.Count(m => m.Type.Equals(CaDETMemberType.Constructor));
+            double numOfAccessors = Members.Count(m => m.IsSimpleAccessor());
+            double numOfConstructors = Members.Count(m => m.Type.Equals(CaDETMemberType.Constructor));
             double numOfObjectOverrides = CountToStringEqualsHashCode();
             //TODO: Create a more elegant solution for thresholds.
             double dataClassThreshold = 0.9;
 
-            return (numOfAccessors + numOfConstructors + numOfObjectOverrides) / Methods.Count > dataClassThreshold;
+            return (numOfAccessors + numOfConstructors + numOfObjectOverrides) / Members.Count > dataClassThreshold;
         }
 
         private double CountToStringEqualsHashCode()
         {
-            return Methods.Count(m => m.Type.Equals(CaDETMemberType.Method) && (
+            return Members.Count(m => m.Type.Equals(CaDETMemberType.Method) && (
                 m.Name.Contains("tostring", StringComparison.CurrentCultureIgnoreCase) ||
                 m.Name.Contains("equals", StringComparison.CurrentCultureIgnoreCase) ||
                 m.Name.Contains("hashcode", StringComparison.CurrentCultureIgnoreCase)));
