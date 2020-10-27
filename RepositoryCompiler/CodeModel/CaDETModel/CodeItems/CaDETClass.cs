@@ -7,14 +7,14 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 {
     public class CaDETClass
     {
-        public string Name { get; set; }
-        public string FullName { get; set; }
-        public string SourceCode { get; set; }
-        public CaDETClass Parent { get; set; }
-        public List<CaDETModifier> Modifiers { get; set; }
-        public List<CaDETMember> Members { get; set; }
-        public List<CaDETField> Fields { get; set; }
-        public CaDETClassMetrics Metrics { get; set; }
+        public string Name { get; internal set; }
+        public string FullName { get; internal set; }
+        public string SourceCode { get; internal set; }
+        public CaDETClass Parent { get; internal set; }
+        public List<CaDETModifier> Modifiers { get; internal set; }
+        public List<CaDETMember> Members { get; internal set; }
+        public List<CaDETField> Fields { get; internal set; }
+        public CaDETClassMetrics Metrics { get; internal set; }
 
         public CaDETMember FindMember(string name)
         {
@@ -28,7 +28,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 
         public bool IsDataClass()
         {
-            double numOfAccessors = Members.Count(m => m.IsSimpleAccessor());
+            double numOfAccessors = Members.Count(m => m.IsFieldDefiningAccessor());
             double numOfConstructors = Members.Count(m => m.Type.Equals(CaDETMemberType.Constructor));
             double numOfObjectOverrides = CountToStringEqualsHashCode();
             //TODO: Create a more elegant solution for thresholds.

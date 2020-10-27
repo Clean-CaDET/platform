@@ -30,13 +30,14 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
             return base.GetHashCode();
         }
 
-        public bool IsSimpleAccessor()
+        public bool IsFieldDefiningAccessor()
         {
             //TODO: This is a workaround that should be reworked https://stackoverflow.com/questions/64009302/roslyn-c-how-to-get-all-fields-and-properties-and-their-belonging-class-acce
             //TODO: It is specific to C# properties. Should move this to CSharpCodeParser so that each language can define its rule for calculating simple accessors.
+            //In its current form, this function will return true for simple properties (e.g., public int SomeNumber { get; set; })
             return Type.Equals(CaDETMemberType.Property)
                    && (InvokedMethods.Count == 0)
-                   && (AccessedAccessors.Count == 0 && AccessedFields.Count < 2)
+                   && (AccessedAccessors.Count == 0 && AccessedFields.Count == 0)
                    && !SourceCode.Contains("return ") && !SourceCode.Contains("=");
         }
     }

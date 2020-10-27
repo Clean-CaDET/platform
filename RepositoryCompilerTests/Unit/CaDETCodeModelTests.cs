@@ -155,8 +155,6 @@ namespace RepositoryCompilerTests.Unit
             gitClass.FindMember("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
         }
 
-
-
         [Fact]
         public void Establishes_correct_class_hierarchy()
         {

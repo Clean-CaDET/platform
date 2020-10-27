@@ -63,7 +63,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 SourceCode = node.ToString()
             };
             parsedClass.Modifiers = GetModifiers(node);
-            parsedClass.Parent = new CaDETClass {Name = symbol.BaseType.ToString()};
+            parsedClass.Parent = new CaDETClass { Name = symbol.BaseType.ToString() };
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
             parsedClass.Members = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
 
@@ -218,12 +218,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private CaDETClass LinkParent(List<CaDETClass> classes, CaDETClass parent)
         {
             if (parent.Name.Equals("object")) return null;
-            foreach (var c in classes)
-            {
-                if (c.FullName.Equals(parent.Name)) return c;
-            }
-
-            return null;
+            return classes.FirstOrDefault(c => c.FullName.Equals(parent.Name));
         }
 
         private ISet<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, ISet<CaDETMember> stubMembers)
@@ -231,10 +226,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             ISet<CaDETMember> linkedMembers = new HashSet<CaDETMember>();
             foreach (var member in stubMembers)
             {
-                var linkingClass = FindParentClass(classes, member.Name);
-                if(IsEnumeration(linkingClass)) continue;
+                var containingClass = FindContainingClass(classes, member.Name);
+                if(IsEnumeration(containingClass)) continue;
                 string memberName = member.Name.Split(_separator).Last();
-                var linkedMember = linkingClass.FindMember(memberName);
+                var linkedMember = containingClass.FindMember(memberName);
                 if (linkedMember != null) linkedMembers.Add(linkedMember);
             }
 
@@ -246,17 +241,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             ISet<CaDETField> linkedFields = new HashSet<CaDETField>();
             foreach (var field in stubFields)
             {
-                var linkingClass = FindParentClass(classes, field.Name);
-                if (IsEnumeration(linkingClass)) continue;
+                var containingClass = FindContainingClass(classes, field.Name);
+                if (IsEnumeration(containingClass)) continue;
                 string fieldName = field.Name.Split(_separator).Last();
-                var linkedField = linkingClass.FindField(fieldName);
+                var linkedField = containingClass.FindField(fieldName);
                 if (linkedField != null) linkedFields.Add(linkedField);
             }
 
             return linkedFields;
         }
 
-        private CaDETClass FindParentClass(List<CaDETClass> classes, string stubElementName)
+        private CaDETClass FindContainingClass(List<CaDETClass> classes, string stubElementName)
         {
             string[] nameParts = stubElementName.Split(_separator);
             string className = string.Join(_separator, nameParts, 0, nameParts.Length - 1);
