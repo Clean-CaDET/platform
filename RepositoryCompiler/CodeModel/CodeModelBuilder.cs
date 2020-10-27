@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.CodeModel.CodeParsers;
 
 namespace RepositoryCompiler.CodeModel
@@ -16,15 +17,15 @@ namespace RepositoryCompiler.CodeModel
             _language = language;
         }
 
-        public List<CaDETClass> BuildCodeModel(IEnumerable<string> codeTexts)
+        public List<CaDETClass> BuildCodeModel(IEnumerable<string> multipleClassSourceCode)
         {
             ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
-            return codeParser.GetParsedClasses(codeTexts);
+            return codeParser.GetParsedClasses(multipleClassSourceCode);
         }
 
-        public CaDETClass BuildCodeModel(string sourceCode)
+        public CaDETClass BuildCodeModel(string classSourceCode)
         {
-            return BuildCodeModel(new List<string> { sourceCode }).First();
+            return BuildCodeModel(new List<string> { classSourceCode }).First();
         }
 
         public CaDETProject ParseFiles(string sourceCodeLocation)

@@ -1,4 +1,4 @@
-﻿namespace RepositoryCompiler.CodeModel.CaDETModel
+﻿namespace RepositoryCompiler.CodeModel.CaDETModel.Metrics
 {
     public class CaDETClassMetrics
     {

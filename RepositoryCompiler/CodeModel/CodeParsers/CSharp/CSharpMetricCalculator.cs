@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 using System;
 using System.Linq;
 

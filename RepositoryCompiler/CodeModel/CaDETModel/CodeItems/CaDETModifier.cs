@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RepositoryCompiler.CodeModel.CaDETModel
+namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 {
     public class CaDETModifier
     {

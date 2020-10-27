@@ -1,5 +1,5 @@
 ﻿using RepositoryCompiler.CodeModel;
-using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using Shouldly;
 using Xunit;
 

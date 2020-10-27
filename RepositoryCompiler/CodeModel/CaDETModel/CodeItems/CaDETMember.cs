@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 
-namespace RepositoryCompiler.CodeModel.CaDETModel
+namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 {
     public class CaDETMember
     {
@@ -15,14 +16,14 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         public ISet<CaDETMember> AccessedFieldsAndAccessors { get; set; }
         public CaDETMemberMetrics Metrics { get; set; }
 
-        public override bool Equals(object? other)
+        public override bool Equals(object other)
         {
-            if(!(other is CaDETMember otherMember)) return false;
-            if(Parent == null) return Name.Equals(otherMember.Name);
+            if (!(other is CaDETMember otherMember)) return false;
+            if (Parent == null) return Name.Equals(otherMember.Name);
             bool nameAndParentEqual = Name.Equals(otherMember.Name) && Parent.Equals(otherMember.Parent);
             //This is a messy hack. The problem is that this class encapsulates methods/constructors/properties and fields.
             //Should refactor.
-            if(Type.Equals(CaDETMemberType.Field)) return nameAndParentEqual;
+            if (Type.Equals(CaDETMemberType.Field)) return nameAndParentEqual;
             return nameAndParentEqual && !Params.Except(otherMember.Params).Any();
         }
         public override int GetHashCode()

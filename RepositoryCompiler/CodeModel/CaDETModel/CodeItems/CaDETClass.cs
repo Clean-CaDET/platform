@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 
-namespace RepositoryCompiler.CodeModel.CaDETModel
+namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 {
     public class CaDETClass
     {
@@ -27,8 +28,8 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
             double numOfObjectOverrides = CountToStringEqualsHashCode();
             //TODO: Create a more elegant solution for thresholds.
             double dataClassThreshold = 0.9;
-            
-            return (numOfAccessors + numOfConstructors + numOfObjectOverrides)/Methods.Count > dataClassThreshold;
+
+            return (numOfAccessors + numOfConstructors + numOfObjectOverrides) / Methods.Count > dataClassThreshold;
         }
 
         private double CountToStringEqualsHashCode()
