@@ -99,6 +99,7 @@ namespace RepositoryCompilerTests.Unit
             var holidayDates = doctor.FindMethod("HolidayDates");
             var findDoctors = service.FindMethod("FindAvailableDoctor");
             findDoctors.AccessedFieldsAndAccessors.ShouldContain(holidayDates);
+            findDoctors.AccessedFieldsAndAccessors.ShouldContain(doctor.Fields.Find(f => f.Name.Equals("Test")));
         }
 
         [Fact]
