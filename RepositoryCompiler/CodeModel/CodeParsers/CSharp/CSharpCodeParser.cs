@@ -100,7 +100,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 method.Parent = parent;
                 method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
                 method.AccessedFieldsAndAccessors = CalculateAccessedFieldsAndAccessors(member, semanticModel);
-                method.Params = GetMethodParams(member); // It's important to first get methods params and at end calculate metrics, because of NOP (example)
+                method.Params = GetMethodParams(member);
+                // It's important to calculate metrics at the end, because they require the information above.
                 method.Metrics = _metricCalculator.CalculateMemberMetrics(member, method);
                 methods.Add(method);
             }

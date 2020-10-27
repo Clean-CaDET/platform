@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel
 {
@@ -18,7 +19,11 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         {
             if(!(other is CaDETMember otherMember)) return false;
             if(Parent == null) return Name.Equals(otherMember.Name);
-            return Name.Equals(otherMember.Name) && Parent.Equals(otherMember.Parent);
+            bool nameAndParentEqual = Name.Equals(otherMember.Name) && Parent.Equals(otherMember.Parent);
+            //This is a messy hack. The problem is that this class encapsulates methods/constructors/properties and fields.
+            //Should refactor.
+            if(Type.Equals(CaDETMemberType.Field)) return nameAndParentEqual;
+            return nameAndParentEqual && !Params.Except(otherMember.Params).Any();
         }
         public override int GetHashCode()
         {
