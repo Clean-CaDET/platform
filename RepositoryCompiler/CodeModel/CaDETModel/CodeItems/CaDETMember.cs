@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
+using System.Collections.Generic;
+using System.Text;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 {
@@ -10,7 +10,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public CaDETMemberType Type { get; internal set; }
         public string SourceCode { get; internal set; }
         public CaDETClass Parent { get; internal set; }
-        public List<string> Params { get; internal set; }
+        public List<CaDETParameter> Params { get; internal set; }
         public List<CaDETModifier> Modifiers { get; internal set; }
         public ISet<CaDETMember> InvokedMethods { get; internal set; }
         public ISet<CaDETMember> AccessedAccessors { get; internal set; }
@@ -20,15 +20,32 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public override bool Equals(object other)
         {
             if (!(other is CaDETMember otherMember)) return false;
-            if (Parent == null) return Name.Equals(otherMember.Name);
-            return Name.Equals(otherMember.Name)
-                   && Parent.Equals(otherMember.Parent)
-                   && !Params.Except(otherMember.Params).Any();
+            return Parent.Equals(otherMember.Parent) && GetSignature().Equals(otherMember.GetSignature());
         }
+
+        public string GetSignature()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Name);
+            if (Params != null)
+            {
+                sb.Append("(");
+                for (var i = 0; i < Params.Count; i++)
+                {
+                    sb.Append(Params[i].Type);
+                    if (i < Params.Count - 1) sb.Append(", ");
+                }
+                sb.Append(")");
+            }
+
+            return sb.ToString();
+        }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
 
         public bool IsFieldDefiningAccessor()
         {

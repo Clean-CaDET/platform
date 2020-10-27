@@ -88,6 +88,24 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
+        public void Checks_method_signature()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetMultipleClassTexts());
+
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var holidayDates = doctor.FindMember("HolidayDates");
+            var overlapsWith = dateRange.FindMember("OverlapsWith");
+            var findDoctors = service.FindMember("FindAvailableDoctor");
+            holidayDates.GetSignature().Equals("HolidayDates");
+            overlapsWith.GetSignature().Equals("OverlapsWith(DoctorApp.Model.Data.DateR.DateRange)");
+            findDoctors.GetSignature().Equals("FindAvailableDoctor(DoctorApp.Model.Data.DateR.DateRange)");
+        }
+
+        [Fact]
         public void Calculates_accessed_fields()
         {
             CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
@@ -127,6 +145,26 @@ namespace RepositoryCompilerTests.Unit
             dateRange.IsDataClass().ShouldBeFalse();
             doctor.IsDataClass().ShouldBeTrue();
             service.IsDataClass().ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Builds_member_parameters()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetMultipleClassTexts());
+
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var overlapTimeSpanParam = dateRange.FindMember("OverlapsWith").Params.First();
+            overlapTimeSpanParam.Name.ShouldBe("timeSpan");
+            overlapTimeSpanParam.Type.ShouldBe("DoctorApp.Model.Data.DateR.DateRange");
+            var serviceTimeSpanParam = service.FindMember("FindAvailableDoctor").Params.First();
+            serviceTimeSpanParam.Name.ShouldBe("timeSpan");
+            serviceTimeSpanParam.Type.ShouldBe("DoctorApp.Model.Data.DateR.DateRange");
+            var logParam = service.FindMember("LogChecked").Params.First();
+            logParam.Name.ShouldBe("testData");
+            logParam.Type.ShouldBe("int");
         }
 
         [Fact]

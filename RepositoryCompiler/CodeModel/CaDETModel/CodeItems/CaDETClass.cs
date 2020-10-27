@@ -21,6 +21,11 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
             return Members.Find(method => method.Name.Equals(name));
         }
 
+        public CaDETMember FindMemberBySignature(string signature)
+        {
+            return Members.Find(method => method.GetSignature().Equals(signature));
+        }
+
         public CaDETField FindField(string name)
         {
             return Fields.Find(field => field.Name.Equals(name));

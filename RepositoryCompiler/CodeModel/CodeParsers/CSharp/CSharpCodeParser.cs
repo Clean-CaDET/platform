@@ -100,7 +100,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
                 method.AccessedFields = CalculateAccessedFields(member, semanticModel);
                 method.AccessedAccessors = CalculateAccessedAccessors(member, semanticModel);
-                method.Params = GetMethodParams(member);
+                method.Params = GetMethodParams(member, semanticModel);
                 // It's important to calculate metrics at the end, because they require the information above.
                 method.Metrics = _metricCalculator.CalculateMemberMetrics(member, method);
                 methods.Add(method);
@@ -113,16 +113,21 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return member.Modifiers.Select(modifier => new CaDETModifier(modifier.ValueText)).ToList();
         }
 
-        private List<string> GetMethodParams(MemberDeclarationSyntax member)
+        private List<CaDETParameter> GetMethodParams(MemberDeclarationSyntax member, SemanticModel semanticModel)
         {
-            List<string> memberParams = new List<string>();
-            // We use First because we have others lambda expressions in this parsed paramLists
-            // lambda expressions are second, third... but we only need function params and we take it from FIRST
+            List<CaDETParameter> memberParams = new List<CaDETParameter>();
+            
             var paramLists = member.DescendantNodes().OfType<ParameterListSyntax>().ToList();
             if (!paramLists.Any()) return memberParams;
 
+            // First() below gives the function param list. Other elements of the list include params for inline lambda expressions
             var parameters = paramLists.First().Parameters;
-            memberParams.AddRange(parameters.Select(parameter => parameter.Identifier.ValueText));
+            foreach (var parameter in parameters)
+            {
+                var symbol = semanticModel.GetDeclaredSymbol(parameter);
+                memberParams.Add(new CaDETParameter { Name = symbol.Name, Type = symbol.ToDisplayString() });
+            }
+            
             return memberParams;
         }
 
@@ -171,10 +176,18 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
                 if (symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
                 //The code below creates a stub method that will be replaced when all classes are parsed and linking is performed.
-                methods.Add(new CaDETMember { Name = symbol.ContainingType + _separator + symbol.Name });
+
+                methods.Add(CreateStubMethod(symbol));
             }
 
             return methods;
+        }
+
+        private static CaDETMember CreateStubMethod(ISymbol symbol)
+        {
+            var classNameAndMethodSignature = symbol.ToDisplayString();
+
+            return new CaDETMember { Name =  classNameAndMethodSignature };
         }
 
         private ISet<CaDETField> CalculateAccessedFields(MemberDeclarationSyntax member, SemanticModel semanticModel)
@@ -208,7 +221,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 {
                     if (method.InvokedMethods == null) continue;
                     method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
-                    method.AccessedAccessors = LinkInvokedMembers(classes, method.AccessedAccessors);
+                    method.AccessedAccessors = LinkAccessedAccessors(classes, method.AccessedAccessors);
                     method.AccessedFields = LinkAccessedFields(classes, method.AccessedFields);
                 }
             }
@@ -228,6 +241,21 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 var containingClass = FindContainingClass(classes, member.Name);
                 if(IsEnumeration(containingClass)) continue;
+                string signature = member.Name.Split(_separator).Last();
+                var linkedMember = containingClass.FindMemberBySignature(signature);
+                if (linkedMember != null) linkedMembers.Add(linkedMember);
+            }
+
+            return linkedMembers;
+        }
+
+        private ISet<CaDETMember> LinkAccessedAccessors(List<CaDETClass> classes, ISet<CaDETMember> stubAccessors)
+        {
+            ISet<CaDETMember> linkedMembers = new HashSet<CaDETMember>();
+            foreach (var member in stubAccessors)
+            {
+                var containingClass = FindContainingClass(classes, member.Name);
+                if (IsEnumeration(containingClass)) continue;
                 string memberName = member.Name.Split(_separator).Last();
                 var linkedMember = containingClass.FindMember(memberName);
                 if (linkedMember != null) linkedMembers.Add(linkedMember);

@@ -229,9 +229,9 @@ namespace RepositoryCompilerTests.Unit
                         }
                         return null;
                     }
-                    private void LogChecked()
+                    private int LogChecked(int testData)
                     {
-                        return;
+                        return testData;
                     }
                 }
             }"
