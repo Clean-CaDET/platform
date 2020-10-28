@@ -12,10 +12,10 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public CaDETClass Parent { get; internal set; }
         public List<CaDETParameter> Params { get; internal set; }
         public List<CaDETModifier> Modifiers { get; internal set; }
+        public CaDETMemberMetrics Metrics { get; internal set; }
         public ISet<CaDETMember> InvokedMethods { get; internal set; }
         public ISet<CaDETMember> AccessedAccessors { get; internal set; }
         public ISet<CaDETField> AccessedFields { get; internal set; }
-        public CaDETMemberMetrics Metrics { get; internal set; }
 
         public override bool Equals(object other)
         {
@@ -26,6 +26,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public string GetSignature()
         {
             var sb = new StringBuilder();
+            if (Parent != null) sb.Append(Parent.FullName).Append(".");
             sb.Append(Name);
             if (Params != null)
             {

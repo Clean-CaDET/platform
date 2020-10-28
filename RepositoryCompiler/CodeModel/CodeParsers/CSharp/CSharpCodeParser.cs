@@ -1,7 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Operations;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
@@ -14,20 +13,21 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
     {
         private CSharpCompilation _compilation;
         private readonly CSharpMetricCalculator _metricCalculator;
-        private const string _separator = ".";
+        private readonly Dictionary<CaDETClass, List<CSharpCaDETMemberBuilder>> _memberBuilders;
 
         public CSharpCodeParser()
         {
             _compilation = CSharpCompilation.Create(new Guid().ToString());
             _metricCalculator = new CSharpMetricCalculator();
+            _memberBuilders = new Dictionary<CaDETClass, List<CSharpCaDETMemberBuilder>>();
         }
 
         public List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode)
         {
             ParseSyntaxTrees(sourceCode);
             var parsedClasses = ParseClasses();
-            var linkedClasses = LinkClasses(parsedClasses);
-            return AddClassMetrics(linkedClasses);
+            var linkedClasses = ConnectCaDETGraph(parsedClasses);
+            return CalculateMetrics(linkedClasses);
         }
 
         private void ParseSyntaxTrees(IEnumerable<string> sourceCode)
@@ -65,7 +65,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             parsedClass.Modifiers = GetModifiers(node);
             parsedClass.Parent = new CaDETClass { Name = symbol.BaseType.ToString() };
             parsedClass.Fields = ParseFields(node.Members, parsedClass);
-            parsedClass.Members = ParseMethodsAndCalculateMetrics(node.Members, parsedClass, semanticModel);
+            parsedClass.Members = ParseMethods(node.Members, parsedClass, semanticModel);
 
             return parsedClass;
         }
@@ -87,25 +87,27 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             
             return fields;
         }
-        private List<CaDETMember> ParseMethodsAndCalculateMetrics(IEnumerable<MemberDeclarationSyntax> members, CaDETClass parent, SemanticModel semanticModel)
+        private List<CaDETMember> ParseMethods(IEnumerable<MemberDeclarationSyntax> members, CaDETClass parent, SemanticModel semanticModel)
         {
-            var methods = new List<CaDETMember>();
+            CreateClassMemberBuilders(parent, members, semanticModel);
+            return _memberBuilders[parent].Select(builder => builder.CreateBasicMember(parent)).Where(method => method != null).ToList();
+        }
+
+        private void CreateClassMemberBuilders(CaDETClass parent, IEnumerable<MemberDeclarationSyntax> members, SemanticModel semanticModel)
+        {
+            var classMemberBuilders = new List<CSharpCaDETMemberBuilder>();
             foreach (var member in members)
             {
-                CaDETMember method = CreateMethodBasedOnMemberType(member);
-                if(method == null) continue;
-                method.Modifiers = GetModifiers(member);
-                method.SourceCode = member.ToString();
-                method.Parent = parent;
-                method.InvokedMethods = CalculateInvokedMethods(member, semanticModel);
-                method.AccessedFields = CalculateAccessedFields(member, semanticModel);
-                method.AccessedAccessors = CalculateAccessedAccessors(member, semanticModel);
-                method.Params = GetMethodParams(member, semanticModel);
-                // It's important to calculate metrics at the end, because they require the information above.
-                method.Metrics = _metricCalculator.CalculateMemberMetrics(member, method);
-                methods.Add(method);
+                try
+                {
+                    classMemberBuilders.Add(new CSharpCaDETMemberBuilder(member, semanticModel));
+                }
+                catch (InappropriateMemberTypeException)
+                {
+                    //MemberDeclarationSyntax is not property, constructor, or method.
+                }
             }
-            return methods;
+            _memberBuilders.Add(parent, classMemberBuilders);
         }
 
         private List<CaDETModifier> GetModifiers(MemberDeclarationSyntax member)
@@ -113,116 +115,14 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return member.Modifiers.Select(modifier => new CaDETModifier(modifier.ValueText)).ToList();
         }
 
-        private List<CaDETParameter> GetMethodParams(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            List<CaDETParameter> memberParams = new List<CaDETParameter>();
-            
-            var paramLists = member.DescendantNodes().OfType<ParameterListSyntax>().ToList();
-            if (!paramLists.Any()) return memberParams;
-
-            // First() below gives the function param list. Other elements of the list include params for inline lambda expressions
-            var parameters = paramLists.First().Parameters;
-            foreach (var parameter in parameters)
-            {
-                var symbol = semanticModel.GetDeclaredSymbol(parameter);
-                memberParams.Add(new CaDETParameter { Name = symbol.Name, Type = symbol.ToDisplayString() });
-            }
-            
-            return memberParams;
-        }
-
-        private CaDETMember CreateMethodBasedOnMemberType(MemberDeclarationSyntax member)
-        {
-            return member switch
-            {
-                PropertyDeclarationSyntax property => ParseProperty(property),
-                ConstructorDeclarationSyntax constructor => ParseConstructor(constructor),
-                MethodDeclarationSyntax method => ParseMethod(method),
-                _ => null
-            };
-        }
-
-        private CaDETMember ParseMethod(MethodDeclarationSyntax method)
-        {
-            return new CaDETMember
-            {
-                Type = CaDETMemberType.Method,
-                Name = method.Identifier.Text
-            };
-        }
-        private CaDETMember ParseConstructor(ConstructorDeclarationSyntax constructor)
-        {
-            return new CaDETMember
-            {
-                Type = CaDETMemberType.Constructor,
-                Name = constructor.Identifier.Text
-            };
-        }
-        private CaDETMember ParseProperty(PropertyDeclarationSyntax property)
-        {
-            return new CaDETMember
-            {
-                Type = CaDETMemberType.Property,
-                Name = property.Identifier.Text
-            };
-        }
-
-        private ISet<CaDETMember> CalculateInvokedMethods(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            ISet<CaDETMember> methods = new HashSet<CaDETMember>();
-            var invokedMethods = member.DescendantNodes().OfType<InvocationExpressionSyntax>();
-            foreach (var invoked in invokedMethods)
-            {
-                var symbol = semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
-                if (symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
-                //The code below creates a stub method that will be replaced when all classes are parsed and linking is performed.
-
-                methods.Add(CreateStubMethod(symbol));
-            }
-
-            return methods;
-        }
-
-        private static CaDETMember CreateStubMethod(ISymbol symbol)
-        {
-            var classNameAndMethodSignature = symbol.ToDisplayString();
-
-            return new CaDETMember { Name =  classNameAndMethodSignature };
-        }
-
-        private ISet<CaDETField> CalculateAccessedFields(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            ISet<CaDETField> fields = new HashSet<CaDETField>();
-            var accessedFields = semanticModel.GetOperation(member).Descendants().OfType<IFieldReferenceOperation>();
-            foreach (var field in accessedFields)
-            {
-                fields.Add(new CaDETField { Name = field.Member.ToDisplayString() });
-            }
-            return fields;
-        }
-
-        private ISet<CaDETMember> CalculateAccessedAccessors(MemberDeclarationSyntax member, SemanticModel semanticModel)
-        {
-            ISet<CaDETMember> accessors = new HashSet<CaDETMember>();
-            var accessedAccessors = semanticModel.GetOperation(member).Descendants().OfType<IPropertyReferenceOperation>();
-            foreach (var accessor in accessedAccessors)
-            {
-                accessors.Add(new CaDETMember { Name = accessor.Member.ToDisplayString() });
-            }
-            return accessors;
-        }
-
-        private List<CaDETClass> LinkClasses(List<CaDETClass> classes)
+        private List<CaDETClass> ConnectCaDETGraph(List<CaDETClass> classes)
         {
             foreach (var c in classes)
             {
                 c.Parent = LinkParent(classes, c.Parent);
-                foreach (var method in c.Members)
+                foreach (var memberBuilder in _memberBuilders[c])
                 {
-                    if (method.InvokedMethods == null) continue;
-                    method.InvokedMethods = LinkInvokedMembers(classes, method.InvokedMethods);
-                    method.AccessedAccessors = LinkAccessedAccessors(classes, method.AccessedAccessors);
-                    method.AccessedFields = LinkAccessedFields(classes, method.AccessedFields);
+                    memberBuilder.DetermineAccessedCodeItems(classes);
                 }
             }
             return classes;
@@ -234,67 +134,14 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return classes.FirstOrDefault(c => c.FullName.Equals(parent.Name));
         }
 
-        private ISet<CaDETMember> LinkInvokedMembers(List<CaDETClass> classes, ISet<CaDETMember> stubMembers)
-        {
-            ISet<CaDETMember> linkedMembers = new HashSet<CaDETMember>();
-            foreach (var member in stubMembers)
-            {
-                var containingClass = FindContainingClass(classes, member.Name);
-                if(IsEnumeration(containingClass)) continue;
-                string signature = member.Name.Split(_separator).Last();
-                var linkedMember = containingClass.FindMemberBySignature(signature);
-                if (linkedMember != null) linkedMembers.Add(linkedMember);
-            }
-
-            return linkedMembers;
-        }
-
-        private ISet<CaDETMember> LinkAccessedAccessors(List<CaDETClass> classes, ISet<CaDETMember> stubAccessors)
-        {
-            ISet<CaDETMember> linkedMembers = new HashSet<CaDETMember>();
-            foreach (var member in stubAccessors)
-            {
-                var containingClass = FindContainingClass(classes, member.Name);
-                if (IsEnumeration(containingClass)) continue;
-                string memberName = member.Name.Split(_separator).Last();
-                var linkedMember = containingClass.FindMember(memberName);
-                if (linkedMember != null) linkedMembers.Add(linkedMember);
-            }
-
-            return linkedMembers;
-        }
-
-        private ISet<CaDETField> LinkAccessedFields(List<CaDETClass> classes, ISet<CaDETField> stubFields)
-        {
-            ISet<CaDETField> linkedFields = new HashSet<CaDETField>();
-            foreach (var field in stubFields)
-            {
-                var containingClass = FindContainingClass(classes, field.Name);
-                if (IsEnumeration(containingClass)) continue;
-                string fieldName = field.Name.Split(_separator).Last();
-                var linkedField = containingClass.FindField(fieldName);
-                if (linkedField != null) linkedFields.Add(linkedField);
-            }
-
-            return linkedFields;
-        }
-
-        private CaDETClass FindContainingClass(List<CaDETClass> classes, string stubElementName)
-        {
-            string[] nameParts = stubElementName.Split(_separator);
-            string className = string.Join(_separator, nameParts, 0, nameParts.Length - 1);
-            return classes.Find(c => c.FullName.Equals(className));
-        }
-
-        private bool IsEnumeration(CaDETClass linkingClass)
-        {
-            return linkingClass == null;
-        }
-
-        private List<CaDETClass> AddClassMetrics(List<CaDETClass> linkedClasses)
+        private List<CaDETClass> CalculateMetrics(List<CaDETClass> linkedClasses)
         {
             foreach (var c in linkedClasses)
             {
+                foreach (var memberBuilder in _memberBuilders[c])
+                {
+                    memberBuilder.CalculateMetrics(_metricCalculator);
+                }
                 c.Metrics = _metricCalculator.CalculateClassMetrics(c);
             }
 
