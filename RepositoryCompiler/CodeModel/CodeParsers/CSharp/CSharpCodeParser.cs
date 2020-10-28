@@ -24,13 +24,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         public List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode)
         {
-            ParseSyntaxTrees(sourceCode);
+            LoadSyntaxTrees(sourceCode);
             var parsedClasses = ParseClasses();
             var linkedClasses = ConnectCaDETGraph(parsedClasses);
             return CalculateMetrics(linkedClasses);
         }
 
-        private void ParseSyntaxTrees(IEnumerable<string> sourceCode)
+        private void LoadSyntaxTrees(IEnumerable<string> sourceCode)
         {
             foreach (var code in sourceCode)
             {
