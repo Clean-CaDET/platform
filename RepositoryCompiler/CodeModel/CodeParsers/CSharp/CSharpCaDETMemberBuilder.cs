@@ -15,7 +15,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private readonly MemberDeclarationSyntax _cSharpMember;
         private readonly SemanticModel _semanticModel;
-        private CaDETMember _member;
+        private readonly CaDETMember _member;
 
         internal CSharpCaDETMemberBuilder(MemberDeclarationSyntax cSharpMember, SemanticModel semanticModel)
         {
@@ -101,9 +101,22 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 var fullFieldName = field.Member.ToDisplayString();
                 var containingClass = FindContainingClass(allProjectClasses, fullFieldName);
+                if(IsEnumeration(containingClass)) continue;
                 fields.Add(containingClass.FindField(fullFieldName.Split(_separator).Last()));
             }
             return fields;
+        }
+
+        private CaDETClass FindContainingClass(List<CaDETClass> classes, string stubElementName)
+        {
+            string[] nameParts = stubElementName.Split(_separator);
+            string className = string.Join(_separator, nameParts, 0, nameParts.Length - 1);
+            return classes.Find(c => c.FullName.Equals(className));
+        }
+
+        private static bool IsEnumeration(CaDETClass containingClass)
+        {
+            return containingClass == null;
         }
 
         private ISet<CaDETMember> CalculateAccessedAccessors(List<CaDETClass> allProjectClasses)
@@ -121,12 +134,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 }
             }
             return accessors;
-        }
-        private CaDETClass FindContainingClass(List<CaDETClass> classes, string stubElementName)
-        {
-            string[] nameParts = stubElementName.Split(_separator);
-            string className = string.Join(_separator, nameParts, 0, nameParts.Length - 1);
-            return classes.Find(c => c.FullName.Equals(className));
         }
     }
 }
