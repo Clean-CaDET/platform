@@ -1,11 +1,14 @@
+using SmellDetector.Controllers;
 using System;
-using SmellDetector.DTO;
 
-public class LongParamLists : SmellRule
+namespace SmellDetector.SmellDetectionRules
 {
-    public override bool isBadSmell(MetricsDTO metrics)
+    public class LongParamLists : SmellRule
     {
-        if (metrics.NOP > 5) return true;
-        return false;
+        public bool isBadSmell(MetricsDTO metrics)
+        {
+            if (metrics.NOP > 5) return true;
+            return false;
+        }
     }
 }

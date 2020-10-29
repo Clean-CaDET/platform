@@ -1,8 +1,11 @@
-using System;
-using SmellDetector.DTO;
+using SmellDetector.Controllers;
 
-public abstract class SmellRule
+namespace SmellDetector.SmellDetectionRules
 {
-   public abstract bool isBadSmell(MetricsDTO metrics);
+    public interface SmellRule
+    {
+        public bool isBadSmell(MetricsDTO metrics);
 
-}
+    }
+} 
+

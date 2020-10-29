@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SmellDetector.DTO
+﻿namespace SmellDetector.Controllers
 {
     public class MetricsDTO
     {

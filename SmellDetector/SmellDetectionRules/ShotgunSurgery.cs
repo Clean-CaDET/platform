@@ -1,10 +1,13 @@
+using SmellDetector.Controllers;
 using System;
-using SmellDetector.DTO;
 
-public class ShotgunSurgery : SmellRule
+namespace SmellDetector.SmellDetectionRules
 {
-    public override bool isBadSmell(MetricsDTO metrics)
+    public class ShotgunSurgery : SmellRule
     {
-        throw new NotImplementedException();
+        public bool isBadSmell(MetricsDTO metrics)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
