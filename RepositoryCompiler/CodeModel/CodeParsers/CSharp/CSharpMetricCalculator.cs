@@ -44,7 +44,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             double NP = (N * (N - 1)) / 2;
             if (NP == 0) return null;
 
-            return GetNumberOfDirectConnections(parsedClass) / NP;
+            return Math.Round(GetNumberOfDirectConnections(parsedClass) / NP, 2);
         }
 
         private int GetNumberOfDirectConnections(CaDETClass parsedClass)
