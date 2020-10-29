@@ -1,43 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.CaDETClass">
-    <Position X="3.5" Y="0.75" Width="3" />
-    <Members>
-      <Method Name="CountToStringEqualsHashCode" Hidden="true" />
-      <Method Name="Equals" Hidden="true" />
-      <Method Name="GetHashCode" Hidden="true" />
-      <Method Name="ToString" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAABAAAAABAIAEgAAAAAQAAAAABIAAAAAEAAAAgEA=</HashCode>
-      <FileName>CodeModel\CaDETModel\CaDETClass.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.CaDETClassMetrics">
-    <Position X="3.5" Y="3.5" Width="3" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAIAAAgAAAAAAAAIBAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
-      <FileName>CodeModel\CaDETModel\CaDETClassMetrics.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.CaDETMember">
-    <Position X="7" Y="0.75" Width="2.5" />
-    <Members>
-      <Method Name="Equals" Hidden="true" />
-      <Method Name="GetHashCode" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAACAAAAABAAAAgAACQAQAAAAABIAIAQAAAAAAAAA=</HashCode>
-      <FileName>CodeModel\CaDETModel\CaDETMember.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.CaDETMemberMetrics">
-    <Position X="7" Y="4" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
-      <FileName>CodeModel\CaDETModel\CaDETMemberMetrics.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="RepositoryCompiler.CodeModel.CaDETModel.CaDETModel">
     <Position X="0.5" Y="0.75" Width="2.5" />
     <Members>
@@ -55,11 +17,49 @@
       <FileName>CodeModel\CaDETModel\CaDETProject.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="RepositoryCompiler.CodeModel.CaDETModel.CaDETMemberType">
-    <Position X="9" Y="3.75" Width="1.5" />
+  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.CodeItems.CaDETClass">
+    <Position X="3.5" Y="0.75" Width="3" />
+    <Members>
+      <Method Name="CountToStringEqualsHashCode" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAABBAAAAABAIAEgAAAQBQAAAAABIAAAAAEAAAAgEA=</HashCode>
+      <FileName>CodeModel\CaDETModel\CodeItems\CaDETClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.Metrics.CaDETClassMetrics">
+    <Position X="3.5" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAgAAAAAAAAIBAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>CodeModel\CaDETModel\Metrics\CaDETClassMetrics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.Metrics.CaDETMemberMetrics">
+    <Position X="7" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACgAAAAAAIAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>CodeModel\CaDETModel\Metrics\CaDETMemberMetrics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RepositoryCompiler.CodeModel.CaDETModel.CodeItems.CaDETMember">
+    <Position X="7" Y="0.75" Width="2.5" />
+    <Members>
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAABCIAAAABAAAAgAACQAQAAAAABIAIAQAAAAAAAAA=</HashCode>
+      <FileName>CodeModel\CaDETModel\CodeItems\CaDETMember.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="RepositoryCompiler.CodeModel.CaDETModel.CodeItems.CaDETMemberType">
+    <Position X="9.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAQAAgAA=</HashCode>
-      <FileName>CodeModel\CaDETModel\CaDETMemberType.cs</FileName>
+      <FileName>CodeModel\CaDETModel\CodeItems\CaDETMemberType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

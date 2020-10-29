@@ -1,5 +1,6 @@
 ﻿using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.RepositoryAdapters;
 using System.Collections.Generic;
 

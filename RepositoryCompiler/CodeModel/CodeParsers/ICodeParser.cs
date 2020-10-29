@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers
 {

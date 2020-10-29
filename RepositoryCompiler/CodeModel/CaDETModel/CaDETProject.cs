@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using System.Collections.Generic;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel
 {
