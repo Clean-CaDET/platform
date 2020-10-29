@@ -12,13 +12,17 @@ namespace SmartTutor.Repository
 
             List<EducationContent> longMethodContents = new List<EducationContent>();
             List<EducationContent> longParameterListContents = new List<EducationContent>();
+            List<EducationContent> godClassContents = new List<EducationContent>();
+
 
             longMethodContents.Add(CreateLongMethodContent());
             longParameterListContents.Add(CreateLongParameterListContent());
+            godClassContents.Add(CreateGodClassContent());
 
 
             educationContents.Add(SmellType.LONG_METHOD, longMethodContents);
             educationContents.Add(SmellType.LONG_PARAM_LISTS, longParameterListContents);
+            educationContents.Add(SmellType.GOD_CLASS, godClassContents);
 
             return educationContents;
         }
@@ -55,6 +59,15 @@ namespace SmartTutor.Repository
                 CreateLPSVideoSnippet(),
                 CreateLPSCodeSnippet()
             };
+
+            return educationContent;
+        }
+
+        private EducationContent CreateGodClassContent()
+        {
+            EducationContent educationContent = new EducationContent();
+
+           
 
             return educationContent;
         }
