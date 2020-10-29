@@ -232,12 +232,12 @@ namespace RepositoryCompilerTests.Unit
                   {
                    
                     public double m1(){
-                        Class4 class4 = new Class4();
+                        Class6 class6 = new Class4();
                        
-                        class4.Hours = 23;
-                        class4.Hours = 24;
+                        class6.Hours = 23;
+                        class6.Hours = 24;
         
-                        return class4.Hours;
+                        return class6.Hours;
                     }
                    
                 }
@@ -245,6 +245,41 @@ namespace RepositoryCompilerTests.Unit
                 public class Class6
                 {
                     private double _seconds;
+
+                    public double Hours
+                    {
+                       get { return _seconds / 3600; }
+                       set {
+                            if (value < 0 || value > 24)
+                             _seconds = value * 3600;
+                        }
+                    }
+                };
+            }",
+                @"
+            using System.Collections.Generic;
+            namespace NDCApp.Model.Data
+            {
+                  public class Class7
+                  {
+                   
+                    public double m1(){
+                        Class8 class8 = new Class8();
+                       
+                        class8.leapYear = true;
+                        class8.Hours = 22;
+                        class8.calendarType = 'Georgian';
+
+                        return class8.Hours;
+                    }
+                   
+                }
+
+                public class Class8
+                {
+                    private double _seconds;
+                    public string calendarType;
+                    public bool leapYear;
 
                     public double Hours
                     {
