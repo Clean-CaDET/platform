@@ -192,6 +192,37 @@ namespace RepositoryCompilerTests.Unit
                     private int a3;
                     private int a4;
                 };
+            }",
+                @"
+            using System.Collections.Generic;
+            namespace NDCApp.Model.Data
+            {
+                  public class Class3
+                  {
+                   
+                    public double m1(){
+                        Class4 class4 = new Class4();
+                       
+                        class4.Hours = 23;
+        
+                        return class4.Hours;
+                    }
+                   
+                }
+
+                public class Class4
+                {
+                    private double _seconds;
+
+                    public double Hours
+                    {
+                       get { return _seconds / 3600; }
+                       set {
+                            if (value < 0 || value > 24)
+                             _seconds = value * 3600;
+                        }
+                    }
+                };
             }"
             };
         }
