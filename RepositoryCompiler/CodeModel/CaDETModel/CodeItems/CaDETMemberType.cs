@@ -4,7 +4,6 @@
     {
         Method,
         Property,
-        Constructor,
-        Field
+        Constructor
     }
 }
