@@ -58,5 +58,33 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
                    && (AccessedAccessors.Count == 0 && AccessedFields.Count == 0)
                    && !SourceCode.Contains("return ") && !SourceCode.Contains("=");
         }
+
+        public List<CaDETField> GetAccessedOwnFields()
+        {
+            List<CaDETField> accessedOwnFields = new List<CaDETField>();
+
+            foreach (var accessedOwnField in AccessedFields)
+            {
+                if (accessedOwnField.Parent == Parent)
+                {
+                    accessedOwnFields.Add(accessedOwnField);
+                }
+            }
+
+            return accessedOwnFields;
+        }
+
+        public List<CaDETMember> GetAccessedOwnAccessors() {
+            List<CaDETMember> accessedOwnAccessors = new List<CaDETMember>();
+
+            foreach (var accessedOwnAccessor in AccessedAccessors)
+            {
+                if (accessedOwnAccessor.Parent == Parent)
+                {
+                    accessedOwnAccessors.Add(accessedOwnAccessor);
+                }
+            }
+            return accessedOwnAccessors;
+        }
     }
 }
