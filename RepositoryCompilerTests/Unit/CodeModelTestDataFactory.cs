@@ -223,6 +223,38 @@ namespace RepositoryCompilerTests.Unit
                         }
                     }
                 };
+            }",
+                @"
+            using System.Collections.Generic;
+            namespace NDCApp.Model.Data
+            {
+                  public class Class5
+                  {
+                   
+                    public double m1(){
+                        Class4 class4 = new Class4();
+                       
+                        class4.Hours = 23;
+                        class4.Hours = 24;
+        
+                        return class4.Hours;
+                    }
+                   
+                }
+
+                public class Class6
+                {
+                    private double _seconds;
+
+                    public double Hours
+                    {
+                       get { return _seconds / 3600; }
+                       set {
+                            if (value < 0 || value > 24)
+                             _seconds = value * 3600;
+                        }
+                    }
+                };
             }"
             };
         }

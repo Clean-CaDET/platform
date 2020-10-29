@@ -159,9 +159,11 @@ namespace RepositoryCompilerTests.Unit
 
             var class1 = classes.Find(c => c.Name.Equals("Class1"));
             var class3 = classes.Find(c => c.Name.Equals("Class3"));
+            var class5 = classes.Find(c => c.Name.Equals("Class3"));
 
             class1.Metrics.ATFD.ShouldBe(2);
             class3.Metrics.ATFD.ShouldBe(1);
+            class5.Metrics.ATFD.ShouldBe(1);
         }
 
         [Fact]
