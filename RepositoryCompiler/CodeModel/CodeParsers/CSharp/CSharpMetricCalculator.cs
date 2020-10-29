@@ -44,32 +44,21 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             double NP = (N * (N - 1)) / 2;
             if (NP == 0) return null;
 
-            return Math.Round(GetMethodPairsThatShareAccessToAFieldOrAccessor(parsedClass) / NP, 2);
+            return Math.Round(CountMethodPairsThatShareAccessToAFieldOrAccessor(parsedClass.Methods) / NP, 2);
         }
 
-        private int GetMethodPairsThatShareAccessToAFieldOrAccessor(CaDETClass parsedClass)
-        {
-            var ownAccessedFieldsAndAccessors = new Dictionary<string, List<CaDETMember>>();
-
-            foreach (var method in parsedClass.Methods)
-            {
-                ownAccessedFieldsAndAccessors.Add(method.Name, OwnAccessedFieldsAndAccessors(method));
-            }
-
-            return CountMethodPairsThatShareAccessToAFieldOrAccessor(ownAccessedFieldsAndAccessors);
-        }
-
-        private static int CountMethodPairsThatShareAccessToAFieldOrAccessor(Dictionary<string, List<CaDETMember>> ownAccessedFieldsAndAccessors)
+        private static int CountMethodPairsThatShareAccessToAFieldOrAccessor(List<CaDETMember> classMethods)
         {
             int methodPairsThatShareAccessToAFieldOrAccessor = 0;
 
-            foreach (var ownAccessedFieldAndAccessor1 in ownAccessedFieldsAndAccessors)
+            for (var i = 0; i < classMethods.Count; i++)
             {
-                foreach (var ownAccessedFieldAndAccessor2 in ownAccessedFieldsAndAccessors)
-                {      
-                    bool hasSameElements = ownAccessedFieldAndAccessor1.Value.Intersect(ownAccessedFieldAndAccessor2.Value).Any();
+                for (var j = 1; j < classMethods.Count; j++)
+                {
+                    var firstMethod = classMethods[i];
+                    var secondMethod = classMethods[j];
 
-                    if (hasSameElements && !(ownAccessedFieldAndAccessor1.Key.Equals(ownAccessedFieldAndAccessor2.Key)))
+                    if (firstMethod.GetAccessedOwnFieldsAndAccessors().Intersect(secondMethod.GetAccessedOwnFieldsAndAccessors()).Any())
                     {
                         methodPairsThatShareAccessToAFieldOrAccessor++;
                         break;
@@ -77,20 +66,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 }
             }
             return methodPairsThatShareAccessToAFieldOrAccessor;
-        }
-
-        private List<CaDETMember> OwnAccessedFieldsAndAccessors(CaDETMember method)
-        {
-            List<CaDETMember> ownAccessedFieldsAndAccessors = new List<CaDETMember>();
-
-            foreach (var accessedFieldAndAccessor in method.AccessedFieldsAndAccessors)
-            {
-                if (accessedFieldAndAccessor.Parent == method.Parent)
-                {
-                    ownAccessedFieldsAndAccessors.Add(accessedFieldAndAccessor);
-                }
-            }
-            return ownAccessedFieldsAndAccessors;
         }
 
         private int GetNumberOfSimpleAccessors(CaDETClass parsedClass)

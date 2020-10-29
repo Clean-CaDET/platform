@@ -15,7 +15,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
         //TODO: FDP, LAA, ATFD (http://www.simpleorientedarchitecture.com/how-to-identify-feature-envy-using-ndepend/) can be calculated
         //Contains fields and properties accessed by method belonging to this and other objects
         public ISet<CaDETMember> AccessedFieldsAndAccessors { get; set; }
-        
+
         public override bool Equals(object? other)
         {
             if(!(other is CaDETMember otherMember)) return false;
@@ -34,6 +34,20 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
                    && (AccessedFieldsAndAccessors == null || AccessedFieldsAndAccessors.Count == 0)
                    && !SourceCode.Contains("return ") && !SourceCode.Contains("="); //TODO: This is a workaround that should be reworked https://stackoverflow.com/questions/64009302/roslyn-c-how-to-get-all-fields-and-properties-and-their-belonging-class-acce
                                                                                     //TODO: It is specific to C# properties. Should move this to CSharpCodeParser so that each language can define its rule for calculating simple accessors.
+        }
+
+        public List<CaDETMember> GetAccessedOwnFieldsAndAccessors()
+        {
+            List<CaDETMember> accessedOwnFieldsAndAccessors = new List<CaDETMember>();
+
+            foreach (var accessedFieldAndAccessor in AccessedFieldsAndAccessors)
+            {
+                if (accessedFieldAndAccessor.Parent == Parent)
+                {
+                    accessedOwnFieldsAndAccessors.Add(accessedFieldAndAccessor);
+                }
+            }
+            return accessedOwnFieldsAndAccessors;
         }
     }
 }
