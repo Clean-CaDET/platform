@@ -25,21 +25,21 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 
         public string GetSignature()
         {
-            var sb = new StringBuilder();
-            if (Parent != null) sb.Append(Parent.FullName).Append(".");
-            sb.Append(Name);
+            var signatureBuilder = new StringBuilder();
+            if (Parent != null) signatureBuilder.Append(Parent.FullName).Append(".");
+            signatureBuilder.Append(Name);
             if (Params != null)
             {
-                sb.Append("(");
+                signatureBuilder.Append("(");
                 for (var i = 0; i < Params.Count; i++)
                 {
-                    sb.Append(Params[i].Type);
-                    if (i < Params.Count - 1) sb.Append(", ");
+                    signatureBuilder.Append(Params[i].Type);
+                    if (i < Params.Count - 1) signatureBuilder.Append(", ");
                 }
-                sb.Append(")");
+                signatureBuilder.Append(")");
             }
 
-            return sb.ToString();
+            return signatureBuilder.ToString();
         }
 
         public override int GetHashCode()
