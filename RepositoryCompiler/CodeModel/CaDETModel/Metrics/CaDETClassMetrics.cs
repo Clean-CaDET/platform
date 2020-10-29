@@ -12,5 +12,9 @@
         /// DOI: 10.1109/ESEM.2009.5314231
         /// </summary>
         public int ATFD { get; set; }
+        /// TCC - Tight Class Cohesion
+        /// DOI: 10.1145/223427.211856
+        /// </summary>
+        public double? TCC { get; set; }
     }
 }

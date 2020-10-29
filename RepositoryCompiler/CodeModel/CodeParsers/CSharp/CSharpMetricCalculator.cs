@@ -2,6 +2,7 @@
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
@@ -18,7 +19,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NMD = GetNumberOfMethodsDeclared(parsedClass),
                 NAD = GetNumberOfAttributesDefined(parsedClass),
                 WMC = GetWeightedMethodPerClass(parsedClass),
-                LCOM = GetLackOfCohesionOfMethods(parsedClass)
+                LCOM = GetLackOfCohesionOfMethods(parsedClass),
+                TCC = GetTightClassCohesion(parsedClass)
             };
         }
 
@@ -34,6 +36,42 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
             return Math.Round(1 - methodFieldAccess/maxCohesion, 3);
+        }
+
+        private double? GetTightClassCohesion(CaDETClass parsedClass)
+        {
+            int N = GetNumberOfMethodsDeclared(parsedClass);
+           
+            double NP = (N * (N - 1)) / 2;
+            if (NP == 0) return null;
+
+            return Math.Round(CountMethodPairsThatShareAccessToAFieldOrAccessor(parsedClass.Members) / NP, 2);
+        }
+
+        private static int CountMethodPairsThatShareAccessToAFieldOrAccessor(List<CaDETMember> classMethods)
+        {
+            int methodPairsThatShareAccessToAFieldOrAccessor = 0;
+
+            for (var i = 0; i < classMethods.Count; i++)
+            {
+                for (var j = 1; j < classMethods.Count; j++)
+                {
+                    var firstMethod = classMethods[i];
+                    var secondMethod = classMethods[j];
+
+                    if (firstMethod.GetAccessedOwnFields().Intersect(secondMethod.GetAccessedOwnFields()).Any())
+                    {
+                        methodPairsThatShareAccessToAFieldOrAccessor++;
+                        break;
+                    }
+                    if (firstMethod.GetAccessedOwnAccessors().Intersect(secondMethod.GetAccessedOwnAccessors()).Any())
+                    {
+                        methodPairsThatShareAccessToAFieldOrAccessor++;
+                        break;
+                    }
+                }
+            }
+            return methodPairsThatShareAccessToAFieldOrAccessor;
         }
 
         private int CountFieldDefiningAccessors(CaDETClass parsedClass)
