@@ -1,6 +1,8 @@
 ﻿using SmartTutor.ContentModel;
 using SmartTutor.Repository;
 using SmartTutor.Service;
+using SmartTutor.Service.Recommenders;
+using System.Collections.Generic;
 
 namespace SmartTutor.Controllers
 {
@@ -10,13 +12,12 @@ namespace SmartTutor.Controllers
 
         public ContentRecommendationController()
         {
-            // Change param in constructor for ContentService if you want to get some other repository implementation
-            ContentService = new ContentService(new ContentInMemoryRepository());
+            ContentService = new ContentService(new KnowledgeBasedRecommender(new ContentInMemoryRepository()));
         }
 
-        public EducationContent FindContentForIssue(SmellType issue, int indexOfContent)
+        public Dictionary<string, List<EducationContent>> FindContentForIssue(Dictionary<string,List<SmellType>> issues, int indexOfContent)
         {
-            return ContentService.FindContentForIssue(issue, indexOfContent);
+            return ContentService.FindContentForIssue(issues);
         }
 
     }

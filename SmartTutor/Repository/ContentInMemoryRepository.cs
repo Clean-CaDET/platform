@@ -1,7 +1,5 @@
 using SmartTutor.ContentModel;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SmartTutor.Repository
 {
@@ -15,10 +13,9 @@ namespace SmartTutor.Repository
             educationContents = contentInMemoryFactory.createContent();
         }
 
-        public EducationContent FindEducationalContent(SmellType issue, int indexOfContent)
+        public List<EducationContent> FindEducationalContent(SmellType issue)
         {
-            return educationContents[issue][indexOfContent];
+            return educationContents[issue];
         }
-
     }
 }

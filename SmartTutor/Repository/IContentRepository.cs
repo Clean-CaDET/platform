@@ -1,4 +1,6 @@
 using SmartTutor.ContentModel;
+using System;
+using System.Collections.Generic;
 
 namespace SmartTutor.Repository
 {
@@ -7,7 +9,7 @@ namespace SmartTutor.Repository
         /// <param name="smellType"> issue </param>
         /// <param name="indexOfContent"> Index of content in list of contents for some type of smell </param>
         /// <returns></returns>
-        EducationContent FindEducationalContent(SmellType smellType, int indexOfContent);
+        List<EducationContent> FindEducationalContent(SmellType smellType);
     }
 }
 
