@@ -162,6 +162,40 @@ namespace RepositoryCompilerTests.Unit
             };
         }
 
+        public IEnumerable<string> GetATFDMultipleClassTexts()
+        {
+            return new[]
+            {
+                @"
+            using System.Collections.Generic;
+            namespace NDCApp.Model.Data
+            {
+                public class Class1
+                {
+                    private int a1;
+                    private int a2;
+                   
+                    private bool m1(){
+                        Class2 class2 = new Class2();
+                        if(class2.a1 == class2.a2 == a1){
+                            return true;
+                        }
+                        return false;
+                    }
+                   
+                }
+            };
+                public class Class2
+                {
+                    public int a1;
+                    public int a2;
+                    private int a3;
+                    private int a4;
+                };
+            }"
+            };
+        }
+
         public IEnumerable<string> GetTCCMultipleClassTexts()
         {
             return new[]
@@ -295,7 +329,6 @@ namespace RepositoryCompilerTests.Unit
             }"
             };
         }
-
 
 
 
