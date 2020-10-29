@@ -6,21 +6,18 @@ namespace SmartTutor.Controllers
 {
     public class ContentRepositoryController
     {
-        public ContentRepositoryService ContentRepositoryService;
+        public ContentService ContentService;
 
         public ContentRepositoryController()
         {
-            ContentRepositoryService = new ContentRepositoryService(new ContentInMemoryRepository());
+            // Change param in constructor for ContentService if you want to get some other repository implementation
+            ContentService = new ContentService(new ContentInMemoryRepository());
         }
 
-        public EducationContent FindLongParamListIssue()
+        public EducationContent FindContentForIssue(SmellType issue, int indexOfContent)
         {
-            return ContentRepositoryService.FindLongParamListIssue();
+            return ContentService.FindContentForIssue(issue, indexOfContent);
         }
 
-        public EducationContent FindLongMethodIssue()
-        {
-            return ContentRepositoryService.FindLongMethodIssue();
-        }
     }
 }
