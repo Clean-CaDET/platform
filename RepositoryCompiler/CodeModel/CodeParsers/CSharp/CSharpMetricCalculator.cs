@@ -44,10 +44,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             double NP = (N * (N - 1)) / 2;
             if (NP == 0) return null;
 
-            return Math.Round(GetNumberOfDirectConnections(parsedClass) / NP, 2);
+            return Math.Round(GetMethodPairsThatShareAccessToAFieldOrAccessor(parsedClass) / NP, 2);
         }
 
-        private int GetNumberOfDirectConnections(CaDETClass parsedClass)
+        private int GetMethodPairsThatShareAccessToAFieldOrAccessor(CaDETClass parsedClass)
         {
             var ownAccessedFieldsAndAccessors = new Dictionary<string, List<CaDETMember>>();
 
@@ -56,12 +56,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 ownAccessedFieldsAndAccessors.Add(method.Name, OwnAccessedFieldsAndAccessors(method));
             }
 
-            return CountNumberOfDirectConnections(ownAccessedFieldsAndAccessors);
+            return CountMethodPairsThatShareAccessToAFieldOrAccessor(ownAccessedFieldsAndAccessors);
         }
 
-        private static int CountNumberOfDirectConnections(Dictionary<string, List<CaDETMember>> ownAccessedFieldsAndAccessors)
+        private static int CountMethodPairsThatShareAccessToAFieldOrAccessor(Dictionary<string, List<CaDETMember>> ownAccessedFieldsAndAccessors)
         {
-            int directConnections = 0;
+            int methodPairsThatShareAccessToAFieldOrAccessor = 0;
 
             foreach (var ownAccessedFieldAndAccessor1 in ownAccessedFieldsAndAccessors)
             {
@@ -71,12 +71,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
                     if (hasSameElements && !(ownAccessedFieldAndAccessor1.Key.Equals(ownAccessedFieldAndAccessor2.Key)))
                     {
-                        directConnections++;
+                        methodPairsThatShareAccessToAFieldOrAccessor++;
                         break;
                     }
                 }
             }
-            return directConnections;
+            return methodPairsThatShareAccessToAFieldOrAccessor;
         }
 
         private List<CaDETMember> OwnAccessedFieldsAndAccessors(CaDETMember method)
