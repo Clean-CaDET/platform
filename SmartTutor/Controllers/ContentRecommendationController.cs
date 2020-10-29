@@ -4,11 +4,11 @@ using SmartTutor.Service;
 
 namespace SmartTutor.Controllers
 {
-    public class ContentRepositoryController
+    public class ContentRecommendationController
     {
         public ContentService ContentService;
 
-        public ContentRepositoryController()
+        public ContentRecommendationController()
         {
             // Change param in constructor for ContentService if you want to get some other repository implementation
             ContentService = new ContentService(new ContentInMemoryRepository());
