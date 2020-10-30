@@ -1,27 +1,37 @@
-using SmellDetector.Controllers;
+using System.Collections.Generic;
 using SmellDetector.SmellDetectionRules;
+using SmellDetector.SmellModel;
 
 namespace SmellDetector.Services
 {
     public class DetectionService
     {
-        public DetectionService() { }
+        public List<IDetector> Detectors { get; set; }
 
-        public SmellType classCheck(MetricsDTO metrics)
+        public DetectionService()
         {
-            // TODO: Add check for class
-            return SmellType.WITHOUT_BAD_SMELL;
+            LoadDetectors();
         }
 
-        public SmellType functionCheck(MetricsDTO metrics)
+        private void LoadDetectors()
         {
-            LongMethod longMethod = new LongMethod();
-            LongParamLists longParam = new LongParamLists();
+            Detectors = new List<IDetector>
+            {
+                new LongMethodRuleEngine(),
+                new LongParameterListRuleEngine(),
+            };
+        }
 
-            if (longMethod.isBadSmell(metrics)) return SmellType.LONG_METHOD;
-            if (longParam.isBadSmell(metrics)) return SmellType.LONG_PARAM_LISTS;
+        public SmellDetectionReport GenerateSmellDetectionReport(CaDETClassDTO caDetClassDto)
+        {
+            SmellDetectionReport smellDetectionReport = new SmellDetectionReport();
 
-            return SmellType.WITHOUT_BAD_SMELL;
+            foreach (IDetector detector in Detectors)
+            {
+                smellDetectionReport.AddPartialReport(detector.findIssues(caDetClassDto));
+            }
+            
+            return smellDetectionReport;
         }
 
     }
