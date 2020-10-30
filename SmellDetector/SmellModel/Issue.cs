@@ -4,12 +4,7 @@
     {
         public SmellType IssueType { get; set; }
 
-        public string Problem { get; set; }
+        public string CodeItemId { get; set; }
 
-        public Issue()
-        {
-            IssueType = SmellType.WITHOUT_BAD_SMELL;
-            Problem = "Problem is: ";
-        }
     }
 }

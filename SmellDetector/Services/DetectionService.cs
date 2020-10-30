@@ -1,6 +1,8 @@
 using System.Collections.Generic;
-using SmellDetector.SmellDetectionRules;
+using SmellDetector.Detectors;
+using SmellDetector.Detectors.RuleEngines;
 using SmellDetector.SmellModel;
+using SmellDetector.SmellModel.Reports;
 
 namespace SmellDetector.Services
 {
@@ -28,7 +30,7 @@ namespace SmellDetector.Services
 
             foreach (IDetector detector in Detectors)
             {
-                smellDetectionReport.AddPartialReport(detector.findIssues(caDetClassDto));
+                smellDetectionReport.AddPartialReport(detector.FindIssues(caDetClassDto));
             }
             
             return smellDetectionReport;
