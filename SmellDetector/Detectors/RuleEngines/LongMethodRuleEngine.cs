@@ -17,7 +17,7 @@ namespace SmellDetector.Detectors.RuleEngines
                 if (IsBadSmell(identifierAnalysis.Value))
                 {
                     Issue newIssue = new Issue();
-                    newIssue.IssueType = SmellType.LONG_PARAM_LISTS;
+                    newIssue.IssueType = SmellType.LONG_METHOD;
                     newIssue.CodeItemId = identifierAnalysis.Key;
                     partialReport.AddIssue(identifierAnalysis.Key, newIssue);
                 }

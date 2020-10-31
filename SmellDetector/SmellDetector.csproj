@@ -4,5 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+  </ItemGroup>
+
 
 </Project>

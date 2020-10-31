@@ -7,5 +7,10 @@ namespace SmellDetector.SmellModel
     {
         public Dictionary<string, MetricsDTO> IdentifierAnalyses { get; set; }
 
+        public CaDETClassDTO()
+        {
+            IdentifierAnalyses = new Dictionary<string, MetricsDTO>();
+        }
+
     }
 }

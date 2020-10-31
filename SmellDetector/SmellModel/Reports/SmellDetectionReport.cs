@@ -15,7 +15,16 @@ namespace SmellDetector.SmellModel.Reports
         {
             foreach (var pair in partialReport.PartialReport)
             {
-                Report[pair.Key].AddRange(pair.Value);
+                if (Report.ContainsKey(pair.Key))
+                {
+                    Report[pair.Key].AddRange(pair.Value);
+                }
+                else
+                {
+                    Report[pair.Key] = new List<Issue>();
+                    Report[pair.Key].AddRange(pair.Value);
+                }
+
             }
         }
 
