@@ -42,6 +42,17 @@ namespace SmellDetectorTests.Unit
 
             var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
             report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
+
+            caDetClassDto = new CaDETClassDTO();
+            testIdentifier = "public void testMethod();";
+            metricsForIdentifier = new MetricsDTO();
+            metricsForIdentifier.NOP = 0;
+            metricsForIdentifier.LOC = 100;
+            caDetClassDto.IdentifierAnalyses[testIdentifier] = metricsForIdentifier;
+            expectedIssues = 1; // one for long method(loc > 50) 
+
+            report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
+            report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
         }
 
         [Fact]
