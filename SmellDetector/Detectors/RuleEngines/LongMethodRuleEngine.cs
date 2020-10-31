@@ -11,15 +11,20 @@ namespace SmellDetector.Detectors.RuleEngines
         {
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
-            foreach (var pair in caDetClassDto.CaDETClass)
+            foreach (var identifierAnalysis in caDetClassDto.IdentifierAnalyses)
             {
-                Issue newIssue = new Issue();
-                if (IsBadSmell(pair.Value)) newIssue.IssueType = SmellType.LONG_PARAM_LISTS;
-                newIssue.CodeItemId = pair.Key;
-                partialReport.AddIssue(pair.Key, newIssue);
+                
+                if (IsBadSmell(identifierAnalysis.Value))
+                {
+                    Issue newIssue = new Issue();
+                    newIssue.IssueType = SmellType.LONG_PARAM_LISTS;
+                    newIssue.CodeItemId = identifierAnalysis.Key;
+                    partialReport.AddIssue(identifierAnalysis.Key, newIssue);
+                }
+                
             }
 
-            return null;
+            return partialReport;
         }
 
         private bool IsBadSmell(MetricsDTO metrics)
