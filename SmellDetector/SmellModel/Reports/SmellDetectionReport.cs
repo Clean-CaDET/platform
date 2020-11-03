@@ -4,7 +4,7 @@ namespace SmellDetector.SmellModel.Reports
 {
     public class SmellDetectionReport
     {
-        public Dictionary<string,List<Issue>> Report { get; set; }
+        public Dictionary<string, List<Issue>> Report { get; set; }
 
         public SmellDetectionReport()
         {
@@ -13,16 +13,16 @@ namespace SmellDetector.SmellModel.Reports
 
         public void AddPartialReport(PartialSmellDetectionReport partialReport)
         {
-            foreach (var pair in partialReport.PartialReport)
+            foreach (var codeItemIssue in partialReport.CodeItemIssues)
             {
-                if (Report.ContainsKey(pair.Key))
+                if (Report.ContainsKey(codeItemIssue.Key))
                 {
-                    Report[pair.Key].AddRange(pair.Value);
+                    Report[codeItemIssue.Key].AddRange(codeItemIssue.Value);
                 }
                 else
                 {
-                    Report[pair.Key] = new List<Issue>();
-                    Report[pair.Key].AddRange(pair.Value);
+                    Report[codeItemIssue.Key] = new List<Issue>();
+                    Report[codeItemIssue.Key].AddRange(codeItemIssue.Value);
                 }
 
             }

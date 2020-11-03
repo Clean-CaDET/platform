@@ -21,7 +21,7 @@ namespace SmellDetectorTests.Unit
             string testIdentifier = "public void testMethod(int paramOne, int paramTwo, int another_paramTwo, int paramtwo, int paramTwos, int paramTwoas);";
             MetricsDTO metricsForIdentifier = new MetricsDTO();
             metricsForIdentifier.NOP = 6;
-            caDetClassDto.IdentifierAnalyses[testIdentifier] = metricsForIdentifier;
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
             var expectedIssues = 2; // one for long method(nop > 4) & one for long parameter list (nop > 5)
 
             var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
@@ -37,7 +37,7 @@ namespace SmellDetectorTests.Unit
             string testIdentifier = "public void testMethod(int paramOne, int paramTwo, int another_paramTwo, int paramtwo, int moreparam);";
             MetricsDTO metricsForIdentifier = new MetricsDTO();
             metricsForIdentifier.NOP = 5;
-            caDetClassDto.IdentifierAnalyses[testIdentifier] = metricsForIdentifier;
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
             var expectedIssues = 1; // one for long method(nop > 4) 
 
             var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
@@ -48,7 +48,7 @@ namespace SmellDetectorTests.Unit
             metricsForIdentifier = new MetricsDTO();
             metricsForIdentifier.NOP = 0;
             metricsForIdentifier.LOC = 100;
-            caDetClassDto.IdentifierAnalyses[testIdentifier] = metricsForIdentifier;
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
             expectedIssues = 1; // one for long method(loc > 50) 
 
             report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
@@ -64,7 +64,7 @@ namespace SmellDetectorTests.Unit
             string testIdentifier = "public void testMethod();";
             MetricsDTO metricsForIdentifier = new MetricsDTO();
             metricsForIdentifier.NOP = 0;
-            caDetClassDto.IdentifierAnalyses[testIdentifier] = metricsForIdentifier;
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
             var expectedIssues = 0; // there is no need for issues
 
             var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);

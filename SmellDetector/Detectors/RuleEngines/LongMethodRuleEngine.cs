@@ -11,7 +11,7 @@ namespace SmellDetector.Detectors.RuleEngines
         {
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
-            foreach (var identifierAnalysis in caDetClassDto.IdentifierAnalyses)
+            foreach (var identifierAnalysis in caDetClassDto.CodeItemMetrics)
             {
                 
                 if (IsBadSmell(identifierAnalysis.Value))
