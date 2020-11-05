@@ -74,34 +74,61 @@ namespace SmartTutor.Repository
                 CreateGodClassShortTextSnippet(),
                 CreateGodClassLongTextSnippet(),
                 CreateGodClassImageSnippet(),
+                CreateGodClassVideoSnippet(),
+                CreateGodClassCodeSnippet()
             };
 
             return educationContent;
         }
 
+        private EducationSnippet CreateGodClassCodeSnippet()
+        {
+            EducationSnippet codeSnippet = new EducationSnippet();
+            codeSnippet.SnippetQuality = 4;
+            codeSnippet.Tags = new List<Tag>();
+            codeSnippet.Tags.Add(Tag.Interesting);
+            codeSnippet.SnippetType = SnippetType.CodeSnippet;
+            codeSnippet.Content =
+                "Circle makeCircle(double x, double y, double radius);Circle makeCircle(Point center, double radius); ";
+            codeSnippet.SnippetDifficulty = 5;
+            return codeSnippet;
+        }
+
+        private EducationSnippet CreateGodClassVideoSnippet()
+        {
+            EducationSnippet videoSnippet = new EducationSnippet();
+            videoSnippet.SnippetQuality = 4;
+            videoSnippet.Tags = new List<Tag>();
+            videoSnippet.Tags.Add(Tag.MustKnow);
+            videoSnippet.SnippetType = SnippetType.Video;
+            videoSnippet.Content = "https://www.youtube.com/watch?v=w_SHQFzOosg";
+            videoSnippet.SnippetDifficulty = 4;
+            return videoSnippet;
+        }
+
         private EducationSnippet CreateGodClassImageSnippet()
         {
-            EducationSnippet snippet = new EducationSnippet();
-            snippet.SnippetQuality = 2;
-            snippet.Tags = new List<Tag>();
-            snippet.Tags.Add(Tag.Interesting);
-            snippet.SnippetType = SnippetType.Image;
-            snippet.Content = "https://refactoring.guru/images/refactoring/content/smells/large-class-01.png";
-            snippet.SnippetDifficulty = 1;
-            return snippet;
+            EducationSnippet imageSnippet = new EducationSnippet();
+            imageSnippet.SnippetQuality = 2;
+            imageSnippet.Tags = new List<Tag>();
+            imageSnippet.Tags.Add(Tag.Interesting);
+            imageSnippet.SnippetType = SnippetType.Image;
+            imageSnippet.Content = "https://refactoring.guru/images/refactoring/content/smells/large-class-01.png";
+            imageSnippet.SnippetDifficulty = 1;
+            return imageSnippet;
         }
 
         private EducationSnippet CreateGodClassLongTextSnippet()
         {
-            EducationSnippet snippet = new EducationSnippet();
-            snippet.SnippetQuality = 5;
-            snippet.Tags = new List<Tag>();
-            snippet.Tags.Add(Tag.MustKnow);
-            snippet.SnippetType = SnippetType.LongText;
-            snippet.Content =
+            EducationSnippet longTextSnippet = new EducationSnippet();
+            longTextSnippet.SnippetQuality = 5;
+            longTextSnippet.Tags = new List<Tag>();
+            longTextSnippet.Tags.Add(Tag.MustKnow);
+            longTextSnippet.SnippetType = SnippetType.LongText;
+            longTextSnippet.Content =
                 "The God class smell occurs when a huge class which is surrounded by many data classes acts as a controller (i.e. takes most of the decisions and monopolises the functionality offered by the software). The class defines many data members and methods and exhibits low cohesion.";
-            snippet.SnippetDifficulty = 4;
-            return snippet;
+            longTextSnippet.SnippetDifficulty = 4;
+            return longTextSnippet;
 
         }
 
