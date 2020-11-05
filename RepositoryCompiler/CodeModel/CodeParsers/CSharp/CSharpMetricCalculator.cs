@@ -31,14 +31,16 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         /// </summary>
         private int GetAccessToForeignData(CaDETClass parsedClass)
         {
-            int numberOfAccessToForeignFieldsAndAccessors = 0;
+            ISet<CaDETField> accessedExternalFields = new HashSet<CaDETField>();
+            ISet<CaDETMember> accessedExternalAccessors = new HashSet<CaDETMember>();
 
             foreach (var member in parsedClass.Members)
             {
-                numberOfAccessToForeignFieldsAndAccessors += (member.AccessedFields.Count - member.GetAccessedOwnFields().Count) + (member.AccessedAccessors.Count - member.GetAccessedOwnAccessors().Count);
+                accessedExternalFields.UnionWith(member.AccessedFields.Where(f => !f.Parent.Equals(member.Parent)));
+                accessedExternalAccessors.UnionWith(member.AccessedAccessors.Where(a => !a.Parent.Equals(member.Parent)));
             }
 
-            return numberOfAccessToForeignFieldsAndAccessors;
+            return accessedExternalAccessors.Count + accessedExternalFields.Count;
         }
 
         private double? GetLackOfCohesionOfMethods(CaDETClass parsedClass)
