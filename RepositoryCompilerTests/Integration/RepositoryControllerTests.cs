@@ -1,8 +1,8 @@
 ﻿using RepositoryCompiler.Controllers;
-using RepositoryCompilerTests.Unit;
+using RepositoryCompiler.Controllers.DTOs;
+using RepositoryCompilerTests.DataFactories;
 using Shouldly;
 using System.Linq;
-using RepositoryCompiler.Controllers.DTOs;
 using Xunit;
 
 namespace RepositoryCompilerTests.Integration
@@ -13,7 +13,7 @@ namespace RepositoryCompilerTests.Integration
         public void Gets_educational_content_for_class_cohesion()
         {
             RepositoryController ctrl = new RepositoryController(new CodeRepositoryService());
-            CodeModelTestDataFactory factory = new CodeModelTestDataFactory();
+            CodeFactory factory = new CodeFactory();
 
             ClassMetricsDTO metricsDto = ctrl.GetBasicClassMetrics(factory.GetDoctorClassText().First());
 

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace RepositoryCompilerTests.Unit
+namespace RepositoryCompilerTests.DataFactories
 {
-    public class CodeModelTestDataFactory
+    public class CodeFactory
     {
         public IEnumerable<string> GetDoctorClassText()
         {
@@ -232,12 +232,18 @@ namespace RepositoryCompilerTests.Unit
                   {
                    
                     public double m1(){
-                        Class6 class6 = new Class4();
+                        Class4 class4 = new Class4();
                        
-                        class6.Hours = 23;
-                        class6.Hours = 24;
+                        class4.Hours = 23;
+                        class4.Hours = 24;
         
-                        return class6.Hours;
+                        return class4.Hours;
+                    }
+
+                    public double m2() {
+                        Class4 class4 = new Class4();
+
+                        return class4.Hours;
                     }
                    
                 }
@@ -484,7 +490,7 @@ namespace RepositoryCompilerTests.Unit
                         return !(From > timeSpan.To || To < timeSpan.From);
                     }
                 }
-            }", 
+            }",
                 @"
             using System.Collections.Generic;
             using DoctorApp.Model.Data.DateR;
