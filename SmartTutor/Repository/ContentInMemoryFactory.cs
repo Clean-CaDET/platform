@@ -67,15 +67,32 @@ namespace SmartTutor.Repository
         {
             EducationContent educationContent = new EducationContent();
 
-           
+            educationContent.ContentQuality = 4;
+            educationContent.ContentDifficulty = 5;
+            educationContent.EducationSnippets = new List<EducationSnippet>
+            {
+                CreateGodClassShortTextSnippet(),
+            };
 
             return educationContent;
         }
 
-        /// <summary>
-        /// LM - LongMethod
-        /// </summary>
-        /// <returns></returns>
+        private EducationSnippet CreateGodClassShortTextSnippet()
+        {
+            EducationSnippet shortTextSnippet = new EducationSnippet();
+            shortTextSnippet.SnippetQuality = 3;
+            shortTextSnippet.Tags = new List<Tag>();
+            shortTextSnippet.Tags.Add(Tag.Interesting);
+            shortTextSnippet.SnippetType = SnippetType.ShortText;
+            shortTextSnippet.Content =
+                "When a class is trying to do too much, it often shows up as too many fields. When a class has too many fields, duplicated code cannot be far behind.";
+            shortTextSnippet.SnippetDifficulty = 2;
+            return shortTextSnippet;
+        }
+            /// <summary>
+            /// LM - LongMethod
+            /// </summary>
+            /// <returns></returns>
         private EducationSnippet CreateLMShortTextSnippet()
         {
             EducationSnippet shortTextSnippet = new EducationSnippet();
