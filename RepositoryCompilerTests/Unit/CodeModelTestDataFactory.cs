@@ -290,6 +290,34 @@ namespace RepositoryCompilerTests.Unit
                         }
                     }
                 };
+            }",
+                @"
+            using System.Collections.Generic;
+            namespace NDCApp.Model.Data
+            {
+                public class Class9
+                {
+                     public void Method()
+                     {
+                        Class10 class10 = new Class10();
+
+                        class10.calendarType = 500;
+                        class10.leapYear = true;
+                     }
+                }
+
+                public class Class10 : Class11
+                {
+                     public bool leapYear;
+                  
+                }
+
+                public class Class11 
+                {
+                     private double _seconds;
+                     public string calendarType;
+                }
+
             }"
             };
         }
