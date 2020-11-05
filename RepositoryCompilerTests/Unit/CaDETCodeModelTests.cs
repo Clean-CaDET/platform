@@ -149,7 +149,27 @@ namespace RepositoryCompilerTests.Unit
             class7.Metrics.TCC.ShouldBe(0.5);
             class8.Metrics.TCC.ShouldBe(0.5);
         }
-     
+
+        [Fact]
+        public void Calculates_access_to_foreign_data()
+        {
+            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetATFDMultipleClassTexts());
+
+            var class1 = classes.Find(c => c.Name.Equals("Class1"));
+            var class3 = classes.Find(c => c.Name.Equals("Class3"));
+            var class5 = classes.Find(c => c.Name.Equals("Class5"));
+            var class7 = classes.Find(c => c.Name.Equals("Class7"));
+            var class9 = classes.Find(c => c.Name.Equals("Class9"));
+        
+            class1.Metrics.ATFD.ShouldBe(2);
+            class3.Metrics.ATFD.ShouldBe(1);
+            class5.Metrics.ATFD.ShouldBe(1);
+            class7.Metrics.ATFD.ShouldBe(3);
+            class9.Metrics.ATFD.ShouldBe(2);
+        }
+
         [Fact]
         public void Determines_if_is_data_class()
         {
