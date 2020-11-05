@@ -25,6 +25,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             };
         }
 
+        /// <summary>
+        /// ATFD: Access To Foreign Data
+        /// DOI: 10.1109/ESEM.2009.5314231
+        /// </summary>
         private int GetAccessToForeignData(CaDETClass parsedClass)
         {
             int numberOfAccessToForeignFieldsAndAccessors = 0;
@@ -51,6 +55,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return Math.Round(1 - methodFieldAccess/maxCohesion, 3);
         }
 
+        /// <summary>
+        /// TCC - Tight Class Cohesion
+        /// DOI: 10.1145/223427.211856
+        /// </summary>
         private double? GetTightClassCohesion(CaDETClass parsedClass)
         {
             int N = GetNumberOfMethodsDeclared(parsedClass);
