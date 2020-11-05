@@ -72,9 +72,24 @@ namespace SmartTutor.Repository
             educationContent.EducationSnippets = new List<EducationSnippet>
             {
                 CreateGodClassShortTextSnippet(),
+                CreateGodClassLongTextSnippet(),
             };
 
             return educationContent;
+        }
+
+        private EducationSnippet CreateGodClassLongTextSnippet()
+        {
+            EducationSnippet snippet = new EducationSnippet();
+            snippet.SnippetQuality = 5;
+            snippet.Tags = new List<Tag>();
+            snippet.Tags.Add(Tag.MustKnow);
+            snippet.SnippetType = SnippetType.LongText;
+            snippet.Content =
+                "The God class smell occurs when a huge class which is surrounded by many data classes acts as a controller (i.e. takes most of the decisions and monopolises the functionality offered by the software). The class defines many data members and methods and exhibits low cohesion.";
+            snippet.SnippetDifficulty = 4;
+            return snippet;
+
         }
 
         private EducationSnippet CreateGodClassShortTextSnippet()
