@@ -73,9 +73,22 @@ namespace SmartTutor.Repository
             {
                 CreateGodClassShortTextSnippet(),
                 CreateGodClassLongTextSnippet(),
+                CreateGodClassImageSnippet(),
             };
 
             return educationContent;
+        }
+
+        private EducationSnippet CreateGodClassImageSnippet()
+        {
+            EducationSnippet snippet = new EducationSnippet();
+            snippet.SnippetQuality = 2;
+            snippet.Tags = new List<Tag>();
+            snippet.Tags.Add(Tag.Interesting);
+            snippet.SnippetType = SnippetType.Image;
+            snippet.Content = "https://refactoring.guru/images/refactoring/content/smells/large-class-01.png";
+            snippet.SnippetDifficulty = 1;
+            return snippet;
         }
 
         private EducationSnippet CreateGodClassLongTextSnippet()
