@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartTutor.ContentModel;
 
 namespace SmartTutor
 {
@@ -18,6 +20,10 @@ namespace SmartTutor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddMvc();
+            services.AddEntityFrameworkNpgsql().AddDbContext<ContentWebApiContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("MyWebApiConection")));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
