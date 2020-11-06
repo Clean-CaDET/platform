@@ -12,13 +12,17 @@ namespace SmartTutor.Repository
 
             List<EducationContent> longMethodContents = new List<EducationContent>();
             List<EducationContent> longParameterListContents = new List<EducationContent>();
+            List<EducationContent> godClassContents = new List<EducationContent>();
+
 
             longMethodContents.Add(CreateLongMethodContent());
             longParameterListContents.Add(CreateLongParameterListContent());
+            godClassContents.Add(CreateGodClassContent());
 
 
             educationContents.Add(SmellType.LONG_METHOD, longMethodContents);
             educationContents.Add(SmellType.LONG_PARAM_LISTS, longParameterListContents);
+            educationContents.Add(SmellType.GOD_CLASS, godClassContents);
 
             return educationContents;
         }
@@ -59,10 +63,91 @@ namespace SmartTutor.Repository
             return educationContent;
         }
 
-        /// <summary>
-        /// LM - LongMethod
-        /// </summary>
-        /// <returns></returns>
+        private EducationContent CreateGodClassContent()
+        {
+            EducationContent educationContent = new EducationContent();
+
+            educationContent.ContentQuality = 4;
+            educationContent.ContentDifficulty = 5;
+            educationContent.EducationSnippets = new List<EducationSnippet>
+            {
+                CreateGodClassShortTextSnippet(),
+                CreateGodClassLongTextSnippet(),
+                CreateGodClassImageSnippet(),
+                CreateGodClassVideoSnippet(),
+                CreateGodClassCodeSnippet()
+            };
+
+            return educationContent;
+        }
+
+        private EducationSnippet CreateGodClassCodeSnippet()
+        {
+            EducationSnippet codeSnippet = new EducationSnippet();
+            codeSnippet.SnippetQuality = 4;
+            codeSnippet.Tags = new List<Tag>();
+            codeSnippet.Tags.Add(Tag.Interesting);
+            codeSnippet.SnippetType = SnippetType.CodeSnippet;
+            codeSnippet.Content =
+                "Circle makeCircle(double x, double y, double radius);Circle makeCircle(Point center, double radius); ";
+            codeSnippet.SnippetDifficulty = 5;
+            return codeSnippet;
+        }
+
+        private EducationSnippet CreateGodClassVideoSnippet()
+        {
+            EducationSnippet videoSnippet = new EducationSnippet();
+            videoSnippet.SnippetQuality = 4;
+            videoSnippet.Tags = new List<Tag>();
+            videoSnippet.Tags.Add(Tag.MustKnow);
+            videoSnippet.SnippetType = SnippetType.Video;
+            videoSnippet.Content = "https://www.youtube.com/watch?v=w_SHQFzOosg";
+            videoSnippet.SnippetDifficulty = 4;
+            return videoSnippet;
+        }
+
+        private EducationSnippet CreateGodClassImageSnippet()
+        {
+            EducationSnippet imageSnippet = new EducationSnippet();
+            imageSnippet.SnippetQuality = 2;
+            imageSnippet.Tags = new List<Tag>();
+            imageSnippet.Tags.Add(Tag.Interesting);
+            imageSnippet.SnippetType = SnippetType.Image;
+            imageSnippet.Content = "https://refactoring.guru/images/refactoring/content/smells/large-class-01.png";
+            imageSnippet.SnippetDifficulty = 1;
+            return imageSnippet;
+        }
+
+        private EducationSnippet CreateGodClassLongTextSnippet()
+        {
+            EducationSnippet longTextSnippet = new EducationSnippet();
+            longTextSnippet.SnippetQuality = 5;
+            longTextSnippet.Tags = new List<Tag>();
+            longTextSnippet.Tags.Add(Tag.MustKnow);
+            longTextSnippet.SnippetType = SnippetType.LongText;
+            longTextSnippet.Content =
+                "The God class smell occurs when a huge class which is surrounded by many data classes acts as a controller (i.e. takes most of the decisions and monopolises the functionality offered by the software). The class defines many data members and methods and exhibits low cohesion.";
+            longTextSnippet.SnippetDifficulty = 4;
+            return longTextSnippet;
+
+        }
+
+        private EducationSnippet CreateGodClassShortTextSnippet()
+        {
+            EducationSnippet shortTextSnippet = new EducationSnippet();
+            shortTextSnippet.SnippetQuality = 3;
+            shortTextSnippet.Tags = new List<Tag>();
+            shortTextSnippet.Tags.Add(Tag.Interesting);
+            shortTextSnippet.SnippetType = SnippetType.ShortText;
+            shortTextSnippet.Content =
+                "When a class is trying to do too much, it often shows up as too many fields. When a class has too many fields, duplicated code cannot be far behind.";
+            shortTextSnippet.SnippetDifficulty = 2;
+            return shortTextSnippet;
+        }
+            /// <summary>
+            /// LM - LongMethod
+            /// </summary>
+            /// <returns></returns>
         private EducationSnippet CreateLMShortTextSnippet()
         {
             EducationSnippet shortTextSnippet = new EducationSnippet();
