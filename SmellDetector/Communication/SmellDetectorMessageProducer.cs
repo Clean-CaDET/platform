@@ -21,12 +21,14 @@ namespace SmellDetector.Communication
         {
             ConfigureInitialStates();
             CreateConnection();
-
             Channel = Connection.CreateModel();
-
             DeclareQueue();
-            PublishMessage(GetEncodedMessage());
+        }
 
+        // TODO: Make more complex param for creating issue report
+        public void CreateNewIssueReport(string message)
+        {
+            PublishMessage(GetEncodedMessage(message));
         }
 
         private void CreateConnection()
@@ -59,9 +61,8 @@ namespace SmellDetector.Communication
                                                  arguments: null);
         }
 
-        private byte[] GetEncodedMessage()
+        private byte[] GetEncodedMessage(string message)
         {
-            string message = "Hello World!";
             var encodedMessage = Encoding.UTF8.GetBytes(message);
             return encodedMessage;
         }

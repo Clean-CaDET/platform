@@ -62,6 +62,7 @@ namespace SmellDetectorTests.Unit
         public void Produce_Issue_Report_Message()
         {
             SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
+            producer.CreateNewIssueReport("Hello Wolrd :)");
         }
 
     }
