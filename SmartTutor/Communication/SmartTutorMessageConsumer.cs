@@ -1,5 +1,7 @@
-﻿using RabbitMQ.Client;
+﻿using Newtonsoft.Json;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using SmellDetector.SmellModel.Reports;
 using System;
 using System.Text;
 
@@ -19,6 +21,9 @@ namespace SmartTutor.Communucation
             {
                 DeclareQueue(queueName, channel);
                 ConsumeMessage(queueName, channel, DecodeMessage(channel));
+
+                   Console.WriteLine(" Press [enter] to exit.");
+                Console.ReadLine();
             }
         }
 
@@ -28,8 +33,16 @@ namespace SmartTutor.Communucation
             consumer.Received += (model, deliveryArguments) =>
             {
                 var body = deliveryArguments.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-
+                var jsonMessage = Encoding.UTF8.GetString(body);
+                SmellDetectionReport reportMessage = new SmellDetectionReport();
+                try
+                {   
+                    reportMessage = JsonConvert.DeserializeObject<SmellDetectionReport>(jsonMessage);
+                }
+                catch (Exception)  
+                {
+                   //TODO: write exc
+                }
             };
             return consumer;
         }

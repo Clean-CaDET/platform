@@ -1,6 +1,10 @@
 ﻿using System;
 using RabbitMQ.Client;
 using System.Text;
+using SmellDetector.SmellModel.Reports;
+using System.Collections.Generic;
+using SmellDetector.SmellModel;
+using Newtonsoft.Json;
 
 namespace SmellDetector.Communication
 {
@@ -46,8 +50,20 @@ namespace SmellDetector.Communication
 
         private byte[] EncodeMessage()
         {
-            string message = "Hello World!";
-            var encodedMessage = Encoding.UTF8.GetBytes(message);
+            SmellDetectionReport reportMessage = new SmellDetectionReport();
+            reportMessage.Report = new Dictionary<string, List<Issue>>();
+
+            Issue detectedIssue = new Issue();
+            detectedIssue.IssueType = SmellType.GOD_CLASS;
+            detectedIssue.CodeItemId = "public class Doctor";
+
+            List<Issue> detectedIssues = new List<Issue>();
+            detectedIssues.Add(detectedIssue);
+
+            reportMessage.Report.Add("Identifikator", detectedIssues);
+
+            var encodedMessage = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(reportMessage));
+
             return encodedMessage;
         }
     }
