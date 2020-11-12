@@ -12,7 +12,6 @@ namespace SmartTutor.Communucation
         {
             var nodeName = "localhost";
             var queueName = "IssueReports";
-            var exchangeName = "";
 
             var connectionFactory = new ConnectionFactory() { HostName = nodeName };
             using (var connection = connectionFactory.CreateConnection())
@@ -31,7 +30,7 @@ namespace SmartTutor.Communucation
                     var message = Encoding.UTF8.GetString(body);
                     Console.WriteLine(" [x] Received {0}", message);
                 };
-                channel.BasicConsume(queue: "hello",
+                channel.BasicConsume(queue: queueName,
                                      autoAck: true,
                                      consumer: consumer);
 
