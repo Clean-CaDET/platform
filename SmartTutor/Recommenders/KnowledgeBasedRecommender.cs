@@ -2,7 +2,7 @@
 using SmartTutor.Repository;
 using System.Collections.Generic;
 
-namespace SmartTutor.Service.Recommenders
+namespace SmartTutor.Recommenders
 {
     class KnowledgeBasedRecommender : IRecommender
     {
@@ -11,9 +11,9 @@ namespace SmartTutor.Service.Recommenders
         {
             this.contentRepository = contentRepository;
         }
-        public List<EducationContent> FindEducationalContent(List<SmellType> issues)
+        public List<EducationalContent> FindEducationalContent(List<SmellType> issues)
         {
-            List<EducationContent> result = new List<EducationContent>();
+            List<EducationalContent> result = new List<EducationalContent>();
             foreach(SmellType smellType in issues)
             {
                  result.AddRange(contentRepository.FindEducationalContent(smellType));

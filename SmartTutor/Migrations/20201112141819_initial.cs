@@ -10,7 +10,7 @@ namespace SmartTutor.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "EducationContents",
+                name: "EducationalContents",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -21,11 +21,11 @@ namespace SmartTutor.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EducationContents", x => x.Id);
+                    table.PrimaryKey("PK_EducationalContents", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EducationSnippets",
+                name: "EducationalSnippets",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -35,32 +35,32 @@ namespace SmartTutor.Migrations
                     SnippetType = table.Column<int>(nullable: false),
                     Tags = table.Column<List<Tag>>(nullable: true),
                     Content = table.Column<string>(nullable: true),
-                    EducationContentId = table.Column<int>(nullable: true)
+                    EducationalContentId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EducationSnippets", x => x.Id);
+                    table.PrimaryKey("PK_EducationalSnippets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EducationSnippets_EducationContents_EducationContentId",
-                        column: x => x.EducationContentId,
-                        principalTable: "EducationContents",
+                        name: "FK_EducationalSnippets_EducationalContents_EducationalContentId",
+                        column: x => x.EducationalContentId,
+                        principalTable: "EducationalContents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_EducationSnippets_EducationContentId",
-                table: "EducationSnippets",
-                column: "EducationContentId");
+                name: "IX_EducationalSnippets_EducationalContentId",
+                table: "EducationalSnippets",
+                column: "EducationalContentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EducationSnippets");
+                name: "EducationalSnippets");
 
             migrationBuilder.DropTable(
-                name: "EducationContents");
+                name: "EducationalContents");
         }
     }
 }

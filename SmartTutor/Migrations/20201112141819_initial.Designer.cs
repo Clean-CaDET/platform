@@ -10,8 +10,8 @@ using SmartTutor.ContentModel;
 
 namespace SmartTutor.Migrations
 {
-    [DbContext(typeof(ContentWebApiContext))]
-    [Migration("20201105124439_initial")]
+    [DbContext(typeof(SmartTutorContext))]
+    [Migration("20201112141819_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace SmartTutor.Migrations
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("SmartTutor.ContentModel.EducationContent", b =>
+            modelBuilder.Entity("SmartTutor.ContentModel.EducationalContent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,10 +40,10 @@ namespace SmartTutor.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EducationContents");
+                    b.ToTable("EducationalContents");
                 });
 
-            modelBuilder.Entity("SmartTutor.ContentModel.EducationSnippet", b =>
+            modelBuilder.Entity("SmartTutor.ContentModel.EducationalSnippet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace SmartTutor.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
-                    b.Property<int?>("EducationContentId")
+                    b.Property<int?>("EducationalContentId")
                         .HasColumnType("integer");
 
                     b.Property<int>("SnippetDifficulty")
@@ -70,16 +70,16 @@ namespace SmartTutor.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EducationContentId");
+                    b.HasIndex("EducationalContentId");
 
-                    b.ToTable("EducationSnippets");
+                    b.ToTable("EducationalSnippets");
                 });
 
-            modelBuilder.Entity("SmartTutor.ContentModel.EducationSnippet", b =>
+            modelBuilder.Entity("SmartTutor.ContentModel.EducationalSnippet", b =>
                 {
-                    b.HasOne("SmartTutor.ContentModel.EducationContent", null)
+                    b.HasOne("SmartTutor.ContentModel.EducationalContent", null)
                         .WithMany("EducationSnippets")
-                        .HasForeignKey("EducationContentId");
+                        .HasForeignKey("EducationalContentId");
                 });
 #pragma warning restore 612, 618
         }

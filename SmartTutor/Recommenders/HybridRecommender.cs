@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartTutor.Service.Recommenders
+namespace SmartTutor.Recommenders
 {
     class HybridRecommender : IRecommender
     {
-        public List<EducationContent> FindEducationalContent(List<SmellType> issues)
+        public List<EducationalContent> FindEducationalContent(List<SmellType> issues)
         {
             throw new NotImplementedException();
         }

@@ -5,13 +5,13 @@ namespace SmartTutor.Repository
 {
     public class ContentInMemoryFactory
     {
-        public Dictionary<SmellType, List<EducationContent>> createContent()
+        public Dictionary<SmellType, List<EducationalContent>> createContent()
         {
-            Dictionary<SmellType, List<EducationContent>> educationContents = new Dictionary<SmellType, List<EducationContent>>();
+            Dictionary<SmellType, List<EducationalContent>> educationContents = new Dictionary<SmellType, List<EducationalContent>>();
 
-            List<EducationContent> longMethodContents = new List<EducationContent>();
-            List<EducationContent> longParameterListContents = new List<EducationContent>();
-            List<EducationContent> godClassContents = new List<EducationContent>();
+            List<EducationalContent> longMethodContents = new List<EducationalContent>();
+            List<EducationalContent> longParameterListContents = new List<EducationalContent>();
+            List<EducationalContent> godClassContents = new List<EducationalContent>();
 
 
             longMethodContents.Add(CreateLongMethodContent());
@@ -26,13 +26,13 @@ namespace SmartTutor.Repository
             return educationContents;
         }
 
-        private EducationContent CreateLongMethodContent()
+        private EducationalContent CreateLongMethodContent()
         {
-            EducationContent educationContent = new EducationContent();
+            EducationalContent educationContent = new EducationalContent();
 
             educationContent.ContentQuality = 4;
             educationContent.ContentDifficulty = 4;
-            educationContent.EducationSnippets = new List<EducationSnippet>
+            educationContent.EducationSnippets = new List<EducationalSnippet>
             {
                 CreateLMShortTextSnippet(),
                 CreateLMLongTextSnippet(),
@@ -44,13 +44,13 @@ namespace SmartTutor.Repository
 
         }
 
-        private EducationContent CreateLongParameterListContent()
+        private EducationalContent CreateLongParameterListContent()
         {
-            EducationContent educationContent = new EducationContent();
+            EducationalContent educationContent = new EducationalContent();
 
             educationContent.ContentQuality = 4;
             educationContent.ContentDifficulty = 5;
-            educationContent.EducationSnippets = new List<EducationSnippet>
+            educationContent.EducationSnippets = new List<EducationalSnippet>
             {
                 CreateLPSShortTextSnippet(),
                 CreateLPSLongTextSnippet(),
@@ -62,13 +62,13 @@ namespace SmartTutor.Repository
             return educationContent;
         }
 
-        private EducationContent CreateGodClassContent()
+        private EducationalContent CreateGodClassContent()
         {
-            EducationContent educationContent = new EducationContent();
+            EducationalContent educationContent = new EducationalContent();
 
             educationContent.ContentQuality = 4;
             educationContent.ContentDifficulty = 5;
-            educationContent.EducationSnippets = new List<EducationSnippet>
+            educationContent.EducationSnippets = new List<EducationalSnippet>
             {
                 CreateGodClassShortTextSnippet(),
                 CreateGodClassLongTextSnippet(),
@@ -80,9 +80,9 @@ namespace SmartTutor.Repository
             return educationContent;
         }
 
-        private EducationSnippet CreateGodClassCodeSnippet()
+        private EducationalSnippet CreateGodClassCodeSnippet()
         {
-            EducationSnippet codeSnippet = new EducationSnippet();
+            EducationalSnippet codeSnippet = new EducationalSnippet();
             codeSnippet.SnippetQuality = 4;
             codeSnippet.Tags = new List<Tag>();
             codeSnippet.Tags.Add(Tag.Interesting);
@@ -93,9 +93,9 @@ namespace SmartTutor.Repository
             return codeSnippet;
         }
 
-        private EducationSnippet CreateGodClassVideoSnippet()
+        private EducationalSnippet CreateGodClassVideoSnippet()
         {
-            EducationSnippet videoSnippet = new EducationSnippet();
+            EducationalSnippet videoSnippet = new EducationalSnippet();
             videoSnippet.SnippetQuality = 4;
             videoSnippet.Tags = new List<Tag>();
             videoSnippet.Tags.Add(Tag.MustKnow);
@@ -105,9 +105,9 @@ namespace SmartTutor.Repository
             return videoSnippet;
         }
 
-        private EducationSnippet CreateGodClassImageSnippet()
+        private EducationalSnippet CreateGodClassImageSnippet()
         {
-            EducationSnippet imageSnippet = new EducationSnippet();
+            EducationalSnippet imageSnippet = new EducationalSnippet();
             imageSnippet.SnippetQuality = 2;
             imageSnippet.Tags = new List<Tag>();
             imageSnippet.Tags.Add(Tag.Interesting);
@@ -117,9 +117,9 @@ namespace SmartTutor.Repository
             return imageSnippet;
         }
 
-        private EducationSnippet CreateGodClassLongTextSnippet()
+        private EducationalSnippet CreateGodClassLongTextSnippet()
         {
-            EducationSnippet longTextSnippet = new EducationSnippet();
+            EducationalSnippet longTextSnippet = new EducationalSnippet();
             longTextSnippet.SnippetQuality = 5;
             longTextSnippet.Tags = new List<Tag>();
             longTextSnippet.Tags.Add(Tag.MustKnow);
@@ -131,9 +131,9 @@ namespace SmartTutor.Repository
 
         }
 
-        private EducationSnippet CreateGodClassShortTextSnippet()
+        private EducationalSnippet CreateGodClassShortTextSnippet()
         {
-            EducationSnippet shortTextSnippet = new EducationSnippet();
+            EducationalSnippet shortTextSnippet = new EducationalSnippet();
             shortTextSnippet.SnippetQuality = 3;
             shortTextSnippet.Tags = new List<Tag>();
             shortTextSnippet.Tags.Add(Tag.Interesting);
@@ -147,9 +147,9 @@ namespace SmartTutor.Repository
             /// LM - LongMethod
             /// </summary>
             /// <returns></returns>
-        private EducationSnippet CreateLMShortTextSnippet()
+        private EducationalSnippet CreateLMShortTextSnippet()
         {
-            EducationSnippet shortTextSnippet = new EducationSnippet();
+            EducationalSnippet shortTextSnippet = new EducationalSnippet();
             shortTextSnippet.SnippetQuality = 3;
             shortTextSnippet.Tags = new List<Tag>();
             shortTextSnippet.Tags.Add(Tag.Interesting);
@@ -164,9 +164,9 @@ namespace SmartTutor.Repository
         /// LM - LongMethod
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLMLongTextSnippet()
+        private EducationalSnippet CreateLMLongTextSnippet()
         {
-            EducationSnippet longTextSnippet = new EducationSnippet();
+            EducationalSnippet longTextSnippet = new EducationalSnippet();
             longTextSnippet.SnippetQuality = 5;
             longTextSnippet.Tags = new List<Tag>();
             longTextSnippet.Tags.Add(Tag.Interesting);
@@ -181,9 +181,9 @@ namespace SmartTutor.Repository
         /// LM - LongMethod
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLMImageSnippet()
+        private EducationalSnippet CreateLMImageSnippet()
         {
-            EducationSnippet imageSnippet = new EducationSnippet();
+            EducationalSnippet imageSnippet = new EducationalSnippet();
             imageSnippet.SnippetQuality = 4;
             imageSnippet.Tags = new List<Tag>();
             imageSnippet.Tags.Add(Tag.MustKnow);
@@ -197,9 +197,9 @@ namespace SmartTutor.Repository
         /// LM - LongMethod
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLMVideoSnippet()
+        private EducationalSnippet CreateLMVideoSnippet()
         {
-            EducationSnippet videoSnippet = new EducationSnippet();
+            EducationalSnippet videoSnippet = new EducationalSnippet();
             videoSnippet.SnippetQuality = 4;
             videoSnippet.Tags = new List<Tag>();
             videoSnippet.Tags.Add(Tag.MustKnow);
@@ -213,9 +213,9 @@ namespace SmartTutor.Repository
         /// LPS - LongParameterList
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLPSShortTextSnippet()
+        private EducationalSnippet CreateLPSShortTextSnippet()
         {
-            EducationSnippet snippet = new EducationSnippet
+            EducationalSnippet snippet = new EducationalSnippet
             {
                 SnippetQuality = 4,
                 Tags = new List<Tag>()
@@ -231,9 +231,9 @@ namespace SmartTutor.Repository
         /// LPS - LongParameterList
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLPSLongTextSnippet()
+        private EducationalSnippet CreateLPSLongTextSnippet()
         {
-            EducationSnippet snippet = new EducationSnippet();
+            EducationalSnippet snippet = new EducationalSnippet();
             snippet.SnippetQuality = 5;
             snippet.Tags = new List<Tag>();
             snippet.Tags.Add(Tag.Interesting);
@@ -248,9 +248,9 @@ namespace SmartTutor.Repository
         /// LPS - LongParameterList
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLPSImageSnippet()
+        private EducationalSnippet CreateLPSImageSnippet()
         {
-            EducationSnippet snippetFive = new EducationSnippet();
+            EducationalSnippet snippetFive = new EducationalSnippet();
             snippetFive.SnippetQuality = 4;
             snippetFive.Tags = new List<Tag>();
             snippetFive.Tags.Add(Tag.MustKnow);
@@ -264,9 +264,9 @@ namespace SmartTutor.Repository
         /// LPS - LongParameterList
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLPSVideoSnippet()
+        private EducationalSnippet CreateLPSVideoSnippet()
         {
-            EducationSnippet videoSnippet = new EducationSnippet();
+            EducationalSnippet videoSnippet = new EducationalSnippet();
             videoSnippet.SnippetQuality = 4;
             videoSnippet.Tags = new List<Tag>();
             videoSnippet.Tags.Add(Tag.MustKnow);
@@ -280,9 +280,9 @@ namespace SmartTutor.Repository
         /// LPS - LongParameterList
         /// </summary>
         /// <returns></returns>
-        private EducationSnippet CreateLPSCodeSnippet()
+        private EducationalSnippet CreateLPSCodeSnippet()
         {
-            EducationSnippet snippetFour = new EducationSnippet();
+            EducationalSnippet snippetFour = new EducationalSnippet();
             snippetFour.SnippetQuality = 4;
             snippetFour.Tags = new List<Tag>();
             snippetFour.Tags.Add(Tag.Interesting);

@@ -5,7 +5,7 @@ namespace SmartTutor.Repository
 {
     public class ContentInMemoryRepository : IContentRepository
     {
-        public Dictionary<SmellType, List<EducationContent>> educationContents { get; set; }
+        public Dictionary<SmellType, List<EducationalContent>> educationContents { get; set; }
 
         public ContentInMemoryRepository()
         {
@@ -13,7 +13,7 @@ namespace SmartTutor.Repository
             educationContents = contentInMemoryFactory.createContent();
         }
 
-        public List<EducationContent> FindEducationalContent(SmellType issue)
+        public List<EducationalContent> FindEducationalContent(SmellType issue)
         {
             return educationContents[issue];
         }

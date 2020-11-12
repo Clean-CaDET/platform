@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace SmartTutor.Service.Recommenders
+namespace SmartTutor.Recommenders
 {
     class CollaborativeFilteringRecommender : IRecommender
     { 
-        public List<EducationContent> FindEducationalContent(List<SmellType> issues)
+        public List<EducationalContent> FindEducationalContent(List<SmellType> issues)
         {
             throw new NotImplementedException();
         }

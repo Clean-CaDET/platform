@@ -21,9 +21,8 @@ namespace SmartTutor
         {
             services.AddControllers();
 
-            services.AddMvc();
-            services.AddEntityFrameworkNpgsql().AddDbContext<ContentWebApiContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("MyWebApiConection")));
+            services.AddEntityFrameworkNpgsql().AddDbContext<SmartTutorContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

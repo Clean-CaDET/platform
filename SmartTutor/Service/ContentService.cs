@@ -1,5 +1,6 @@
+
 using SmartTutor.ContentModel;
-using SmartTutor.Service.Recommenders;
+using SmartTutor.Recommenders;
 using System.Collections.Generic;
 
 namespace SmartTutor.Service
@@ -13,9 +14,9 @@ namespace SmartTutor.Service
             this.recommender = recommender;
         }
 
-        internal Dictionary<string, List<EducationContent>> FindContentForIssue(Dictionary<string, List<SmellType>> issues)
+        internal Dictionary<string, List<EducationalContent>> FindContentForIssue(Dictionary<string, List<SmellType>> issues)
         {
-            Dictionary<string, List<EducationContent>> content = new Dictionary<string, List<EducationContent>>();
+            Dictionary<string, List<EducationalContent>> content = new Dictionary<string, List<EducationalContent>>();
             foreach (string entityId in issues.Keys)
             {
                 content.Add(entityId, recommender.FindEducationalContent(issues[entityId]));

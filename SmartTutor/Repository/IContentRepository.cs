@@ -9,7 +9,7 @@ namespace SmartTutor.Repository
         /// <param name="smellType"> issue </param>
         /// <param name="indexOfContent"> Index of content in list of contents for some type of smell </param>
         /// <returns></returns>
-        List<EducationContent> FindEducationalContent(SmellType smellType);
+        List<EducationalContent> FindEducationalContent(SmellType smellType);
     }
 }
 

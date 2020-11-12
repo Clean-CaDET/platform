@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmartTutor.ContentModel
 {
-    public class EducationSnippet
+    public class EducationalSnippet
     {
         public int Id { get; set; }
         public int SnippetQuality { get; set; }
