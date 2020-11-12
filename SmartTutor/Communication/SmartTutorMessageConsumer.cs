@@ -25,9 +25,9 @@ namespace SmartTutor.Communucation
                                      arguments: null);
 
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
+                consumer.Received += (model, deliveryArguments) =>
                 {
-                    var body = ea.Body.ToArray();
+                    var body = deliveryArguments.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     Console.WriteLine(" [x] Received {0}", message);
                 };
