@@ -22,20 +22,33 @@ namespace SmellDetector.Communication
             using (var connection = connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: queueName,
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
-
-                string message = "Hello World!";
-                var body = Encoding.UTF8.GetBytes(message);
-
-                channel.BasicPublish(exchange: exchangeName,
-                                     routingKey: queueName,
-                                     basicProperties: null,
-                                     body: body);
+                DeclareQueue(queueName, channel);
+                PublishMessage(queueName, exchangeName, channel, EncodeMessage());
             }
+        }
+
+        private void PublishMessage(string queueName, string exchangeName, IModel channel, byte[] body)
+        {
+            channel.BasicPublish(exchange: exchangeName,
+                                                 routingKey: queueName,
+                                                 basicProperties: null,
+                                                 body: body);
+        }
+
+        private void DeclareQueue(string queueName, IModel channel)
+        {
+            channel.QueueDeclare(queue: queueName,
+                                                 durable: false,
+                                                 exclusive: false,
+                                                 autoDelete: false,
+                                                 arguments: null);
+        }
+
+        private byte[] EncodeMessage()
+        {
+            string message = "Hello World!";
+            var encodedMessage = Encoding.UTF8.GetBytes(message);
+            return encodedMessage;
         }
     }
 }

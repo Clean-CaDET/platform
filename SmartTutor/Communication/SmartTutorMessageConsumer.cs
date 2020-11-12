@@ -17,23 +17,37 @@ namespace SmartTutor.Communucation
             using (var connection = connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: queueName,
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
-
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, deliveryArguments) =>
-                {
-                    var body = deliveryArguments.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-
-                };
-                channel.BasicConsume(queue: queueName,
-                                     autoAck: true,
-                                     consumer: consumer);
+                DeclareQueue(queueName, channel);
+                ConsumeMessage(queueName, channel, DecodeMessage(channel));
             }
+        }
+
+        private static EventingBasicConsumer DecodeMessage(IModel channel)
+        {
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (model, deliveryArguments) =>
+            {
+                var body = deliveryArguments.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+
+            };
+            return consumer;
+        }
+
+        private static void ConsumeMessage(string queueName, IModel channel, EventingBasicConsumer consumer)
+        {
+            channel.BasicConsume(queue: queueName,
+                                                 autoAck: true,
+                                                 consumer: consumer);
+        }
+
+        private static void DeclareQueue(string queueName, IModel channel)
+        {
+            channel.QueueDeclare(queue: queueName,
+                                                 durable: false,
+                                                 exclusive: false,
+                                                 autoDelete: false,
+                                                 arguments: null);
         }
     }
 }
