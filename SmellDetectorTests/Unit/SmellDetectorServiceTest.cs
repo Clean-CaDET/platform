@@ -6,6 +6,7 @@ using SmellDetector.SmellModel.Reports;
 using System.Linq;
 using Xunit;
 using Shouldly;
+using SmellDetector.Communication;
 
 namespace SmellDetectorTests.Unit
 {
@@ -69,6 +70,12 @@ namespace SmellDetectorTests.Unit
 
             var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
             report.Report.Count().ShouldBe(expectedIssues);
+        }
+
+        [Fact]
+        public void Produce_Issue_Report_Message()
+        {
+            SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
         }
 
     }

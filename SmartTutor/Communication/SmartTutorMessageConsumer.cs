@@ -28,14 +28,11 @@ namespace SmartTutor.Communucation
                 {
                     var body = deliveryArguments.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
-                    Console.WriteLine(" [x] Received {0}", message);
+
                 };
                 channel.BasicConsume(queue: queueName,
                                      autoAck: true,
                                      consumer: consumer);
-
-                Console.WriteLine(" Press [enter] to exit.");
-                Console.ReadLine();
             }
         }
     }
