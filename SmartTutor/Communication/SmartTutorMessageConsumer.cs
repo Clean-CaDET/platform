@@ -8,23 +8,47 @@ namespace SmartTutor.Communucation
 
     public class SmartTutorMessageConsumer
     {
+        public string NodeName { get; set; }
+        public string QueueName { get; set; }
+        public string ExchangeName { get; set; }
+        public IConnection Connection { get; set; }
+        public IModel Channel { get; set; }
+
         public SmartTutorMessageConsumer()
         {
-            var nodeName = "localhost";
-            var queueName = "IssueReports";
-
-            var connectionFactory = new ConnectionFactory() { HostName = nodeName };
-            using (var connection = connectionFactory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                DeclareQueue(queueName, channel);
-                ConsumeMessage(queueName, channel, DecodeMessage(channel));
-            }
+            ConfigureInitialStates();
+            CreateConnection();
+            Channel = Connection.CreateModel();
+            DeclareQueue();
+            ConsumeMessage(DecodeMessage());
+            
         }
 
-        private static EventingBasicConsumer DecodeMessage(IModel channel)
+        private void ConfigureInitialStates()
         {
-            var consumer = new EventingBasicConsumer(channel);
+            NodeName = "localhost";
+            QueueName = "IssueReports";
+            ExchangeName = "";
+        }
+
+        private void CreateConnection()
+        {
+            var connectionFactory = new ConnectionFactory() { HostName = NodeName };
+            Connection = connectionFactory.CreateConnection();
+        }
+
+        private void DeclareQueue()
+        {
+            Channel.QueueDeclare(queue: QueueName,
+                                                 durable: false,
+                                                 exclusive: false,
+                                                 autoDelete: false,
+                                                 arguments: null);
+        }
+
+        private EventingBasicConsumer DecodeMessage()
+        {
+            var consumer = new EventingBasicConsumer(Channel);
             consumer.Received += (model, deliveryArguments) =>
             {
                 var body = deliveryArguments.Body.ToArray();
@@ -34,20 +58,11 @@ namespace SmartTutor.Communucation
             return consumer;
         }
 
-        private static void ConsumeMessage(string queueName, IModel channel, EventingBasicConsumer consumer)
+        private void ConsumeMessage(EventingBasicConsumer consumer)
         {
-            channel.BasicConsume(queue: queueName,
+            Channel.BasicConsume(queue: QueueName,
                                                  autoAck: true,
                                                  consumer: consumer);
-        }
-
-        private static void DeclareQueue(string queueName, IModel channel)
-        {
-            channel.QueueDeclare(queue: queueName,
-                                                 durable: false,
-                                                 exclusive: false,
-                                                 autoDelete: false,
-                                                 arguments: null);
         }
     }
 }
