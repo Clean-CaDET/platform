@@ -15,56 +15,58 @@ namespace SmellDetector.Communication
     /// </summary>
     public class SmellDetectorMessageProducer
     {
+        public string NodeName { get; set; }
+        public string QueueName { get; set; }
+        public string ExchangeName { get; set; }
+        public IConnection Connection { get; set; }
+        public IModel Channel { get; set; }
+
         public SmellDetectorMessageProducer()
         {
-
-            var nodeName = "localhost";
-            var queueName = "IssueReports";
-            var exchangeName = "";
-
-            var connectionFactory = new ConnectionFactory() { HostName = nodeName };
-            using (var connection = connectionFactory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                DeclareQueue(queueName, channel);
-                PublishMessage(queueName, exchangeName, channel, EncodeMessage());
-            }
+            ConfigureInitialStates();
+            CreateConnection();
+            Channel = Connection.CreateModel();
+            DeclareQueue();
         }
 
-        private void PublishMessage(string queueName, string exchangeName, IModel channel, byte[] body)
+        public void CreateNewIssueReport(SmellDetectionReport reportMessage)
         {
-            channel.BasicPublish(exchange: exchangeName,
-                                                 routingKey: queueName,
+            PublishMessage(GetEncodedMessage(reportMessage));
+        }
+
+        private void CreateConnection()
+        {
+            var connectionFactory = new ConnectionFactory() { HostName = NodeName };
+            Connection = connectionFactory.CreateConnection();
+        }
+
+        private void ConfigureInitialStates()
+        {
+            NodeName = "localhost";
+            QueueName = "IssueReports";
+            ExchangeName = "";
+        }
+
+        private void PublishMessage(byte[] body)
+        {
+            Channel.BasicPublish(exchange: ExchangeName,
+                                                 routingKey: QueueName,
                                                  basicProperties: null,
                                                  body: body);
         }
 
-        private void DeclareQueue(string queueName, IModel channel)
+        private void DeclareQueue()
         {
-            channel.QueueDeclare(queue: queueName,
+            Channel.QueueDeclare(queue: QueueName,
                                                  durable: false,
                                                  exclusive: false,
                                                  autoDelete: false,
                                                  arguments: null);
         }
 
-        private byte[] EncodeMessage()
+        private byte[] GetEncodedMessage(SmellDetectionReport reportMessage)
         {
-            SmellDetectionReport reportMessage = new SmellDetectionReport();
-            reportMessage.Report = new Dictionary<string, List<Issue>>();
-
-            Issue detectedIssue = new Issue();
-            detectedIssue.IssueType = SmellType.GOD_CLASS;
-            detectedIssue.CodeItemId = "public class Doctor";
-
-            List<Issue> detectedIssues = new List<Issue>();
-            detectedIssues.Add(detectedIssue);
-
-            reportMessage.Report.Add("Identifikator", detectedIssues);
-
-            var encodedMessage = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(reportMessage));
-
-            return encodedMessage;
+            return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(reportMessage));
         }
     }
 }

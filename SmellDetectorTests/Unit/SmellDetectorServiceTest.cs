@@ -8,6 +8,7 @@ using Xunit;
 using Shouldly;
 using SmellDetector.Communication;
 using SmellDetectorTests.DataFactory;
+using System.Collections.Generic;
 
 namespace SmellDetectorTests.Unit
 {
@@ -62,7 +63,24 @@ namespace SmellDetectorTests.Unit
         public void Produce_Issue_Report_Message()
         {
             SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
+            SmellDetectionReport reportMessage = CreateMockupReportMessage();
+            producer.CreateNewIssueReport(reportMessage);
         }
 
+        private SmellDetectionReport CreateMockupReportMessage()
+        {
+            SmellDetectionReport reportMessage = new SmellDetectionReport();
+            reportMessage.Report = new Dictionary<string, List<Issue>>();
+
+            Issue detectedIssue = new Issue();
+            detectedIssue.IssueType = SmellType.GOD_CLASS;
+            detectedIssue.CodeItemId = "public class Doctor";
+
+            List<Issue> detectedIssues = new List<Issue>();
+            detectedIssues.Add(detectedIssue);
+
+            reportMessage.Report.Add("Identifikator", detectedIssues);
+            return reportMessage;
+        }
     }
 }
