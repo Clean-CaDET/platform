@@ -71,5 +71,59 @@ namespace SmellDetectorTests.Unit
             report.Report.Count().ShouldBe(expectedIssues);
         }
 
+
+        [Fact]
+        public void Generate_Smell_Detection_Report_For_GodClass_Issue1()
+        {
+            DetectionService detectionService = new DetectionService();
+
+            CaDETClassDTO caDetClassDto = new CaDETClassDTO();
+            string testIdentifier = "public class DoctorService";
+            MetricsDTO metricsForIdentifier = new MetricsDTO();
+            metricsForIdentifier.WMC = 48;
+            metricsForIdentifier.ATFD = 6;
+            metricsForIdentifier.TCC = 0.32;
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
+            var expectedIssues = 1; 
+
+            var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
+            report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
+        }
+
+        [Fact]
+        public void Generate_Smell_Detection_Report_For_GodClass_Issue2()
+        {
+            DetectionService detectionService = new DetectionService();
+
+            CaDETClassDTO caDetClassDto = new CaDETClassDTO();
+
+            caDetClassDto = new CaDETClassDTO();
+            string testIdentifier = "public class DoctorService2";
+            MetricsDTO metricsForIdentifier = new MetricsDTO();
+            metricsForIdentifier.LOC = 110;
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
+            var expectedIssues = 2; // One for GodClass one for LongMethod 
+
+            var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
+            report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
+        }
+
+        [Fact]
+        public void Generate_Smell_Detection_Report_For_GodClass_Issue3()
+        {
+            DetectionService detectionService = new DetectionService();
+
+            CaDETClassDTO caDetClassDto = new CaDETClassDTO();
+            string testIdentifier = "public class DoctorService3";
+            MetricsDTO metricsForIdentifier = new MetricsDTO();
+            metricsForIdentifier.NMD = 11;
+            metricsForIdentifier.NAD = 14;
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
+            var expectedIssues = 1;
+
+            var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
+            report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
+        }
+
     }
 }
