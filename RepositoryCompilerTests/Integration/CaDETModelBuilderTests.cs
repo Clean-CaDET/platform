@@ -10,9 +10,9 @@ namespace RepositoryCompilerTests.Integration
         [Fact]
         public void Build_code_model_from_repository()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            var project = builder.ParseFiles("C:/repo");
+            var project = factory.ParseFiles("C:/repo");
 
             project.Classes.ShouldNotBeEmpty();
             CaDETClass conflict = project.Classes.Find(c => c.FullName.Equals("LibGit2Sharp.Conflict"));

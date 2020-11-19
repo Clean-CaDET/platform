@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Operations;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CodeParsers.CSharp.Exceptions;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
@@ -16,6 +17,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private readonly MemberDeclarationSyntax _cSharpMember;
         private readonly SemanticModel _semanticModel;
         private readonly CaDETMember _member;
+        private readonly CaDETMemberMetricCalculator _metricCalculator;
 
         internal CSharpCaDETMemberBuilder(MemberDeclarationSyntax cSharpMember, SemanticModel semanticModel)
         {
@@ -23,6 +25,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             if (_member == null) throw new InappropriateMemberTypeException();
             _cSharpMember = cSharpMember;
             _semanticModel = semanticModel;
+            _metricCalculator = new CaDETMemberMetricCalculator();
         }
 
         internal CaDETMember CreateBasicMember(CaDETClass parent)
@@ -41,9 +44,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             _member.AccessedFields = CalculateAccessedFields(allProjectClasses);
         }
 
-        internal void CalculateMetrics(CSharpMetricCalculator calculator)
+        internal void CalculateMetrics()
         {
-            _member.Metrics = calculator.CalculateMemberMetrics(_cSharpMember, _member);
+            _member.Metrics = _metricCalculator.CalculateMemberMetrics(_cSharpMember, _member);
         }
 
         private CaDETMember CreateMemberBasedOnType(MemberDeclarationSyntax member)

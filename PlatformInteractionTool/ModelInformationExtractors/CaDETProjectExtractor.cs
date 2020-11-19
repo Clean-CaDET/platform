@@ -16,7 +16,7 @@ namespace PlatformInteractionTool.ModelInformationExtractors
 
         public CaDETProjectExtractor(string projectPath, LanguageEnum language)
         {
-            _project = new CodeModelBuilder(language).ParseFiles(projectPath);
+            _project = new CodeModelFactory(language).ParseFiles(projectPath);
             _resultFolder = projectPath + "extraction-results\\";
         }
 

@@ -3,9 +3,9 @@ using System.ComponentModel;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers
 {
-    public class SimpleParserFactory
+    internal class SimpleParserFactory
     {
-        public static ICodeParser CreateParser(LanguageEnum language)
+        internal static ICodeParser CreateParser(LanguageEnum language)
         {
             switch (language)
             {

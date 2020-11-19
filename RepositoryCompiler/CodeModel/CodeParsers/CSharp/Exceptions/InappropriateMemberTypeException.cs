@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
+namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp.Exceptions
 {
     [Serializable]
     internal class InappropriateMemberTypeException : Exception

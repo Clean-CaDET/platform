@@ -25,6 +25,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
                 "sealed" => CaDETModifierValue.Sealed,
                 "const" => CaDETModifierValue.Const,
                 "partial" => CaDETModifierValue.Partial,
+                "async" => CaDETModifierValue.Async,
                 _ => throw new InvalidEnumArgumentException(modifier)
             };
         }
@@ -45,6 +46,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         ReadOnly,
         Sealed,
         Const,
-        Partial
+        Partial,
+        Async
     }
 }

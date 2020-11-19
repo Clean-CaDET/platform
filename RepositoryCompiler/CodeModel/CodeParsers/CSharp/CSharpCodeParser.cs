@@ -5,6 +5,7 @@ using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CodeParsers.CSharp.Exceptions;
 
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
@@ -12,13 +13,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
     public class CSharpCodeParser : ICodeParser
     {
         private CSharpCompilation _compilation;
-        private readonly CSharpMetricCalculator _metricCalculator;
+        private readonly CaDETClassMetricCalculator _metricCalculator;
         private readonly Dictionary<CaDETClass, List<CSharpCaDETMemberBuilder>> _memberBuilders;
 
         public CSharpCodeParser()
         {
             _compilation = CSharpCompilation.Create(new Guid().ToString());
-            _metricCalculator = new CSharpMetricCalculator();
+            _metricCalculator = new CaDETClassMetricCalculator();
             _memberBuilders = new Dictionary<CaDETClass, List<CSharpCaDETMemberBuilder>>();
         }
 
@@ -140,7 +141,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 foreach (var memberBuilder in _memberBuilders[c])
                 {
-                    memberBuilder.CalculateMetrics(_metricCalculator);
+                    memberBuilder.CalculateMetrics();
                 }
                 c.Metrics = _metricCalculator.CalculateClassMetrics(c);
             }

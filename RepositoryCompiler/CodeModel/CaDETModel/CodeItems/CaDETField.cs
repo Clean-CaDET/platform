@@ -18,5 +18,10 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         {
             return base.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return Parent.FullName + "." + Name;
+        }
     }
 }

@@ -31,8 +31,8 @@ namespace RepositoryCompiler.Controllers
         public CaDETProject BuildProjectModel(CommitId commit)
         {
             _codeRepositoryAdapter.CheckoutCommit(commit);
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
-            return builder.ParseFiles("C:/repo");
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+            return factory.ParseFiles("C:/repo");
         }
 
         public CaDETModel BuildModel(int numOfPreviousCommits)
@@ -53,8 +53,8 @@ namespace RepositoryCompiler.Controllers
 
         public CaDETClass BuildClassModel(string sourceCode)
         {
-            CodeModelBuilder codeBuilder = new CodeModelBuilder(LanguageEnum.CSharp);
-            return codeBuilder.BuildCodeModel(sourceCode);
+            CodeModelFactory codeFactory = new CodeModelFactory(LanguageEnum.CSharp);
+            return codeFactory.CreateCodeModel(sourceCode);
         }
     }
 }

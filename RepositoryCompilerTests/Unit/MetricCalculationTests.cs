@@ -15,9 +15,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_lines_of_code_for_CSharp_class_elements()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetDoctorClassText());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetDoctorClassText());
 
             var doctorClass = classes.First();
             doctorClass.Metrics.LOC.ShouldBe(22);
@@ -28,9 +28,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_weighted_methods_per_class()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
             gitClass.Metrics.WMC.ShouldBe(17);
@@ -40,9 +40,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_access_to_foreign_data()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetATFDMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetATFDMultipleClassTexts());
 
             var class1 = classes.Find(c => c.Name.Equals("Class1"));
             var class3 = classes.Find(c => c.Name.Equals("Class3"));
@@ -60,9 +60,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_lack_of_cohesion()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetCohesionClasses());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetCohesionClasses());
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -73,9 +73,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_tight_class_cohesion()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetTCCMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetTCCMultipleClassTexts());
 
             var class6 = classes.Find(c => c.Name.Equals("Class6"));
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
@@ -89,9 +89,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
 
@@ -103,9 +103,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_number_of_parameters()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
             gitClass.FindMember("CheckForNewCommits").Metrics.NOP.ShouldBe(0);
@@ -117,9 +117,9 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_number_of_local_variables()
         {
-            CodeModelBuilder builder = new CodeModelBuilder(LanguageEnum.CSharp);
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = builder.BuildCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
             gitClass.FindMember("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);

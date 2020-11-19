@@ -8,30 +8,30 @@ using RepositoryCompiler.CodeModel.CodeParsers;
 
 namespace RepositoryCompiler.CodeModel
 {
-    public class CodeModelBuilder
+    public class CodeModelFactory
     {
         private readonly LanguageEnum _language;
 
-        public CodeModelBuilder(LanguageEnum language)
+        public CodeModelFactory(LanguageEnum language)
         {
             _language = language;
         }
 
-        public List<CaDETClass> BuildCodeModel(IEnumerable<string> multipleClassSourceCode)
+        public List<CaDETClass> CreateCodeModel(IEnumerable<string> multipleClassSourceCode)
         {
             ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
             return codeParser.GetParsedClasses(multipleClassSourceCode);
         }
 
-        public CaDETClass BuildCodeModel(string classSourceCode)
+        public CaDETClass CreateCodeModel(string classSourceCode)
         {
-            return BuildCodeModel(new List<string> { classSourceCode }).First();
+            return CreateCodeModel(new List<string> { classSourceCode }).First();
         }
 
         public CaDETProject ParseFiles(string sourceCodeLocation)
         {
             string[] allFiles = Directory.GetFiles(sourceCodeLocation, GetLanguageExtension(), SearchOption.AllDirectories);
-            return new CaDETProject(LanguageEnum.CSharp, BuildCodeModel(allFiles.Select(File.ReadAllText)));
+            return new CaDETProject(LanguageEnum.CSharp, CreateCodeModel(allFiles.Select(File.ReadAllText)));
         }
 
         private string GetLanguageExtension()
