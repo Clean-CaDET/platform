@@ -680,193 +680,43 @@ namespace RepositoryCompilerTests.DataFactories
         {
             return new[]
             {
-                @"public class Doctor : User
-   {
-      public Medication[] ViewMedicationList()
-      {
-         // TODO: implement
-         return null;
-      }
-      
-      public Boolean ApproveMedication()
-      {
-         // TODO: implement
-         return null;
-      }
-      
-      public Intervention ScheduleIntervention()
-      {
-         // TODO: implement
-         return null;
-      }
-      
-      public Intervention CancelOperation()
-      {
-         // TODO: implement
-         return null;
-      }
-      
-      public Intervention AddExamination()
-      {
-         // TODO: implement
-         return null;
-      }
-      
-      public Medication ViewMedication()
-      {
-         // TODO: implement
-         return null;
-      }
-      
-      public Question ViewQuestions()
-      {
-         // TODO: implement
-         return null;
-      }
-      
-      public Notification NotifyDirector()
-      {
-         // TODO: implement
-         return null;
-      }
-   
-      public System.Collections.ArrayList comment;
-      
-      /// <pdGenerated>default getter</pdGenerated>
-      public System.Collections.ArrayList GetComment()
-      {
-         if (comment == null)
-            comment = new System.Collections.ArrayList();
-         return comment;
-      }
-      
-      /// <pdGenerated>default setter</pdGenerated>
-      public void SetComment(System.Collections.ArrayList newComment)
-      {
-         RemoveAllComment();
-         foreach (Comment oComment in newComment)
-            AddComment(oComment);
-      }
-      
-      /// <pdGenerated>default Add</pdGenerated>
-      public void AddComment(Comment newComment)
-      {
-         if (newComment == null)
-            return;
-         if (this.comment == null)
-            this.comment = new System.Collections.ArrayList();
-         if (!this.comment.Contains(newComment))
-            this.comment.Add(newComment);
-      }
-      
-      /// <pdGenerated>default Remove</pdGenerated>
-      public void RemoveComment(Comment oldComment)
-      {
-         if (oldComment == null)
-            return;
-         if (this.comment != null)
-            if (this.comment.Contains(oldComment))
-               this.comment.Remove(oldComment);
-      }
-      
-      /// <pdGenerated>default removeAll</pdGenerated>
-      public void RemoveAllComment()
-      {
-         if (comment != null)
-            comment.Clear();
-      }
-      public Specialization specialization;
-      
-      /// <pdGenerated>default parent getter</pdGenerated>
-      public Specialization GetSpecialization()
-      {
-         return specialization;
-      }
-      
-      /// <pdGenerated>default parent setter</pdGenerated>
-      /// <param>newSpecialization</param>
-      public void SetSpecialization(Specialization newSpecialization)
-      {
-         if (this.specialization != newSpecialization)
-         {
-            if (this.specialization != null)
+                @"
+                namespace DoctorApp.Model
+                public class Doctor
+                {
+                  private Signature Signature;
+                  private DateTime startWorking;
+                  private DateTime endWorking;
+                }",
+                @"
+                namespace DoctorApp.Model
+                public class Doctor
+                {
+                  private String name;
+                  private String surname;
+                }"
+            };
+        }
+
+        public IEnumerable<string> GetTwoPartialClassesWithSameFullName()
+        {
+            return new[]
             {
-               Specialization oldSpecialization = this.specialization;
-               this.specialization = null;
-               oldSpecialization.RemoveDoctor(this);
-            }
-            if (newSpecialization != null)
-            {
-               this.specialization = newSpecialization;
-               this.specialization.AddDoctor(this);
-            }
-         }
-      }
-      public System.Collections.ArrayList intervention;
-      
-      /// <pdGenerated>default getter</pdGenerated>
-      public System.Collections.ArrayList GetIntervention()
-      {
-         if (intervention == null)
-            intervention = new System.Collections.ArrayList();
-         return intervention;
-      }
-      
-      /// <pdGenerated>default setter</pdGenerated>
-      public void SetIntervention(System.Collections.ArrayList newIntervention)
-      {
-         RemoveAllIntervention();
-         foreach (Intervention oIntervention in newIntervention)
-            AddIntervention(oIntervention);
-      }
-      
-      /// <pdGenerated>default Add</pdGenerated>
-      public void AddIntervention(Intervention newIntervention)
-      {
-         if (newIntervention == null)
-            return;
-         if (this.intervention == null)
-            this.intervention = new System.Collections.ArrayList();
-         if (!this.intervention.Contains(newIntervention))
-         {
-            this.intervention.Add(newIntervention);
-            newIntervention.SetDoctor(this);      
-         }
-      }
-      
-      /// <pdGenerated>default Remove</pdGenerated>
-      public void RemoveIntervention(Intervention oldIntervention)
-      {
-         if (oldIntervention == null)
-            return;
-         if (this.intervention != null)
-            if (this.intervention.Contains(oldIntervention))
-            {
-               this.intervention.Remove(oldIntervention);
-               oldIntervention.SetDoctor((Doctor)null);
-            }
-      }
-      
-      /// <pdGenerated>default removeAll</pdGenerated>
-      public void RemoveAllIntervention()
-      {
-         if (intervention != null)
-         {
-            System.Collections.ArrayList tmpIntervention = new System.Collections.ArrayList();
-            foreach (Intervention oldIntervention in intervention)
-               tmpIntervention.Add(oldIntervention);
-            intervention.Clear();
-            foreach (Intervention oldIntervention in tmpIntervention)
-               oldIntervention.SetDoctor((Doctor)null);
-            tmpIntervention.Clear();
-         }
-      }
-   
-      private Signature Signature;
-      private DateTime startWorking;
-      private DateTime endWorking;
-   
-   }"
+                @"
+                namespace DoctorApp.Model
+                public partial class Doctor
+                {
+                  private Signature Signature;
+                  private DateTime startWorking;
+                  private DateTime endWorking;
+                }",
+                @"
+                namespace DoctorApp.Model
+                public partial class Doctor
+                {
+                  private String name;
+                  private String surname;
+                }"
             };
         }
     }

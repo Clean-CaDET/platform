@@ -30,6 +30,10 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         {
             return Fields.Find(field => field.Name.Equals(name));
         }
+        public bool IsPartialClass()
+        {
+            return Modifiers.Any(m => m.Value == CaDETModifierValue.Partial);
+        }
 
         public bool IsDataClass()
         {

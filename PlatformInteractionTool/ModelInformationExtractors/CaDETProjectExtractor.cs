@@ -51,6 +51,7 @@ namespace PlatformInteractionTool.ModelInformationExtractors
 
         private void WriteToFile(string text, string fileName)
         {
+            if (!Directory.Exists(_resultFolder)) Directory.CreateDirectory(_resultFolder);
             File.WriteAllText(_resultFolder + fileName, text);
         }
 

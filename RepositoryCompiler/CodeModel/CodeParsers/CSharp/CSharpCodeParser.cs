@@ -27,8 +27,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             LoadSyntaxTrees(sourceCode);
             var parsedClasses = ParseClasses();
-            var linkedClasses = ConnectCaDETGraph(parsedClasses);
-            return CalculateMetrics(linkedClasses);
+            ValidateUniqueFullNameForNonPartial(parsedClasses);
+            parsedClasses = ConnectCaDETGraph(parsedClasses);
+            return CalculateMetrics(parsedClasses);
         }
 
         private void LoadSyntaxTrees(IEnumerable<string> sourceCode)
@@ -48,7 +49,15 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
                 foreach (var node in classNodes)
                 {
-                    builtClasses.Add(ParseClass(semanticModel, node));
+                    try
+                    {
+                        ValidateNoPartialModifier(node);
+                        builtClasses.Add(ParseClass(semanticModel, node));
+                    }
+                    catch (PartialIsNotSupportedException)
+                    {
+                        // Skips classes with partial keyword.
+                    }
                 }
             }
             return builtClasses;
@@ -101,19 +110,43 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 try
                 {
+                    ValidateNoPartialModifier(member);
                     classMemberBuilders.Add(new CSharpCaDETMemberBuilder(member, semanticModel));
                 }
                 catch (InappropriateMemberTypeException)
                 {
                     //MemberDeclarationSyntax is not property, constructor, or method.
                 }
+                catch (PartialIsNotSupportedException)
+                {
+                    //Skips members with partial keyword.
+                }
             }
             _memberBuilders.Add(parent, classMemberBuilders);
+        }
+
+        private static void ValidateNoPartialModifier(MemberDeclarationSyntax member)
+        {
+            if (member.Modifiers.Any(m => m.ValueText.Equals("partial"))) throw new PartialIsNotSupportedException();
         }
 
         private List<CaDETModifier> GetModifiers(MemberDeclarationSyntax member)
         {
             return member.Modifiers.Select(modifier => new CaDETModifier(modifier.ValueText)).ToList();
+        }
+        private void ValidateUniqueFullNameForNonPartial(List<CaDETClass> parsedClasses)
+        {
+            for (int i = 0; i < parsedClasses.Count - 1; i++)
+            {
+                if(parsedClasses[i].IsPartialClass()) continue;
+                for (int j = i+1; j < parsedClasses.Count; j++)
+                {
+                    if (parsedClasses[i].FullName.Equals(parsedClasses[j].FullName))
+                    {
+                        throw new NonUniqueFullNameException(parsedClasses[i].FullName);
+                    }
+                }
+            }
         }
 
         private List<CaDETClass> ConnectCaDETGraph(List<CaDETClass> classes)

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using RepositoryCompiler.CodeModel.CodeParsers.CSharp;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 {
@@ -24,8 +25,8 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
                 "readonly" => CaDETModifierValue.ReadOnly,
                 "sealed" => CaDETModifierValue.Sealed,
                 "const" => CaDETModifierValue.Const,
-                "partial" => CaDETModifierValue.Partial,
                 "async" => CaDETModifierValue.Async,
+                "partial" => throw new PartialIsNotSupportedException(),
                 _ => throw new InvalidEnumArgumentException(modifier)
             };
         }

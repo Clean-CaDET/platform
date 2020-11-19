@@ -4,6 +4,7 @@ using RepositoryCompilerTests.DataFactories;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CodeParsers.CSharp.Exceptions;
 using Xunit;
 
 namespace RepositoryCompilerTests.Unit
@@ -139,16 +140,19 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Fails_to_build_code_with_nonunique_class_full_names()
         {
-            //TODO: Make test
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            Should.Throw<KeyNotFoundException>(() => factory.CreateCodeModel(_testDataFactory.GetTwoClassesWithSameFullName()));
+            Should.Throw<NonUniqueFullNameException>(() => factory.CreateCodeModel(_testDataFactory.GetTwoClassesWithSameFullName()));
         }
 
         [Fact]
-        public void Merges_partial_classes_with_same_full_name_into_single_CaDETClass()
+        public void Ignores_partial_classes()
         {
-            //TODO: Test
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            var classes = factory.CreateCodeModel(_testDataFactory.GetTwoPartialClassesWithSameFullName());
+
+            classes.Count.ShouldBe(0);
         }
     }
 }
