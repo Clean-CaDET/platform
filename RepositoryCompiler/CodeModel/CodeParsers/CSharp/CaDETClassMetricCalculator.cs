@@ -78,22 +78,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             int methodPairsThatShareAccessToAFieldOrAccessor = 0;
 
-            for (var i = 0; i < classMethods.Count; i++)
+            for (var i = 0; i < classMethods.Count - 1; i++)
             {
-                for (var j = 1; j < classMethods.Count; j++)
+                for (var j = i+1; j < classMethods.Count; j++)
                 {
                     var firstMethod = classMethods[i];
                     var secondMethod = classMethods[j];
 
-                    if (firstMethod.GetAccessedOwnFields().Intersect(secondMethod.GetAccessedOwnFields()).Any())
+                    if (firstMethod.GetAccessedOwnFields().Intersect(secondMethod.GetAccessedOwnFields()).Any() 
+                        || firstMethod.GetAccessedOwnAccessors().Intersect(secondMethod.GetAccessedOwnAccessors()).Any())
                     {
                         methodPairsThatShareAccessToAFieldOrAccessor++;
-                        break;
-                    }
-                    if (firstMethod.GetAccessedOwnAccessors().Intersect(secondMethod.GetAccessedOwnAccessors()).Any())
-                    {
-                        methodPairsThatShareAccessToAFieldOrAccessor++;
-                        break;
                     }
                 }
             }
@@ -112,10 +107,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
             return counter;
         }
-        
+
+        /// <summary>
+        /// WMC - Weighted Method Per Class
+        /// DOI: 10.1109/32.295895
+        /// </summary>
         private int GetWeightedMethodPerClass(CaDETClass parsedClass)
         {
-            //Defined based on 10.1109/32.295895
             return parsedClass.Members.Sum(method => method.Metrics.CYCLO);
         }
         
