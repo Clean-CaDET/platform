@@ -37,22 +37,6 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
-        public void Calculates_invoked_methods()
-        {
-            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
-
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
-
-            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
-            var service = classes.Find(c => c.Name.Equals("DoctorService"));
-            var overlapsWith = dateRange.FindMember("OverlapsWith");
-            var logChecked = service.FindMember("LogChecked");
-            var findDoctors = service.FindMember("FindAvailableDoctor");
-            findDoctors.InvokedMethods.ShouldContain(overlapsWith);
-            findDoctors.InvokedMethods.ShouldContain(logChecked);
-        }
-
-        [Fact]
         public void Checks_method_signature()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
@@ -71,18 +55,77 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
-        public void Calculates_accessed_fields()
+        public void Calculates_invoked_methods()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
             List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
 
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var overlapsWith = dateRange.FindMember("OverlapsWith");
+            var logChecked = service.FindMember("LogChecked");
+            var findDoctors = service.FindMember("FindAvailableDoctor");
+            
+            findDoctors.InvokedMethods.ShouldContain(overlapsWith);
+            findDoctors.InvokedMethods.ShouldContain(logChecked);
+            logChecked.InvokedMethods.ShouldContain(findDoctors);
+            logChecked.InvokedMethods.ShouldContain(overlapsWith);
+            logChecked.InvokedMethods.ShouldContain(doctor.FindMember("TestFunction"));
+        }
+        [Fact]
+        public void Calculates_accessed_fields()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
             var holidayDates = doctor.FindMember("HolidayDates");
             var findDoctors = service.FindMember("FindAvailableDoctor");
-            findDoctors.AccessedAccessors.ShouldContain(holidayDates);
+            var logChecked = service.FindMember("LogChecked");
+            
             findDoctors.AccessedFields.ShouldContain(doctor.Fields.Find(f => f.Name.Equals("Test")));
+            logChecked.AccessedFields.ShouldContain(doctor.FindField("TestDR"));
+            logChecked.AccessedFields.ShouldContain(dateRange.FindField("NumOfDays"));
+        }
+        [Fact]
+        public void Calculates_accessed_accessors()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var holidayDates = doctor.FindMember("HolidayDates");
+            var findDoctors = service.FindMember("FindAvailableDoctor");
+            var logChecked = service.FindMember("LogChecked");
+            
+            findDoctors.AccessedAccessors.ShouldContain(holidayDates);
+            logChecked.AccessedAccessors.ShouldContain(service.FindMember("TestDoc"));
+            logChecked.AccessedAccessors.ShouldContain(doctor.FindMember("TestProp"));
+            logChecked.AccessedAccessors.ShouldContain(doctor.FindMember("Name"));
+            logChecked.AccessedAccessors.ShouldContain(dateRange.FindMember("From"));
+            logChecked.AccessedAccessors.ShouldContain(dateRange.FindMember("To"));
+        }
+        [Fact]
+        public void Calculates_array_element_accessed_accessor()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var holidayDates = doctor.FindMember("HolidayDates");
+            var logChecked = service.FindMember("LogChecked");
+            
+            logChecked.AccessedAccessors.ShouldContain(holidayDates);
         }
 
         [Fact]
@@ -96,7 +139,7 @@ namespace RepositoryCompilerTests.Unit
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             dateRange.IsDataClass().ShouldBeFalse();
-            doctor.IsDataClass().ShouldBeTrue();
+            doctor.IsDataClass().ShouldBeFalse();
             service.IsDataClass().ShouldBeFalse();
         }
 

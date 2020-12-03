@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
@@ -82,7 +83,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             var invokedMethods = _cSharpMember.DescendantNodes().OfType<InvocationExpressionSyntax>();
             foreach (var invoked in invokedMethods)
             {
-                var symbol = _semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
+                var symbol = FindSymbol(invoked);
                 if (symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
                 foreach (var projectClass in allProjectClasses)
                 {
@@ -95,7 +96,15 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
             return methods;
         }
-        
+
+        private ISymbol FindSymbol(InvocationExpressionSyntax invoked)
+        {
+            var symbolInfo = _semanticModel.GetSymbolInfo(invoked.Expression);
+            if (symbolInfo.Symbol != null) return symbolInfo.Symbol;
+
+            return symbolInfo.CandidateSymbols.Length > 0 ? symbolInfo.CandidateSymbols.First() : null;
+        }
+
         private ISet<CaDETField> CalculateAccessedFields(List<CaDETClass> allProjectClasses)
         {
             ISet<CaDETField> fields = new HashSet<CaDETField>();

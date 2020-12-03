@@ -37,8 +37,8 @@ namespace RepositoryCompilerTests.Integration
         {
             var retVal = new List<object[]>();
 
-            retVal.Add(new object[] {null, true} );
             retVal.Add(new object[] { new CommitId("a3f95fc9e92aa4bec32f4c4a535b0316ec2ea470"), false} );
+            retVal.Add(new object[] { null, true });
 
             return retVal;
 
