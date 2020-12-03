@@ -116,6 +116,7 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Calculates_array_element_accessed_accessor()
         {
+            //CURRENTLY NOT SUPPORTED - ergo tests fail.
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
             List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());

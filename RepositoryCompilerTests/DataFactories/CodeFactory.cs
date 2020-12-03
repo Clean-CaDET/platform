@@ -511,6 +511,7 @@ namespace RepositoryCompilerTests.DataFactories
                         Name = name;
                         Email = email;
                         HolidayDates = new List<DateRange>();
+                        HolidayDates.Add(new DateTime(), new DateTime());
                         TestDR = new DateRange(new DateTime(), new DateTime());
                     }
 
@@ -548,12 +549,13 @@ namespace RepositoryCompilerTests.DataFactories
                     }
                     private int LogChecked(int testData)
                     {
+                        _doctors.Add(new Doctor());
                         DateTime test1 = TestDoc.TestProp.From;
                         DateTime test = _doctors[0].HolidayDates[0].From;
                         var a = TestDoc.Name;
                         var b = TestDoc.TestProp;
                         var c = b.To;
-                        var temp1 = _doctors[0];
+                        var temp1 = new Doctor();
                         temp1.Test = null;
                         var temp2 = temp1.TestDR;
                         int testNum = temp2.NumOfDays;
