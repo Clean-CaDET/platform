@@ -18,6 +18,11 @@
         public int LOC { get; set; }
 
         /// <summary>
+        /// ELOC: Effective lines of code, excluding comments, blank lines, function header and function braces.
+        /// </summary>
+        public int ELOC { get; set; }
+
+        /// <summary>
         /// NOP - number of parameters
         ///
         /// Also used as: PAR, PL

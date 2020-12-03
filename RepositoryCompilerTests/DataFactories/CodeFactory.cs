@@ -4,6 +4,56 @@ namespace RepositoryCompilerTests.DataFactories
 {
     public class CodeFactory
     {
+        public IEnumerable<string> GetEffectiveLinesOfCodeTest()
+        {
+            return new[]
+            {
+                @"
+            using System.Collections.Generic;
+            namespace DoctorApp.Model.Data
+            {
+                public class Doctor
+                {
+                    private string name;
+                    public string Name
+                    {
+                        get { 
+                            return name;
+                        }
+                        set {
+                            if(value != null)
+                            {
+                                //Console.writetests
+                                name = value;
+                            }
+                        }
+                    }
+                    public string Email { get; set; }
+
+                    public Doctor(string m, string email)
+                    {
+                        name = m;
+
+
+                        //Email = email;
+                    }
+
+                    internal bool IsAvailable(DateRange timeSpan)
+                    {
+                        /*foreach (DateRange holiday in HolidayDates)
+                        {
+                            if (holiday.OverlapsWith(timeSpan)) return false;
+
+
+                        }*/
+
+
+                        return true;
+                    }
+                }
+            }"
+            };
+        }
         public IEnumerable<string> GetDoctorClassText()
         {
             return new[]
@@ -547,7 +597,7 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return null;
                     }
-                    private int LogChecked(int testData)
+                    private int LogChecked(int testData, Doctor beljko)
                     {
                         _doctors.Add(new Doctor());
                         DateTime test1 = TestDoc.TestProp.From;
@@ -557,8 +607,8 @@ namespace RepositoryCompilerTests.DataFactories
                         var c = b.To;
                         var temp1 = new Doctor();
                         temp1.Test = null;
-                        var temp2 = temp1.TestDR;
-                        int testNum = temp2.NumOfDays;
+                        var temp2 = beljko.TestDR.NumOfDays;
+                        
                         var test2 = FindAvailableDoctor(temp2).TestFunction().OverlapsWith(temp2);
                         return testData;
                     }

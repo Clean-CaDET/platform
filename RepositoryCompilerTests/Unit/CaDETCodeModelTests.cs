@@ -89,6 +89,8 @@ namespace RepositoryCompilerTests.Unit
             var logChecked = service.FindMember("LogChecked");
             
             findDoctors.AccessedFields.ShouldContain(doctor.Fields.Find(f => f.Name.Equals("Test")));
+            logChecked.AccessedFields.ShouldContain(service.FindField("_doctors"));
+            logChecked.AccessedFields.ShouldContain(doctor.FindField("Test"));
             logChecked.AccessedFields.ShouldContain(doctor.FindField("TestDR"));
             logChecked.AccessedFields.ShouldContain(dateRange.FindField("NumOfDays"));
         }

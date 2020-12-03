@@ -13,17 +13,76 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return new CaDETMemberMetrics
             {
                 CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = GetLinesOfCode(member.ToString()),
+                LOC = CountLinesOfText(member.ToString()),
+                ELOC = GetEffectiveLinesOfCode(member),
                 NOP = GetNumberOfParameters(method),
                 NOLV = GetNumberOfLocalVariables(member)
             };
         }
 
         /// <summary>
+        /// DOI: 10.1109/MALTESQUE.2017.7882011
+        /// </summary>
+        private int GetEffectiveLinesOfCode(MemberDeclarationSyntax member)
+        {
+            string[] allLines = member.ToString().Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
+            
+            int triviaLines = CountCommentsAndBlankLines(allLines);
+            int headerLines = CountHeaderLines(allLines);
+            int openAndClosingBracketLines = 2;
+            
+            return  allLines.Length - (triviaLines + headerLines + openAndClosingBracketLines);
+        }
+
+        private int CountHeaderLines(string[] allLines)
+        {
+            int counter = 0;
+            foreach (var line in allLines)
+            {
+                if(line.Contains("{")) break;
+                counter++;
+            }
+
+            return counter;
+        }
+
+        private int CountCommentsAndBlankLines(string[] allLines)
+        {
+            int counter = 0;
+            for (int i = 0; i < allLines.Length; i++)
+            {
+                string line = allLines[i].Trim();
+                if (line.StartsWith("/*"))
+                {
+                    //Count multiline comments
+                    counter++;
+                    while (!line.EndsWith("*/"))
+                    {
+                        i++;
+                        line = allLines[i].Trim();
+                        counter++;
+                    }
+                    continue;
+                }
+                if (line.StartsWith("//"))
+                {
+                    //Count single line comment
+                    counter++;
+                    continue;
+                }
+                if (line == "")
+                {
+                    //Count blank line
+                    counter++;
+                }
+            }
+
+            return counter;
+        }
+
+        /// <summary>
         /// DOI: 10.1002/smr.2255
         /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
         private int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<VariableDeclarationSyntax>().Count();
@@ -32,14 +91,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         /// <summary>
         /// DOI: 10.1002/smr.2255
         /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
         private int GetNumberOfParameters(CaDETMember method)
         {
             return method.Params.Count;
         }
 
-        public int GetLinesOfCode(string code)
+        public int CountLinesOfText(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
         }

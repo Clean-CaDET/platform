@@ -24,7 +24,7 @@ namespace RepositoryCompilerTests.Unit
             doctorClass.FindMember("Email").Metrics.LOC.ShouldBe(1);
             doctorClass.FindMember("IsAvailable").Metrics.LOC.ShouldBe(8);
         }
-        
+
         [Fact]
         public void Calculates_weighted_methods_per_class()
         {
@@ -99,6 +99,17 @@ namespace RepositoryCompilerTests.Unit
             gitClass.FindMember("ParseDocuments").Metrics.CYCLO.ShouldBe(4);
         }
 
+        [Fact]
+        public void Calculates_member_effective_lines_of_code()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetEffectiveLinesOfCodeTest());
+
+            var doctor = classes.First();
+            doctor.FindMember("Doctor").Metrics.ELOC.ShouldBe(1);
+            doctor.FindMember("IsAvailable").Metrics.ELOC.ShouldBe(1);
+        }
 
         [Fact]
         public void Calculates_number_of_parameters()
