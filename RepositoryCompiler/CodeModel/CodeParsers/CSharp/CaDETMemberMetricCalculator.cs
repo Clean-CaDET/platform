@@ -52,16 +52,18 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             for (int i = 0; i < allLines.Length; i++)
             {
                 string line = allLines[i].Trim();
-                if (line.StartsWith("/*"))
+                if (line.Contains("/*"))
                 {
                     //Count multiline comments
-                    counter++;
-                    while (!line.EndsWith("*/"))
+                    if(line.StartsWith("/*")) counter++;
+                    while (!line.Contains("*/"))
                     {
                         i++;
                         line = allLines[i].Trim();
                         counter++;
                     }
+
+                    if (!line.EndsWith("*/")) counter++;
                     continue;
                 }
                 if (line.StartsWith("//"))

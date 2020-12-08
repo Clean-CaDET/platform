@@ -108,7 +108,7 @@ namespace RepositoryCompilerTests.Unit
 
             var doctor = classes.First();
             doctor.FindMember("Doctor").Metrics.ELOC.ShouldBe(1);
-            doctor.FindMember("IsAvailable").Metrics.ELOC.ShouldBe(1);
+            doctor.FindMember("IsAvailable").Metrics.ELOC.ShouldBe(2);
         }
 
         [Fact]

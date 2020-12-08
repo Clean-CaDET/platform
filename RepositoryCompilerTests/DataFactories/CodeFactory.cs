@@ -24,7 +24,7 @@ namespace RepositoryCompilerTests.DataFactories
                             if(value != null)
                             {
                                 //Console.writetests
-                                name = value;
+                                name = value; //sets the name
                             }
                         }
                     }
@@ -40,13 +40,13 @@ namespace RepositoryCompilerTests.DataFactories
 
                     internal bool IsAvailable(DateRange timeSpan)
                     {
-                        /*foreach (DateRange holiday in HolidayDates)
+                        if(timeSpan == null) return false;/*
+                        foreach (DateRange holiday in HolidayDates)
                         {
                             if (holiday.OverlapsWith(timeSpan)) return false;
 
 
                         }*/
-
 
                         return true;
                     }
