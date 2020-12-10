@@ -7,12 +7,12 @@ namespace PlatformInteractionTool
     {
         static void Main(string[] args)
         {
-            var builder = new Builder("C:\\sdataset4\\", LanguageEnum.CSharp, true, true);
+            var builder = new CaDETToDataSetBuilder("C:\\sdataset4\\", LanguageEnum.CSharp, true, true);
 
             var project = builder.IncludeMembersWith(2).RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
 
-            var fileSerializer = new DSFileSerializer("C:\\DSOutput\\", project);
+            var fileSerializer = new TextFileExporter("C:\\DSOutput\\", project);
             fileSerializer.ExtractNamesToFile();
         }
     }

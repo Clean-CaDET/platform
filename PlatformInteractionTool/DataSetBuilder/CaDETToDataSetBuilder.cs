@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace PlatformInteractionTool.DataSetBuilder
 {
-    internal class Builder
+    internal class CaDETToDataSetBuilder
     {
         private readonly CaDETProject _cadetProject;
         private int _percentileOfProjectCovered = 100;
@@ -21,20 +21,20 @@ namespace PlatformInteractionTool.DataSetBuilder
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
         private int _minimumELOC;
 
-        internal Builder(string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
+        internal CaDETToDataSetBuilder(string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
             _cadetProject = new CodeModelFactory(language).ParseFiles(projectPath);
             _includeClasses = includeClasses;
             _includeMembers = includeMembers;
         }
 
-        internal Builder SetProjectExtractionPercentile(int percentile)
+        internal CaDETToDataSetBuilder SetProjectExtractionPercentile(int percentile)
         {
             _percentileOfProjectCovered = percentile;
             return this;
         }
         
-        internal Builder RandomizeClassSelection()
+        internal CaDETToDataSetBuilder RandomizeClassSelection()
         {
             ValidateClassesIncluded();
             _randomizeClassList = true;
@@ -46,7 +46,7 @@ namespace PlatformInteractionTool.DataSetBuilder
             if (!_includeClasses) throw new InvalidOperationException("Classes are not included.");
         }
 
-        internal Builder IncludeMemberTypes(CaDETMemberType[] acceptedTypes)
+        internal CaDETToDataSetBuilder IncludeMemberTypes(CaDETMemberType[] acceptedTypes)
         {
             ValidateMembersIncluded();
             _acceptedMemberTypes = acceptedTypes;
@@ -58,14 +58,14 @@ namespace PlatformInteractionTool.DataSetBuilder
             if (!_includeMembers) throw new InvalidOperationException("Members are not included.");
         }
 
-        internal Builder RandomizeMemberSelection()
+        internal CaDETToDataSetBuilder RandomizeMemberSelection()
         {
             ValidateMembersIncluded();
             _randomizeMemberList = true;
             return this;
         }
 
-        internal Builder IncludeMembersWith(int minimumELOC)
+        internal CaDETToDataSetBuilder IncludeMembersWith(int minimumELOC)
         {
             ValidateMembersIncluded();
             _minimumELOC = minimumELOC;

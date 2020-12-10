@@ -4,21 +4,23 @@ using System.Text;
 
 namespace PlatformInteractionTool.DataSetBuilder
 {
-    class DSFileSerializer
+    class TextFileExporter
     {
         private readonly DataSet _dataSet;
         private readonly string _resultFolder;
+        private readonly string _classFileName = "classNames.txt";
+        private readonly string _functionFileName = "functionNames.txt";
 
-        public DSFileSerializer(string destinationPath, DataSet dataSet)
+        public TextFileExporter(string destinationPath, DataSet dataSet)
         {
             _dataSet = dataSet;
-            _resultFolder = destinationPath + "extraction-results\\";
+            _resultFolder = destinationPath;
         }
 
         public void ExtractNamesToFile()
         {
-            SaveInstancesToFile(SnippetType.Class, "classNamesA.txt");
-            SaveInstancesToFile(SnippetType.Function, "memberNamesA.txt");
+            SaveInstancesToFile(SnippetType.Class, _classFileName);
+            SaveInstancesToFile(SnippetType.Function, _functionFileName);
         }
 
         private void SaveInstancesToFile(SnippetType codeSnippetType, string fileName)

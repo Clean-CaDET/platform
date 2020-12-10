@@ -2,9 +2,9 @@
 {
     internal class SmellHeuristic
     {
-        public string Description { get; set; }
-        public bool IsApplicable { get; set; }
-        public string ReasonForApplicability { get; set; }
+        public string Description { get; }
+        public bool IsApplicable { get; }
+        public string ReasonForApplicability { get; }
 
         internal SmellHeuristic(string description, string reason)
         {
