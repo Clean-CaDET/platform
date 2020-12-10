@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RepositoryCompiler\RepositoryCompiler.csproj" />
   </ItemGroup>
 

@@ -1,40 +1,40 @@
-﻿using PlatformInteractionTool.DataSet.Model;
+﻿using PlatformInteractionTool.DataSetBuilder.Model;
 using RepositoryCompiler.CodeModel;
+using RepositoryCompiler.CodeModel.CaDETModel;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel;
 
-namespace PlatformInteractionTool.DataSet
+namespace PlatformInteractionTool.DataSetBuilder
 {
-    internal class DataSetBuilder
+    internal class Builder
     {
         private readonly CaDETProject _cadetProject;
         private int _percentileOfProjectCovered = 100;
 
         private readonly bool _includeClasses;
-        private bool _randomizeClassList = false;
+        private bool _randomizeClassList;
         
         private readonly bool _includeMembers;
-        private bool _randomizeMemberList = false;
+        private bool _randomizeMemberList;
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
-        private int _minimumLOC = 0;
+        private int _minimumELOC;
 
-        internal DataSetBuilder(string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
+        internal Builder(string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
             _cadetProject = new CodeModelFactory(language).ParseFiles(projectPath);
             _includeClasses = includeClasses;
             _includeMembers = includeMembers;
         }
 
-        internal DataSetBuilder SetProjectExtractionPercentile(int percentile)
+        internal Builder SetProjectExtractionPercentile(int percentile)
         {
             _percentileOfProjectCovered = percentile;
             return this;
         }
         
-        internal DataSetBuilder RandomizeClassSelection()
+        internal Builder RandomizeClassSelection()
         {
             ValidateClassesIncluded();
             _randomizeClassList = true;
@@ -46,7 +46,7 @@ namespace PlatformInteractionTool.DataSet
             if (!_includeClasses) throw new InvalidOperationException("Classes are not included.");
         }
 
-        internal DataSetBuilder IncludeMemberTypes(CaDETMemberType[] acceptedTypes)
+        internal Builder IncludeMemberTypes(CaDETMemberType[] acceptedTypes)
         {
             ValidateMembersIncluded();
             _acceptedMemberTypes = acceptedTypes;
@@ -58,29 +58,29 @@ namespace PlatformInteractionTool.DataSet
             if (!_includeMembers) throw new InvalidOperationException("Members are not included.");
         }
 
-        internal DataSetBuilder RandomizeMemberSelection()
+        internal Builder RandomizeMemberSelection()
         {
             ValidateMembersIncluded();
             _randomizeMemberList = true;
             return this;
         }
 
-        internal DataSetBuilder IncludeMembersWith(int minimumLOC)
+        internal Builder IncludeMembersWith(int minimumELOC)
         {
             ValidateMembersIncluded();
-            _minimumLOC = minimumLOC;
+            _minimumELOC = minimumELOC;
             return this;
         }
 
-        internal DataSetProject Build()
+        internal DataSet Build()
         {
-            var builtProject = new DataSetProject();
-            if (_includeClasses) builtProject.Classes = BuildClasses();
-            if (_includeMembers) builtProject.Functions = BuildMembers();
-            return builtProject;
+            var builtDataSet = new DataSet();
+            if (_includeClasses) builtDataSet.AddInstances(BuildClasses());
+            if (_includeMembers) builtDataSet.AddInstances(BuildMembers());
+            return builtDataSet;
         }
 
-        private List<DataSetClass> BuildClasses()
+        private List<DataSetInstance> BuildClasses()
         {
             var cadetClasses = _cadetProject.Classes;
             if(_randomizeClassList) ShuffleList(cadetClasses);
@@ -93,9 +93,9 @@ namespace PlatformInteractionTool.DataSet
             return list.Count * _percentileOfProjectCovered / 100;
         }
 
-        private static List<DataSetClass> CaDETToDataSetClasses(IEnumerable<CaDETClass> cadetClasses)
+        private static List<DataSetInstance> CaDETToDataSetClasses(IEnumerable<CaDETClass> cadetClasses)
         {
-            return cadetClasses.Select(c => new DataSetClass(c)).ToList();
+            return cadetClasses.Select(c => new DataSetInstance(c.FullName, SnippetType.Class)).ToList();
         }
         private static void ShuffleList<T>(IList<T> list)
         {
@@ -109,23 +109,23 @@ namespace PlatformInteractionTool.DataSet
             }
         }
 
-        private List<DataSetFunction> BuildMembers()
+        private List<DataSetInstance> BuildMembers()
         {
             var cadetMembers = new List<CaDETMember>();
             foreach (var c in _cadetProject.Classes)
             {
                 cadetMembers.AddRange(c.Members.Where(
-                    m => _acceptedMemberTypes.Contains(m.Type) && m.Metrics.LOC > _minimumLOC));
+                    m => _acceptedMemberTypes.Contains(m.Type) && m.Metrics.ELOC > _minimumELOC));
             }
             if (_randomizeMemberList) ShuffleList(cadetMembers);
             if (_percentileOfProjectCovered < 100) cadetMembers = cadetMembers.Take(DetermineNumber(cadetMembers)).ToList();
 
-            return CaDETToDataSetMembers(cadetMembers);
+            return CaDETToDataSetFunction(cadetMembers);
         }
 
-        private static List<DataSetFunction> CaDETToDataSetMembers(IEnumerable<CaDETMember> cadetMembers)
+        private static List<DataSetInstance> CaDETToDataSetFunction(IEnumerable<CaDETMember> cadetMembers)
         {
-            return cadetMembers.Select(m => new DataSetFunction(m)).ToList();
+            return cadetMembers.Select(m => new DataSetInstance(m.GetSignature(), SnippetType.Function)).ToList();
         }
     }
 }
