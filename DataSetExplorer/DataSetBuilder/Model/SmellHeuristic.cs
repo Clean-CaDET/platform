@@ -1,6 +1,6 @@
-﻿namespace PlatformInteractionTool.DataSetBuilder.Model
+﻿namespace DataSetExplorer.DataSetBuilder.Model
 {
-    internal class SmellHeuristic
+    public class SmellHeuristic
     {
         public string Description { get; }
         public bool IsApplicable { get; }
@@ -11,6 +11,11 @@
             Description = description;
             IsApplicable = true;
             ReasonForApplicability = reason;
+        }
+
+        public override string ToString()
+        {
+            return Description;
         }
     }
 }

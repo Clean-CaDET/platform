@@ -1,8 +1,8 @@
-﻿using PlatformInteractionTool.DataSetBuilder.Model;
-using System.IO;
+﻿using System.IO;
 using System.Text;
+using DataSetExplorer.DataSetBuilder.Model;
 
-namespace PlatformInteractionTool.DataSetBuilder
+namespace DataSetExplorer.DataSetBuilder
 {
     class TextFileExporter
     {

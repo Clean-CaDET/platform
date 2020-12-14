@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace PlatformInteractionTool.DataSetBuilder.Model
+namespace DataSetExplorer.DataSetBuilder.Model
 {
-    internal class DataSet
+    public class DataSet
     {
+        public string Name { get; }
         private readonly HashSet<DataSetInstance> _instances;
 
-        internal DataSet()
+        internal DataSet(string dataSetName)
         {
+            Name = dataSetName;
             _instances = new HashSet<DataSetInstance>();
         }
 
@@ -26,9 +28,18 @@ namespace PlatformInteractionTool.DataSetBuilder.Model
             }
         }
 
-        internal List<DataSetInstance> GetInstancesOfType(SnippetType type)
+        public List<DataSetInstance> GetInstancesOfType(SnippetType type)
         {
             return _instances.Where(i => i.Type.Equals(type)).ToList();
+        }
+
+        public List<DataSetInstance> GetInstancesForCrossValidation()
+        {
+            var instances = new List<DataSetInstance>();
+
+            instances.AddRange(_instances.Where(i => !i.IsSufficientlyAnnotated()));
+            
+            return instances;
         }
     }
 }

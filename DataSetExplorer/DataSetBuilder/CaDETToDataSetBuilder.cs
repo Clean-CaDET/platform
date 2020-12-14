@@ -1,15 +1,17 @@
-﻿using PlatformInteractionTool.DataSetBuilder.Model;
-using RepositoryCompiler.CodeModel;
+﻿using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataSetExplorer.DataSetBuilder.Model;
 
-namespace PlatformInteractionTool.DataSetBuilder
+namespace DataSetExplorer.DataSetBuilder
 {
     internal class CaDETToDataSetBuilder
     {
+        private string _dataSetName;
+
         private readonly CaDETProject _cadetProject;
         private int _percentileOfProjectCovered = 100;
 
@@ -20,13 +22,17 @@ namespace PlatformInteractionTool.DataSetBuilder
         private bool _randomizeMemberList;
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
         private int _minimumELOC;
+        
 
-        internal CaDETToDataSetBuilder(string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
+        internal CaDETToDataSetBuilder(string dataSetName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
+            _dataSetName = dataSetName;
             _cadetProject = new CodeModelFactory(language).ParseFiles(projectPath);
             _includeClasses = includeClasses;
             _includeMembers = includeMembers;
         }
+
+        internal CaDETToDataSetBuilder(string dataSetName, string projectPath): this(dataSetName, projectPath, LanguageEnum.CSharp, true, true) { }
 
         internal CaDETToDataSetBuilder SetProjectExtractionPercentile(int percentile)
         {
@@ -74,7 +80,7 @@ namespace PlatformInteractionTool.DataSetBuilder
 
         internal DataSet Build()
         {
-            var builtDataSet = new DataSet();
+            var builtDataSet = new DataSet(_dataSetName);
             if (_includeClasses) builtDataSet.AddInstances(BuildClasses());
             if (_includeMembers) builtDataSet.AddInstances(BuildMembers());
             return builtDataSet;
@@ -95,7 +101,7 @@ namespace PlatformInteractionTool.DataSetBuilder
 
         private static List<DataSetInstance> CaDETToDataSetClasses(IEnumerable<CaDETClass> cadetClasses)
         {
-            return cadetClasses.Select(c => new DataSetInstance(c.FullName, SnippetType.Class)).ToList();
+            return cadetClasses.Select(c => new DataSetInstance(c.FullName, null, null, SnippetType.Class)).ToList();
         }
         private static void ShuffleList<T>(IList<T> list)
         {
@@ -125,7 +131,7 @@ namespace PlatformInteractionTool.DataSetBuilder
 
         private static List<DataSetInstance> CaDETToDataSetFunction(IEnumerable<CaDETMember> cadetMembers)
         {
-            return cadetMembers.Select(m => new DataSetInstance(m.GetSignature(), SnippetType.Function)).ToList();
+            return cadetMembers.Select(m => new DataSetInstance(m.GetSignature(), null, null, SnippetType.Function)).ToList();
         }
     }
 }
