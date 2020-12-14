@@ -7,7 +7,9 @@ namespace RepositoryCompiler.CodeModel.CaDETModel
     {
         private readonly LanguageEnum _language;
 
-        public List<CaDETClass> Classes { get; private set;  }
+        public List<CaDETClass> Classes { get; }
+
+        public Dictionary<string, CodeLocationLink> CodeLinks { get; set; }
         
         public CaDETProject(LanguageEnum language, List<CaDETClass> classes)
         {

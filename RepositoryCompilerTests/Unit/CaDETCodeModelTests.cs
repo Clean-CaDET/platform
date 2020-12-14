@@ -20,7 +20,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetDoctorClassText());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetDoctorClassText());
 
             classes.ShouldHaveSingleItem();
             var doctorClass = classes.First();
@@ -41,7 +41,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
 
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
@@ -59,7 +59,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -79,7 +79,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
             
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -99,7 +99,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
             
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -121,7 +121,7 @@ namespace RepositoryCompilerTests.Unit
             //CURRENTLY NOT SUPPORTED - ergo tests fail.
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
             
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
@@ -136,7 +136,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
 
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
@@ -151,7 +151,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
 
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
@@ -171,7 +171,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetClassesWithHierarchy());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetClassesWithHierarchy());
 
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var employee = classes.Find(c => c.Name.Equals("Employee"));
@@ -188,7 +188,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            Should.Throw<NonUniqueFullNameException>(() => factory.CreateCodeModel(_testDataFactory.GetTwoClassesWithSameFullName()));
+            Should.Throw<NonUniqueFullNameException>(() => factory.CreateClassModel(_testDataFactory.GetTwoClassesWithSameFullName()));
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            var classes = factory.CreateCodeModel(_testDataFactory.GetTwoPartialClassesWithSameFullName());
+            var classes = factory.CreateClassModel(_testDataFactory.GetTwoPartialClassesWithSameFullName());
 
             classes.Count.ShouldBe(0);
         }

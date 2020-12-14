@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
@@ -25,13 +27,21 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         /// </summary>
         private int GetEffectiveLinesOfCode(MemberDeclarationSyntax member)
         {
-            string[] allLines = member.ToString().Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
+            //string[] allLines = member.ToString().Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
+            var allCode = member.ToString();
             
-            int triviaLines = CountCommentsAndBlankLines(allLines);
+            var allComments = member.DescendantTrivia().Where(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia) || t.IsKind(SyntaxKind.MultiLineCommentTrivia));
+            foreach (var comment in allComments)
+            {
+                allCode = allCode.Replace(comment.ToFullString(), "");
+            }
+            
+            var allLines = allCode.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            int blankLines = CountBlankLines(allLines);
             int headerLines = CountHeaderLines(allLines);
             int openAndClosingBracketLines = 2;
             
-            return  allLines.Length - (triviaLines + headerLines + openAndClosingBracketLines);
+            return  allLines.Length - (blankLines + headerLines + openAndClosingBracketLines);
         }
 
         private int CountHeaderLines(string[] allLines)
@@ -46,40 +56,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return counter;
         }
 
-        private int CountCommentsAndBlankLines(string[] allLines)
+        private int CountBlankLines(string[] allLines)
         {
-            int counter = 0;
-            for (int i = 0; i < allLines.Length; i++)
-            {
-                string line = allLines[i].Trim();
-                if (line.Contains("/*"))
-                {
-                    //Count multiline comments
-                    if(line.StartsWith("/*")) counter++;
-                    while (!line.Contains("*/"))
-                    {
-                        i++;
-                        line = allLines[i].Trim();
-                        counter++;
-                    }
-
-                    if (!line.EndsWith("*/")) counter++;
-                    continue;
-                }
-                if (line.StartsWith("//"))
-                {
-                    //Count single line comment
-                    counter++;
-                    continue;
-                }
-                if (line == "")
-                {
-                    //Count blank line
-                    counter++;
-                }
-            }
-
-            return counter;
+            return allLines.Select(t => t.Trim()).Count(line => line == "");
         }
 
         /// <summary>

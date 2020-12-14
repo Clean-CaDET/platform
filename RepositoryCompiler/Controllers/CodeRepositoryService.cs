@@ -32,7 +32,7 @@ namespace RepositoryCompiler.Controllers
         {
             _codeRepositoryAdapter.CheckoutCommit(commit);
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
-            return factory.ParseFiles("C:/repo");
+            return factory.CreateProject("C:/repo");
         }
 
         public CaDETModel BuildModel(int numOfPreviousCommits)
@@ -54,7 +54,7 @@ namespace RepositoryCompiler.Controllers
         public CaDETClass BuildClassModel(string sourceCode)
         {
             CodeModelFactory codeFactory = new CodeModelFactory(LanguageEnum.CSharp);
-            return codeFactory.CreateCodeModel(sourceCode);
+            return codeFactory.CreateClassModel(sourceCode);
         }
     }
 }

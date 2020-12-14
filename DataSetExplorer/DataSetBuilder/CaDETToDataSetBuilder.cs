@@ -27,7 +27,7 @@ namespace DataSetExplorer.DataSetBuilder
         internal CaDETToDataSetBuilder(string dataSetName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
             _dataSetName = dataSetName;
-            _cadetProject = new CodeModelFactory(language).ParseFiles(projectPath);
+            _cadetProject = new CodeModelFactory(language).CreateProject(projectPath);
             _includeClasses = includeClasses;
             _includeMembers = includeMembers;
         }

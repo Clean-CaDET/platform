@@ -23,7 +23,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         internal CSharpCaDETMemberBuilder(MemberDeclarationSyntax cSharpMember, SemanticModel semanticModel)
         {
             _member = CreateMemberBasedOnType(cSharpMember);
-            if (_member == null) throw new InappropriateMemberTypeException();
             _cSharpMember = cSharpMember;
             _semanticModel = semanticModel;
             _metricCalculator = new CaDETMemberMetricCalculator();
@@ -50,16 +49,30 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             _member.Metrics = _metricCalculator.CalculateMemberMetrics(_cSharpMember, _member);
         }
 
-        private CaDETMember CreateMemberBasedOnType(MemberDeclarationSyntax member)
+        private static CaDETMember CreateMemberBasedOnType(MemberDeclarationSyntax member)
         {
             return member switch
             {
-                PropertyDeclarationSyntax property => new CaDETMember { Type = CaDETMemberType.Property, Name = property.Identifier.Text },
-                ConstructorDeclarationSyntax constructor => new CaDETMember { Type = CaDETMemberType.Constructor, Name = constructor.Identifier.Text },
-                MethodDeclarationSyntax method => new CaDETMember { Type = CaDETMemberType.Method, Name = method.Identifier.Text },
-                _ => null
+                PropertyDeclarationSyntax property => new CaDETMember { Type = CaDETMemberType.Property, Name = GetNameWithInterface(property.ExplicitInterfaceSpecifier, property.Identifier) },
+                ConstructorDeclarationSyntax constructor => ReturnNonStaticConstructor(constructor),
+                MethodDeclarationSyntax method => new CaDETMember { Type = CaDETMemberType.Method, Name = GetNameWithInterface(method.ExplicitInterfaceSpecifier, method.Identifier) },
+                _ => throw new InappropriateMemberTypeException("Unsupported member type " + member.ToFullString() + "for CaDETMember.")
             };
         }
+
+        private static CaDETMember ReturnNonStaticConstructor(ConstructorDeclarationSyntax constructor)
+        {
+            if (constructor.Modifiers.Count(m => m.ValueText == "static") > 0)
+                throw new InappropriateMemberTypeException("Error at: " + constructor.ToFullString() +
+                                                           ". Static constructors are not supported.");
+            return new CaDETMember { Type = CaDETMemberType.Constructor, Name = constructor.Identifier.Text };
+        }
+
+        private static string GetNameWithInterface(ExplicitInterfaceSpecifierSyntax explicitInterface, SyntaxToken identifier)
+        {
+            return explicitInterface == null ? identifier.Text : explicitInterface + identifier.Text;
+        }
+
         private List<CaDETParameter> GetMethodParams()
         {
             List<CaDETParameter> memberParams = new List<CaDETParameter>();

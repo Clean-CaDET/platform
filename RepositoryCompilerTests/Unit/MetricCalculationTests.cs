@@ -17,7 +17,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetDoctorClassText());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetDoctorClassText());
 
             var doctorClass = classes.First();
             doctorClass.Metrics.LOC.ShouldBe(22);
@@ -30,7 +30,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
             gitClass.Metrics.WMC.ShouldBe(17);
@@ -42,7 +42,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetATFDMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetATFDMultipleClassTexts());
 
             var class1 = classes.Find(c => c.Name.Equals("Class1"));
             var class3 = classes.Find(c => c.Name.Equals("Class3"));
@@ -62,7 +62,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetCohesionClasses());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCohesionClasses());
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -75,7 +75,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetTCCMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetTCCMultipleClassTexts());
 
             var class6 = classes.Find(c => c.Name.Equals("Class6"));
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
@@ -91,7 +91,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
 
@@ -104,7 +104,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetEffectiveLinesOfCodeTest());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetEffectiveLinesOfCodeTest());
 
             var doctor = classes.First();
             doctor.FindMember("Doctor").Metrics.ELOC.ShouldBe(1);
@@ -116,7 +116,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
             gitClass.FindMember("CheckForNewCommits").Metrics.NOP.ShouldBe(0);
@@ -130,7 +130,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateCodeModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
             gitClass.FindMember("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);

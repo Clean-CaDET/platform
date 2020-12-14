@@ -746,6 +746,15 @@ namespace RepositoryCompilerTests.DataFactories
                     {
                         return Email + Email + Email;
                     }
+
+                    public virtual IEnumerator<DateRange> GetEnumerator()
+                    {
+                        return HolidayDates.GetEnumerator();
+                    }
+                    IEnumerator IEnumerable.GetEnumerator()
+                    {
+                        return GetEnumerator();
+                    }
                 }
             }"
             };
