@@ -54,18 +54,40 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return member switch
             {
                 PropertyDeclarationSyntax property => new CaDETMember { Type = CaDETMemberType.Property, Name = GetNameWithInterface(property.ExplicitInterfaceSpecifier, property.Identifier) },
-                ConstructorDeclarationSyntax constructor => ReturnNonStaticConstructor(constructor),
-                MethodDeclarationSyntax method => new CaDETMember { Type = CaDETMemberType.Method, Name = GetNameWithInterface(method.ExplicitInterfaceSpecifier, method.Identifier) },
+                ConstructorDeclarationSyntax constructor => CreateNonStaticConstructor(constructor),
+                MethodDeclarationSyntax method => CreateMethod(method),
                 _ => throw new InappropriateMemberTypeException("Unsupported member type " + member.ToFullString() + "for CaDETMember.")
             };
         }
 
-        private static CaDETMember ReturnNonStaticConstructor(ConstructorDeclarationSyntax constructor)
+        private static CaDETMember CreateNonStaticConstructor(ConstructorDeclarationSyntax constructor)
         {
             if (constructor.Modifiers.Count(m => m.ValueText == "static") > 0)
                 throw new InappropriateMemberTypeException("Error at: " + constructor.ToFullString() +
                                                            ". Static constructors are not supported.");
             return new CaDETMember { Type = CaDETMemberType.Constructor, Name = constructor.Identifier.Text };
+        }
+
+        private static CaDETMember CreateMethod(MethodDeclarationSyntax method)
+        {
+            var methodName = GetNameWithInterface(method.ExplicitInterfaceSpecifier, method.Identifier);
+            if (method.TypeParameterList == null) return new CaDETMember {Type = CaDETMemberType.Method, Name = methodName};
+
+            methodName += GetTypeParameterNameExtension(method.TypeParameterList);
+
+            return new CaDETMember { Type = CaDETMemberType.Method, Name = methodName };
+        }
+
+        private static string GetTypeParameterNameExtension(TypeParameterListSyntax paramList)
+        {
+            var methodName = "<";
+            for (var i = 0; i < paramList.Parameters.Count; i++)
+            {
+                methodName += paramList.Parameters[i].Identifier.Text;
+                if (i != paramList.Parameters.Count - 1) methodName += ", ";
+            }
+            methodName += ">";
+            return methodName;
         }
 
         private static string GetNameWithInterface(ExplicitInterfaceSpecifierSyntax explicitInterface, SyntaxToken identifier)

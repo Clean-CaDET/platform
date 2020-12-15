@@ -8,15 +8,15 @@ namespace DataSetExplorer.DataSetBuilder.Model
     {
         public string CodeSnippetId { get; }
         public string Link { get; }
-        public string ProjectName { get; }
+        public string ProjectLink { get; }
         public SnippetType Type { get; }
         public ISet<DataSetAnnotation> Annotations { get; }
 
-        internal DataSetInstance(string codeSnippetId, string link, string projectName, SnippetType type)
+        internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type)
         {
             CodeSnippetId = codeSnippetId;
             Link = link;
-            ProjectName = projectName;
+            ProjectLink = projectLink;
             Type = type;
 
             Validate();
@@ -58,7 +58,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         public override string ToString()
         {
-            return ProjectName + " > " + CodeSnippetId;
+            return ProjectLink + " > " + CodeSnippetId;
         }
     }
 

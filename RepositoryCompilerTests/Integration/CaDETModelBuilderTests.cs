@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using RepositoryCompiler.CodeModel;
-using RepositoryCompiler.CodeModel.CaDETModel;
+﻿using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using Shouldly;
+using System.Linq;
 using Xunit;
 
 namespace RepositoryCompilerTests.Integration
@@ -58,6 +57,17 @@ namespace RepositoryCompilerTests.Integration
 
         [Fact]
         public void Create_code_model_with_links()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+            var project = factory.CreateProjectWithCodeFileLinks("C:/sdataset2");
+
+            var projectClassesAndMembersCount = project.Classes.Count + project.Classes.Sum(c => c.Members.Count);
+
+            project.CodeLinks.Count.ShouldBe(projectClassesAndMembersCount);
+        }
+
+        [Fact]
+        public void Create_code_model_with_links_on_large_repo()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
             var project = factory.CreateProjectWithCodeFileLinks("C:/repo");

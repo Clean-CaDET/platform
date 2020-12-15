@@ -74,9 +74,9 @@ namespace DataSetExplorer.DataSetImporter
         {
             var codeSnippetId = sheet.Cells["A" + row].Text;
             var link = sheet.Cells["B" + row].Text;
-            var projectName = sheet.Cells["A2"].Text;
+            var projectLink = sheet.Cells["A2"].Text;
             var snippetType = GetInstanceType(codeSnippetId);
-            return new DataSetInstance(codeSnippetId, link, projectName, snippetType);
+            return new DataSetInstance(codeSnippetId, link, projectLink, snippetType);
         }
 
         private static SnippetType GetInstanceType(string codeSnippetId)

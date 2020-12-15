@@ -17,7 +17,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public ISet<CaDETMember> AccessedAccessors { get; internal set; }
         public ISet<CaDETField> AccessedFields { get; internal set; }
 
-        public string GetSignature()
+        public string Signature()
         {
             var signatureBuilder = new StringBuilder();
             if (Parent != null) signatureBuilder.Append(Parent.FullName).Append(".");
@@ -78,7 +78,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public override bool Equals(object other)
         {
             if (!(other is CaDETMember otherMember)) return false;
-            return Parent.Equals(otherMember.Parent) && GetSignature().Equals(otherMember.GetSignature());
+            return Parent.Equals(otherMember.Parent) && Signature().Equals(otherMember.Signature());
         }
         public override int GetHashCode()
         {
@@ -87,7 +87,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 
         public override string ToString()
         {
-            return GetSignature();
+            return Signature();
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System;
+﻿using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.CodeModel.CodeParsers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using RepositoryCompiler.CodeModel.CaDETModel;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using RepositoryCompiler.CodeModel.CodeParsers;
 
 namespace RepositoryCompiler.CodeModel
 {
@@ -65,7 +64,7 @@ namespace RepositoryCompiler.CodeModel
                     codeLinks.Add(c.FullName, GetSnippetLocationLink(c.SourceCode, fileText, relativePath));
                     foreach (var member in c.Members)
                     {
-                        codeLinks.Add(member.GetSignature(), GetSnippetLocationLink(member.SourceCode, fileText, relativePath));
+                        codeLinks.Add(member.Signature(), GetSnippetLocationLink(member.SourceCode, fileText, relativePath));
                     }
                 }
             }

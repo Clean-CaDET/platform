@@ -49,9 +49,9 @@ namespace RepositoryCompilerTests.Unit
             var holidayDates = doctor.FindMember("HolidayDates");
             var overlapsWith = dateRange.FindMember("OverlapsWith");
             var findDoctors = service.FindMember("FindAvailableDoctor");
-            holidayDates.GetSignature().Equals("HolidayDates");
-            overlapsWith.GetSignature().Equals("OverlapsWith(DoctorApp.Model.Data.DateR.DateRange)");
-            findDoctors.GetSignature().Equals("FindAvailableDoctor(DoctorApp.Model.Data.DateR.DateRange)");
+            holidayDates.Signature().Equals("HolidayDates");
+            overlapsWith.Signature().Equals("OverlapsWith(DoctorApp.Model.Data.DateR.DateRange)");
+            findDoctors.Signature().Equals("FindAvailableDoctor(DoctorApp.Model.Data.DateR.DateRange)");
         }
 
         [Fact]

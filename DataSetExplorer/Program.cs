@@ -8,10 +8,7 @@ namespace DataSetExplorer
     {
         static void Main(string[] args)
         {
-            //CreateDataSetFromRepository();
-            DataSet ds = ReadDataSetFromExcel();
-            //TODO: Srediti excele da imaju anotator ID, uparene heuristike, i sve ostalo sto treba
-            var b = ds.Name;
+            CreateDataSetFromRepository();
         }
 
         private static DataSet ReadDataSetFromExcel()
@@ -22,7 +19,7 @@ namespace DataSetExplorer
 
         private static void CreateDataSetFromRepository()
         {
-            var builder = new CaDETToDataSetBuilder("SharpX", "C:\\sdataset4\\");
+            var builder = new CaDETToDataSetBuilder("https://github.com/OpenRA/OpenRA/tree/920d00bbae9fa8e62387bbff705ca4bea6a26677", "C:\\sdataset5\\");
 
             var project = builder.IncludeMembersWith(2).RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
