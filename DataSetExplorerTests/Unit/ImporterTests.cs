@@ -1,11 +1,11 @@
 using System.Linq;
 using DataSetExplorer.DataSetBuilder.Model;
-using Xunit;
-using DataSetExplorer.DataSetImporter;
+using DataSetExplorer.DataSetSerializer;
 using DataSetExplorerTests.DataFactories;
 using Shouldly;
+using Xunit;
 
-namespace DataSetExplorerTests
+namespace DataSetExplorerTests.Unit
 {
     public class ImporterTests
     {

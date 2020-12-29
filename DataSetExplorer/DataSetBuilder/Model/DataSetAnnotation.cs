@@ -12,21 +12,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         public DataSetAnnotation(string instanceSmell, int severity, int annotatorId, List<SmellHeuristic> applicableHeuristics)
         {
-            InstanceSmell = GetInstanceEnum(instanceSmell);
+            InstanceSmell = new CodeSmell(instanceSmell);
             Severity = severity;
             AnnotatorId = annotatorId;
             ApplicableHeuristics = applicableHeuristics;
             Validate();
-        }
-
-        private static CodeSmell GetInstanceEnum(string instanceSmell)
-        {
-            return instanceSmell switch
-            {
-                "Large Class" => CodeSmell.LargeClass,
-                "Long Method" => CodeSmell.LongMethod,
-                _ => throw new InvalidOperationException("Unsupported code smell type.")
-            };
         }
 
         private void Validate()
@@ -36,24 +26,18 @@ namespace DataSetExplorer.DataSetBuilder.Model
             if (Severity > 0 && ApplicableHeuristics.Count < 1) throw new InvalidOperationException("Annotations with severity above 0 must have at least one applicable heuristic.");
         }
 
-        public override int GetHashCode() => (AnnotatorId, InstanceSmell).GetHashCode();
+        public override int GetHashCode() => (AnnotatorId, InstanceSmell: InstanceSmell.Value).GetHashCode();
 
         public override bool Equals(object other)
         {
             return other is DataSetAnnotation annotation
                    && AnnotatorId.Equals(annotation.AnnotatorId)
-                   && InstanceSmell.Equals(annotation.InstanceSmell);
+                   && InstanceSmell.Value.Equals(annotation.InstanceSmell.Value);
         }
 
         public override string ToString()
         {
-            return "Annotator: " + AnnotatorId + "; Smell: " + InstanceSmell + "; Severity: " + Severity;
+            return "Annotator: " + AnnotatorId + "; Smell: " + InstanceSmell.Value + "; Severity: " + Severity;
         }
-    }
-
-    public enum CodeSmell
-    {
-        LongMethod,
-        LargeClass
     }
 }

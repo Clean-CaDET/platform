@@ -5,12 +5,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
 {
     public class DataSet
     {
-        public string Name { get; }
+        public string Url { get; }
         private readonly HashSet<DataSetInstance> _instances;
 
-        internal DataSet(string dataSetName)
+        internal DataSet(string dataSetUrl)
         {
-            Name = dataSetName;
+            Url = dataSetUrl;
             _instances = new HashSet<DataSetInstance>();
         }
 

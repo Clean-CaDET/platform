@@ -1,6 +1,7 @@
 ﻿using DataSetExplorer.DataSetBuilder;
 using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.DataSetImporter;
+using DataSetExplorer.DataSetSerializer;
+using DataSetExplorer.DataSetSerializer.ViewModel;
 
 namespace DataSetExplorer
 {
@@ -8,7 +9,9 @@ namespace DataSetExplorer
     {
         static void Main(string[] args)
         {
-            CreateDataSetFromRepository();
+            var ds = CreateDataSetFromRepository();
+            var exporter = new ExcelExporter("C:\\DSOutput\\", new ColumnHeuristicsModel());
+            exporter.Export(ds, "ShopifySharp");
         }
 
         private static DataSet ReadDataSetFromExcel()
@@ -17,15 +20,11 @@ namespace DataSetExplorer
             return importer.Import("BurningKnight");
         }
 
-        private static void CreateDataSetFromRepository()
+        private static DataSet CreateDataSetFromRepository()
         {
-            var builder = new CaDETToDataSetBuilder("https://github.com/OpenRA/OpenRA/tree/920d00bbae9fa8e62387bbff705ca4bea6a26677", "C:\\sdataset5\\");
-
-            var project = builder.IncludeMembersWith(2).RandomizeClassSelection().RandomizeMemberSelection()
+            var builder = new CaDETToDataSetBuilder("https://github.com/OpenRA/OpenRA/tree/920d00bbae9fa8e62387bbff705ca4bea6a26677", "C:\\sdataset2\\");
+            return builder.IncludeMembersWith(2).RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
-
-            var fileSerializer = new TextFileExporter("C:\\DSOutput\\", project);
-            fileSerializer.ExtractNamesToFile();
         }
     }
 }

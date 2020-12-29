@@ -1,11 +1,11 @@
 ﻿using System;
-using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataSetExplorer.DataSetBuilder.Model;
+using OfficeOpenXml;
 
-namespace DataSetExplorer.DataSetImporter
+namespace DataSetExplorer.DataSetSerializer
 {
     public class ExcelImporter
     {

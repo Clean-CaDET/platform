@@ -8,7 +8,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public List<CaDETModifier> Modifiers { get; internal set; }
         public CaDETClass Parent { get; internal set; }
 
-        public override bool Equals(object? other)
+        public override bool Equals(object other)
         {
             if (!(other is CaDETField otherField)) return false;
             if (Parent == null) return Name.Equals(otherField.Name);

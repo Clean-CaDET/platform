@@ -2,35 +2,33 @@
 using System.Text;
 using DataSetExplorer.DataSetBuilder.Model;
 
-namespace DataSetExplorer.DataSetBuilder
+namespace DataSetExplorer.DataSetSerializer
 {
     class TextFileExporter
     {
-        private readonly DataSet _dataSet;
         private readonly string _resultFolder;
         private const string ClassFileName = "classNames.txt";
         private const string FunctionFileName = "functionNames.txt";
         private const string ClassLinks = "classLinks.txt";
         private const string FunctionLinks = "functionLinks.txt";
 
-        public TextFileExporter(string destinationPath, DataSet dataSet)
+        public TextFileExporter(string destinationPath)
         {
-            _dataSet = dataSet;
             _resultFolder = destinationPath;
         }
 
-        public void ExtractNamesToFile()
+        public void Export(DataSet dataSet)
         {
-            SaveSnippetIdToFile(SnippetType.Class, ClassFileName);
-            SaveSnippetIdToFile(SnippetType.Function, FunctionFileName);
-            SaveSnippetLinkToFile(SnippetType.Class, ClassLinks);
-            SaveSnippetLinkToFile(SnippetType.Function, FunctionLinks);
+            SaveSnippetIdToFile(SnippetType.Class, ClassFileName, dataSet);
+            SaveSnippetIdToFile(SnippetType.Function, FunctionFileName, dataSet);
+            SaveSnippetLinkToFile(SnippetType.Class, ClassLinks, dataSet);
+            SaveSnippetLinkToFile(SnippetType.Function, FunctionLinks, dataSet);
         }
 
-        private void SaveSnippetIdToFile(SnippetType codeSnippetType, string fileName)
+        private void SaveSnippetIdToFile(SnippetType codeSnippetType, string fileName, DataSet dataSet)
         {
             var sb = new StringBuilder();
-            foreach (var instance in _dataSet.GetInstancesOfType(codeSnippetType))
+            foreach (var instance in dataSet.GetInstancesOfType(codeSnippetType))
             {
                 sb.Append(instance.CodeSnippetId).Append("\n");
             }
@@ -43,10 +41,10 @@ namespace DataSetExplorer.DataSetBuilder
             File.WriteAllText(_resultFolder + fileName, text);
         }
 
-        private void SaveSnippetLinkToFile(SnippetType codeSnippetType, string fileName)
+        private void SaveSnippetLinkToFile(SnippetType codeSnippetType, string fileName, DataSet dataSet)
         {
             var sb = new StringBuilder();
-            foreach (var instance in _dataSet.GetInstancesOfType(codeSnippetType))
+            foreach (var instance in dataSet.GetInstancesOfType(codeSnippetType))
             {
                 sb.Append(instance.Link).Append("\n");
             }
