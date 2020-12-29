@@ -55,7 +55,7 @@ namespace RepositoryCompiler.CodeModel
             foreach (var file in allFiles)
             {
                 var fileText = File.ReadAllText(file);
-                var classesInFile = projectClasses.Where(projectClass => fileText.Contains(projectClass.SourceCode)).ToList();
+                var classesInFile = GetClassesInFile(projectClasses, fileText);
                 if(classesInFile.Count == 0) continue;
 
                 var relativePath = GetRelativePath(basePath, file);
@@ -70,6 +70,21 @@ namespace RepositoryCompiler.CodeModel
             }
 
             return codeLinks;
+        }
+
+        private List<CaDETClass> GetClassesInFile(List<CaDETClass> projectClasses, string fileText)
+        {
+            return projectClasses.Where(projectClass => FileContainsOuterMostClass(projectClass, fileText)).ToList();
+        }
+
+        private bool FileContainsOuterMostClass(CaDETClass projectClass, string fileText)
+        {
+            var c = projectClass;
+            while(c.IsInnerClass) c = c.OuterClass;
+            var namespaceName = GetLanguagePackageName() + " " + c.ContainerName;
+            return fileText.Contains(c.SourceCode)
+                   && fileText.Contains(namespaceName)
+                   && !fileText.Contains(namespaceName + "."); //To avoid subpackages.
         }
 
         private static string GetRelativePath(string basePath, string fullPath)
@@ -94,6 +109,15 @@ namespace RepositoryCompiler.CodeModel
             return _language switch
             {
                 LanguageEnum.CSharp => "*.cs",
+                _ => throw new InvalidEnumArgumentException()
+            };
+        }
+
+        private string GetLanguagePackageName()
+        {
+            return _language switch
+            {
+                LanguageEnum.CSharp => "namespace",
                 _ => throw new InvalidEnumArgumentException()
             };
         }

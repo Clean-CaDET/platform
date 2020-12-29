@@ -52,15 +52,29 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                     try
                     {
                         ValidateNoPartialModifier(node);
+                        ValidateNoStructParent(node);
                         builtClasses.Add(ParseClass(semanticModel, node));
                     }
                     catch (PartialIsNotSupportedException)
                     {
                         // Skips classes with partial keyword.
                     }
+                    catch (StructIsNotSupportedException)
+                    {
+                        //Skips members belonging to structs.
+                    }
                 }
             }
             return builtClasses;
+        }
+        private static void ValidateNoStructParent(ClassDeclarationSyntax node)
+        {
+            var parentNode = node.Parent;
+            while (parentNode != null)
+            {
+                if (parentNode is StructDeclarationSyntax) throw new StructIsNotSupportedException();
+                parentNode = parentNode.Parent;
+            }
         }
 
         private CaDETClass ParseClass(SemanticModel semanticModel, ClassDeclarationSyntax node)
@@ -128,6 +142,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private static void ValidateNoPartialModifier(MemberDeclarationSyntax member)
         {
             if (member.Modifiers.Any(m => m.ValueText.Equals("partial"))) throw new PartialIsNotSupportedException();
+            var memberParent = member.Parent;
+            while (memberParent is MemberDeclarationSyntax parent)
+            {
+                if (parent.Modifiers.Any(m => m.ValueText.Equals("partial"))) throw new PartialIsNotSupportedException();
+                memberParent = parent.Parent;
+            }
         }
 
         private List<CaDETModifier> GetModifiers(MemberDeclarationSyntax member)
@@ -154,6 +174,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             foreach (var c in classes)
             {
                 c.Parent = LinkParent(classes, c.Parent);
+                c.OuterClass = LinkOuterClass(classes, c.ContainerName);
                 foreach (var memberBuilder in _memberBuilders[c])
                 {
                     memberBuilder.DetermineAccessedCodeItems(classes);
@@ -166,6 +187,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             if (parent.Name.Equals("object")) return null;
             return classes.FirstOrDefault(c => c.FullName.Equals(parent.Name));
+        }
+        private CaDETClass LinkOuterClass(List<CaDETClass> classes, string containerName)
+        {
+            return classes.FirstOrDefault(c => c.FullName.Equals(containerName));
         }
 
         private List<CaDETClass> CalculateMetrics(List<CaDETClass> linkedClasses)

@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataSetExplorer\DataSetExplorer.csproj" />
-    <ProjectReference Include="..\PlatformInteractionTool\DataSetExplorer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

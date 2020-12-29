@@ -1,4 +1,5 @@
-﻿using RepositoryCompiler.CodeModel;
+﻿using System;
+using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using Shouldly;
 using System.Linq;
@@ -55,15 +56,24 @@ namespace RepositoryCompilerTests.Integration
             handles.Metrics.WMC.ShouldBe(10);
         }
 
-        [Fact]
-        public void Create_code_model_with_links()
+        [Theory]
+        [InlineData("C:/test-repo")]
+        [InlineData("C:/sdataset")]
+        [InlineData("C:/sdataset2")]
+        [InlineData("C:/sdataset3")]
+        [InlineData("C:/sdataset4")]
+        [InlineData("C:/sdataset5")]
+        public void Create_code_model_with_links(string folderLocation)
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
-            var project = factory.CreateProjectWithCodeFileLinks("C:/sdataset2");
+            var project = factory.CreateProjectWithCodeFileLinks(folderLocation);
 
-            var projectClassesAndMembersCount = project.Classes.Count + project.Classes.Sum(c => c.Members.Count);
+            var classes = project.Classes.Select(c => c.FullName);
+            var members = project.Classes.SelectMany(c => c.Members).Select(m => m.Signature());
+            var keys = project.CodeLinks.Keys.ToList();
+            var difference = classes.Union(members).Except(keys);
 
-            project.CodeLinks.Count.ShouldBe(projectClassesAndMembersCount);
+            difference.ShouldBeEmpty();
         }
 
         [Fact]
