@@ -22,7 +22,9 @@ namespace DataSetExplorer.DataSetBuilder
         private bool _randomizeMemberList;
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
         private int _minimumELOC;
-        
+        private int _minimumNMD;
+        private int _minimumNAD;
+
 
         internal CaDETToDataSetBuilder(string projectUrl, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
@@ -44,6 +46,17 @@ namespace DataSetExplorer.DataSetBuilder
         {
             ValidateClassesIncluded();
             _randomizeClassList = true;
+            return this;
+        }
+
+        /// <summary>Final dataset will include classes that have minimumNMD or minimumNAD</summary>
+        /// <param name="minimumNMD">Minimum number of methods.</param>
+        /// <param name="minimumNAD">Minimum number of fields and properties with implicit fields.</param>
+        internal CaDETToDataSetBuilder IncludeClassesWith(int minimumNMD, int minimumNAD)
+        {
+            ValidateClassesIncluded();
+            _minimumNMD = minimumNMD;
+            _minimumNAD = minimumNAD;
             return this;
         }
 
@@ -88,15 +101,16 @@ namespace DataSetExplorer.DataSetBuilder
 
         private List<DataSetInstance> BuildClasses()
         {
-            var cadetClasses = _cadetProject.Classes;
+            var cadetClasses = _cadetProject.Classes.Where(
+                c => c.Metrics.NAD >= _minimumNAD || c.Metrics.NMD >= _minimumNMD).ToList();
             if(_randomizeClassList) ShuffleList(cadetClasses);
-            if(_percentileOfProjectCovered < 100) cadetClasses = cadetClasses.Take(DetermineNumberOfInstances(cadetClasses)).ToList();
+            if(_percentileOfProjectCovered < 100) cadetClasses = cadetClasses.Take(DetermineNumberOfInstances(_cadetProject.Classes.Count)).ToList();
             return CaDETToDataSetClasses(cadetClasses);
         }
 
-        private int DetermineNumberOfInstances<T>(List<T> list)
+        private int DetermineNumberOfInstances(int totalNumber)
         {
-            return list.Count * _percentileOfProjectCovered / 100;
+            return totalNumber * _percentileOfProjectCovered / 100;
         }
 
         private List<DataSetInstance> CaDETToDataSetClasses(List<CaDETClass> cadetClasses)
@@ -126,13 +140,11 @@ namespace DataSetExplorer.DataSetBuilder
         private List<DataSetInstance> BuildMembers()
         {
             var cadetMembers = new List<CaDETMember>();
-            foreach (var c in _cadetProject.Classes)
-            {
-                cadetMembers.AddRange(c.Members.Where(
-                    m => _acceptedMemberTypes.Contains(m.Type) && m.Metrics.ELOC > _minimumELOC));
-            }
+            var allMembers= _cadetProject.Classes.SelectMany(c => c.Members).ToList();
+            cadetMembers.AddRange(allMembers.Where(
+                    m => _acceptedMemberTypes.Contains(m.Type) && m.Metrics.ELOC >= _minimumELOC));
             if (_randomizeMemberList) ShuffleList(cadetMembers);
-            if (_percentileOfProjectCovered < 100) cadetMembers = cadetMembers.Take(DetermineNumberOfInstances(cadetMembers)).ToList();
+            if (_percentileOfProjectCovered < 100) cadetMembers = cadetMembers.Take(DetermineNumberOfInstances(allMembers.Count)).ToList();
 
             return CaDETToDataSetFunction(cadetMembers);
         }

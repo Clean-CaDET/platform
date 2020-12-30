@@ -49,7 +49,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private double? GetLackOfCohesionOfMethods(CaDETClass parsedClass)
         {
             //TODO: Will need to reexamine the way we look at accessors and fields
-            double maxCohesion = (GetNumberOfAttributesDefined(parsedClass) + CountFieldDefiningAccessors(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
+            double maxCohesion = (GetNumberOfAttributesDefined(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
             if (maxCohesion == 0) return null;
 
             double methodFieldAccess = 0;
@@ -95,11 +95,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return methodPairsThatShareAccessToAFieldOrAccessor;
         }
 
-        private int CountFieldDefiningAccessors(CaDETClass parsedClass)
-        {
-            return parsedClass.Members.Count(method => method.IsFieldDefiningAccessor());
-        }
-
         private int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
         {
             int counter = method.AccessedFields.Count(field => Enumerable.Contains(parsedClass.Fields, field));
@@ -121,7 +116,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             //TODO: Probably should expand to include simple accessors that do not have a related field.
             //TODO: It is C# specific, but this is the CSSharpMetricCalculator
-            return parsedClass.Fields.Count;
+            return parsedClass.Fields.Count + parsedClass.Members.Count(m => m.IsFieldDefiningAccessor());
         }
 
         private int GetNumberOfMethodsDeclared(CaDETClass parsedClass)

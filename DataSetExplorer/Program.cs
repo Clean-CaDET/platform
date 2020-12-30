@@ -23,7 +23,7 @@ namespace DataSetExplorer
         private static DataSet CreateDataSetFromRepository()
         {
             var builder = new CaDETToDataSetBuilder("https://github.com/OpenRA/OpenRA/tree/920d00bbae9fa8e62387bbff705ca4bea6a26677", "C:\\sdataset2\\");
-            return builder.IncludeMembersWith(2).RandomizeClassSelection().RandomizeMemberSelection()
+            return builder.IncludeMembersWith(3).IncludeClassesWith(2, 4).RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
         }
     }
