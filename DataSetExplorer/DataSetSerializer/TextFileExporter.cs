@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using DataSetExplorer.DataSetBuilder.Model;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
-using DataSetExplorer.DataSetBuilder.Model;
 
 namespace DataSetExplorer.DataSetSerializer
 {
@@ -17,18 +19,29 @@ namespace DataSetExplorer.DataSetSerializer
             _resultFolder = destinationPath;
         }
 
-        public void Export(DataSet dataSet)
+        public void ExportInstancesWithAnnotatorId(List<DataSetInstance> instances)
         {
-            SaveSnippetIdToFile(SnippetType.Class, ClassFileName, dataSet);
-            SaveSnippetIdToFile(SnippetType.Function, FunctionFileName, dataSet);
-            SaveSnippetLinkToFile(SnippetType.Class, ClassLinks, dataSet);
-            SaveSnippetLinkToFile(SnippetType.Function, FunctionLinks, dataSet);
+            //TODO: Consider moving to DataSet or new entity
+            var groupedInstances = instances.GroupBy(i => i.GetSortedAnnotatorIds());
+            foreach (var group in groupedInstances)
+            {
+                SaveInstanceToFile(group.ToList(), group.Key + ".txt");
+                SaveSnippetLinkToFile(group.ToList(), group.Key + "-links.txt");
+            }
         }
 
-        private void SaveSnippetIdToFile(SnippetType codeSnippetType, string fileName, DataSet dataSet)
+        public void Export(DataSet dataSet)
+        {
+            SaveInstanceToFile(dataSet.GetInstancesOfType(SnippetType.Class), ClassFileName);
+            SaveInstanceToFile(dataSet.GetInstancesOfType(SnippetType.Function), FunctionFileName);
+            SaveSnippetLinkToFile(dataSet.GetInstancesOfType(SnippetType.Class), ClassLinks);
+            SaveSnippetLinkToFile(dataSet.GetInstancesOfType(SnippetType.Function), FunctionLinks);
+        }
+
+        private void SaveInstanceToFile(List<DataSetInstance> instances, string fileName)
         {
             var sb = new StringBuilder();
-            foreach (var instance in dataSet.GetInstancesOfType(codeSnippetType))
+            foreach (var instance in instances)
             {
                 sb.Append(instance.CodeSnippetId).Append("\n");
             }
@@ -41,10 +54,10 @@ namespace DataSetExplorer.DataSetSerializer
             File.WriteAllText(_resultFolder + fileName, text);
         }
 
-        private void SaveSnippetLinkToFile(SnippetType codeSnippetType, string fileName, DataSet dataSet)
+        private void SaveSnippetLinkToFile(List<DataSetInstance> instances, string fileName)
         {
             var sb = new StringBuilder();
-            foreach (var instance in dataSet.GetInstancesOfType(codeSnippetType))
+            foreach (var instance in instances)
             {
                 sb.Append(instance.Link).Append("\n");
             }

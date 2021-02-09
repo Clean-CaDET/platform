@@ -10,7 +10,7 @@ namespace DataSetExplorer.DataSetBuilder
 {
     internal class CaDETToDataSetBuilder
     {
-        private readonly string _projectUrl;
+        private readonly string _projectAndCommitUrl;
 
         private readonly CaDETProject _cadetProject;
         private int _percentileOfProjectCovered = 100;
@@ -26,15 +26,15 @@ namespace DataSetExplorer.DataSetBuilder
         private int _minimumNAD;
 
 
-        internal CaDETToDataSetBuilder(string projectUrl, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
+        internal CaDETToDataSetBuilder(string projectAndCommitUrl, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
-            _projectUrl = projectUrl;
+            _projectAndCommitUrl = projectAndCommitUrl;
             _cadetProject = new CodeModelFactory(language).CreateProjectWithCodeFileLinks(projectPath);
             _includeClasses = includeClasses;
             _includeMembers = includeMembers;
         }
 
-        internal CaDETToDataSetBuilder(string projectUrl, string projectPath): this(projectUrl, projectPath, LanguageEnum.CSharp, true, true) { }
+        internal CaDETToDataSetBuilder(string projectAndCommitUrl, string projectPath): this(projectAndCommitUrl, projectPath, LanguageEnum.CSharp, true, true) { }
 
         internal CaDETToDataSetBuilder SetProjectExtractionPercentile(int percentile)
         {
@@ -93,7 +93,7 @@ namespace DataSetExplorer.DataSetBuilder
 
         internal DataSet Build()
         {
-            var builtDataSet = new DataSet(_projectUrl);
+            var builtDataSet = new DataSet(_projectAndCommitUrl);
             if (_includeClasses) builtDataSet.AddInstances(BuildClasses());
             if (_includeMembers) builtDataSet.AddInstances(BuildMembers());
             return builtDataSet;
@@ -116,13 +116,13 @@ namespace DataSetExplorer.DataSetBuilder
         private List<DataSetInstance> CaDETToDataSetClasses(List<CaDETClass> cadetClasses)
         {
             return cadetClasses.Select(c => 
-                new DataSetInstance(c.FullName, GetCodeUrl(c.FullName), _projectUrl, SnippetType.Class)).ToList();
+                new DataSetInstance(c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class)).ToList();
         }
 
         private string GetCodeUrl(string snippetId)
         {
             _cadetProject.CodeLinks.TryGetValue(snippetId, out var codeLink);
-            return _projectUrl + "\\" + codeLink.FileLocation + "#L" + codeLink.StartLoC + "-L" + codeLink.EndLoC;
+            return _projectAndCommitUrl + "\\" + codeLink.FileLocation + "#L" + codeLink.StartLoC + "-L" + codeLink.EndLoC;
         }
 
         private static void ShuffleList<T>(IList<T> list)
@@ -152,7 +152,7 @@ namespace DataSetExplorer.DataSetBuilder
         private List<DataSetInstance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
         {
             return cadetMembers.Select(m => 
-                new DataSetInstance(m.Signature(), GetCodeUrl(m.Signature()), _projectUrl, SnippetType.Function)).ToList();
+                new DataSetInstance(m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function)).ToList();
         }
     }
 }

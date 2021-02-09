@@ -33,7 +33,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
             return _instances.Where(i => i.Type.Equals(type)).ToList();
         }
 
-        public List<DataSetInstance> GetInstancesForCrossValidation()
+        public List<DataSetInstance> GetInsufficientlyAnnotatedInstances()
         {
             var instances = new List<DataSetInstance>();
 

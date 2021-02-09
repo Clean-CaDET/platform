@@ -35,15 +35,23 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         internal void AddAnnotations(DataSetInstance instance)
         {
+            if (Annotations.Overlaps(instance.Annotations)) throw new InvalidOperationException("Duplicate annotations (same author and same code quality issue): " + instance.CodeSnippetId);
             Annotations.UnionWith(instance.Annotations);
         }
 
         internal bool IsSufficientlyAnnotated()
         {
             if (Annotations.Count > 2) return true;
-            if (Annotations.Count == 1) return false;
+            if (Annotations.Count <= 1) return false;
             var twoVotes = Annotations.ToList();
             return twoVotes[0].Severity == twoVotes[1].Severity;
+        }
+
+        internal string GetSortedAnnotatorIds()
+        {
+            var list = Annotations.Select(annotation => annotation.AnnotatorId).ToList();
+            list.Sort();
+            return string.Join(",", list);
         }
 
         public override int GetHashCode()

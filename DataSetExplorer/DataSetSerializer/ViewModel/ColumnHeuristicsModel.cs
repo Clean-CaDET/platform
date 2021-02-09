@@ -34,7 +34,7 @@ namespace DataSetExplorer.DataSetSerializer.ViewModel
                 "Function is too long.",
                 "Function is too complex.",
                 "Function does multiple things.",
-                "Different abstraction levels."
+                //"Different abstraction levels."
             };
             return retVal;
         }

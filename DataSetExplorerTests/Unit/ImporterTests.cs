@@ -28,12 +28,12 @@ namespace DataSetExplorerTests.Unit
         }
 
         [Fact]
-        public void Finds_instances_for_cross_validation()
+        public void Finds_insufficiently_annotated_instances()
         {
             ExcelImporter importer = new ExcelImporter(new ExcelFactory().GetTestDataFolder());
             var dataSet = importer.Import("BurningKnight");
 
-            var instances = dataSet.GetInstancesForCrossValidation();
+            var instances = dataSet.GetInsufficientlyAnnotatedInstances();
 
             instances.Count.ShouldBe(9);
         }

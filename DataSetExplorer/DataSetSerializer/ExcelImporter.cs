@@ -21,10 +21,10 @@ namespace DataSetExplorer.DataSetSerializer
         /// <summary>
         /// This logic is highly dependent on the appropriate excel file structure.
         /// It examines excel documents in the sourceFolder directory and its subdirectories.
-        /// The excel documents must be formatted following these guidelines https://github.com/Clean-CaDET/platform-documentation/wiki/Dataset-Explorer#excel-import
+        /// The excel documents must be formatted following these guidelines https://github.com/Clean-CaDET/platform/wiki/Dataset-Explorer#building-your-dataset
         /// </summary>
-        /// <param name="dataSetName">Name of the returned dataset and folder that contains the documents.</param>
-        /// <returns>A dataset constructed from multiple excel documents.</returns>
+        /// <param name="dataSetName">Name of the returned dataset.</param>
+        /// <returns>A dataset constructed from one or more excel documents.</returns>
         public DataSet Import(string dataSetName)
         {
             var dataSet = new DataSet(dataSetName);
@@ -59,7 +59,7 @@ namespace DataSetExplorer.DataSetSerializer
         private static List<DataSetInstance> ExtractInstances(ExcelWorksheet sheet)
         {
             var instances = new List<DataSetInstance>();
-            for (var row = StartingInstanceRow; row < sheet.Dimension.End.Row; row++)
+            for (var row = StartingInstanceRow; row <= sheet.Dimension.End.Row; row++)
             {
                 if (string.IsNullOrEmpty(sheet.Cells["A" + row].Text)) throw new InvalidOperationException("Rows contain empty value. Error at row " + row);
                 var instance = GetBasicInstance(sheet, row);
