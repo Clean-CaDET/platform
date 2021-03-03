@@ -4,20 +4,19 @@ using System.Collections.Generic;
 
 namespace SmartTutor.Recommenders
 {
-    class KnowledgeBasedRecommender : IRecommender
+    internal class KnowledgeBasedRecommender : IRecommender
     {
-        private IContentRepository contentRepository;
+        private readonly IContentRepository _contentRepository;
+
         public KnowledgeBasedRecommender(IContentRepository contentRepository)
         {
-            this.contentRepository = contentRepository;
+            _contentRepository = contentRepository;
         }
+
         public List<EducationalContent> FindEducationalContent(List<SmellType> issues)
         {
-            List<EducationalContent> result = new List<EducationalContent>();
-            foreach(SmellType smellType in issues)
-            {
-                 result.AddRange(contentRepository.FindEducationalContent(smellType));
-            }
+            var result = new List<EducationalContent>();
+            issues.ForEach(smellType => result.AddRange(_contentRepository.FindEducationalContent(smellType)));
             return result;
         }
     }

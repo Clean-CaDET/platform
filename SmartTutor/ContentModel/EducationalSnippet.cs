@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartTutor.ContentModel
 {
     public class EducationalSnippet
     {
-        public int Id { get; set; }
-        public int SnippetQuality { get; set; }
-        public int SnippetDifficulty { get; set; }   
-        public SnippetType SnippetType { get; set; }
+        [Key] public int Id { get; set; }
+        public int Quality { get; set; }
+        public int Difficulty { get; set; }
+        public SnippetType Type { get; set; }
         public List<Tag> Tags { get; set; }
         public string Content { get; set; }
     }

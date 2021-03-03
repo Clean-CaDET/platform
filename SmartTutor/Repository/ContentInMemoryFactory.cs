@@ -30,9 +30,9 @@ namespace SmartTutor.Repository
         {
             EducationalContent educationContent = new EducationalContent();
 
-            educationContent.ContentQuality = 4;
-            educationContent.ContentDifficulty = 4;
-            educationContent.EducationSnippets = new List<EducationalSnippet>
+            educationContent.Quality = 4;
+            educationContent.Difficulty = 4;
+            educationContent.EducationalSnippets = new List<EducationalSnippet>
             {
                 CreateLMShortTextSnippet(),
                 CreateLMLongTextSnippet(),
@@ -48,9 +48,9 @@ namespace SmartTutor.Repository
         {
             EducationalContent educationContent = new EducationalContent();
 
-            educationContent.ContentQuality = 4;
-            educationContent.ContentDifficulty = 5;
-            educationContent.EducationSnippets = new List<EducationalSnippet>
+            educationContent.Quality = 4;
+            educationContent.Difficulty = 5;
+            educationContent.EducationalSnippets = new List<EducationalSnippet>
             {
                 CreateLPSShortTextSnippet(),
                 CreateLPSLongTextSnippet(),
@@ -150,13 +150,13 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLMShortTextSnippet()
         {
             EducationalSnippet shortTextSnippet = new EducationalSnippet();
-            shortTextSnippet.SnippetQuality = 3;
+            shortTextSnippet.Quality = 3;
             shortTextSnippet.Tags = new List<Tag>();
             shortTextSnippet.Tags.Add(Tag.Interesting);
-            shortTextSnippet.SnippetType = SnippetType.ShortText;
+            shortTextSnippet.Type = SnippetType.ShortText;
             shortTextSnippet.Content =
                 "Blocks and Indenting. This implies that the blocks within if statements, else statements, while statements, and so on should be one line long.Probably that line should be a function call.";
-            shortTextSnippet.SnippetDifficulty = 2;
+            shortTextSnippet.Difficulty = 2;
             return shortTextSnippet;
         }
 
@@ -167,13 +167,13 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLMLongTextSnippet()
         {
             EducationalSnippet longTextSnippet = new EducationalSnippet();
-            longTextSnippet.SnippetQuality = 5;
+            longTextSnippet.Quality = 5;
             longTextSnippet.Tags = new List<Tag>();
             longTextSnippet.Tags.Add(Tag.Interesting);
-            longTextSnippet.SnippetType = SnippetType.LongText;
+            longTextSnippet.Type = SnippetType.LongText;
             longTextSnippet.Content =
                 "Lines should not be 150 characters long. Functions should not be 100 lines long. Functions should hardly ever be 20 lines long. Every function in this program was just two, or three, or four lines long.Each was transparently obvious.Each told a story. And each led you to the next in a compelling order.That’s how short your functions should be!";
-            longTextSnippet.SnippetDifficulty = 3;
+            longTextSnippet.Difficulty = 3;
             return longTextSnippet;
         }
 
@@ -184,12 +184,12 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLMImageSnippet()
         {
             EducationalSnippet imageSnippet = new EducationalSnippet();
-            imageSnippet.SnippetQuality = 4;
+            imageSnippet.Quality = 4;
             imageSnippet.Tags = new List<Tag>();
             imageSnippet.Tags.Add(Tag.MustKnow);
-            imageSnippet.SnippetType = SnippetType.Image;
+            imageSnippet.Type = SnippetType.Image;
             imageSnippet.Content = "https://refactoring.guru/images/refactoring/content/smells/long-method-01-3x.png";
-            imageSnippet.SnippetDifficulty = 4;
+            imageSnippet.Difficulty = 4;
             return imageSnippet;
         }
 
@@ -200,12 +200,12 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLMVideoSnippet()
         {
             EducationalSnippet videoSnippet = new EducationalSnippet();
-            videoSnippet.SnippetQuality = 4;
+            videoSnippet.Quality = 4;
             videoSnippet.Tags = new List<Tag>();
             videoSnippet.Tags.Add(Tag.MustKnow);
-            videoSnippet.SnippetType = SnippetType.Video;
+            videoSnippet.Type = SnippetType.Video;
             videoSnippet.Content = "https://www.youtube.com/watch?v=w_SHQFzOosg";
-            videoSnippet.SnippetDifficulty = 4;
+            videoSnippet.Difficulty = 4;
             return videoSnippet;
         }
 
@@ -217,12 +217,12 @@ namespace SmartTutor.Repository
         {
             EducationalSnippet snippet = new EducationalSnippet
             {
-                SnippetQuality = 4,
+                Quality = 4,
                 Tags = new List<Tag>()
             };
             snippet.Tags.Add(Tag.MustKnow);
-            snippet.SnippetType = SnippetType.ShortText;
-            snippet.SnippetDifficulty = 3;
+            snippet.Type = SnippetType.ShortText;
+            snippet.Difficulty = 3;
             snippet.Content = "This method have problem with long parameter list";
             return snippet;
         }
@@ -234,13 +234,13 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLPSLongTextSnippet()
         {
             EducationalSnippet snippet = new EducationalSnippet();
-            snippet.SnippetQuality = 5;
+            snippet.Quality = 5;
             snippet.Tags = new List<Tag>();
             snippet.Tags.Add(Tag.Interesting);
-            snippet.SnippetType = SnippetType.LongText;
+            snippet.Type = SnippetType.LongText;
             snippet.Content =
                 "The ideal number of arguments for a function is zero (niladic). Next comes one (monadic), followed closely by two (dyadic). Three arguments (triadic) should be avoided where possible. More than three (polyadic) requires very special justification—and then shouldn’t be used anyway.The argument is at a different level of abstraction than the function name and forces you to know a detail that isn’t particularly important.at that point.";
-            snippet.SnippetDifficulty = 3;
+            snippet.Difficulty = 3;
             return snippet;
         }
 
@@ -251,12 +251,12 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLPSImageSnippet()
         {
             EducationalSnippet snippetFive = new EducationalSnippet();
-            snippetFive.SnippetQuality = 4;
+            snippetFive.Quality = 4;
             snippetFive.Tags = new List<Tag>();
             snippetFive.Tags.Add(Tag.MustKnow);
-            snippetFive.SnippetType = SnippetType.Image;
+            snippetFive.Type = SnippetType.Image;
             snippetFive.Content = "https://refactoring.guru/images/refactoring/content/smells/long-parameter-list-01.png";
-            snippetFive.SnippetDifficulty = 5;
+            snippetFive.Difficulty = 5;
             return snippetFive;
         }
 
@@ -267,12 +267,12 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLPSVideoSnippet()
         {
             EducationalSnippet videoSnippet = new EducationalSnippet();
-            videoSnippet.SnippetQuality = 4;
+            videoSnippet.Quality = 4;
             videoSnippet.Tags = new List<Tag>();
             videoSnippet.Tags.Add(Tag.MustKnow);
-            videoSnippet.SnippetType = SnippetType.Video;
+            videoSnippet.Type = SnippetType.Video;
             videoSnippet.Content = "https://www.youtube.com/watch?v=w_SHQFzOosg";
-            videoSnippet.SnippetDifficulty = 4;
+            videoSnippet.Difficulty = 4;
             return videoSnippet;
         }
 
@@ -283,13 +283,13 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateLPSCodeSnippet()
         {
             EducationalSnippet snippetFour = new EducationalSnippet();
-            snippetFour.SnippetQuality = 4;
+            snippetFour.Quality = 4;
             snippetFour.Tags = new List<Tag>();
             snippetFour.Tags.Add(Tag.Interesting);
-            snippetFour.SnippetType = SnippetType.CodeSnippet;
+            snippetFour.Type = SnippetType.CodeSnippet;
             snippetFour.Content =
                 "Circle makeCircle(double x, double y, double radius);Circle makeCircle(Point center, double radius); ";
-            snippetFour.SnippetDifficulty = 5;
+            snippetFour.Difficulty = 5;
             return snippetFour;
         }
     }

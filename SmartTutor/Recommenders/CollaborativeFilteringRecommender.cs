@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SmartTutor.Recommenders
 {
-    class CollaborativeFilteringRecommender : IRecommender
+    internal class CollaborativeFilteringRecommender : IRecommender
     { 
         public List<EducationalContent> FindEducationalContent(List<SmellType> issues)
         {
