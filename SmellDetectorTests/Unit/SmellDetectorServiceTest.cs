@@ -6,6 +6,7 @@ using SmellDetector.SmellModel.Reports;
 using System.Linq;
 using Xunit;
 using Shouldly;
+using System.Collections.Generic;
 
 namespace SmellDetectorTests.Unit
 {
@@ -71,58 +72,29 @@ namespace SmellDetectorTests.Unit
             report.Report.Count().ShouldBe(expectedIssues);
         }
 
-
-        [Fact]
-        public void Generate_Smell_Detection_Report_For_GodClass_Issue1()
+        [Theory]
+        [MemberData(nameof(Data))]
+        public void Generate_Smell_Detection_Report_For_GodClass(String testIdentifier, MetricsDTO metricsForIdentifier, int expectedIssues)
         {
             DetectionService detectionService = new DetectionService();
 
             CaDETClassDTO caDetClassDto = new CaDETClassDTO();
-            string testIdentifier = "public class DoctorService";
-            MetricsDTO metricsForIdentifier = new MetricsDTO();
-            metricsForIdentifier.WMC = 48;
-            metricsForIdentifier.ATFD = 6;
-            metricsForIdentifier.TCC = 0.32;
-            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
-            var expectedIssues = 1; 
 
+            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
             var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
             report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
+
         }
 
-        [Fact]
-        public void Generate_Smell_Detection_Report_For_GodClass_Issue2()
+        public static IEnumerable<object[]> Data()
         {
-            DetectionService detectionService = new DetectionService();
+            List<object[]> retVal = new List<object[]>();
 
-            CaDETClassDTO caDetClassDto = new CaDETClassDTO();
-
-            caDetClassDto = new CaDETClassDTO();
-            string testIdentifier = "public class DoctorService2";
-            MetricsDTO metricsForIdentifier = new MetricsDTO();
-            metricsForIdentifier.LOC = 110;
-            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
-            var expectedIssues = 2; // One for GodClass one for LongMethod 
-
-            var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
-            report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
-        }
-
-        [Fact]
-        public void Generate_Smell_Detection_Report_For_GodClass_Issue3()
-        {
-            DetectionService detectionService = new DetectionService();
-
-            CaDETClassDTO caDetClassDto = new CaDETClassDTO();
-            string testIdentifier = "public class DoctorService3";
-            MetricsDTO metricsForIdentifier = new MetricsDTO();
-            metricsForIdentifier.NMD = 11;
-            metricsForIdentifier.NAD = 14;
-            caDetClassDto.CodeItemMetrics[testIdentifier] = metricsForIdentifier;
-            var expectedIssues = 1;
-
-            var report = detectionService.GenerateSmellDetectionReport(caDetClassDto);
-            report.Report[testIdentifier].Count().ShouldBe(expectedIssues);
+            retVal.Add(new object[] { "public class DoctorService", new MetricsDTO { WMC = 48, ATFD = 6, TCC = 0.32 }, 1});
+            retVal.Add(new object[] { "public class DoctorService2", new MetricsDTO { LOC = 110 },  2});// One issue for GodClass and one issue for LongMethod 
+            retVal.Add(new object[] { "public class DoctorService3", new MetricsDTO { NMD = 11, NAD = 14 }, 1});
+            
+            return retVal;
         }
 
     }
