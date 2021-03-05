@@ -1,23 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using SmellDetector.SmellModel.Reports;
-using System;
-using System.Linq;
-using System.Text;
 
-namespace SmartTutor.Communucation
+namespace SmellDetector.Communication
 {
-
-    public class SmartTutorMessageConsumer
+    public class SmellDetectorMessageConsumer
     {
         public string NodeName { get; set; }
         public string QueueName { get; set; }
         public string ExchangeName { get; set; }
         public IConnection Connection { get; set; }
         public IModel Channel { get; set; }
-
-        public SmartTutorMessageConsumer()
+        public SmellDetectorMessageConsumer()
         {
             ConfigureInitialStates();
             CreateConnection();
@@ -29,7 +29,7 @@ namespace SmartTutor.Communucation
         private void ConfigureInitialStates()
         {
             NodeName = "localhost";
-            QueueName = "IssueReports";
+            QueueName = "MetricsReports";
             ExchangeName = "";
         }
 
@@ -55,15 +55,7 @@ namespace SmartTutor.Communucation
             {
                 var body = deliveryArguments.Body.ToArray();
                 var jsonMessage = Encoding.UTF8.GetString(body);
-                SmellDetectionReport reportMessage = new SmellDetectionReport();
-                try
-                {   
-                    reportMessage = JsonConvert.DeserializeObject<SmellDetectionReport>(jsonMessage);
-                }
-                catch (Exception)  
-                {
-                   //TODO: write exc
-                }
+                Console.WriteLine(" [x] Received {0}", jsonMessage);
             };
             return consumer;
         }
@@ -74,5 +66,6 @@ namespace SmartTutor.Communucation
                                                  autoAck: true,
                                                  consumer: consumer);
         }
+
     }
 }
