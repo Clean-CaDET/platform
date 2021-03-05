@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
 
 namespace SmellDetector.Communication
@@ -55,7 +56,15 @@ namespace SmellDetector.Communication
             {
                 var body = deliveryArguments.Body.ToArray();
                 var jsonMessage = Encoding.UTF8.GetString(body);
-                Console.WriteLine(" [x] Received {0}", jsonMessage);
+                CaDETClassDTO reportMessage = new CaDETClassDTO();
+                try
+                {
+                    reportMessage = JsonConvert.DeserializeObject<CaDETClassDTO>(jsonMessage);
+                }
+                catch (Exception)
+                {
+                    //TODO: write exc
+                }
             };
             return consumer;
         }

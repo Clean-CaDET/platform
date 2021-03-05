@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 
 namespace RepositoryCompiler.Communication
@@ -28,7 +29,7 @@ namespace RepositoryCompiler.Communication
             DeclareQueue();
         }
 
-        public void CreateNewMetricsReport(string reportMessage)
+        public void CreateNewMetricsReport(CaDETClassDTO reportMessage)
         {
             PublishMessage(GetEncodedMessage(reportMessage));
         }
@@ -63,9 +64,9 @@ namespace RepositoryCompiler.Communication
                 arguments: null);
         }
 
-        private byte[] GetEncodedMessage(string reportMessage)
+        private byte[] GetEncodedMessage(CaDETClassDTO reportMessage)
         {
-            return Encoding.UTF8.GetBytes(reportMessage);
+            return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(reportMessage));
         }
     }
 }
