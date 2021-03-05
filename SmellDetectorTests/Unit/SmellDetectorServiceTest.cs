@@ -14,6 +14,7 @@ namespace SmellDetectorTests.Unit
 {
     public class SmellDetectorServiceTest
     {
+        private readonly ReportFactory _reportFactory = new ReportFactory();
 
         [Fact]
         public void Generate_Smell_Detection_Report_For_LongMethod_And_Long_Parameter_List_Issues()
@@ -63,24 +64,8 @@ namespace SmellDetectorTests.Unit
         public void Produce_Issue_Report_Message()
         {
             SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
-            SmellDetectionReport reportMessage = CreateMockupReportMessage();
+            SmellDetectionReport reportMessage = _reportFactory.CreateMockupReportMessage();
             producer.CreateNewIssueReport(reportMessage);
-        }
-
-        private SmellDetectionReport CreateMockupReportMessage()
-        {
-            SmellDetectionReport reportMessage = new SmellDetectionReport();
-            reportMessage.Report = new Dictionary<string, List<Issue>>();
-
-            Issue detectedIssue = new Issue();
-            detectedIssue.IssueType = SmellType.GOD_CLASS;
-            detectedIssue.CodeItemId = "public class Doctor";
-
-            List<Issue> detectedIssues = new List<Issue>();
-            detectedIssues.Add(detectedIssue);
-
-            reportMessage.Report.Add("Identifikator", detectedIssues);
-            return reportMessage;
         }
     }
 }

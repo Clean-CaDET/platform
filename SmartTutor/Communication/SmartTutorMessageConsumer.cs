@@ -3,6 +3,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using SmellDetector.SmellModel.Reports;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace SmartTutor.Communucation
