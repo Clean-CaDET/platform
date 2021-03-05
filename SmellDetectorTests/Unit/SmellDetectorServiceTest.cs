@@ -14,8 +14,6 @@ namespace SmellDetectorTests.Unit
 {
     public class SmellDetectorServiceTest
     {
-        private readonly ReportFactory _reportFactory = new ReportFactory();
-
         [Fact]
         public void Generate_Smell_Detection_Report_For_LongMethod_And_Long_Parameter_List_Issues()
         {
@@ -58,14 +56,6 @@ namespace SmellDetectorTests.Unit
             classFactory.CreateEmptyIssue();
             var report = detectionService.GenerateSmellDetectionReport(classFactory.CaDETClassDTO);
             report.Report.Count().ShouldBe(classFactory.ExpectedIssues);
-        }
-
-        [Fact]
-        public void Produce_Issue_Report_Message()
-        {
-            SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
-            SmellDetectionReport reportMessage = _reportFactory.CreateMockupReportMessage();
-            producer.CreateNewIssueReport(reportMessage);
         }
     }
 }
