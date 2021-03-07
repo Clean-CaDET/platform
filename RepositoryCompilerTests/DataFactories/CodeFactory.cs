@@ -4,6 +4,56 @@ namespace RepositoryCompilerTests.DataFactories
 {
     public class CodeFactory
     {
+        public IEnumerable<string> GetEffectiveLinesOfCodeTest()
+        {
+            return new[]
+            {
+                @"
+            using System.Collections.Generic;
+            namespace DoctorApp.Model.Data
+            {
+                public class Doctor
+                {
+                    private string name;
+                    public string Name
+                    {
+                        get { 
+                            return name;
+                        }
+                        set {
+                            if(value != null)
+                            {
+                                //Console.writetests
+                                name = value; //sets the name
+                            }
+                        }
+                    }
+                    public string Email { get; set; }
+
+                    public Doctor(string m, string email)
+                    {
+                        name = m;
+
+
+                        //Email = email;
+                    }
+
+                    internal bool IsAvailable(DateRange timeSpan)
+                    {
+                        if(timeSpan == null) return false;/*
+                        foreach (DateRange holiday in HolidayDates)
+                        {
+                            if (holiday.OverlapsWith(timeSpan)) return false;
+
+
+                        }*/
+
+                        return true;
+                    }
+                }
+            }"
+            };
+        }
         public IEnumerable<string> GetDoctorClassText()
         {
             return new[]
@@ -476,6 +526,7 @@ namespace RepositoryCompilerTests.DataFactories
             {
                 public class DateRange
                 {
+                    public int NumOfDays;
                     public DateTime From { get; set; }
                     public DateTime To { get; set; }
 
@@ -498,9 +549,11 @@ namespace RepositoryCompilerTests.DataFactories
             {
                 public class Doctor
                 {
+                    public DateRange TestDR;
                     public string Test;
                     public string Name { get; set; }
                     public string Email { get; set; }
+                    public DateRange TestProp { get; set;}
                     public List<DateRange> HolidayDates { get; set; }
 
                     public Doctor(string name, string email)
@@ -508,6 +561,16 @@ namespace RepositoryCompilerTests.DataFactories
                         Name = name;
                         Email = email;
                         HolidayDates = new List<DateRange>();
+                        HolidayDates.Add(new DateTime(), new DateTime());
+                        TestDR = new DateRange(new DateTime(), new DateTime());
+                    }
+
+                    public DateRange TestFunction() {
+                        return TestProp;
+                    }
+
+                    public DateRange TestFieldFunction() {
+                        return TestDR;
                     }
                 }
             }",
@@ -519,6 +582,7 @@ namespace RepositoryCompilerTests.DataFactories
             {
                 public class DoctorService
                 {
+                    public Doctor TestDoc {get;set;}
                     private List<Doctor> _doctors;
                     public Doctor FindAvailableDoctor(DateRange timeSpan)
                     {
@@ -533,8 +597,19 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return null;
                     }
-                    private int LogChecked(int testData)
+                    private int LogChecked(int testData, Doctor beljko)
                     {
+                        _doctors.Add(new Doctor());
+                        DateTime test1 = TestDoc.TestProp.From;
+                        DateTime test = _doctors[0].HolidayDates[0].From;
+                        var a = TestDoc.Name;
+                        var b = TestDoc.TestProp;
+                        var c = b.To;
+                        var temp1 = new Doctor();
+                        temp1.Test = null;
+                        var temp2 = beljko.TestDR.NumOfDays;
+                        
+                        var test2 = FindAvailableDoctor(temp2).TestFunction().OverlapsWith(temp2);
                         return testData;
                     }
                 }
@@ -671,8 +746,61 @@ namespace RepositoryCompilerTests.DataFactories
                     {
                         return Email + Email + Email;
                     }
+
+                    public virtual IEnumerator<DateRange> GetEnumerator()
+                    {
+                        return HolidayDates.GetEnumerator();
+                    }
+                    IEnumerator IEnumerable.GetEnumerator()
+                    {
+                        return GetEnumerator();
+                    }
                 }
             }"
+            };
+        }
+
+        public IEnumerable<string> GetTwoClassesWithSameFullName()
+        {
+            return new[]
+            {
+                @"
+                namespace DoctorApp.Model
+                public class Doctor
+                {
+                  private Signature Signature;
+                  private DateTime startWorking;
+                  private DateTime endWorking;
+                }",
+                @"
+                namespace DoctorApp.Model
+                public class Doctor
+                {
+                  private String name;
+                  private String surname;
+                }"
+            };
+        }
+
+        public IEnumerable<string> GetTwoPartialClassesWithSameFullName()
+        {
+            return new[]
+            {
+                @"
+                namespace DoctorApp.Model
+                public partial class Doctor
+                {
+                  private Signature Signature;
+                  private DateTime startWorking;
+                  private DateTime endWorking;
+                }",
+                @"
+                namespace DoctorApp.Model
+                public partial class Doctor
+                {
+                  private String name;
+                  private String surname;
+                }"
             };
         }
     }

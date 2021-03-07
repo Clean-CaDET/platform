@@ -21,26 +21,38 @@ namespace RepositoryCompilerTests.Integration
             GitDirectoryExists().ShouldBeTrue();
         }
 
-        [Fact]
-        public void Checks_content_of_master_commit()
+        [Theory]
+        [MemberData(nameof(Data))]
+        public void Checks_presence_of_file_on_commit(CommitId commit, bool isFilePresent)
         {
             ICodeRepositoryAdapter gitAdapter = new GitRepositoryAdapter(GetTestConfiguration());
-            string presentFile = GetTestPath() + _separator + "LibGit2Sharp" + _separator + "BlameOptions.cs";
+            string fileName = GetTestPath() + _separator + "LibGit2Sharp" + _separator + "BlameOptions.cs";
 
-            gitAdapter.CheckoutCommit(null);
+            gitAdapter.CheckoutCommit(commit);
 
-            File.Exists(presentFile).ShouldBeTrue();
+            File.Exists(fileName).ShouldBe(isFilePresent);
+        }
+
+        public static IEnumerable<object[]> Data()
+        {
+            var retVal = new List<object[]>();
+
+            retVal.Add(new object[] { new CommitId("a3f95fc9e92aa4bec32f4c4a535b0316ec2ea470"), false} );
+            retVal.Add(new object[] { null, true });
+
+            return retVal;
+
         }
 
         [Fact]
         public void Checks_content_of_commit()
         {
             ICodeRepositoryAdapter gitAdapter = new GitRepositoryAdapter(GetTestConfiguration());
-            string missingFile = GetTestPath() + _separator + "LibGit2Sharp" + _separator + "BlameOptions.cs";
+            string fileName = GetTestPath() + _separator + "LibGit2Sharp" + _separator + "BlameOptions.cs";
 
             gitAdapter.CheckoutCommit(new CommitId("a3f95fc9e92aa4bec32f4c4a535b0316ec2ea470"));
 
-            File.Exists(missingFile).ShouldBeFalse();
+            File.Exists(fileName).ShouldBe(false);
         }
 
         [Fact]
@@ -80,7 +92,7 @@ namespace RepositoryCompilerTests.Integration
 
         private string GetTestPath()
         {
-            return "C:" + _separator + "CaDETTests";
+            return "C:" + _separator + "repo";
         }
     }
 }

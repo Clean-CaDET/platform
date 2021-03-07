@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 using System;
 using System.Collections.Generic;
@@ -7,11 +6,11 @@ using System.Linq;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
-    public class CSharpMetricCalculator
+    internal class CaDETClassMetricCalculator
     {
         //TODO: See how this class will change with new metrics and try to decouple it from CSharp (e.g., by moving to CaDETClassMetric constructor)
         //TODO: Currently we see feature envy for CaDETClass.
-        public CaDETClassMetrics CalculateClassMetrics(CaDETClass parsedClass)
+        internal CaDETClassMetrics CalculateClassMetrics(CaDETClass parsedClass)
         {
             return new CaDETClassMetrics
             {
@@ -23,6 +22,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 TCC = GetTightClassCohesion(parsedClass),
                 ATFD = GetAccessToForeignData(parsedClass)
             };
+        }
+        public int GetLinesOfCode(string code)
+        {
+            return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private double? GetLackOfCohesionOfMethods(CaDETClass parsedClass)
         {
             //TODO: Will need to reexamine the way we look at accessors and fields
-            double maxCohesion = (GetNumberOfAttributesDefined(parsedClass) + CountFieldDefiningAccessors(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
+            double maxCohesion = (GetNumberOfAttributesDefined(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
             if (maxCohesion == 0) return null;
 
             double methodFieldAccess = 0;
@@ -75,31 +78,21 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             int methodPairsThatShareAccessToAFieldOrAccessor = 0;
 
-            for (var i = 0; i < classMethods.Count; i++)
+            for (var i = 0; i < classMethods.Count - 1; i++)
             {
-                for (var j = 1; j < classMethods.Count; j++)
+                for (var j = i+1; j < classMethods.Count; j++)
                 {
                     var firstMethod = classMethods[i];
                     var secondMethod = classMethods[j];
 
-                    if (firstMethod.GetAccessedOwnFields().Intersect(secondMethod.GetAccessedOwnFields()).Any())
+                    if (firstMethod.GetAccessedOwnFields().Intersect(secondMethod.GetAccessedOwnFields()).Any() 
+                        || firstMethod.GetAccessedOwnAccessors().Intersect(secondMethod.GetAccessedOwnAccessors()).Any())
                     {
                         methodPairsThatShareAccessToAFieldOrAccessor++;
-                        break;
-                    }
-                    if (firstMethod.GetAccessedOwnAccessors().Intersect(secondMethod.GetAccessedOwnAccessors()).Any())
-                    {
-                        methodPairsThatShareAccessToAFieldOrAccessor++;
-                        break;
                     }
                 }
             }
             return methodPairsThatShareAccessToAFieldOrAccessor;
-        }
-
-        private int CountFieldDefiningAccessors(CaDETClass parsedClass)
-        {
-            return parsedClass.Members.Count(method => method.IsFieldDefiningAccessor());
         }
 
         private int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
@@ -109,10 +102,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
             return counter;
         }
-        
+
+        /// <summary>
+        /// WMC - Weighted Method Per Class
+        /// DOI: 10.1109/32.295895
+        /// </summary>
         private int GetWeightedMethodPerClass(CaDETClass parsedClass)
         {
-            //Defined based on 10.1109/32.295895
             return parsedClass.Members.Sum(method => method.Metrics.CYCLO);
         }
         
@@ -120,88 +116,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             //TODO: Probably should expand to include simple accessors that do not have a related field.
             //TODO: It is C# specific, but this is the CSSharpMetricCalculator
-            return parsedClass.Fields.Count;
+            return parsedClass.Fields.Count + parsedClass.Members.Count(m => m.IsFieldDefiningAccessor());
         }
 
         private int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
         {
             return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method));
-        }
-
-        public CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member, CaDETMember method)
-        {
-            return new CaDETMemberMetrics
-            {
-                CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = GetLinesOfCode(member.ToString()),
-                NOP = GetNumberOfParameters(method),
-                NOLV = GetNumberOfLocalVariables(member)
-            };
-        }
-
-        /// <summary>
-        /// DOI: 10.1002/smr.2255
-        /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        private int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
-        {
-            return method.DescendantNodes().OfType<VariableDeclarationSyntax>().Count();
-        }
-
-        /// <summary>
-        /// DOI: 10.1002/smr.2255
-        /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        private int GetNumberOfParameters(CaDETMember method)
-        {
-            return method.Params.Count;
-        }
-
-        private int GetLinesOfCode(string code)
-        {
-            return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
-        }
-
-        private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
-        {
-            //Defined based on https://www.ndepend.com/docs/code-metrics#CC
-            int count = method.DescendantNodes().OfType<IfStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<CaseSwitchLabelSyntax>().Count();
-            count += method.DescendantNodes().OfType<DefaultSwitchLabelSyntax>().Count();
-            count += method.DescendantNodes().OfType<ContinueStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<GotoStatementSyntax>().Count();
-            count += method.DescendantNodes().OfType<ConditionalExpressionSyntax>().Count();
-            count += method.DescendantNodes().OfType<CatchClauseSyntax>().Count();
-
-            count += CountLogicalOperators(method, "&&");
-            count += CountLogicalOperators(method, "||");
-            count += CountLogicalOperators(method, "??");
-            
-            return count + 1;
-        }
-
-        private int CountLogicalOperators(MemberDeclarationSyntax method, string pattern)
-        {
-            var comments = method.DescendantTrivia();
-            int commentOperatorCount = comments.Sum(comment => CountOccurrences(comment.ToString(), pattern));
-            return CountOccurrences(method.ToString(), pattern) - commentOperatorCount;
-        }
-
-        private int CountOccurrences(string text, string pattern)
-        {
-            var count = 0;
-            var i = 0;
-            while ((i = text.IndexOf(pattern, i)) != -1)
-            {
-                i += pattern.Length;
-                count++;
-            }
-            return count;
         }
     }
 }

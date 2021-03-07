@@ -1,10 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CodeParsers.CSharp.Exceptions;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
@@ -16,13 +18,14 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private readonly MemberDeclarationSyntax _cSharpMember;
         private readonly SemanticModel _semanticModel;
         private readonly CaDETMember _member;
+        private readonly CaDETMemberMetricCalculator _metricCalculator;
 
         internal CSharpCaDETMemberBuilder(MemberDeclarationSyntax cSharpMember, SemanticModel semanticModel)
         {
             _member = CreateMemberBasedOnType(cSharpMember);
-            if (_member == null) throw new InappropriateMemberTypeException();
             _cSharpMember = cSharpMember;
             _semanticModel = semanticModel;
+            _metricCalculator = new CaDETMemberMetricCalculator();
         }
 
         internal CaDETMember CreateBasicMember(CaDETClass parent)
@@ -41,21 +44,57 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             _member.AccessedFields = CalculateAccessedFields(allProjectClasses);
         }
 
-        internal void CalculateMetrics(CSharpMetricCalculator calculator)
+        internal void CalculateMetrics()
         {
-            _member.Metrics = calculator.CalculateMemberMetrics(_cSharpMember, _member);
+            _member.Metrics = _metricCalculator.CalculateMemberMetrics(_cSharpMember, _member);
         }
 
-        private CaDETMember CreateMemberBasedOnType(MemberDeclarationSyntax member)
+        private static CaDETMember CreateMemberBasedOnType(MemberDeclarationSyntax member)
         {
             return member switch
             {
-                PropertyDeclarationSyntax property => new CaDETMember { Type = CaDETMemberType.Property, Name = property.Identifier.Text },
-                ConstructorDeclarationSyntax constructor => new CaDETMember { Type = CaDETMemberType.Constructor, Name = constructor.Identifier.Text },
-                MethodDeclarationSyntax method => new CaDETMember { Type = CaDETMemberType.Method, Name = method.Identifier.Text },
-                _ => null
+                PropertyDeclarationSyntax property => new CaDETMember { Type = CaDETMemberType.Property, Name = GetNameWithInterface(property.ExplicitInterfaceSpecifier, property.Identifier) },
+                ConstructorDeclarationSyntax constructor => CreateNonStaticConstructor(constructor),
+                MethodDeclarationSyntax method => CreateMethod(method),
+                _ => throw new InappropriateMemberTypeException("Unsupported member type " + member.ToFullString() + "for CaDETMember.")
             };
         }
+
+        private static CaDETMember CreateNonStaticConstructor(ConstructorDeclarationSyntax constructor)
+        {
+            if (constructor.Modifiers.Count(m => m.ValueText == "static") > 0)
+                throw new InappropriateMemberTypeException("Error at: " + constructor.ToFullString() +
+                                                           ". Static constructors are not supported.");
+            return new CaDETMember { Type = CaDETMemberType.Constructor, Name = constructor.Identifier.Text };
+        }
+
+        private static CaDETMember CreateMethod(MethodDeclarationSyntax method)
+        {
+            var methodName = GetNameWithInterface(method.ExplicitInterfaceSpecifier, method.Identifier);
+            if (method.TypeParameterList == null) return new CaDETMember {Type = CaDETMemberType.Method, Name = methodName};
+
+            methodName += GetTypeParameterNameExtension(method.TypeParameterList);
+
+            return new CaDETMember { Type = CaDETMemberType.Method, Name = methodName };
+        }
+
+        private static string GetTypeParameterNameExtension(TypeParameterListSyntax paramList)
+        {
+            var methodName = "<";
+            for (var i = 0; i < paramList.Parameters.Count; i++)
+            {
+                methodName += paramList.Parameters[i].Identifier.Text;
+                if (i != paramList.Parameters.Count - 1) methodName += ", ";
+            }
+            methodName += ">";
+            return methodName;
+        }
+
+        private static string GetNameWithInterface(ExplicitInterfaceSpecifierSyntax explicitInterface, SyntaxToken identifier)
+        {
+            return explicitInterface == null ? identifier.Text : explicitInterface + identifier.Text;
+        }
+
         private List<CaDETParameter> GetMethodParams()
         {
             List<CaDETParameter> memberParams = new List<CaDETParameter>();
@@ -79,7 +118,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             var invokedMethods = _cSharpMember.DescendantNodes().OfType<InvocationExpressionSyntax>();
             foreach (var invoked in invokedMethods)
             {
-                var symbol = _semanticModel.GetSymbolInfo(invoked.Expression).Symbol;
+                var symbol = FindSymbol(invoked);
                 if (symbol == null) continue; //True when invoked method is a system or library call and not part of our code.
                 foreach (var projectClass in allProjectClasses)
                 {
@@ -92,7 +131,15 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
             return methods;
         }
-        
+
+        private ISymbol FindSymbol(InvocationExpressionSyntax invoked)
+        {
+            var symbolInfo = _semanticModel.GetSymbolInfo(invoked.Expression);
+            if (symbolInfo.Symbol != null) return symbolInfo.Symbol;
+
+            return symbolInfo.CandidateSymbols.Length > 0 ? symbolInfo.CandidateSymbols.First() : null;
+        }
+
         private ISet<CaDETField> CalculateAccessedFields(List<CaDETClass> allProjectClasses)
         {
             ISet<CaDETField> fields = new HashSet<CaDETField>();

@@ -9,8 +9,21 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
     {
         public string Name { get; internal set; }
         public string FullName { get; internal set; }
+
+        public string ContainerName
+        {
+            get
+            {
+                var nameParts = FullName.Split(".");
+                return string.Join(".", nameParts, 0, nameParts.Length - 1);
+            }
+        }
+
         public string SourceCode { get; internal set; }
         public CaDETClass Parent { get; internal set; }
+        public CaDETClass OuterClass { get; internal set; }
+        public bool IsInnerClass => OuterClass != null;
+        public List<CaDETClass> InnerClasses { get; internal set; }
         public List<CaDETModifier> Modifiers { get; internal set; }
         public List<CaDETMember> Members { get; internal set; }
         public List<CaDETField> Fields { get; internal set; }
@@ -23,12 +36,16 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 
         public CaDETMember FindMemberBySignature(string signature)
         {
-            return Members.Find(method => method.GetSignature().Equals(signature));
+            return Members.Find(method => method.Signature().Equals(signature));
         }
 
         public CaDETField FindField(string name)
         {
             return Fields.Find(field => field.Name.Equals(name));
+        }
+        public bool IsPartialClass()
+        {
+            return Modifiers.Any(m => m.Value == CaDETModifierValue.Partial);
         }
 
         public bool IsDataClass()
