@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmellDetectorTests", "Smell
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTutorTests", "SmartTutorTests\SmartTutorTests.csproj", "{AA91C49E-7FFA-48B5-9EF2-DE7746D5A483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformInteractionTool", "PlatformInteractionTool\PlatformInteractionTool.csproj", "{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformInteractionTool", "PlatformInteractionTool\PlatformInteractionTool.csproj", "{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformTests", "PlatfromTests\PlatformTests.csproj", "{CC453AB3-46D0-4EF0-8F91-750878B050F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
