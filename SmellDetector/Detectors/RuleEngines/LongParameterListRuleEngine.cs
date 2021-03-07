@@ -12,6 +12,7 @@ namespace SmellDetector.Detectors.RuleEngines
 
             foreach (var identifierAnalysis in caDetClassDto.CodeItemMetrics)
             {
+                if (identifierAnalysis.Key.Contains("class")) continue;
                 if (IsBadSmell(identifierAnalysis.Value))
                 {
                     Issue newIssue = new Issue();

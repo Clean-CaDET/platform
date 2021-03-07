@@ -8,13 +8,14 @@ namespace RepositoryCompilerTests.DataFactories
         {
             CaDETClassDTO report = new CaDETClassDTO();
 
-            string exampleClassId = "public class Person";
+            string exampleMethodId = "public void SavePerson(Person person);";
 
             MetricsDTO metrics = new MetricsDTO();
             metrics.LOC = 1000;
             metrics.NOLV = 100;
+            metrics.NOP = 1;
 
-            report.CodeItemMetrics[exampleClassId] = metrics;
+            report.CodeItemMetrics[exampleMethodId] = metrics;
 
             return report;
         }

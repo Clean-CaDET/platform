@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using SmellDetector.Services;
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
 
@@ -56,10 +57,11 @@ namespace SmellDetector.Communication
             {
                 var body = deliveryArguments.Body.ToArray();
                 var jsonMessage = Encoding.UTF8.GetString(body);
-                CaDETClassDTO reportMessage = new CaDETClassDTO();
+                CaDETClassDTO repositoryCompilerReport = new CaDETClassDTO();
                 try
                 {
-                    reportMessage = JsonConvert.DeserializeObject<CaDETClassDTO>(jsonMessage);
+                    repositoryCompilerReport = JsonConvert.DeserializeObject<CaDETClassDTO>(jsonMessage);
+                    SendIssueReportToSmartTutor(ProcessRepositoryCompilerReport(repositoryCompilerReport));
                 }
                 catch (Exception)
                 {
@@ -67,6 +69,18 @@ namespace SmellDetector.Communication
                 }
             };
             return consumer;
+        }
+
+        private void SendIssueReportToSmartTutor(SmellDetectionReport smellDetectionReport)
+        {
+            SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
+            producer.CreateNewIssueReport(smellDetectionReport);
+        }
+
+        private SmellDetectionReport ProcessRepositoryCompilerReport(CaDETClassDTO repositoryCompilerReport)
+        {
+            DetectionService detectionService = new DetectionService();
+            return detectionService.GenerateSmellDetectionReport(repositoryCompilerReport);
         }
 
         private void ConsumeMessage(EventingBasicConsumer consumer)

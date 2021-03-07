@@ -6,14 +6,13 @@ namespace SmellDetector.Detectors.RuleEngines
 {
     public class LongMethodRuleEngine : IDetector
     {
-
         public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
         {
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
             foreach (var identifierAnalysis in caDetClassDto.CodeItemMetrics)
             {
-                
+                if (identifierAnalysis.Key.Contains("class")) continue;
                 if (IsBadSmell(identifierAnalysis.Value))
                 {
                     Issue newIssue = new Issue();
@@ -21,7 +20,6 @@ namespace SmellDetector.Detectors.RuleEngines
                     newIssue.CodeItemId = identifierAnalysis.Key;
                     partialReport.AddIssue(identifierAnalysis.Key, newIssue);
                 }
-                
             }
 
             return partialReport;
