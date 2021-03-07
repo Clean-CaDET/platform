@@ -71,6 +71,13 @@ namespace SmellDetector.Communication
             return consumer;
         }
 
+        private void ConsumeMessage(EventingBasicConsumer consumer)
+        {
+            Channel.BasicConsume(queue: QueueName,
+                                                 autoAck: true,
+                                                 consumer: consumer);
+        }
+
         private void SendIssueReportToSmartTutor(SmellDetectionReport smellDetectionReport)
         {
             SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
@@ -81,13 +88,6 @@ namespace SmellDetector.Communication
         {
             DetectionService detectionService = new DetectionService();
             return detectionService.GenerateSmellDetectionReport(repositoryCompilerReport);
-        }
-
-        private void ConsumeMessage(EventingBasicConsumer consumer)
-        {
-            Channel.BasicConsume(queue: QueueName,
-                                                 autoAck: true,
-                                                 consumer: consumer);
         }
 
     }
