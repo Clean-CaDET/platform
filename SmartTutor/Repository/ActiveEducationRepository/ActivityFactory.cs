@@ -1,4 +1,5 @@
 ﻿using LibGit2Sharp;
+using RepositoryCompiler.CodeModel.CaDETModel;
 using SmartTutor.ActiveEducationModel;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,18 @@ namespace SmartTutor.Repository.ActiveEducationRepository
                     Score = 0,
                     Rank = 1,
                     EducationActivities = new List<EducationActivity>()
+                },
+                Project = new ChallengeProject
+                {
+                    Name = "Extract AwardAchievement method",
+                    Description = "1) Discover (e.g., using Google) the Extract Method command in your IDE." +
+                    " 2) Using the command, extract multiple methods from the AwardAchievement method." +
+                    " 3) For each method, define the most appropriate name.",
+                    Level = 1,
+                    Points = 5,
+                    GitURL = "https://github.com/Ana00000/Challenge-inspiration/blob/develop/Method/ExtractMethod%20-%2001.cs",
+                    StartState = new CaDETModel(),
+                    EndState = new CaDETModel()
                 }
             };
 
@@ -70,7 +83,18 @@ namespace SmartTutor.Repository.ActiveEducationRepository
         {
             EducationTraining longMethodTraining = new EducationTraining
             {
-                Points = 0,
+                Start = DateTime.Now,
+                End = DateTime.Now,
+                Status = ActivityStatus.Unlocked,
+                Player = new Player
+                {
+                    Credentials = new UsernamePasswordCredentials { Username = "MIRKOMM", Password = "963mmirkom369" },
+                    Title = new PlayerTitle { Name = "Novice", PointsWorth = 0 },
+                    Score = 0,
+                    Rank = 2,
+                    EducationActivities = new List<EducationActivity>()
+                },
+                Points = 5,
                 Content = new ContentInMemoryFactory().CreateLongMethodContent()
             };
 
