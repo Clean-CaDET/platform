@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartTutor.ActiveEducationModel
 {
-    public class EducationTraining
+    public class EducationTraining : EducationActivity
     {
         public double Points { get; set; }
         public EducationContent Content { get; set; }

@@ -11,5 +11,6 @@ namespace SmartTutor.ActiveEducationModel
         public DateTime End { get; set; }
         public ActivityStatus Status { get; set; }
         public SmellType ActivityType { get; set; }
+        public Player Player { get; set; }
     }
 }
