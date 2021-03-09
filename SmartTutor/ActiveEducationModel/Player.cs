@@ -1,13 +1,11 @@
-﻿using System;
+﻿using LibGit2Sharp;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SmartTutor.ActiveEducationModel
 {
     public class Player
     {
-        //public Person Person { get; set; }
+        public UsernamePasswordCredentials Credentials { get; set; }
         public PlayerTitle Title { get; set; }
         public double Score { get; set; }
         public int Rank { get; set; }
