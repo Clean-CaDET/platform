@@ -11,6 +11,7 @@ namespace RepositoryCompilerTests.Unit
     public class MetricCalculationTests
     {
         private readonly CodeFactory _testDataFactory = new CodeFactory();
+        private readonly CodeCohesionFactory _testCohesionDataFactory = new CodeCohesionFactory();
 
         [Fact]
         public void Calculates_lines_of_code_for_CSharp_class_elements()
@@ -62,7 +63,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCohesionClasses());
+            List<CaDETClass> classes = factory.CreateClassModel(_testCohesionDataFactory.GetCohesionClasses());
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -75,7 +76,7 @@ namespace RepositoryCompilerTests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetTCCMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateClassModel(_testCohesionDataFactory.GetTCCMultipleClassTexts());
 
             var class6 = classes.Find(c => c.Name.Equals("Class6"));
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
