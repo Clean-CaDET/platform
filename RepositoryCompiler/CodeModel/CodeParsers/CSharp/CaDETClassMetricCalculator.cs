@@ -20,6 +20,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 WMC = GetWeightedMethodPerClass(parsedClass),
                 LCOM = GetLackOfCohesionOfMethods(parsedClass),
                 TCC = GetTightClassCohesion(parsedClass),
+                CC = GetCCClassCohesion(parsedClass),
                 ATFD = GetAccessToForeignData(parsedClass)
             };
         }
@@ -122,6 +123,44 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
         {
             return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method));
+        }
+
+        /// <summary>
+        /// CC - Class cohesion
+        /// DOI: 10.14257/ijmue.2014.9.6.35
+        /// </summary>
+        private double? GetCCClassCohesion(CaDETClass parsedClass)
+        {
+            IEnumerable<CaDETMember> memberMethods = parsedClass.Members.Where(m => m.Type != CaDETMemberType.Property);
+            IEnumerable<CaDETMember> memberProperties = parsedClass.Members.Where(m => m.Type == CaDETMemberType.Property);
+            double fieldsCount = parsedClass.Fields.Count + memberProperties.Count();
+
+            if (fieldsCount == 0 || memberMethods.Count() == 0)
+            {
+                return 0;
+            }
+
+            double cv = CalculateCohesionForEveryVariable(parsedClass, memberMethods, memberProperties);
+
+            return Math.Round(cv / fieldsCount, 2);
+        }
+
+        private static double CalculateCohesionForEveryVariable(CaDETClass parsedClass, IEnumerable<CaDETMember> memberMethods, IEnumerable<CaDETMember> memberProperties)
+        {
+            double cc = 0;
+
+            foreach (var field in parsedClass.Fields)
+            {
+                double methodsInvokingGivenField = memberMethods.Count(m => m.AccessedFields.Contains(field));
+                cc += methodsInvokingGivenField / memberMethods.Count();
+            }
+            foreach (var property in memberProperties)
+            {
+                double methodsInvokingGivenProperty = memberMethods.Count(m => m.AccessedAccessors.Contains(property));
+                cc += methodsInvokingGivenProperty / memberMethods.Count();
+            }
+
+            return cc;
         }
     }
 }
