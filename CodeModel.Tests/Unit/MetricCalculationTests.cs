@@ -3,6 +3,7 @@ using CodeModel.Tests.DataFactories;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompilerTests.DataFactories;
 using Xunit;
 
 namespace CodeModel.Tests.Unit
@@ -10,6 +11,7 @@ namespace CodeModel.Tests.Unit
     public class MetricCalculationTests
     {
         private readonly CodeFactory _testDataFactory = new CodeFactory();
+        private readonly CodeCohesionFactory _testCohesionDataFactory = new CodeCohesionFactory();
 
         [Fact]
         public void Calculates_lines_of_code_for_CSharp_class_elements()
@@ -61,7 +63,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(_testCohesionDataFactory.GetCohesionClasses()).Classes;
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -74,7 +76,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetTCCMultipleClassTexts()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(_testCohesionDataFactory.GetTCCMultipleClassTexts()).Classes;
 
             var class6 = classes.Find(c => c.Name.Equals("Class6"));
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
