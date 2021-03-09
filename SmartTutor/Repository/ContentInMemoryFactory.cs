@@ -27,7 +27,7 @@ namespace SmartTutor.Repository
             return educationContents;
         }
 
-        private EducationContent CreateLongMethodContent()
+        public EducationContent CreateLongMethodContent()
         {
             EducationContent educationContent = new EducationContent();
 
