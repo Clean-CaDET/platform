@@ -204,7 +204,67 @@ namespace RepositoryCompilerTests.DataFactories
             };
         }
 
+        public IEnumerable<string> GetCCTestClasses()
+        {
+            return new[]
+            {
+                @"
+            namespace TestApp.Model
+            {
+                public class TestClass1
+                {
+                    public int A { get; set; }
+                    public int B { get; set; }
+                    public int C;
+                    public int D;
 
+                    public TestClass1(int a, int c)
+                    {
+                        A = a;
+                        C = c;
+                    }
+                    public bool TestMethod2(int b)
+                    {
+                        return !b == B;
+                    }
+                    public bool TestMethod3()
+                    {
+                        return A + C - D;
+                    }
+                }
+            }",
+                @"
+            namespace TestApp.Model
+            {
+                public class ClassWithNoFields
+                {
+
+                    public ClassWithNoFields()
+                    {
+                    }
+
+                    public int ThisMethodReturns10()
+                    {
+                        return 10;
+                    }
+
+                }
+            }",
+                @"
+            namespace TestApp.Model
+            {
+                public class ClassWithNoMethods
+                {
+                    public int FirstField;
+                    public int SencondField;
+                    public int FirstProperty { get; set; }
+                    public int SecondProperty { get; set; }
+
+                }
+            }"
+
+            };
+        }
 
 
     }

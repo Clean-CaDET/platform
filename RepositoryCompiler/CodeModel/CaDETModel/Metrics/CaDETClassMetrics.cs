@@ -9,5 +9,6 @@
         public int WMC { get; set; }
         public int ATFD { get; set; }
         public double? TCC { get; set; }
+        public double? CC { get; set; }
     }
 }

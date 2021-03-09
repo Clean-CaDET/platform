@@ -137,5 +137,26 @@ namespace RepositoryCompilerTests.Unit
             gitClass.FindMember("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);
             gitClass.FindMember("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
         }
+
+        [Fact]
+        public void Calculates_CC_cohesion_metric()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testCohesionDataFactory.GetCohesionClasses());
+            classes.AddRange(factory.CreateClassModel(_testCohesionDataFactory.GetCCTestClasses()));
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var testClass = classes.Find(c => c.Name.Equals("TestClass1"));
+            var classWithNoFields = classes.Find(c => c.Name.Equals("ClassWithNoFields"));
+            var classWithNoMethods = classes.Find(c => c.Name.Equals("ClassWithNoMethods"));
+            dateRange.Metrics.CC.ShouldBe(1);
+            doctor.Metrics.CC.ShouldBe(0.38);
+            testClass.Metrics.CC.ShouldBe(0.5);
+            classWithNoFields.Metrics.CC.ShouldBe(0);
+            classWithNoMethods.Metrics.CC.ShouldBe(0);
+
+        }
     }
 }
