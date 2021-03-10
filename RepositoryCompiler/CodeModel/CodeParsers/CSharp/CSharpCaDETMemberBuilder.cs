@@ -149,7 +149,9 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 var fullFieldName = field.Member.ToDisplayString();
                 var containingClass = FindContainingClass(allProjectClasses, fullFieldName);
                 if(IsEnumeration(containingClass)) continue;
-                fields.Add(containingClass.FindField(fullFieldName.Split(_separator).Last()));
+                var accessedField = containingClass.FindField(fullFieldName.Split(_separator).Last());
+                if(accessedField == null) continue;
+                fields.Add(accessedField);
             }
             return fields;
         }

@@ -81,6 +81,7 @@ namespace RepositoryCompiler.CodeModel
         {
             var c = projectClass;
             while(c.IsInnerClass) c = c.OuterClass;
+            if (c.ContainerName.Equals("")) return fileText.Contains(c.SourceCode); //When namespace is not defined (global).
             var namespaceName = GetLanguagePackageName() + " " + c.ContainerName;
             return fileText.Contains(c.SourceCode)
                    && fileText.Contains(namespaceName)

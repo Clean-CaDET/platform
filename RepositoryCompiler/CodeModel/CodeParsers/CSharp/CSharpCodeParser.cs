@@ -156,6 +156,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         }
         private void ValidateUniqueFullNameForNonPartial(List<CaDETClass> parsedClasses)
         {
+            var nonUniqueFullNameClasses = new List<CaDETClass>();
             for (int i = 0; i < parsedClasses.Count - 1; i++)
             {
                 if(parsedClasses[i].IsPartialClass()) continue;
@@ -163,10 +164,16 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 {
                     if (parsedClasses[i].FullName.Equals(parsedClasses[j].FullName))
                     {
-                        throw new NonUniqueFullNameException(parsedClasses[i].FullName);
+                        nonUniqueFullNameClasses.Add(parsedClasses[i]);
                     }
                 }
             }
+
+            if (nonUniqueFullNameClasses.Count > 0)
+            {
+                throw new NonUniqueFullNameException(nonUniqueFullNameClasses.ToArray().ToString());
+            }
+
         }
 
         private List<CaDETClass> ConnectCaDETGraph(List<CaDETClass> classes)

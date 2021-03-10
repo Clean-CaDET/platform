@@ -47,6 +47,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
             return twoVotes[0].Severity == twoVotes[1].Severity;
         }
 
+        internal bool HasNoAgreeingAnnotations()
+        {
+            var severityGrades = Annotations.Select(a => a.Severity);
+            return severityGrades.Distinct().Count() == Annotations.Count;
+        }
+
         internal string GetSortedAnnotatorIds()
         {
             var list = Annotations.Select(annotation => annotation.AnnotatorId).ToList();
