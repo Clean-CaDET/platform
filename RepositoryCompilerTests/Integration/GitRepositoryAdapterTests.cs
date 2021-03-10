@@ -11,6 +11,16 @@ namespace RepositoryCompilerTests.Integration
         private readonly char _separator = Path.DirectorySeparatorChar;
 
         [Fact]
+        public void Clones_repository_with_params()
+        {
+            ICodeRepositoryAdapter gitAdapter = new GitRepositoryAdapter();
+
+            gitAdapter.CloneRepository("https://github.com/Ana00000/Challenge-inspiration.git", "GGojko", "gojkoG9G8G7", "ActiveEducation");
+
+            Directory.Exists("C:" + _separator + "ActiveEducation").ShouldBeTrue();
+        }
+
+        [Fact]
         public void Clones_repository()
         {
             CleanTestDirectory();
@@ -37,7 +47,7 @@ namespace RepositoryCompilerTests.Integration
         {
             var retVal = new List<object[]>();
 
-            retVal.Add(new object[] { new CommitId("a3f95fc9e92aa4bec32f4c4a535b0316ec2ea470"), false} );
+            retVal.Add(new object[] { new CommitId("a3f95fc9e92aa4bec32f4c4a535b0316ec2ea470"), false });
             retVal.Add(new object[] { null, true });
 
             return retVal;
@@ -86,7 +96,7 @@ namespace RepositoryCompilerTests.Integration
         private void CleanTestDirectory()
         {
             var testPath = GetTestPath();
-            if(GitDirectoryExists()) Directory.Delete(testPath, true);
+            if (GitDirectoryExists()) Directory.Delete(testPath, true);
             Directory.CreateDirectory(testPath);
         }
 
