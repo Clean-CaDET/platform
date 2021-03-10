@@ -43,7 +43,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
             return instances;
         }
 
-        internal List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
+        public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
         {
             return _instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
         }
