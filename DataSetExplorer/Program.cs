@@ -1,7 +1,6 @@
 ﻿using DataSetExplorer.DataSetBuilder;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
-using System.Collections.Generic;
 using DataSetExplorer.DataSetSerializer.ViewModel;
 
 namespace DataSetExplorer
@@ -27,32 +26,46 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
          */
         static void Main(string[] args)
         {
-            //MakeExcelFromProjectUseCase();
-            FindInstancesRequiringAdditionalAnnotationUseCase();
+            MakeExcelFromProjectUseCase();
+            //FindInstancesRequiringAdditionalAnnotationUseCase();
+            //FindInstancesWithAllDisagreeingAnnotationsUseCase();
+        }
+
+        private static void FindInstancesWithAllDisagreeingAnnotationsUseCase()
+        {
+            var dataset = LoadDataSet("C:/DSInput");
+
+            var exporter = new TextFileExporter("C:/DSOutput/Conflicts");
+            exporter.ExportInstancesWithAnnotatorId(dataset.GetInstancesWithAllDisagreeingAnnotations());
         }
 
         private static void FindInstancesRequiringAdditionalAnnotationUseCase()
         {
-            var importer = new ExcelImporter("C:/DSInput");
-            var dataset = importer.Import("Clean CaDET");
+            var dataset = LoadDataSet("C:/DSInput/Jellyfin");
 
-            var exporter = new TextFileExporter("C:/DSOutput/");
+            var exporter = new TextFileExporter("C:/DSOutput/Jellyfin");
             exporter.ExportInstancesWithAnnotatorId(dataset.GetInsufficientlyAnnotatedInstances());
+        }
+
+        private static DataSet LoadDataSet(string folder)
+        {
+            var importer = new ExcelImporter(folder);
+            return importer.Import("Clean CaDET");
         }
 
         private static void MakeExcelFromProjectUseCase()
         {
             var dataSet = CreateDataSetFromRepository(
-                "https://github.com/jellyfin/jellyfin/tree/6c2eb5fc7e872a29b4a0951849681ae0764dbb8e",
-                "C:/sdataset-p2/jellyfin");
+                "https://github.com/MonoGame/MonoGame/tree/4802d00db04dc7aa5fe07cd2d908f9a4b090a4fd",
+                "C:/sdataset-p2/MonoGame");
             var exporter = new ExcelExporter("C:/DSOutput/", new ColumnHeuristicsModel());
-            exporter.Export(dataSet, "jellyfin");
+            exporter.Export(dataSet, "MonoGame");
         }
 
         private static DataSet CreateDataSetFromRepository(string projectAndCommitUrl, string projectPath)
         {
             var builder = new CaDETToDataSetBuilder(projectAndCommitUrl, projectPath);
-            return builder.IncludeMembersWith(3).IncludeClassesWith(2, 4).RandomizeClassSelection().RandomizeMemberSelection()
+            return builder.IncludeMembersWith(10).IncludeClassesWith(3, 5).RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
         }
     }

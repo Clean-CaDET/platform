@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
@@ -40,6 +41,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
             instances.AddRange(_instances.Where(i => !i.IsSufficientlyAnnotated()));
             
             return instances;
+        }
+
+        internal List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
+        {
+            return _instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
         }
     }
 }
