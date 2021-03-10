@@ -21,9 +21,9 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         private void Validate()
         {
-            if (Severity < 0 || Severity > 3) throw new InvalidOperationException("Severity ranges from 0 to 3.");
+            if (Severity < 0 || Severity > 3) throw new InvalidOperationException("Accepted severity ranges from 0 to 3, but was " + Severity);
             if (AnnotatorId == 0) throw new InvalidOperationException("Annotator ID is required.");
-            if (Severity > 0 && ApplicableHeuristics.Count < 1) throw new InvalidOperationException("Annotations with severity above 0 must have at least one applicable heuristic.");
+            if (Severity > 0 && ApplicableHeuristics.Count < 1) throw new InvalidOperationException("Annotations made by " + AnnotatorId + " with severity " + Severity + " must have at least one applicable heuristic.");
         }
 
         public override int GetHashCode() => (AnnotatorId, InstanceSmell: InstanceSmell.Value).GetHashCode();

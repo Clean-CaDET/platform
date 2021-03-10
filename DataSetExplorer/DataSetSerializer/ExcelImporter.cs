@@ -61,13 +61,18 @@ namespace DataSetExplorer.DataSetSerializer
             var instances = new List<DataSetInstance>();
             for (var row = StartingInstanceRow; row <= sheet.Dimension.End.Row; row++)
             {
-                if (string.IsNullOrEmpty(sheet.Cells["A" + row].Text)) throw new InvalidOperationException("Rows contain empty value. Error at row " + row);
+                if (IsEndOfSheet(sheet, row)) break;
                 var instance = GetBasicInstance(sheet, row);
                 instance.AddAnnotation(GetAnnotation(sheet, row));
                 instances.Add(instance);
             }
 
             return instances;
+        }
+
+        private static bool IsEndOfSheet(ExcelWorksheet sheet, int row)
+        {
+            return string.IsNullOrEmpty(sheet.Cells["A" + row].Text);
         }
 
         private static DataSetInstance GetBasicInstance(ExcelWorksheet sheet, int row)
@@ -87,11 +92,23 @@ namespace DataSetExplorer.DataSetSerializer
 
         private static DataSetAnnotation GetAnnotation(ExcelWorksheet sheet, int row)
         {
-            var smellSeverity = int.Parse(sheet.Cells["C" + row].Text);
-            var annotatorId = int.Parse(sheet.Cells["C2"].Text);
-            var codeSmell = sheet.Cells["B2"].Text;
-            var heuristics = GetHeuristics(sheet, row);
-            return new DataSetAnnotation(codeSmell, smellSeverity, annotatorId, heuristics);
+            try
+            {
+                var smellSeverity = int.Parse(sheet.Cells["C" + row].Text);
+                var annotatorId = int.Parse(sheet.Cells["C2"].Text);
+                var codeSmell = sheet.Cells["B2"].Text;
+                var heuristics = GetHeuristics(sheet, row);
+
+                return new DataSetAnnotation(codeSmell, smellSeverity, annotatorId, heuristics);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new InvalidOperationException(GetErrorMessage(e.Message, sheet, row, 1));
+            }
+            catch (FormatException)
+            {
+                throw new InvalidOperationException(GetErrorMessage("Severity or annotator ID empty", sheet, row, 2));
+            }
         }
 
         private static List<SmellHeuristic> GetHeuristics(ExcelWorksheet sheet, int row)
@@ -99,12 +116,19 @@ namespace DataSetExplorer.DataSetSerializer
             var heuristics = new List<SmellHeuristic>();
             for (var col = StartingHeuristicColumn; col < sheet.Dimension.End.Column; col += 2)
             {
-                if (sheet.Cells[row, col].Text != "Yes" && sheet.Cells[row, col].Text != "No") throw new InvalidOperationException("Columns are not properly formatted. Error at column " + col + " and row " + row);
+                if (sheet.Cells[row, col].Text != "Yes" && sheet.Cells[row, col].Text != "No") throw new InvalidOperationException(GetErrorMessage("Yes or No allowed.", sheet, row, col));
                 var isNotApplicable = sheet.Cells[row, col].Text == "No";
                 if (isNotApplicable) continue;
                 heuristics.Add(new SmellHeuristic(sheet.Cells[2, col].Text, sheet.Cells[row, col + 1].Text));
             }
             return heuristics;
+        }
+
+        private static string GetErrorMessage(string postfixMessage, ExcelWorksheet sheet, int row, int col)
+        {
+            return "Error at column " + col + " and row " + row +
+                   " for smell " + sheet.Cells["B2"].Text + " and annotator "
+                   + sheet.Cells["C2"].Text + ". " + postfixMessage;
         }
     }
 }

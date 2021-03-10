@@ -26,8 +26,8 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
          */
         static void Main(string[] args)
         {
-            MakeExcelFromProjectUseCase();
-            //FindInstancesRequiringAdditionalAnnotationUseCase();
+            //MakeExcelFromProjectUseCase();
+            FindInstancesRequiringAdditionalAnnotationUseCase();
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
         }
 
@@ -35,15 +35,15 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         {
             var dataset = LoadDataSet("C:/DSInput");
 
-            var exporter = new TextFileExporter("C:/DSOutput/Conflicts");
+            var exporter = new TextFileExporter("C:/DSOutput/Mono");
             exporter.ExportInstancesWithAnnotatorId(dataset.GetInstancesWithAllDisagreeingAnnotations());
         }
 
         private static void FindInstancesRequiringAdditionalAnnotationUseCase()
         {
-            var dataset = LoadDataSet("C:/DSInput/Jellyfin");
+            var dataset = LoadDataSet("C:/DSInput/MonoGame");
 
-            var exporter = new TextFileExporter("C:/DSOutput/Jellyfin");
+            var exporter = new TextFileExporter("C:/DSOutput/Mono");
             exporter.ExportInstancesWithAnnotatorId(dataset.GetInsufficientlyAnnotatedInstances());
         }
 
