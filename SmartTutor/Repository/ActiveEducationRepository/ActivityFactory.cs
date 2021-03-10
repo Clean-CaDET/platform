@@ -1,5 +1,6 @@
 ﻿using LibGit2Sharp;
-using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel;
+using RepositoryCompiler.RepositoryAdapters;
 using SmartTutor.ActiveEducationModel;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,8 @@ namespace SmartTutor.Repository.ActiveEducationRepository
 
         private Challenge CreateLongMethodChallenge()
         {
+            new GitRepositoryAdapter().CloneRepository("https://github.com/Ana00000/Challenge-inspiration.git", "GGojko", "gojkoG9G8G7", "ActiveEducation");
+
             Challenge longMethodChallenge = new Challenge
             {
                 Start = DateTime.Now,
@@ -60,9 +63,9 @@ namespace SmartTutor.Repository.ActiveEducationRepository
                     " 3) For each method, define the most appropriate name.",
                     Level = 1,
                     Points = 5,
-                    GitURL = "https://github.com/Ana00000/Challenge-inspiration/blob/develop/Method/ExtractMethod%20-%2001.cs",
-                    StartState = new CaDETModel(),
-                    EndState = new CaDETModel()
+                    GitURL = "https://github.com/Ana00000/Challenge-inspiration.git",
+                    StartState = new CodeModelFactory(LanguageEnum.CSharp).CreateProjectWithCodeFileLinks(@"C:\ActiveEducation\SRP\SRP1"),
+                    EndState = new CodeModelFactory(LanguageEnum.CSharp).CreateProjectWithCodeFileLinks(@"C:\ActiveEducation\SRP\SRP1")
                 }
             };
 

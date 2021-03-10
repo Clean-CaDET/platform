@@ -9,8 +9,8 @@ namespace SmartTutor.ActiveEducationModel
         public int Level { get; set; }
         public double Points { get; set; }
         public string GitURL { get; set; }
-        public CaDETModel StartState { get; set; }
-        public CaDETModel EndState { get; set; }
+        public CaDETProject StartState { get; set; }
+        public CaDETProject EndState { get; set; }
         //public List<ProjectHint> Hints { get; set; }
     }
 }

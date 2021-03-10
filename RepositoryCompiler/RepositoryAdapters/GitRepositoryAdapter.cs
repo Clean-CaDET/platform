@@ -1,6 +1,7 @@
 ﻿using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace RepositoryCompiler.RepositoryAdapters
@@ -12,6 +13,9 @@ namespace RepositoryCompiler.RepositoryAdapters
         private readonly string _mainBranchName;
         private readonly string _uname;
         private readonly string _pass;
+
+        public GitRepositoryAdapter() { }
+
         public GitRepositoryAdapter(Dictionary<string, string> settings)
         {
             _gitSourcePath = settings["CodeRepository:GitSourcePath"];
@@ -23,6 +27,18 @@ namespace RepositoryCompiler.RepositoryAdapters
             _pass = settings.ContainsKey("CodeRepository:Password")
                 ? settings["CodeRepository:Password"]
                 : "TODO";
+        }
+
+        public void CloneRepository(string gitURL, string username, string password, string dirName)
+        {
+            if (Directory.Exists(@"C:\" + dirName))
+                return;
+
+            var co = new CloneOptions
+            {
+                CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials { Username = username, Password = password }
+            };
+            Repository.Clone(gitURL, "C:" + Path.DirectorySeparatorChar + dirName, co);
         }
 
         public void CloneRepository()
@@ -67,7 +83,7 @@ namespace RepositoryCompiler.RepositoryAdapters
         {
             return GetCommits(1).First();
         }
-        
+
         public IEnumerable<CommitId> GetCommits(int numOfPreviousCommits)
         {
             return GetRepository().Commits.Take(numOfPreviousCommits).Select(commit => new CommitId(commit.Sha));
