@@ -132,7 +132,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private double? GetCCClassCohesion(CaDETClass parsedClass)
         {
             IEnumerable<CaDETMember> memberMethods = parsedClass.Members.Where(m => m.Type != CaDETMemberType.Property);
-            IEnumerable<CaDETMember> memberProperties = parsedClass.Members.Where(m => m.IsFieldDefiningAccessor());
             double dataMembersCount = GetNumberOfAttributesDefined(parsedClass);
 
             if (dataMembersCount == 0 || memberMethods.Count() == 0)
@@ -140,14 +139,15 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 return 0;
             }
 
-            double cv = CalculateCohesionForEveryDataMember(parsedClass, memberMethods, memberProperties);
+            double cv = CalculateCohesionForEveryDataMember(parsedClass, memberMethods);
 
             return Math.Round(cv / dataMembersCount, 2);
         }
 
-        private static double CalculateCohesionForEveryDataMember(CaDETClass parsedClass, IEnumerable<CaDETMember> memberMethods, IEnumerable<CaDETMember> memberProperties)
+        private static double CalculateCohesionForEveryDataMember(CaDETClass parsedClass, IEnumerable<CaDETMember> memberMethods)
         {
             double cc = 0;
+            IEnumerable<CaDETMember> memberProperties = parsedClass.Members.Where(m => m.IsFieldDefiningAccessor());
 
             foreach (var field in parsedClass.Fields)
             {
