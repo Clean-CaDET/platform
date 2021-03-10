@@ -132,20 +132,20 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private double? GetCCClassCohesion(CaDETClass parsedClass)
         {
             IEnumerable<CaDETMember> memberMethods = parsedClass.Members.Where(m => m.Type != CaDETMemberType.Property);
-            IEnumerable<CaDETMember> memberProperties = parsedClass.Members.Where(m => m.Type == CaDETMemberType.Property);
-            double fieldsCount = parsedClass.Fields.Count + memberProperties.Count();
+            IEnumerable<CaDETMember> memberProperties = parsedClass.Members.Where(m => m.IsFieldDefiningAccessor());
+            double dataMembersCount = GetNumberOfAttributesDefined(parsedClass);
 
-            if (fieldsCount == 0 || memberMethods.Count() == 0)
+            if (dataMembersCount == 0 || memberMethods.Count() == 0)
             {
                 return 0;
             }
 
-            double cv = CalculateCohesionForEveryVariable(parsedClass, memberMethods, memberProperties);
+            double cv = CalculateCohesionForEveryDataMember(parsedClass, memberMethods, memberProperties);
 
-            return Math.Round(cv / fieldsCount, 2);
+            return Math.Round(cv / dataMembersCount, 2);
         }
 
-        private static double CalculateCohesionForEveryVariable(CaDETClass parsedClass, IEnumerable<CaDETMember> memberMethods, IEnumerable<CaDETMember> memberProperties)
+        private static double CalculateCohesionForEveryDataMember(CaDETClass parsedClass, IEnumerable<CaDETMember> memberMethods, IEnumerable<CaDETMember> memberProperties)
         {
             double cc = 0;
 
