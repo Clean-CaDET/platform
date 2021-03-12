@@ -1,7 +1,6 @@
 ﻿using LibGit2Sharp;
-using RepositoryCompiler.RepositoryAdapters;
 using SmartTutor.ActiveEducationModel;
-using SmartTutor.Repository.ChallengeProjectRepository;
+using SmartTutor.Repository.ChallengeRepository;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +8,12 @@ namespace SmartTutor.Repository.ActiveEducationRepository
 {
     public class ActivityFactory
     {
-        private readonly ChallengeProjectFactory challengeProjectFactory;
+        private readonly ChallengeFactory challengeFactory;
+
+        public ActivityFactory()
+        {
+            challengeFactory = new ChallengeFactory();
+        }
 
         public Dictionary<SmellType, List<EducationActivity>> CreateActivities()
         {
@@ -24,43 +28,10 @@ namespace SmartTutor.Repository.ActiveEducationRepository
         {
             List<EducationActivity> longMethodActivities = new List<EducationActivity>();
 
-            longMethodActivities.AddRange(CreateLongMethodChallenges());
+            longMethodActivities.AddRange(challengeFactory.CreateLongMethodChallenges());
             longMethodActivities.AddRange(CreateLongMethodTrainings());
 
             return longMethodActivities;
-        }
-
-        public List<Challenge> CreateLongMethodChallenges()
-        {
-            List<Challenge> longMethodChallenges = new List<Challenge>
-            {
-                CreateLongMethodChallenge()
-            };
-
-            return longMethodChallenges;
-        }
-
-        private Challenge CreateLongMethodChallenge()
-        {
-            new GitRepositoryAdapter().CloneRepository("https://github.com/Ana00000/Challenge-inspiration.git", "GGojko", "gojkoG9G8G7", "ActiveEducation");
-
-            Challenge longMethodChallenge = new Challenge
-            {
-                Start = DateTime.Now,
-                End = DateTime.Now,
-                Status = ActivityStatus.Unlocked,
-                Player = new Player
-                {
-                    Credentials = new UsernamePasswordCredentials { Username = "GGojko", Password = "gojkoG9G8G7" },
-                    Title = new PlayerTitle { Name = "Novice", PointsWorth = 0 },
-                    Score = 0,
-                    Rank = 1,
-                    EducationActivities = new List<EducationActivity>()
-                },
-                Project = challengeProjectFactory.CreateLongMethodProject()
-            };
-
-            return longMethodChallenge;
         }
 
         private List<EducationTraining> CreateLongMethodTrainings()
