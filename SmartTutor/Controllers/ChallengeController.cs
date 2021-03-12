@@ -17,6 +17,5 @@ namespace SmartTutor.Controllers
         {
             ChallengeService.StartChallenge(issue, indexOfProject, player);
         }
-
     }
 }

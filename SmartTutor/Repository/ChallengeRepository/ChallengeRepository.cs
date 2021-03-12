@@ -28,6 +28,5 @@ namespace SmartTutor.Repository.ChallengeRepository
 
             Challenges[issue].Add(challenge);
         }
-
     }
 }

@@ -15,6 +15,5 @@ namespace SmartTutorTests.Unit
 
             educationActivities.Count.ShouldBe(2);
         }
-
     }
 }

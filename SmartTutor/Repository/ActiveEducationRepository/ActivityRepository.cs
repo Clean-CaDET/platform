@@ -18,6 +18,5 @@ namespace SmartTutor.Repository
         {
             return EducationActivities[issue];
         }
-
     }
 }

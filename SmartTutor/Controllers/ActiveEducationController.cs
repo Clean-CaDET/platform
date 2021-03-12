@@ -18,6 +18,5 @@ namespace SmartTutor.Controllers
         {
             return ActiveEducationService.FindActivitiesForIssue(issue);
         }
-
     }
 }

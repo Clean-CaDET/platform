@@ -17,6 +17,5 @@ namespace SmartTutor.Service
         {
             return ActiveEducationRepository.FindEducationActivitiesForIssue(issue);
         }
-
     }
 }
