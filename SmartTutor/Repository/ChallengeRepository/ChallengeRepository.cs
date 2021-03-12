@@ -7,6 +7,7 @@ namespace SmartTutor.Repository.ChallengeRepository
 {
     public class ChallengeRepository : IChallengeRepository
     {
+        private readonly ChallengeProjectRepository.ChallengeProjectRepository challengeProjectRepository;
         public Dictionary<SmellType, List<Challenge>> Challenges { get; set; }
 
         public ChallengeRepository()
@@ -23,7 +24,7 @@ namespace SmartTutor.Repository.ChallengeRepository
                 End = DateTime.Now,
                 Status = ActivityStatus.Started,  //TODO: Prerequisites determine status
                 Player = player,
-                Project = null //TODO FindChallengeProject(issue, indexOfProject)
+                Project = challengeProjectRepository.FindChallengeProjectForIssue(issue, indexOfProject)
             };
 
             Challenges[issue].Add(challenge);
