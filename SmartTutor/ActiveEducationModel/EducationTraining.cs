@@ -6,5 +6,13 @@ namespace SmartTutor.ActiveEducationModel
     {
         public double Points { get; set; }
         public EducationContent Content { get; set; }
+
+        public EducationTraining() { }
+
+        public EducationTraining(EducationActivity educationActivity) : base(educationActivity)
+        {
+            Points = 0;
+            Content = new EducationContent();
+        }
     }
 }

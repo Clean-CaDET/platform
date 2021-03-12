@@ -13,7 +13,7 @@ namespace SmartTutor.Service
             ActiveEducationRepository = activeEducationRepository;
         }
 
-        internal List<EducationActivity> FindActivitiesForIssue(SmellType issue)
+        public List<EducationActivity> FindActivitiesForIssue(SmellType issue)
         {
             return ActiveEducationRepository.FindEducationActivitiesForIssue(issue);
         }

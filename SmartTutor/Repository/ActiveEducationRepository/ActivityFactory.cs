@@ -28,7 +28,7 @@ namespace SmartTutor.Repository.ActiveEducationRepository
             return longMethodActivities;
         }
 
-        private List<Challenge> CreateLongMethodChallenges()
+        public List<Challenge> CreateLongMethodChallenges()
         {
             List<Challenge> longMethodChallenges = new List<Challenge>
             {
