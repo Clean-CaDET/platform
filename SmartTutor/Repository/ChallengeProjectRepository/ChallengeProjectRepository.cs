@@ -1,5 +1,4 @@
 ﻿using SmartTutor.ActiveEducationModel;
-using SmartTutor.Repository.ActiveEducationRepository;
 using System.Collections.Generic;
 
 namespace SmartTutor.Repository.ChallengeProjectRepository
@@ -10,12 +9,8 @@ namespace SmartTutor.Repository.ChallengeProjectRepository
 
         public ChallengeProjectRepository()
         {
-            ChallengeProjects = new Dictionary<SmellType, List<ChallengeProject>>();
-
-            List<ChallengeProject> challengeProjects = new List<ChallengeProject>();
-            challengeProjects.Add(new ActivityFactory().CreateLongMethodProject());
-
-            ChallengeProjects.Add(SmellType.LONG_METHOD, challengeProjects);
+            ChallengeProjectFactory challengeProjectFactory = new ChallengeProjectFactory();
+            ChallengeProjects = challengeProjectFactory.CreateProjects();
         }
 
         public ChallengeProject FindChallengeProjectForIssue(SmellType issue, int indexOfProject)
