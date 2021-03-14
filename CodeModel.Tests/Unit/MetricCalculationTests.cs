@@ -400,5 +400,31 @@ namespace CodeModel.Tests.Unit
             gitClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOUW].ShouldBe(22);
             gitClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOUW].ShouldBe(33);
         }
+
+        [Fact]
+        public void Calculate_ICBMC_cohesion()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateProject(_testCohesionDataFactory.GetICBMCTestClasses()).Classes;
+
+            var testClass0 = classes.Find(c => c.Name.Equals("TestClass0"));
+            var testClass01 = classes.Find(c => c.Name.Equals("TestClass01"));
+            var testClass02 = classes.Find(c => c.Name.Equals("TestClass02"));
+            //var testClass1 = classes.Find(c => c.Name.Equals("TestClass1"));
+            //var testClass2 = classes.Find(c => c.Name.Equals("TestClass2"));
+            //var testClass3 = classes.Find(c => c.Name.Equals("TestClass3"));
+            //var testClass4 = classes.Find(c => c.Name.Equals("TestClass4"));
+            //var testClass5 = classes.Find(c => c.Name.Equals("TestClass5"));
+            testClass0.Metrics[CaDETMetric.ICBMC].ShouldBe(1);
+            testClass01.Metrics[CaDETMetric.ICBMC].ShouldBe(0.25);
+            testClass02.Metrics[CaDETMetric.ICBMC].ShouldBe(0.33);
+            //testClass1.Metrics[CaDETMetric.ICBMC].ShouldBe(0.11);
+            //testClass2.Metrics[CaDETMetric.ICBMC].ShouldBe(0.17);
+            //testClass3.Metrics[CaDETMetric.ICBMC].ShouldBe(0.22);
+            //testClass4.Metrics[CaDETMetric.ICBMC].ShouldBe(0.05);
+            //testClass5.Metrics[CaDETMetric.ICBMC].ShouldBe(0.16);
+
+        }
     }
 }

@@ -204,8 +204,235 @@ namespace RepositoryCompilerTests.DataFactories
             };
         }
 
+        public IEnumerable<string> GetICBMCTestClasses()
+        {
+            return new[]
+            {
+            @"
+            namespace TestApp
+            {
+                public class TestClass0
+                {
+                    private int a;
+                    private int b;
 
+                    public bool IsAZero()
+                    {
+                        int asdf = b;
+                        return a == 0;
+                    }
+                    public bool APlusB()
+                    {
+                        double asdf = 324;
+                        return a + b;
+                    }
+                }
+            }",
+            @"
+            namespace TestApp
+            {
+                public class TestClass01
+                {
+                    private int a;
+                    private int b;
 
+                    public bool IsAZero()
+                    {
+                        int asdf = 21;
+                        return a == 0;
+                    }
+                    public bool APlusB()
+                    {
+                        double asdf = 324;
+                        return a + b;
+                    }
+                }
+            }",
+            @"
+            namespace TestApp
+            {
+                public class TestClass02
+                {
+                    private int a;
+                    private int b;
 
+                    public bool IsAZero()
+                    {
+                        int x = 21;
+                        return a == 0;
+                    }
+                    public int APlusNumPlusB()
+                    {
+                        int x = 324;
+                        return a + x + b;
+                    }
+                    public int BPlusNumPlusA()
+                    {
+                        int x = 12;
+                        return b + x + a;
+                    }
+                }
+            }",
+            @"
+            namespace TestApp
+            {
+                public class TestClass1
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAZero()
+                    {
+                        int asdf =  a;
+                        return a == 0;
+                    }
+                    public bool IsAPlusBEqualsC()
+                    {
+                        double asdf = 324;
+                        return a + b == c;
+                    }
+                    public bool IsAEqualsBPlusC()
+                    {
+                        int w;
+                        return a == b + c;
+                    }
+                    public bool IsCZero()
+                    {
+                        int asdf = c;
+                        return c == 0;
+                    }
+                }
+            }",
+                @"
+            namespace TestApp
+            {
+                public class TestClass2
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAC()
+                    {
+                        int x = 0;
+                        return a == c;
+                    }
+                    public bool IsAPlusBEqualsC()
+                    {
+                        int x = 0;
+                        return a + b == c;
+                    }
+                    public bool IsAEqualsBPlusC()
+                    {
+                        int x = 0;
+                        return a == b + c;
+                    }
+                    public bool IsCZero()
+                    {
+                        int x = 0;
+                        return c == 0;
+                    }
+                }
+            }",
+
+                @"
+            namespace TestApp
+            {
+                public class TestClass3
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAC()
+                    {
+                        int x = 0;
+                        return a == c;
+                    }
+                    public bool IsAPlusBEqualsC()
+                    {
+                        int x = 0;
+                        return a + b == c;
+                    }
+                    public bool IsAEqualsBPlusC()
+                    {
+                        int x = 0;
+                        return a == b + c;
+                    }
+                    public bool IsCZeroPlusA()
+                    {
+                        int x = 0;
+                        return c == 0 + a;
+                    }
+                }
+            }",
+
+                @"
+            namespace TestApp
+            {
+                public class TestClass4
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAZero()
+                    {
+                        int x = 0;
+                        return a == 0;
+                    }
+                    public bool IsAEqualsToC()
+                    {
+                        int x = 0;
+                        return a == c;
+                    }
+                    public bool IsBEqualToC()
+                    {
+                        int x = 0;
+                        return b == c;
+                    }
+                    public bool IsCZero()
+                    {
+                        int x = 0;
+                        return c == 0;
+                    }
+                }
+            }",
+
+                @"
+            namespace TestApp
+            {
+                public class TestClass5
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAZero()
+                    {
+                        int x = 0;
+                        return a == 0;
+                    }
+                    public bool IsAEqualsToCPlusB()
+                    {
+                        int x = 0;
+                        return a == c + b;
+                    }
+                    public bool IsBEqualToC()
+                    {
+                        int x = 0;
+                        return b == c;
+                    }
+                    public bool IsCZero()
+                    {
+                        int x = 0;
+                        return c == 0;
+                    }
+                }
+            }"
+            };
+
+        }
     }
 }
