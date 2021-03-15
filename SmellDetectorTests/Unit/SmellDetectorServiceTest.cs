@@ -46,6 +46,7 @@ namespace SmellDetectorTests.Unit
             classFactory.CreateAnotherIssueLongMethod();
             var report = detectionService.GenerateSmellDetectionReport(classFactory.CaDETClassDTO);
             report.Report[classFactory.TestIdentifier].Count().ShouldBe(classFactory.ExpectedIssues);
+        }
 
         [Theory]
         [MemberData(nameof(Data))]

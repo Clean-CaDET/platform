@@ -17,10 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTutorTests", "SmartTut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformInteractionTool", "PlatformInteractionTool\PlatformInteractionTool.csproj", "{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformTests", "PlatfromTests\PlatformTests.csproj", "{CC453AB3-46D0-4EF0-8F91-750878B050F9}"
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorer", "DataSetExplorer\DataSetExplorer.csproj", "{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformTests", "PlatfromTests\PlatformTests.csproj", "{CC453AB3-46D0-4EF0-8F91-750878B050F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSetExplorerTests", "DataSetExplorerTests\DataSetExplorerTests.csproj", "{E6AA4545-2AB6-42E0-B560-612F64667366}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorer", "DataSetExplorer\DataSetExplorer.csproj", "{FDA438F6-95D1-4372-85B4-249E50896149}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorerTests", "DataSetExplorerTests\DataSetExplorerTests.csproj", "{E6AA4545-2AB6-42E0-B560-612F64667366}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +61,10 @@ Global
 		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA438F6-95D1-4372-85B4-249E50896149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA438F6-95D1-4372-85B4-249E50896149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA438F6-95D1-4372-85B4-249E50896149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA438F6-95D1-4372-85B4-249E50896149}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6AA4545-2AB6-42E0-B560-612F64667366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6AA4545-2AB6-42E0-B560-612F64667366}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6AA4545-2AB6-42E0-B560-612F64667366}.Release|Any CPU.ActiveCfg = Release|Any CPU
