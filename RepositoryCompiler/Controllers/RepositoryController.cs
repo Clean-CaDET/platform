@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.Communication;
 using RepositoryCompiler.Controllers.DTOs;
 
 namespace RepositoryCompiler.Controllers
@@ -33,6 +34,21 @@ namespace RepositoryCompiler.Controllers
                 Content = content,
                 Metrics = metrics
             };
+        }
+
+        // TODO: Add GUID for return type here !
+        [HttpPost("process/class")]
+        public void ActivateProcessOfClassParsing([FromBody] string classCode)
+        {
+            CaDETClass parsedClass = _repositoryService.BuildClassModel(classCode);
+            CreateMetricsReport(parsedClass);
+        }
+
+        private void CreateMetricsReport(CaDETClass parsedClass)
+        {
+            RepositoryCompilerMessageProducer producer = new RepositoryCompilerMessageProducer();
+            CaDETClassDTO reportMessage = new CaDETClassDTO(parsedClass);
+            producer.CreateNewMetricsReport(reportMessage);
         }
 
         private EducationalContentDTO DetermineSuitableContent(CaDETClass parsedClass)

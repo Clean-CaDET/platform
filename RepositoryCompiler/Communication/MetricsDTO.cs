@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 
 namespace RepositoryCompiler.Communication
 {
@@ -14,5 +15,12 @@ namespace RepositoryCompiler.Communication
         public int NOLV { get; set; }
 
         public int LOC { get; set; }
+
+        public MetricsDTO(CaDETClassMetrics parsedClassMetrics)
+        {
+            LOC = parsedClassMetrics.LOC;
+            NOLV = parsedClassMetrics.NAD;             // TODO: Check is this okay ?
+        }
+
     }
 }
