@@ -37,19 +37,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e77478f0-b354-4ce6-8b6e-b239ecafaad7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/SmartTutor/Repository/ContentDatabaseRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalContent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalContent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalSnippet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalSnippet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Clean CaDET Platform/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Clean CaDET Platform/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Clean CaDET Platform/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Clean CaDET Platform/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartTutor/ContentModel/SmartTutorContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/ContentModel/SmartTutorContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Controllers/ContentRecommendationController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/Controllers/ContentRecommendationController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Migrations/20201112141819_initial.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Migrations/20201112141819_initial.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Migrations/SmartTutorContextModelSnapshot.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Recommenders/CollaborativeFilteringRecommender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/Recommenders/CollaborativeFilteringRecommender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Recommenders/HybridRecommender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/Recommenders/HybridRecommender.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartTutor/Recommenders/KnowledgeBasedRecommender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/Recommenders/KnowledgeBasedRecommender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Repository/ContentInMemoryFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/Repository/ContentInMemoryFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartTutor/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartTutor/SmartTutor.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutor/SmartTutor.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartTutorTests/SmartTutorTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/SmartTutorTests/SmartTutorTests.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,14 +55,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalSnippet.cs" />
-        <option value="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalContent.cs" />
         <option value="$PROJECT_DIR$/SmartTutor/Repository/ContentDatabaseRepository.cs" />
         <option value="$PROJECT_DIR$/SmartTutor/Startup.cs" />
         <option value="$PROJECT_DIR$/SmartTutor/ContentModel/SmartTutorContext.cs" />
         <option value="$PROJECT_DIR$/SmartTutor/Recommenders/KnowledgeBasedRecommender.cs" />
         <option value="$PROJECT_DIR$/SmartTutor/Recommenders/CollaborativeFilteringRecommender.cs" />
+        <option value="$PROJECT_DIR$/SmartTutor/Controllers/ContentRecommendationController.cs" />
         <option value="$PROJECT_DIR$/SmartTutor/Recommenders/HybridRecommender.cs" />
+        <option value="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalContent.cs" />
+        <option value="$PROJECT_DIR$/SmartTutor/ContentModel/EducationalSnippet.cs" />
+        <option value="$PROJECT_DIR$/SmartTutorTests/Integration/ContentRecommendationControllerTests.cs" />
       </list>
     </option>
   </component>
@@ -202,7 +197,8 @@
       <option name="presentableId" value="Default" />
       <updated>1614761363490</updated>
       <workItem from="1614761377304" duration="947000" />
-      <workItem from="1614766950116" duration="454000" />
+      <workItem from="1614766950116" duration="995000" />
+      <workItem from="1615803020554" duration="2336000" />
     </task>
     <servers />
   </component>

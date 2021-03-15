@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SmartTutor.Recommenders
 {
-    internal class KnowledgeBasedRecommender : IRecommender
+    public class KnowledgeBasedRecommender : IRecommender
     {
         private readonly IContentRepository _contentRepository;
 
