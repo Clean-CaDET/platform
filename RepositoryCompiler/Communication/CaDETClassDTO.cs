@@ -19,12 +19,7 @@ namespace RepositoryCompiler.Communication
         public CaDETClassDTO(CaDETClass parsedClass)
         {
             CodeItemMetrics = new Dictionary<string, MetricsDTO>();
-            Console.WriteLine("hi");
-
             CodeItemMetrics[parsedClass.FullName] = new MetricsDTO(parsedClass.Metrics);
-
-            // parsedClass.FullName - identifier
-            // parsedClass.Metrics - metrike
         }
     }
 }
