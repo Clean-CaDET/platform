@@ -31,12 +31,33 @@ namespace RepositoryCompiler.Controllers
             var metrics = new ClassMetricsDTO(parsedClass);
             EducationalContentDTO content = DetermineSuitableContent(parsedClass);
 
+            MessageProducer producer = new MessageProducer();
+            CaDETClassDTO reportMessage = CreateMockupMetricsReportMessage();
+            producer.CreateNewMetricsReport(reportMessage);
+
             return new ClassQualityAnalysisResponse
             {
                 Id = Guid.NewGuid(),
                 Content = content,
                 Metrics = metrics
             };
+        }
+
+        // TODO: Delete Mockup
+        public CaDETClassDTO CreateMockupMetricsReportMessage()
+        {
+            CaDETClassDTO report = new CaDETClassDTO();
+
+            string exampleMethodId = "public void SavePerson(Person person);";
+
+            MetricsDTO metrics = new MetricsDTO();
+            metrics.LOC = 1000;
+            metrics.NOLV = 100;
+            metrics.NOP = 1;
+
+            report.CodeItemMetrics[exampleMethodId] = metrics;
+
+            return report;
         }
 
         // TODO: Add GUID for return type here !
