@@ -31,7 +31,6 @@ namespace RepositoryCompiler.Controllers
             var metrics = new ClassMetricsDTO(parsedClass);
             EducationalContentDTO content = DetermineSuitableContent(parsedClass);
 
-            //Generisanje GUIDA, smisliti gde da cuvas GUID, proslediti ga dalje i vratiti ga nazad
             return new ClassQualityAnalysisResponse
             {
                 Id = Guid.NewGuid(),
