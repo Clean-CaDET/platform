@@ -2,6 +2,7 @@
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.Communication;
 using RepositoryCompiler.Controllers.DTOs;
+using System;
 
 namespace RepositoryCompiler.Controllers
 {
@@ -29,8 +30,11 @@ namespace RepositoryCompiler.Controllers
             CaDETClass parsedClass = _repositoryService.BuildClassModel(classCode);
             var metrics = new ClassMetricsDTO(parsedClass);
             EducationalContentDTO content = DetermineSuitableContent(parsedClass);
+
+            //Generisanje GUIDA, smisliti gde da cuvas GUID, proslediti ga dalje i vratiti ga nazad
             return new ClassQualityAnalysisResponse
             {
+                Id = Guid.NewGuid(),
                 Content = content,
                 Metrics = metrics
             };

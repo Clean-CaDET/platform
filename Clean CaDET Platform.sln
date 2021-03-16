@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformInteractionTool", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformTests", "PlatfromTests\PlatformTests.csproj", "{CC453AB3-46D0-4EF0-8F91-750878B050F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorer", "DataSetExplorer\DataSetExplorer.csproj", "{FDA438F6-95D1-4372-85B4-249E50896149}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorer", "DataSetExplorer\DataSetExplorer.csproj", "{FB2CC996-6FF1-4968-BCB3-D2BA613322BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorerTests", "DataSetExplorerTests\DataSetExplorerTests.csproj", "{E6AA4545-2AB6-42E0-B560-612F64667366}"
 EndProject
@@ -61,10 +61,10 @@ Global
 		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC453AB3-46D0-4EF0-8F91-750878B050F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDA438F6-95D1-4372-85B4-249E50896149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDA438F6-95D1-4372-85B4-249E50896149}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDA438F6-95D1-4372-85B4-249E50896149}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDA438F6-95D1-4372-85B4-249E50896149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB2CC996-6FF1-4968-BCB3-D2BA613322BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB2CC996-6FF1-4968-BCB3-D2BA613322BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB2CC996-6FF1-4968-BCB3-D2BA613322BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB2CC996-6FF1-4968-BCB3-D2BA613322BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6AA4545-2AB6-42E0-B560-612F64667366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6AA4545-2AB6-42E0-B560-612F64667366}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6AA4545-2AB6-42E0-B560-612F64667366}.Release|Any CPU.ActiveCfg = Release|Any CPU
