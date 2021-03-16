@@ -6,7 +6,7 @@ namespace SmartTutor.Repository
 {
     public class ContentInMemoryFactory
     {
-        public Dictionary<SmellType, List<EducationContent>> createContent()
+        public Dictionary<SmellType, List<EducationContent>> CreateContent()
         {
             Dictionary<SmellType, List<EducationContent>> educationContents = new Dictionary<SmellType, List<EducationContent>>();
 

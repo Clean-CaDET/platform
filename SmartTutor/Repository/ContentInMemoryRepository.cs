@@ -12,7 +12,7 @@ namespace SmartTutor.Repository
         public ContentInMemoryRepository()
         {
             ContentInMemoryFactory contentInMemoryFactory = new ContentInMemoryFactory();
-            educationContents = contentInMemoryFactory.createContent();
+            educationContents = contentInMemoryFactory.CreateContent();
         }
 
         public EducationContent FindEducationalContent(SmellType issue, int indexOfContent)
