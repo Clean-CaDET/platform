@@ -4,8 +4,6 @@ using RepositoryCompiler.Communication;
 using SmartTutor.Communication;
 using SmellDetector.Communication;
 using Xunit;
-using CaDETClassDTO =
-    RepositoryCompiler.Communication.CaDETClassDTO; // TODO: Decide where to storage same files between services
 
 namespace Platform.Integration
 {
@@ -25,7 +23,7 @@ namespace Platform.Integration
         private void CreateMetricsReport()
         {
             var producer = new RepositoryCompiler.Communication.MessageProducer();
-            CaDETClassDTO reportMessage = _metricsReportFactory.CreateMockupMetricsReportMessage();
+            var reportMessage = _metricsReportFactory.CreateMockupMetricsReportMessage();
             producer.CreateNewMetricsReport(reportMessage);
         }
 
