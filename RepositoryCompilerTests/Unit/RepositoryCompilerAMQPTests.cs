@@ -15,7 +15,7 @@ namespace RepositoryCompilerTests.Unit
         [Fact]
         public void Produce_Metrics_Report_Message()
         {
-            RepositoryCompilerMessageProducer  producer = new RepositoryCompilerMessageProducer();
+            MessageProducer  producer = new MessageProducer();
             CaDETClassDTO reportMessage = _metricsReportFactory.CreateMockupMetricsReportMessage();
             producer.CreateNewMetricsReport(reportMessage);
         }

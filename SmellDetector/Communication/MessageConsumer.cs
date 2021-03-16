@@ -12,14 +12,14 @@ using SmellDetector.SmellModel.Reports;
 
 namespace SmellDetector.Communication
 {
-    public class SmellDetectorMessageConsumer
+    public class MessageConsumer
     {
         public string NodeName { get; set; }
         public string QueueName { get; set; }
         public string ExchangeName { get; set; }
         public IConnection Connection { get; set; }
         public IModel Channel { get; set; }
-        public SmellDetectorMessageConsumer()
+        public MessageConsumer()
         {
             ConfigureInitialStates();
             CreateConnection();
@@ -80,7 +80,7 @@ namespace SmellDetector.Communication
 
         private void SendIssueReportToSmartTutor(SmellDetectionReport smellDetectionReport)
         {
-            SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
+            MessageProducer producer = new MessageProducer();
             producer.CreateNewIssueReport(smellDetectionReport);
         }
 

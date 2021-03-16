@@ -44,7 +44,7 @@ namespace SmellDetector
         private void ActivateSmellDetectorConsumer()
         {
             // TODO: Check is this a good place for this consumer
-            var consumer = new SmellDetectorMessageConsumer();
+            var consumer = new MessageConsumer();
         }
     }
 }

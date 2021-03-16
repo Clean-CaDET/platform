@@ -16,7 +16,7 @@ namespace SmellDetectorTests.Unit
         [Fact]
         public void Produce_Issue_Report_Message()
         {
-            SmellDetectorMessageProducer producer = new SmellDetectorMessageProducer();
+            MessageProducer producer = new MessageProducer();
             SmellDetectionReport reportMessage = _reportFactory.CreateMockupReportMessage();
             producer.CreateNewIssueReport(reportMessage);
         }
@@ -24,7 +24,7 @@ namespace SmellDetectorTests.Unit
         [Fact]
         public void Consume_Metrics_Report_Message()
         {
-            SmellDetectorMessageConsumer consumer = new SmellDetectorMessageConsumer();
+            MessageConsumer consumer = new MessageConsumer();
         }
 
     }

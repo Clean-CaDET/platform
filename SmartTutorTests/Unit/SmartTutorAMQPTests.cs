@@ -1,4 +1,4 @@
-﻿using SmartTutor.Communucation;
+﻿using SmartTutor.Communication;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -8,7 +8,7 @@ namespace SmartTutorTests.Unit
         [Fact]
         public void Consume_Issue_Report_Message()
         {
-            SmartTutorMessageConsumer consumer = new SmartTutorMessageConsumer();
+            MessageConsumer consumer = new MessageConsumer();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace SmellDetector.Communication
     /// 
     /// We need to refactor and make more suitable infrastructure !
     /// </summary>
-    public class SmellDetectorMessageProducer
+    public class MessageProducer
     {
         public string NodeName { get; set; }
         public string QueueName { get; set; }
@@ -21,7 +21,7 @@ namespace SmellDetector.Communication
         public IConnection Connection { get; set; }
         public IModel Channel { get; set; }
 
-        public SmellDetectorMessageProducer()
+        public MessageProducer()
         {
             ConfigureInitialStates();
             CreateConnection();

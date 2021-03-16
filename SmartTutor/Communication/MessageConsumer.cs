@@ -6,10 +6,10 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace SmartTutor.Communucation
+namespace SmartTutor.Communication
 {
 
-    public class SmartTutorMessageConsumer
+    public class MessageConsumer
     {
         public string NodeName { get; set; }
         public string QueueName { get; set; }
@@ -17,7 +17,7 @@ namespace SmartTutor.Communucation
         public IConnection Connection { get; set; }
         public IModel Channel { get; set; }
 
-        public SmartTutorMessageConsumer()
+        public MessageConsumer()
         {
             ConfigureInitialStates();
             CreateConnection();

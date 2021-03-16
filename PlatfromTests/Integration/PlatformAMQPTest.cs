@@ -1,7 +1,7 @@
 ﻿using Shouldly;
 using Platform.DataFactories;
 using RepositoryCompiler.Communication;
-using SmartTutor.Communucation;
+using SmartTutor.Communication;
 using SmellDetector.Communication;
 using Xunit;
 using CaDETClassDTO =
@@ -24,19 +24,19 @@ namespace Platform.Integration
 
         private void CreateMetricsReport()
         {
-            RepositoryCompilerMessageProducer producer = new RepositoryCompilerMessageProducer();
+            var producer = new RepositoryCompiler.Communication.MessageProducer();
             CaDETClassDTO reportMessage = _metricsReportFactory.CreateMockupMetricsReportMessage();
             producer.CreateNewMetricsReport(reportMessage);
         }
 
         private void CreateIssueReport()
         {
-            SmellDetectorMessageConsumer consumer = new SmellDetectorMessageConsumer();
+            var consumer = new SmellDetector.Communication.MessageConsumer();
         }
 
         private void ReadIssueReport()
         {
-            SmartTutorMessageConsumer consumer = new SmartTutorMessageConsumer();
+            var consumer = new SmartTutor.Communication.MessageConsumer();
         }
     }
 }

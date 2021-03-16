@@ -49,7 +49,7 @@ namespace RepositoryCompiler.Controllers
 
         private void CreateMetricsReport(CaDETClass parsedClass)
         {
-            RepositoryCompilerMessageProducer producer = new RepositoryCompilerMessageProducer();
+            MessageProducer producer = new MessageProducer();
             CaDETClassDTO reportMessage = new CaDETClassDTO(parsedClass);
             producer.CreateNewMetricsReport(reportMessage);
         }

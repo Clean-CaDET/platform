@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using SmartTutor.Communucation;
+using SmartTutor.Communication;
 
 namespace SmartTutor
 {
