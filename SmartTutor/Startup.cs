@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartTutor.Communucation;
 
 namespace SmartTutor
 {
@@ -18,6 +19,7 @@ namespace SmartTutor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            ActivateSmartTutorConsumer();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -37,6 +39,12 @@ namespace SmartTutor
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void ActivateSmartTutorConsumer()
+        {
+            // TODO: Check is this a good place for this consumer
+            var consumer = new SmartTutorMessageConsumer();
         }
     }
 }

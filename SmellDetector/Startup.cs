@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmellDetector.Communication;
 
 namespace SmellDetector
 {
@@ -18,6 +19,8 @@ namespace SmellDetector
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            ActivateSmellDetectorConsumer();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -37,6 +40,11 @@ namespace SmellDetector
             {
                 endpoints.MapControllers();
             });
+        }
+        private void ActivateSmellDetectorConsumer()
+        {
+            // TODO: Check is this a good place for this consumer
+            var consumer = new SmellDetectorMessageConsumer();
         }
     }
 }

@@ -16,6 +16,8 @@ namespace RepositoryCompiler.Communication
 
         public int LOC { get; set; }
 
+        public MetricsDTO() { }
+
         public MetricsDTO(CaDETClassMetrics parsedClassMetrics)
         {
             LOC = parsedClassMetrics.LOC;
