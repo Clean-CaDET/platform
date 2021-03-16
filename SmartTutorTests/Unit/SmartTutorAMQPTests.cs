@@ -8,6 +8,7 @@ namespace SmartTutorTests.Unit
         [Fact]
         public void Consume_Issue_Report_Message()
         {
+            // TODO: Remove once we round up the PoC
             MessageConsumer consumer = new MessageConsumer();
         }
     }
