@@ -12,6 +12,7 @@ namespace RepositoryCompilerTests.Unit
     {
         private readonly MetricsReportFactory _metricsReportFactory = new MetricsReportFactory();
 
+        // TODO: Remove this before completing the PR, since this is not an actual test
         [Fact]
         public void Produce_Metrics_Report_Message()
         {
