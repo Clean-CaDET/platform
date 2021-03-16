@@ -6,6 +6,7 @@ using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 
 namespace RepositoryCompiler.Communication
 {
+    // TODO: Decouple class & method metrics to separate DTOs
     public class MetricsDTO
     {
         public int NOP { get; set; }
@@ -21,7 +22,6 @@ namespace RepositoryCompiler.Communication
         public MetricsDTO(CaDETClassMetrics parsedClassMetrics)
         {
             LOC = parsedClassMetrics.LOC;
-            NOLV = parsedClassMetrics.NAD;             // TODO: Check is this okay ?
         }
 
     }
