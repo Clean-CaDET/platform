@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using SmartTutor.ContentModel;
+using SmartTutor.Controllers.DTOs;
+using SmartTutor.Repository;
+using SmartTutor.Service;
 
 namespace SmartTutor.Controllers
 {
@@ -6,15 +11,30 @@ namespace SmartTutor.Controllers
     [ApiController]
     public class SmarttutorController : ControllerBase
     {
+        public ContentService ContentService;
+
         public SmarttutorController()
         {
-      
+            // Change param in constructor for ContentService if you want to get some other repository implementation
+            ContentService = new ContentService(new ContentInMemoryRepository());
         }
 
         [HttpPost("education/class")]
-        public string GetClassMetricsWithCohesionFeedback([FromBody] string classCode)
+        public ClassQualityAnalysisResponse GetCodeQualityAnalysis([FromBody] string classCode)
         {
-            return "SUCC";
+            var content = MakeGodClassContent();
+
+            return new ClassQualityAnalysisResponse()
+            {
+                NewContent = content
+            };
+        }
+
+        // TODO: DELETE THIS, THIS IS ONLY FOR TEST PURPOSE
+        private EducationContent MakeGodClassContent()
+        {
+            var content = ContentService.FindContentForIssue(SmellType.GOD_CLASS, 0);
+            return content;
         }
     }
 }
