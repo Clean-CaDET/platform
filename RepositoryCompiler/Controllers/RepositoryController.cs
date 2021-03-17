@@ -23,9 +23,9 @@ namespace RepositoryCompiler.Controllers
         }
         //TODO: Should be moved to the smart tutor module
         [HttpPost("education/class")]
-        public ClassQualityAnalysisResponse GetClassMetricsWithCohesionFeedback([FromBody] string classCode)
+        public ClassQualityAnalysisResponse GetClassMetricsWithCohesionFeedback([FromBody] string[] classCode)
         {
-            CaDETClass parsedClass = _repositoryService.BuildClassModel(classCode);
+            CaDETClass parsedClass = _repositoryService.BuildClassModel(classCode[0]);
             var metrics = new ClassMetricsDTO(parsedClass);
             EducationalContentDTO content = DetermineSuitableContent(parsedClass);
             return new ClassQualityAnalysisResponse
