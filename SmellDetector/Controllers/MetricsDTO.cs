@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace SmellDetector.Controllers
 {
     public class MetricsDTO

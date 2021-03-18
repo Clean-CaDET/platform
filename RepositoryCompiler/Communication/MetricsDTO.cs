@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 
 namespace RepositoryCompiler.Communication
 {
