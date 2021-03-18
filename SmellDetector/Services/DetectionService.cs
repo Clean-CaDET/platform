@@ -28,6 +28,7 @@ namespace SmellDetector.Services
         public SmellDetectionReport GenerateSmellDetectionReport(CaDETClassDTO caDetClassDto)
         {
             SmellDetectionReport smellDetectionReport = new SmellDetectionReport();
+            smellDetectionReport.Id = caDetClassDto.Id;
 
             foreach (IDetector detector in Detectors)
             {

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SmellDetector.SmellModel.Reports
 {
     public class SmellDetectionReport
     {
+        public Guid Id { get; set; }
+
         public Dictionary<string, List<Issue>> Report { get; set; }
 
         public SmellDetectionReport()

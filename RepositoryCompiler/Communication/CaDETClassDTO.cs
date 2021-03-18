@@ -9,10 +9,13 @@ namespace RepositoryCompiler.Communication
 {
     public class CaDETClassDTO
     {
+        public Guid Id { get; set; }
+
         public Dictionary<string, MetricsDTO> CodeItemMetrics { get; set; }
 
-        public CaDETClassDTO()
+        public CaDETClassDTO(Guid id)
         {
+            Id = id;
             CodeItemMetrics = new Dictionary<string, MetricsDTO>();
         }
 

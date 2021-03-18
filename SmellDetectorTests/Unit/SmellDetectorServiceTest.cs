@@ -75,7 +75,7 @@ namespace SmellDetectorTests.Unit
             retVal.Add(new object[] { "public void testMethod();", new MetricsDTO { NOP = 0, LOC = 100 }, 1 });// one for long method(loc > 50) 
             retVal.Add(new object[] { "public void testMethod2();", new MetricsDTO { NOP = 0 }, 0 });// there is no need for issues 
             retVal.Add(new object[] { "public class DoctorService", new MetricsDTO { WMC = 48, ATFD = 6, TCC = 0.32 }, 1});
-            retVal.Add(new object[] { "public class DoctorService2", new MetricsDTO { LOC = 110 },  2}); // One issue for GodClass and one issue for LongMethod 
+            retVal.Add(new object[] { "public void testMethod3();", new MetricsDTO { LOC = 110 },  2}); // One issue for GodClass and one issue for LongMethod 
             retVal.Add(new object[] { "public class DoctorService3", new MetricsDTO { NMD = 11, NAD = 14 }, 1});
             
             return retVal;

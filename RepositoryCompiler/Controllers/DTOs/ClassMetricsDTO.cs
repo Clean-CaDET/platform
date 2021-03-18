@@ -1,4 +1,5 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using System;
 
 namespace RepositoryCompiler.Controllers.DTOs
 {

@@ -27,6 +27,8 @@ namespace RepositoryCompiler.Controllers
         [HttpPost("education/class")]
         public ClassQualityAnalysisResponse GetClassMetricsWithCohesionFeedback([FromBody] string classCode)
         {
+
+            Guid id = Guid.NewGuid();
             CaDETClass parsedClass = _repositoryService.BuildClassModel(classCode);
             var metrics = new ClassMetricsDTO(parsedClass);
             EducationalContentDTO content = DetermineSuitableContent(parsedClass);
@@ -34,10 +36,12 @@ namespace RepositoryCompiler.Controllers
             MessageProducer producer = new MessageProducer();
             CaDETClassDTO reportMessage = CreateMockupMetricsReportMessage();
             producer.CreateNewMetricsReport(reportMessage);
+            id = reportMessage.Id;
+
 
             return new ClassQualityAnalysisResponse
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 Content = content,
                 Metrics = metrics
             };
@@ -46,7 +50,8 @@ namespace RepositoryCompiler.Controllers
         // TODO: Delete Mockup
         public CaDETClassDTO CreateMockupMetricsReportMessage()
         {
-            CaDETClassDTO report = new CaDETClassDTO();
+            Guid id = Guid.NewGuid();
+            CaDETClassDTO report = new CaDETClassDTO(id);
 
             string exampleMethodId = "public void SavePerson(Person person);";
 
