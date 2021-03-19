@@ -1,8 +1,13 @@
 ﻿using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using SmartTutor.ContentModel;
+using SmartTutor.Repository;
+using SmartTutor.Service;
 using SmellDetector.SmellModel.Reports;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -11,6 +16,7 @@ namespace SmartTutor.Communication
 
     public class MessageConsumer
     {
+
         public string NodeName { get; set; }
         public string QueueName { get; set; }
         public string ExchangeName { get; set; }
@@ -50,6 +56,7 @@ namespace SmartTutor.Communication
 
         private EventingBasicConsumer DecodeMessage()
         {
+            ReportMessagesClass reportMessagesClass = ReportMessagesClass.Instance;
             var consumer = new EventingBasicConsumer(Channel);
             consumer.Received += (model, deliveryArguments) =>
             {
@@ -59,6 +66,9 @@ namespace SmartTutor.Communication
                 try
                 {   
                     reportMessage = JsonConvert.DeserializeObject<SmellDetectionReport>(jsonMessage);
+
+                    // TODO: Decide how many content we need in summary
+                    reportMessagesClass.ReportMessages[reportMessage.Id] = FindEducationContentForReportMessage(reportMessage)[0]; 
                 }
                 catch (Exception)  
                 {
@@ -66,6 +76,24 @@ namespace SmartTutor.Communication
                 }
             };
             return consumer;
+        }
+
+        private List<EducationContent> FindEducationContentForReportMessage(SmellDetectionReport reportMessage)
+        {
+            var contentService = new ContentService(new ContentInMemoryRepository());
+            var educationContent = new List<EducationContent>();
+            var allKeys = reportMessage.Report.Keys;
+
+            foreach (var key in allKeys)
+            {
+                foreach (var issue in reportMessage.Report[key])
+                {
+                    // TODO: Decide how many content we need for each issue, there is only first only with 0
+                    educationContent.Add(contentService.FindContentForIssue(issue.IssueType, 0));
+                }
+            }
+
+            return educationContent;
         }
 
         private void ConsumeMessage(EventingBasicConsumer consumer)

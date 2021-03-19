@@ -49,11 +49,11 @@ namespace SmartTutor
 
     public static class ApplicationBuilderExtentions
     {
-        private static MessageConsumer _consumer { get; set; }
+        public static MessageConsumer Consumer { get; set; }
 
         public static IApplicationBuilder UseRabbitListener(this IApplicationBuilder app)
         {
-            _consumer = app.ApplicationServices.GetService<MessageConsumer>();
+            Consumer = app.ApplicationServices.GetService<MessageConsumer>();
 
             var lifetime = app.ApplicationServices.GetService<IApplicationLifetime>();
 
@@ -64,7 +64,7 @@ namespace SmartTutor
 
         private static void OnStarted()
         {
-            _consumer = new MessageConsumer();
+            Consumer = new MessageConsumer();
         }
 
     }

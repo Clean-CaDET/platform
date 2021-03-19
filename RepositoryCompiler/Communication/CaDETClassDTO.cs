@@ -18,6 +18,10 @@ namespace RepositoryCompiler.Communication
             Id = id;
             CodeItemMetrics = new Dictionary<string, MetricsDTO>();
         }
+        public CaDETClassDTO()
+        {
+            CodeItemMetrics = new Dictionary<string, MetricsDTO>();
+        }
 
         public CaDETClassDTO(CaDETClass parsedClass)
         {

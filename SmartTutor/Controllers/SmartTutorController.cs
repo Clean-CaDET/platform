@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using SmartTutor.Communication;
 using SmartTutor.ContentModel;
 using SmartTutor.Controllers.DTOs;
 using SmartTutor.Repository;
@@ -20,21 +22,25 @@ namespace SmartTutor.Controllers
         }
 
         [HttpPost("education/class")]
-        public ClassQualityAnalysisResponse GetCodeQualityAnalysis([FromBody] string classCode)
+        public ClassQualityAnalysisResponse GetCodeQualityAnalysis([FromBody] Guid Id)
         {
-            var content = MakeGodClassContent();
-
-            return new ClassQualityAnalysisResponse()
+            ReportMessagesClass reportMessagesClass = ReportMessagesClass.Instance;
+            var qualityAnalysisResponse = new ClassQualityAnalysisResponse();
+            EducationContent contentForId = new EducationContent();
+            try
+            {  
+                Dictionary<Guid, EducationContent> ReportMessages = reportMessagesClass.ReportMessages;
+                contentForId = ReportMessages[Id];
+                qualityAnalysisResponse.NewContent = contentForId;
+                qualityAnalysisResponse.Id = Id;
+            }
+            catch
             {
-                NewContent = content
-            };
+               // TODO: Write some exp
+            }
+          
+            return qualityAnalysisResponse;
         }
 
-        // TODO: DELETE THIS, THIS IS ONLY FOR TEST PURPOSE
-        private EducationContent MakeGodClassContent()
-        {
-            var content = ContentService.FindContentForIssue(SmellType.GOD_CLASS, 0);
-            return content;
-        }
     }
 }
