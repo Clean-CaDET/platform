@@ -7,7 +7,8 @@ namespace SmartTutor.Repository
     {
         public Dictionary<SmellType, List<EducationalContent>> createContent()
         {
-            Dictionary<SmellType, List<EducationalContent>> educationContents = new Dictionary<SmellType, List<EducationalContent>>();
+            Dictionary<SmellType, List<EducationalContent>> educationContents =
+                new Dictionary<SmellType, List<EducationalContent>>();
 
             List<EducationalContent> longMethodContents = new List<EducationalContent>();
             List<EducationalContent> longParameterListContents = new List<EducationalContent>();
@@ -41,7 +42,6 @@ namespace SmartTutor.Repository
             };
 
             return educationContent;
-
         }
 
         private EducationalContent CreateLongParameterListContent()
@@ -66,9 +66,9 @@ namespace SmartTutor.Repository
         {
             EducationalContent educationContent = new EducationalContent();
 
-            educationContent.ContentQuality = 4;
-            educationContent.ContentDifficulty = 5;
-            educationContent.EducationSnippets = new List<EducationalSnippet>
+            educationContent.Quality = 4;
+            educationContent.Difficulty = 5;
+            educationContent.EducationalSnippets = new List<EducationalSnippet>
             {
                 CreateGodClassShortTextSnippet(),
                 CreateGodClassLongTextSnippet(),
@@ -83,70 +83,70 @@ namespace SmartTutor.Repository
         private EducationalSnippet CreateGodClassCodeSnippet()
         {
             EducationalSnippet codeSnippet = new EducationalSnippet();
-            codeSnippet.SnippetQuality = 4;
+            codeSnippet.Quality = 4;
             codeSnippet.Tags = new List<Tag>();
             codeSnippet.Tags.Add(Tag.Interesting);
-            codeSnippet.SnippetType = SnippetType.CodeSnippet;
+            codeSnippet.Type = SnippetType.CodeSnippet;
             codeSnippet.Content =
                 "Circle makeCircle(double x, double y, double radius);Circle makeCircle(Point center, double radius); ";
-            codeSnippet.SnippetDifficulty = 5;
+            codeSnippet.Difficulty = 5;
             return codeSnippet;
         }
 
         private EducationalSnippet CreateGodClassVideoSnippet()
         {
             EducationalSnippet videoSnippet = new EducationalSnippet();
-            videoSnippet.SnippetQuality = 4;
+            videoSnippet.Quality = 4;
             videoSnippet.Tags = new List<Tag>();
             videoSnippet.Tags.Add(Tag.MustKnow);
-            videoSnippet.SnippetType = SnippetType.Video;
+            videoSnippet.Type = SnippetType.Video;
             videoSnippet.Content = "https://www.youtube.com/watch?v=w_SHQFzOosg";
-            videoSnippet.SnippetDifficulty = 4;
+            videoSnippet.Difficulty = 4;
             return videoSnippet;
         }
 
         private EducationalSnippet CreateGodClassImageSnippet()
         {
             EducationalSnippet imageSnippet = new EducationalSnippet();
-            imageSnippet.SnippetQuality = 2;
+            imageSnippet.Quality = 2;
             imageSnippet.Tags = new List<Tag>();
             imageSnippet.Tags.Add(Tag.Interesting);
-            imageSnippet.SnippetType = SnippetType.Image;
+            imageSnippet.Type = SnippetType.Image;
             imageSnippet.Content = "https://refactoring.guru/images/refactoring/content/smells/large-class-01.png";
-            imageSnippet.SnippetDifficulty = 1;
+            imageSnippet.Difficulty = 1;
             return imageSnippet;
         }
 
         private EducationalSnippet CreateGodClassLongTextSnippet()
         {
             EducationalSnippet longTextSnippet = new EducationalSnippet();
-            longTextSnippet.SnippetQuality = 5;
+            longTextSnippet.Quality = 5;
             longTextSnippet.Tags = new List<Tag>();
             longTextSnippet.Tags.Add(Tag.MustKnow);
-            longTextSnippet.SnippetType = SnippetType.LongText;
+            longTextSnippet.Type = SnippetType.LongText;
             longTextSnippet.Content =
                 "The God class smell occurs when a huge class which is surrounded by many data classes acts as a controller (i.e. takes most of the decisions and monopolises the functionality offered by the software). The class defines many data members and methods and exhibits low cohesion.";
-            longTextSnippet.SnippetDifficulty = 4;
+            longTextSnippet.Difficulty = 4;
             return longTextSnippet;
-
         }
 
         private EducationalSnippet CreateGodClassShortTextSnippet()
         {
             EducationalSnippet shortTextSnippet = new EducationalSnippet();
-            shortTextSnippet.SnippetQuality = 3;
+            shortTextSnippet.Quality = 3;
             shortTextSnippet.Tags = new List<Tag>();
             shortTextSnippet.Tags.Add(Tag.Interesting);
-            shortTextSnippet.SnippetType = SnippetType.ShortText;
+            shortTextSnippet.Type = SnippetType.ShortText;
             shortTextSnippet.Content =
                 "When a class is trying to do too much, it often shows up as too many fields. When a class has too many fields, duplicated code cannot be far behind.";
-            shortTextSnippet.SnippetDifficulty = 2;
+            shortTextSnippet.Difficulty = 2;
             return shortTextSnippet;
         }
-            /// <summary>
-            /// LM - LongMethod
-            /// </summary>
-            /// <returns></returns>
+
+        /// <summary>
+        /// LM - LongMethod
+        /// </summary>
+        /// <returns></returns>
         private EducationalSnippet CreateLMShortTextSnippet()
         {
             EducationalSnippet shortTextSnippet = new EducationalSnippet();
@@ -255,7 +255,8 @@ namespace SmartTutor.Repository
             snippetFive.Tags = new List<Tag>();
             snippetFive.Tags.Add(Tag.MustKnow);
             snippetFive.Type = SnippetType.Image;
-            snippetFive.Content = "https://refactoring.guru/images/refactoring/content/smells/long-parameter-list-01.png";
+            snippetFive.Content =
+                "https://refactoring.guru/images/refactoring/content/smells/long-parameter-list-01.png";
             snippetFive.Difficulty = 5;
             return snippetFive;
         }
