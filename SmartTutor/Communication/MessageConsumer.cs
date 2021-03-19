@@ -68,7 +68,12 @@ namespace SmartTutor.Communication
                     reportMessage = JsonConvert.DeserializeObject<SmellDetectionReport>(jsonMessage);
 
                     // TODO: Decide how many content we need in summary
-                    reportMessagesClass.ReportMessages[reportMessage.Id] = FindEducationContentForReportMessage(reportMessage)[0]; 
+
+                    Random random = new Random();
+                    int numberOfeducationContents = FindEducationContentForReportMessage(reportMessage).Count();
+                    int randomEducatinContent = random.Next(numberOfeducationContents);
+
+                    reportMessagesClass.ReportMessages[reportMessage.Id] = FindEducationContentForReportMessage(reportMessage)[randomEducatinContent]; 
                 }
                 catch (Exception)  
                 {
