@@ -21,7 +21,8 @@ namespace SmellDetector.Services
             {
                 new LongMethodRuleEngine(),
                 new LongParameterListRuleEngine(),
-                new GodClassRuleEngine(),
+                new GodClassRuleEngine(47, 2, 0.33),
+                new GodClassRuleEngineNMDandNAD(15,15),
             };
         }
 

@@ -2,4 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Enumerations\" />
+  </ItemGroup>
 </Project>
