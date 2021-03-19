@@ -113,7 +113,7 @@ namespace SmartTutor.Repository
             imageSnippet.Tags = new List<Tag>();
             imageSnippet.Tags.Add(Tag.Interesting);
             imageSnippet.SnippetType = SnippetType.Image;
-            imageSnippet.Content = "https://refactoring.guru/images/refactoring/content/smells/large-class-01.png";
+            imageSnippet.Content = "https://cdn.activestate.com/wp-content/uploads/2018/10/technical-debt-ceos-perspective.jpg";
             imageSnippet.SnippetDifficulty = 1;
             return imageSnippet;
         }
@@ -189,7 +189,7 @@ namespace SmartTutor.Repository
             imageSnippet.Tags = new List<Tag>();
             imageSnippet.Tags.Add(Tag.MustKnow);
             imageSnippet.SnippetType = SnippetType.Image;
-            imageSnippet.Content = "https://refactoring.guru/images/refactoring/content/smells/long-method-01-3x.png";
+            imageSnippet.Content = "https://www.zaraffasoft.com/wp-content/uploads/2016/09/rsz_104572068.jpg";
             imageSnippet.SnippetDifficulty = 4;
             return imageSnippet;
         }
@@ -256,7 +256,7 @@ namespace SmartTutor.Repository
             snippetFive.Tags = new List<Tag>();
             snippetFive.Tags.Add(Tag.MustKnow);
             snippetFive.SnippetType = SnippetType.Image;
-            snippetFive.Content = "https://refactoring.guru/images/refactoring/content/smells/long-parameter-list-01.png";
+            snippetFive.Content = "https://stackify.com/wp-content/uploads/2017/05/DotNet-Developers-Headers-min.jpg";
             snippetFive.SnippetDifficulty = 5;
             return snippetFive;
         }
