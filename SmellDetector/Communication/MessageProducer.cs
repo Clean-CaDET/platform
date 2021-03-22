@@ -32,7 +32,6 @@ namespace SmellDetector.Communication
         public void CreateNewIssueReport(SmellDetectionReport reportMessage)
         {
             PublishMessage(GetEncodedMessage(reportMessage));
-/*            Channel.Close();*/
         }
 
         private void CreateConnection()

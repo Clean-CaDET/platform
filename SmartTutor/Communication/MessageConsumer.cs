@@ -6,7 +6,6 @@ using SmartTutor.Repository;
 using SmartTutor.Service;
 using SmellDetector.SmellModel.Reports;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

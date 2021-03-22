@@ -33,7 +33,6 @@ namespace RepositoryCompiler.Controllers
             var metrics = new ClassMetricsDTO(parsedClass);
             EducationalContentDTO content = DetermineSuitableContent(parsedClass);
 
-            /*            MessageProducer producer = new MessageProducer();*/
             CaDETClassDTO reportMessage = CreateMockupMetricsReportMessage();
             ApplicationBuilderExtentions._producer.CreateNewMetricsReport(reportMessage);
             id = reportMessage.Id;
@@ -75,7 +74,6 @@ namespace RepositoryCompiler.Controllers
 
         private void CreateMetricsReport(CaDETClass parsedClass)
         {
-/*            MessageProducer producer = new MessageProducer();*/
             CaDETClassDTO reportMessage = new CaDETClassDTO(parsedClass);
             ApplicationBuilderExtentions._producer.CreateNewMetricsReport(reportMessage);
         }

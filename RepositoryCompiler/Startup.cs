@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using RepositoryCompiler.Communication;
 using RepositoryCompiler.Controllers;
 using RepositoryCompiler.RepositoryAdapters;
-using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
 
 namespace RepositoryCompiler
 {
