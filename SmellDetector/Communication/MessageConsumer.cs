@@ -80,8 +80,10 @@ namespace SmellDetector.Communication
 
         private void SendIssueReportToSmartTutor(SmellDetectionReport smellDetectionReport)
         {
-            MessageProducer producer = new MessageProducer();
-            producer.CreateNewIssueReport(smellDetectionReport);
+        /*    MessageProducer producer = new MessageProducer();
+            producer.CreateNewIssueReport(smellDetectionReport);*/
+            ApplicationBuilderExtentions._producer.CreateNewIssueReport(smellDetectionReport);
+
         }
 
         private SmellDetectionReport ProcessRepositoryCompilerReport(CaDETClassDTO repositoryCompilerReport)
