@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartTutor.ContentModel;
+using SmartTutor.Recommenders;
+using SmartTutor.Repository;
 
 namespace SmartTutor
 {
@@ -18,6 +22,12 @@ namespace SmartTutor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddEntityFrameworkNpgsql().AddDbContext<SmartTutorContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
+
+            services.AddScoped<IContentRepository, ContentDatabaseRepository>();
+            services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,10 +43,7 @@ namespace SmartTutor
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

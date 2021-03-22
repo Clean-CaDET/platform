@@ -1,13 +1,11 @@
 using SmartTutor.ContentModel;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SmartTutor.Repository
 {
     public class ContentInMemoryRepository : IContentRepository
     {
-        public Dictionary<SmellType, List<EducationContent>> educationContents { get; set; }
+        public Dictionary<SmellType, List<EducationalContent>> educationContents { get; set; }
 
         public ContentInMemoryRepository()
         {
@@ -15,10 +13,9 @@ namespace SmartTutor.Repository
             educationContents = contentInMemoryFactory.createContent();
         }
 
-        public EducationContent FindEducationalContent(SmellType issue, int indexOfContent)
+        public List<EducationalContent> FindEducationalContent(SmellType issue)
         {
-            return educationContents[issue][indexOfContent];
+            return educationContents[issue];
         }
-
     }
 }

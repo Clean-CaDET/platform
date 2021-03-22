@@ -17,4 +17,9 @@
     <ProjectReference Include="..\SmartTutor\SmartTutor.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Integration" />
+    <Folder Include="Unit\" />
+  </ItemGroup>
+
 </Project>
