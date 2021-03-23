@@ -1,6 +1,6 @@
-﻿using SmartTutor.ContentModel;
-using SmartTutor.Repository;
+﻿using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
+using SmartTutor.ContentModel.Repository;
 
 namespace SmartTutor.Recommenders
 {
@@ -13,10 +13,10 @@ namespace SmartTutor.Recommenders
             _contentRepository = contentRepository;
         }
 
-        public List<EducationalContent> FindEducationalContent(List<SmellType> issues)
+        public List<LearningObject> FindEducationalContent(List<SmellType> issues)
         {
-            var result = new List<EducationalContent>();
-            issues.ForEach(smellType => result.AddRange(_contentRepository.FindEducationalContent(smellType)));
+            var result = new List<LearningObject>();
+            //TODO: Contact ContentService 
             return result;
         }
     }

@@ -1,10 +1,10 @@
-﻿using SmartTutor.ContentModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SmartTutor.ContentModel.LectureModel;
 
 namespace SmartTutor.Recommenders
 {
     public interface IRecommender
     {
-        List<EducationalContent> FindEducationalContent(List<SmellType> issues);
+        List<LearningObject> FindEducationalContent(List<SmellType> issues);
     }
 }
