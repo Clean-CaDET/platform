@@ -14,5 +14,10 @@
         /// NOR: Number of return statements in a class
         /// </summary>
         public int NOR { get; set; }
+
+        /// <summary>
+        /// NOL: Number of loops in a class
+        /// </summary>
+        public int NOL { get; set; }
     }
 }

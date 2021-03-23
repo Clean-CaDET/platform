@@ -22,6 +22,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 TCC = GetTightClassCohesion(parsedClass),
                 ATFD = GetAccessToForeignData(parsedClass),
                 NOR = CountReturnStatements(parsedClass),
+                NOL = CountLoops(parsedClass),
             };
         }
         public int GetLinesOfCode(string code)
@@ -128,6 +129,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountReturnStatements(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOR);
+        }
+
+        private int CountLoops(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Sum(method => method.Metrics.NOL);
         }
     }
 }
