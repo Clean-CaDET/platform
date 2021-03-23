@@ -30,6 +30,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NONL = CountNumberOfNumericLiterals(member),
                 NOSL = CountNumberOfStringLiterals(member),
                 NOMO = CountNumberOfMathOperations(member),
+                NOPE = CountNumberOfParenthesizedExpressions(member),
+                NOLE = CountNumberOfLambdaExpressions(member),
             };
         }
 
@@ -227,6 +229,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 .Count(n => n.IsKind(SyntaxKind.PostIncrementExpression) ||
                             n.IsKind(SyntaxKind.PostDecrementExpression));
             return count;
+        }
+
+        private int CountNumberOfParenthesizedExpressions(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<ExpressionSyntax>()
+                .Count(n => n.IsKind(SyntaxKind.ParenthesizedExpression));
+        }
+
+        private int CountNumberOfLambdaExpressions(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<LambdaExpressionSyntax>().Count();
         }
     }
 }

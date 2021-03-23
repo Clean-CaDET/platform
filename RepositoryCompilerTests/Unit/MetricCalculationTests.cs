@@ -267,5 +267,29 @@ namespace RepositoryCompilerTests.Unit
             firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOMO.ShouldBe(0);
             firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOMO.ShouldBe(6);
         }
+
+        [Fact]
+        public void Calculates_number_of_parenthesized_expressions()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOPE.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOPE.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_number_of_lambda_expressions()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOLE.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOLE.ShouldBe(2);
+        }
     }
 }

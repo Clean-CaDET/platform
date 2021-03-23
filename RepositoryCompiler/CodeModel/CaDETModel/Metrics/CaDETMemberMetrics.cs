@@ -85,5 +85,15 @@
         /// NOMO: Number of math operations
         /// </summary>
         public int NOMO { get; set; }
+
+        /// <summary>
+        /// NOPE: Number of parenthesized expressions
+        /// </summary>
+        public int NOPE { get; set; }
+
+        /// <summary>
+        /// NOLE: Number of lambda expressions
+        /// </summary>
+        public int NOLE { get; set; }
     }
 }
