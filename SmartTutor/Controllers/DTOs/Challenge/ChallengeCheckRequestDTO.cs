@@ -1,6 +1,6 @@
-﻿namespace SmartTutor.Controllers.DTOs
+﻿namespace SmartTutor.Controllers.DTOs.Challenge
 {
-    public class ChallengeCheckRequest
+    public class ChallengeCheckRequestDTO
     {
         public string[] SourceCode { get; set; }
         public int ChallengeId { get; set; }

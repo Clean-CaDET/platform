@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartTutor.Controllers.DTOs;
+using SmartTutor.Controllers.DTOs.Challenge;
 
 namespace SmartTutor.Controllers
 {
@@ -8,10 +8,10 @@ namespace SmartTutor.Controllers
     public class ChallengeController : ControllerBase
     {
         [HttpPost("check")]
-        public ChallengeCheckResponse CheckChallengeCompletion([FromBody] ChallengeCheckRequest checkRequest)
+        public ChallengeCheckResponseDTO CheckChallengeCompletion([FromBody] ChallengeCheckRequestDTO checkRequestDto)
         {
-            var text = checkRequest.ChallengeId == 1 ? "Fail." : "Success.";
-            return new ChallengeCheckResponse(text);
+            var text = checkRequestDto.ChallengeId == 1 ? "Fail." : "Success.";
+            return new ChallengeCheckResponseDTO(text);
         }
     }
 }

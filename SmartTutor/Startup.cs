@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
+using SmartTutor.Controllers.DTOs.Lecture;
 using SmartTutor.Recommenders;
 using SmartTutor.Repository;
 
@@ -21,7 +22,10 @@ namespace SmartTutor
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new LearningObjectConverter());
+            });
 
             services.AddEntityFrameworkNpgsql().AddDbContext<SmartTutorContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
