@@ -305,5 +305,17 @@ namespace RepositoryCompilerTests.Unit
             firstClass.FindMember("CreateClassMemberBuilders2").Metrics.MNB.ShouldBe(4);
             firstClass.FindMember("CreateClassMemberBuilders3").Metrics.MNB.ShouldBe(4);
         }
+
+        [Fact]
+        public void Calculates_number_of_unique_words()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var gitClass = classes.First();
+            gitClass.FindMember("CSharpCodeParserInit").Metrics.NOUW.ShouldBe(5);
+            gitClass.FindMember("CreateClassMemberBuilders1").Metrics.NOUW.ShouldBe(23);
+        }
     }
 }

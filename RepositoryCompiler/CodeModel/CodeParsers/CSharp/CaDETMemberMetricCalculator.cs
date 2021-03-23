@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -33,6 +34,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOPE = CountNumberOfParenthesizedExpressions(member),
                 NOLE = CountNumberOfLambdaExpressions(member),
                 MNB = CountMaxNestedBlocks(member),
+                NOUW = CountNumberOfUniqueWords(member)
             };
         }
 
@@ -245,28 +247,294 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int CountMaxNestedBlocks(MemberDeclarationSyntax method)
         {
-            try
-            {
-                BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
-                var blocks = baseMethod.Body.DescendantNodes().OfType<BlockSyntax>().ToList();
-
-                List<int> blocksAncestors = new List<int>();
-                foreach (var block in blocks)
-                {
-                    blocksAncestors.Add(block.Ancestors().Count(a => a.IsKind(SyntaxKind.Block)));
-                }
-
-                if (!blocksAncestors.Any())
-                {
-                    return 0;
-                }
-                return blocksAncestors.Max();
-            }
-            catch (Exception)
+            if (!method.Kind().Equals(SyntaxKind.MethodDeclaration))
             {
                 return 0;
             }
-            
+            BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
+            var blocks = baseMethod.Body.DescendantNodes().OfType<BlockSyntax>().ToList();
+
+            List<int> blocksAncestors = new List<int>();
+            foreach (var block in blocks)
+            {
+                blocksAncestors.Add(block.Ancestors().Count(a => a.IsKind(SyntaxKind.Block)));
+            }
+
+            if (!blocksAncestors.Any())
+            {
+                return 0;
+            }
+            return blocksAncestors.Max();
         }
+
+        private int CountNumberOfUniqueWords(MemberDeclarationSyntax method)
+        {
+            if (!method.Kind().Equals(SyntaxKind.MethodDeclaration))
+            {
+                return 0;
+            }
+            BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
+            string methodBody = baseMethod.Body.ToString();
+            List<string> lines = GetLinesWithoutComments(methodBody);
+            List<string> words = GetWordsFromLines(lines);
+            words = FilterWords(words);
+            List<string> individualWords = BreakWords(words);
+            individualWords = FindAdditionalWords(individualWords);
+            return CleanWordsFromSymbols(individualWords).Distinct().ToList().Count();
+        }
+
+        private List<string> GetLinesWithoutComments(string methodBody)
+        {
+            List<string> lines = methodBody.Split("\n")
+                .Select(line => line.Trim())
+                .Where(line => !line.StartsWith("//"))
+                .ToList();
+            return RemoveMultiLineComments(lines);
+        }
+
+        private List<string> RemoveMultiLineComments(List<string> lines)
+        {
+            List<string> linesToRemove = new List<string>();
+            for (int i = 0; i < lines.Count(); i++)
+            {
+                if (lines[i].StartsWith("/*"))
+                {
+                    linesToRemove.Add(lines[i]);
+                    int j = 1;
+                    while (!lines[i + j].EndsWith("*/"))
+                    {
+                        linesToRemove.Add(lines[i + j]);
+                        j++;
+                    }
+                    linesToRemove.Add(lines[i + j]);
+                }
+            }
+            lines.RemoveAll(line => linesToRemove.Contains(line));
+            return lines;
+        }
+
+        private List<string> GetWordsFromLines(List<string> lines)
+        {
+            List<string> words = new List<string>();
+
+            foreach (string line in lines)
+            {
+                int index = 0;
+                while (index < line.Length && char.IsWhiteSpace(line[index]))
+                    index++;
+
+                int start;
+                while (index < line.Length)
+                {
+                    start = index;
+                    while (index < line.Length && !char.IsWhiteSpace(line[index]))
+                        index++;
+
+                    words.Add(line.Substring(start, index - start));
+
+                    while (index < line.Length && char.IsWhiteSpace(line[index]))
+                        index++;
+                }
+            }
+            return words;
+        }
+
+        private List<string> FilterWords(List<string> words)
+        {
+            for (int i = 0; i < words.Count(); i++)
+            {
+                words[i] = words[i]
+                    .Replace("(", " ")
+                    .Replace(")", " ")
+                    .Replace("{", " ")
+                    .Replace("}", " ")
+                    .Replace("=", " ")
+                    .Replace(">", " ")
+                    .Replace("<", " ")
+                    .Replace("&", " ")
+                    .Replace("|", " ")
+                    .Replace("!", " ")
+                    .Replace("+", " ")
+                    .Replace("*", " ")
+                    .Replace("/", " ")
+                    .Replace("-", " ")
+                    .Replace(";", " ")
+                    .Replace(":", " ")
+                    .Replace(",", " ")
+                    .Replace("[", " ")
+                    .Replace("]", " ")
+                    .Replace("\"", " ");
+            }
+            words = words.Where(word => !string.IsNullOrEmpty(word))
+                .Where(word => !Regex.IsMatch(word, "[0-9]+"))
+                .Where(word => !getKeywords().Contains(word))
+                .ToList();
+            return words;
+        }
+
+        private List<string> BreakWords(List<string> words)
+        {
+            List<string> individualWords = new List<string>();
+            foreach (string word in words)
+            {
+                if (word.Length == 1)
+                {
+                    individualWords.Add(word.Trim());
+
+                }
+                else
+                {
+                    if (getKeywords().Contains(word.Trim()))
+                    {
+                        continue;
+                    }
+
+                    int current = 0;
+                    for (int i = 1; i < word.Length; i++)
+                    {
+                        if (word[i] == '_' || char.IsUpper(word[i]))
+                        {
+                            individualWords.Add(word.Substring(current, i - current).Trim());
+                            current = i + (word[i] == '_' ? 1 : 0);
+                        }
+                    }
+                    individualWords.Add(word.Substring(current).Trim());
+                }
+            }
+            return individualWords.Where(word => !string.IsNullOrEmpty(word)).ToList();
+        }
+
+        private List<string> FindAdditionalWords(List<string> words)
+        {
+            List<string> result = new List<string>();
+            foreach (string word in words)
+            {
+                if (word.Contains(" "))
+                {
+                    foreach (string w in word.Split(" "))
+                    {
+                        result.Add(w);
+                    }
+                }
+                else
+                {
+                    result.Add(word);
+                }
+            }
+            return result;
+        }
+
+        private List<string> CleanWordsFromSymbols(List<string> words)
+        {
+            List<string> cleanWords = new List<string>();
+            foreach (string word in words)
+            {
+                if (word.Length > 1)
+                {
+                    if (!char.IsLetter(word[0]))
+                    {
+                        cleanWords.Add(word.Substring(1));
+                    }
+                    else if (!char.IsLetter(word[word.Length - 1]))
+                        cleanWords.Add(word.Substring(0, word.Length - 2));
+                    else
+                    {
+                        cleanWords.Add(word);
+                    }
+
+                }
+                else
+                {
+                    cleanWords.Add(word);
+                }
+            }
+            return cleanWords;
+        }
+
+        private List<string> getKeywords()
+        {
+            List<string> keywords = new List<string>();
+            keywords.Add("abstract");
+            keywords.Add("as");
+            keywords.Add("base");
+            keywords.Add("bool");
+            keywords.Add("break");
+            keywords.Add("byte");
+            keywords.Add("case");
+            keywords.Add("catch");
+            keywords.Add("char");
+            keywords.Add("checked");
+            keywords.Add("class");
+            keywords.Add("const");
+            keywords.Add("continue");
+            keywords.Add("decimal");
+            keywords.Add("default");
+            keywords.Add("delegate");
+            keywords.Add("do");
+            keywords.Add("double");
+            keywords.Add("else");
+            keywords.Add("enum");
+            keywords.Add("event");
+            keywords.Add("explicit");
+            keywords.Add("extern");
+            keywords.Add("false");
+            keywords.Add("finally");
+            keywords.Add("fixed");
+            keywords.Add("float");
+            keywords.Add("for");
+            keywords.Add("foreach");
+            keywords.Add("goto");
+            keywords.Add("if");
+            keywords.Add("implicit");
+            keywords.Add("in");
+            keywords.Add("int");
+            keywords.Add("interface");
+            keywords.Add("internal");
+            keywords.Add("is");
+            keywords.Add("lock");
+            keywords.Add("long");
+            keywords.Add("namespace");
+            keywords.Add("new");
+            keywords.Add("null");
+            keywords.Add("object");
+            keywords.Add("operator");
+            keywords.Add("out");
+            keywords.Add("override");
+            keywords.Add("params");
+            keywords.Add("private");
+            keywords.Add("protected");
+            keywords.Add("public");
+            keywords.Add("readonly");
+            keywords.Add("record");
+            keywords.Add("ref");
+            keywords.Add("return");
+            keywords.Add("sbyte");
+            keywords.Add("sealed");
+            keywords.Add("short");
+            keywords.Add("sizeof");
+            keywords.Add("stackalloc");
+            keywords.Add("static");
+            keywords.Add("string");
+            keywords.Add("struct");
+            keywords.Add("switch");
+            keywords.Add("this");
+            keywords.Add("throw");
+            keywords.Add("true");
+            keywords.Add("try");
+            keywords.Add("typeof");
+            keywords.Add("uint");
+            keywords.Add("ulong");
+            keywords.Add("unchecked");
+            keywords.Add("unsafe");
+            keywords.Add("ushort");
+            keywords.Add("using");
+            keywords.Add("virtual");
+            keywords.Add("void");
+            keywords.Add("volatile");
+            keywords.Add("while");
+            return keywords;
+        }
+
+
     }
 }

@@ -100,5 +100,10 @@
         /// MNB: Max nested blocks
         /// </summary>
         public int MNB { get; set; }
+
+        /// <summary>
+        /// NOUW: Number of unique words
+        /// </summary>
+        public int NOUW { get; set; }
     }
 }
