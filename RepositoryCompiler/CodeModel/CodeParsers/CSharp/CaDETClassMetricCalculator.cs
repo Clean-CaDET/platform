@@ -25,6 +25,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOL = CountLoops(parsedClass),
                 NOC = CountComparisonOperators(parsedClass),
                 NOA = CountNumberOfAssignments(parsedClass),
+                NOPM = CountNumberOfPrivateMethods(parsedClass),
+                NOPF = CountNumberOfProtectedFields(parsedClass),
             };
         }
         public int GetLinesOfCode(string code)
@@ -146,6 +148,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountNumberOfAssignments(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOA);
+        }
+
+        private int CountNumberOfPrivateMethods(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method) &&
+                                                       method.Modifiers.Any(m => m.Value == CaDETModifierValue.Private));
+        }
+
+        private int CountNumberOfProtectedFields(CaDETClass parsedClass)
+        {
+            return parsedClass.Fields.Count(field => field.Modifiers.Any(f => f.Value == CaDETModifierValue.Protected));
         }
     }
 }

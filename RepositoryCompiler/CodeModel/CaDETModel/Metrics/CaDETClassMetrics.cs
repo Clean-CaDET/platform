@@ -11,12 +11,12 @@
         public double? TCC { get; set; }
 
         /// <summary>
-        /// NOR: Number of return statements in a class
+        /// NOR: Number of return statements
         /// </summary>
         public int NOR { get; set; }
 
         /// <summary>
-        /// NOL: Number of loops in a class
+        /// NOL: Number of loops
         /// </summary>
         public int NOL { get; set; }
 
@@ -29,5 +29,15 @@
         /// NOA: Number of assignments
         /// </summary>
         public int NOA { get; set; }
+
+        /// <summary>
+        /// NOPM: Number of private methods
+        /// </summary>
+        public int NOPM { get; set; }
+
+        /// <summary>
+        /// NOPF: Number of protected fields
+        /// </summary>
+        public int NOPF { get; set; }
     }
 }

@@ -131,6 +131,28 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
+        public void Calculates_number_of_private_methods_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOPM.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Calculates_number_of_protected_fields_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOPF.ShouldBe(2);
+        }
+
+        [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
