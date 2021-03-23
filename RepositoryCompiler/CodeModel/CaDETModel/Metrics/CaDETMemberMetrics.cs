@@ -65,5 +65,10 @@
         /// RFC: Number of unique method invocations
         /// </summary>
         public int RFC { get; set; }
+
+        /// <summary>
+        /// NOA: Number of assignments
+        /// </summary>
+        public int NOA { get; set; }
     }
 }

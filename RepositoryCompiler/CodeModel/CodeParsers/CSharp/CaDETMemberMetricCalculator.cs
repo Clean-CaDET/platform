@@ -26,6 +26,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOC = CountComparisonOperators(member),
                 NOMI = CountMethodInvocations(member),
                 RFC = CountUniqueMethodInvocations(member),
+                NOA = CountNumberOfAssignments(member),
             };
         }
 
@@ -176,6 +177,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 }
             }
             return uniqueInvokedMethods.Count();
+        }
+
+        private int CountNumberOfAssignments(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<AssignmentExpressionSyntax>().Count();
         }
     }
 }
