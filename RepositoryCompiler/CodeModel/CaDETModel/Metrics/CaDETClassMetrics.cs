@@ -24,5 +24,10 @@
         /// NOC: Number of comparison operators
         /// </summary>
         public int NOC { get; set; }
+
+        /// <summary>
+        /// NOA: Number of assignments
+        /// </summary>
+        public int NOA { get; set; }
     }
 }

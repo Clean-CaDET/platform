@@ -24,6 +24,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOR = CountReturnStatements(parsedClass),
                 NOL = CountLoops(parsedClass),
                 NOC = CountComparisonOperators(parsedClass),
+                NOA = CountNumberOfAssignments(parsedClass),
             };
         }
         public int GetLinesOfCode(string code)
@@ -140,6 +141,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountComparisonOperators(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOC);
+        }
+
+        private int CountNumberOfAssignments(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Sum(method => method.Metrics.NOA);
         }
     }
 }
