@@ -1,15 +1,29 @@
+using System.Collections.Generic;
+using SmartTutor.ContentModel.LectureModel;
+using SmartTutor.ContentModel.Repository;
 using SmartTutor.Recommenders;
 
 namespace SmartTutor.ContentModel
 {
-    // TODO: Integrate here: Trainee repository & Recommender system
-    public class ContentService
+    public class ContentService : IContentService
     {
-        private IRecommender recommender;
-        public ContentService(IRecommender recommender)
+        private readonly IRecommender _recommender;
+        private readonly IContentRepository _contentRepository;
+
+        public ContentService(IRecommender recommender, IContentRepository repository)
         {
-            this.recommender = recommender;
+            _recommender = recommender;
+            _contentRepository = repository;
         }
-        
+
+        public List<Lecture> GetLectures()
+        {
+            return _contentRepository.GetLectures();
+        }
+
+        public Lecture GetFullLecture(int id)
+        {
+            return _contentRepository.GetLecture(id);
+        }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SmartTutor.ContentModel.LectureModel;
+using System;
 using System.Collections.Generic;
-using SmartTutor.ContentModel.LectureModel;
 
 namespace SmartTutor.ContentModel.Repository
 {
@@ -13,7 +13,12 @@ namespace SmartTutor.ContentModel.Repository
             _dbContext = dbContext;
         }
 
-        public List<LearningObject> FindEducationalContent(SmellType smellType)
+        public List<Lecture> GetLectures()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Lecture GetLecture(int id)
         {
             throw new NotImplementedException();
         }

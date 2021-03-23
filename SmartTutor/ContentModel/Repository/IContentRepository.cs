@@ -5,7 +5,8 @@ namespace SmartTutor.ContentModel.Repository
 {
     public interface IContentRepository
     {
-        List<LearningObject> FindEducationalContent(SmellType smellType);
+        List<Lecture> GetLectures();
+        Lecture GetLecture(int id);
     }
 }
 

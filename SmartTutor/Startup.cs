@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.Repository;
-using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.Controllers.Mappers;
 using SmartTutor.Recommenders;
 
 namespace SmartTutor
@@ -21,15 +22,20 @@ namespace SmartTutor
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers().AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.Converters.Add(new LearningObjectConverter());
+                options.JsonSerializerOptions.Converters.Add(new LearningObjectJsonConverter());
             });
 
             services.AddEntityFrameworkNpgsql().AddDbContext<ContentModelContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
 
-            services.AddScoped<IContentRepository, ContentDatabaseRepository>();
+            services.AddScoped<IContentService, ContentService>();
+
+            //services.AddScoped<IContentRepository, ContentDatabaseRepository>();
+            services.AddScoped<IContentRepository, ContentInMemoryRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace SmartTutor.Controllers.DTOs.Lecture
 {
-    public class TextDTO : LearningObjectDTO
+    public class LearningTextDTO : LearningObjectDTO
     {
         public string Text { get; set; }
     }
