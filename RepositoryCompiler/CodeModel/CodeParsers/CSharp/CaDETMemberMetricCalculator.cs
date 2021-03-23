@@ -27,6 +27,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOMI = CountMethodInvocations(member),
                 RFC = CountUniqueMethodInvocations(member),
                 NOA = CountNumberOfAssignments(member),
+                NONL = CountNumberOfNumericLiterals(member),
+                NOSL = CountNumberOfStringLiterals(member),
             };
         }
 
@@ -182,6 +184,16 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountNumberOfAssignments(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<AssignmentExpressionSyntax>().Count();
+        }
+
+        private int CountNumberOfNumericLiterals(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<LiteralExpressionSyntax>().Count(n => n.IsKind(SyntaxKind.NumericLiteralExpression));
+        }
+
+        private int CountNumberOfStringLiterals(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<LiteralExpressionSyntax>().Count(n => n.IsKind(SyntaxKind.StringLiteralExpression));
         }
     }
 }

@@ -228,5 +228,31 @@ namespace RepositoryCompilerTests.Unit
             firstClass.FindMember("CSharpCodeParserInit").Metrics.NOA.ShouldBe(2);
             firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOA.ShouldBe(0);
         }
+
+        [Fact]
+        public void Calculates_number_of_numeric_literals()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NONL.ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NONL.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NONL.ShouldBe(12);
+        }
+
+        [Fact]
+        public void Calculates_number_of_string_literals()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOSL.ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOSL.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOSL.ShouldBe(2);
+        }
     }
 }

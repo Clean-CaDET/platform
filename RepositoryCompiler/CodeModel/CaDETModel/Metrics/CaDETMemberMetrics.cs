@@ -70,5 +70,15 @@
         /// NOA: Number of assignments
         /// </summary>
         public int NOA { get; set; }
+
+        /// <summary>
+        /// NONL: Number of numeric literals
+        /// </summary>
+        public int NONL { get; set; }
+
+        /// <summary>
+        /// NOSL: Number of string literals
+        /// </summary>
+        public int NOSL { get; set; }
     }
 }
