@@ -35,5 +35,10 @@
         /// Also used as : LVAR
         /// </summary>
         public int NOLV { get; set; }
+
+        /// <summary>
+        /// NOTC: Number of try catch blocks
+        /// </summary>
+        public int NOTC { get; set; }
     }
 }

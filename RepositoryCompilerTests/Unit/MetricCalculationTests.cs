@@ -136,5 +136,19 @@ namespace RepositoryCompilerTests.Unit
             gitClass.FindMember("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);
             gitClass.FindMember("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
         }
+
+        [Fact]
+        public void Calculates_number_of_try_catch_blocks()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOTC.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOTC.ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOTC.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOTC.ShouldBe(3);
+        }
     }
 }
