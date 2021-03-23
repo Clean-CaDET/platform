@@ -45,5 +45,10 @@
         /// NOL: Number of loops
         /// </summary>
         public int NOL { get; set; }
+
+        /// <summary>
+        /// NOR: Number of return statements
+        /// </summary>
+        public int NOR { get; set; }
     }
 }

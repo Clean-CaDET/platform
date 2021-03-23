@@ -164,5 +164,18 @@ namespace RepositoryCompilerTests.Unit
             firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOL.ShouldBe(2);
             firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOL.ShouldBe(4);
         }
+
+        [Fact]
+        public void Calculates_number_of_return_statements()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOR.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOR.ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOR.ShouldBe(2);
+        }
     }
 }

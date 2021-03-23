@@ -20,7 +20,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOP = GetNumberOfParameters(method),
                 NOLV = GetNumberOfLocalVariables(member),
                 NOTC = CountTryCatchBlocks(member),
-                NOL = CountLoops(member)
+                NOL = CountLoops(member),
+                NOR = CountReturnStatements(member),
             };
         }
 
@@ -136,6 +137,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<DoStatementSyntax>().Count();
             return count;
+        }
+
+        private int CountReturnStatements(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<ReturnStatementSyntax>().Count();
         }
     }
 }
