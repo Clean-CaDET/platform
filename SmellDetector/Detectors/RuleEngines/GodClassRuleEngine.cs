@@ -8,17 +8,17 @@ namespace SmellDetector.Detectors
 
     // Trifu A, Marinescu R. Diagnosing design problems in object oriented systems. In Proceedings of the 12th Working Conference on Reverse Engineering. IEEE; 2005:1-10.
     // Schumacher J, Zazworka N, Shull F, Seaman C, Shaw M. Building empirical support for automated code smell detection. In Proceedings of the International Symposium on Empirical Software Engineering and Measurement. ACM; 2010:8-18
-    internal class GodClassRuleEngine : IDetector
+    internal class GodClassRule : IDetector
     {
-        private double wmcThreshold;
-        private double atfdThreshold;
-        private double tccThreshold;
+        private readonly double _wmcThreshold;
+        private readonly double _atfdThreshold;
+        private readonly double _tccThreshold;
 
-        public GodClassRuleEngine(double wmcThreshold, double atfdThreshold, double tccThreshold)
+        public GodClassRule(double wmcThreshold, double atfdThreshold, double tccThreshold)
         {
-            this.wmcThreshold = wmcThreshold;
-            this.atfdThreshold = atfdThreshold;
-            this.tccThreshold = tccThreshold;
+            _wmcThreshold = wmcThreshold;
+            _atfdThreshold = atfdThreshold;
+            _tccThreshold = tccThreshold;
         }
 
         public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
@@ -43,7 +43,7 @@ namespace SmellDetector.Detectors
 
         private bool IsBadSmell(MetricsDTO metrics)
         {
-            if (metrics.WMC > this.wmcThreshold && metrics.ATFD > this.atfdThreshold && metrics.TCC < this.tccThreshold) return true;
+            if (metrics.WMC > _wmcThreshold && metrics.ATFD > _atfdThreshold && metrics.TCC < _tccThreshold) return true;
             return false;
         }
     }

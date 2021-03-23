@@ -5,15 +5,15 @@ using SmellDetector.SmellModel.Reports;
 
 namespace SmellDetector.Detectors.RuleEngines
 {
-    internal class GodClassRuleEngineNMDandNAD : IDetector
+    internal class GodClassRuleNMDandNAD : IDetector
     {
         // Kiefer C, Bernstein A, Tappolet J. Mining software repositories with isparol and a software evolution ontology. In Proceedings of the Fourth International Workshop on Mining Software Repositories. IEEE Computer Society; 2007:1-8.
-        private int nmdThreshold;
-        private int nadThreshold;
-        public GodClassRuleEngineNMDandNAD(int nmdThreshold, int nadThreshold)
+        private readonly int _nmdThreshold;
+        private readonly int _nadThreshold;
+        public GodClassRuleNMDandNAD(int nmdThreshold, int nadThreshold)
         {
-            this.nmdThreshold = nmdThreshold;
-            this.nadThreshold = nadThreshold;
+            _nmdThreshold = nmdThreshold;
+            _nadThreshold = nadThreshold;
         }
 
         public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
@@ -38,8 +38,8 @@ namespace SmellDetector.Detectors.RuleEngines
 
         private bool IsBadSmell(MetricsDTO metrics)
         {
-            if (metrics.NMD > this.nmdThreshold) return true;
-            if (metrics.NAD > this.nadThreshold) return true;
+            if (metrics.NMD > _nmdThreshold) return true;
+            if (metrics.NAD > _nadThreshold) return true;
             return false;
         }
     }

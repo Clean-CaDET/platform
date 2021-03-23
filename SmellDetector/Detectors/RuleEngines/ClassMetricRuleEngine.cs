@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SmellDetector.Controllers;
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
 
 namespace SmellDetector.Detectors.RuleEngines
 {
-    internal class GodClassMetricRuleEngine: IDetector
+    internal class ClassMetricRuleEngine : IDetector
     {
-        private Dictionary<Guid, Criteria> criterias;
-        public GodClassMetricRuleEngine(Dictionary<Guid, Criteria> criterias)
+        private readonly List<Rule> _rules;
+        public ClassMetricRuleEngine(List<Rule> rules)
         {
-            this.criterias = criterias;
+            _rules = rules;
         }
 
         public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
@@ -34,14 +35,20 @@ namespace SmellDetector.Detectors.RuleEngines
             return partialReport;
         }
 
+        private List<Issue> ApplyRule(CaDETClassDTO c)
+        {
+            return (List<Issue>)_rules.Select(r => r.IsTriggered("", new Dictionary<string, double>()));
+        }
+
         private bool IsBadSmell(MetricsDTO value)
         {
-            bool isBadSmell = false;
-            foreach(Criteria criteria in criterias.Values)
-            {
-                isBadSmell = criteria.meetCriteria();
-            }
-            return isBadSmell;
+            //bool isBadSmell = false;
+            //foreach(Criteria criteria in criterias.Values)
+            //{
+            //    isBadSmell = criteria.MeetCriteria();
+            //}
+            //return isBadSmell;
+            return false;
         }
     }
 }
