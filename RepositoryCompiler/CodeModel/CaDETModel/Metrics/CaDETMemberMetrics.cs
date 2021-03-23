@@ -50,5 +50,10 @@
         /// NOR: Number of return statements
         /// </summary>
         public int NOR { get; set; }
+
+        /// <summary>
+        /// NOC: Number of comparison operators
+        /// </summary>
+        public int NOC { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOTC = CountTryCatchBlocks(member),
                 NOL = CountLoops(member),
                 NOR = CountReturnStatements(member),
+                NOC = CountComparisonOperators(member),
             };
         }
 
@@ -142,6 +143,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountReturnStatements(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<ReturnStatementSyntax>().Count();
+        }
+
+        private int CountComparisonOperators(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<BinaryExpressionSyntax>()
+                .Count(n => n.IsKind(SyntaxKind.EqualsExpression) || 
+                            n.IsKind(SyntaxKind.NotEqualsExpression) ||
+                            n.IsKind(SyntaxKind.LessThanExpression) ||
+                            n.IsKind(SyntaxKind.LessThanOrEqualExpression) ||
+                            n.IsKind(SyntaxKind.GreaterThanExpression) ||
+                            n.IsKind(SyntaxKind.GreaterThanOrEqualExpression));
         }
     }
 }
