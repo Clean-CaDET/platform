@@ -153,6 +153,17 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
+        public void Calculates_max_nested_blocks_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.MNB.ShouldBe(4);
+        }
+
+        [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);

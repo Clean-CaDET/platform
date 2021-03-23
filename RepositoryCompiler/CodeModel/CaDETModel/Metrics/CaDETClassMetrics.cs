@@ -39,5 +39,10 @@
         /// NOPF: Number of protected fields
         /// </summary>
         public int NOPF { get; set; }
+
+        /// <summary>
+        /// MNB: Max nested blocks
+        /// </summary>
+        public int MNB { get; set; }
     }
 }

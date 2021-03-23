@@ -27,6 +27,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOA = CountNumberOfAssignments(parsedClass),
                 NOPM = CountNumberOfPrivateMethods(parsedClass),
                 NOPF = CountNumberOfProtectedFields(parsedClass),
+                MNB = CountMaxNestedBlocks(parsedClass)
             };
         }
         public int GetLinesOfCode(string code)
@@ -159,6 +160,15 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountNumberOfProtectedFields(CaDETClass parsedClass)
         {
             return parsedClass.Fields.Count(field => field.Modifiers.Any(f => f.Value == CaDETModifierValue.Protected));
+        }
+
+        private int CountMaxNestedBlocks(CaDETClass parsedClass)
+        {
+            if (!parsedClass.Members.Any())
+            {
+                return 0;
+            }
+            return parsedClass.Members.Max(method => method.Metrics.MNB);
         }
     }
 }
