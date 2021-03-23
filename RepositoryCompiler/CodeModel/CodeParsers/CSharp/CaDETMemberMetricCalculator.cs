@@ -19,7 +19,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 ELOC = GetEffectiveLinesOfCode(member),
                 NOP = GetNumberOfParameters(method),
                 NOLV = GetNumberOfLocalVariables(member),
-                NOTC = CountTryCatchBlocks(member)
+                NOTC = CountTryCatchBlocks(member),
+                NOL = CountLoops(member)
             };
         }
 
@@ -126,6 +127,15 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountTryCatchBlocks(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<TryStatementSyntax>().Count();
+        }
+
+        private int CountLoops(MemberDeclarationSyntax method)
+        {
+            int count = method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<DoStatementSyntax>().Count();
+            return count;
         }
     }
 }

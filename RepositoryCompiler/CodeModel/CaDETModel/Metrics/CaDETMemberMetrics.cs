@@ -40,5 +40,10 @@
         /// NOTC: Number of try catch blocks
         /// </summary>
         public int NOTC { get; set; }
+
+        /// <summary>
+        /// NOL: Number of loops
+        /// </summary>
+        public int NOL { get; set; }
     }
 }
