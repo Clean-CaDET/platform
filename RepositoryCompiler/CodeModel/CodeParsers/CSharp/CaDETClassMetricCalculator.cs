@@ -20,7 +20,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 WMC = GetWeightedMethodPerClass(parsedClass),
                 LCOM = GetLackOfCohesionOfMethods(parsedClass),
                 TCC = GetTightClassCohesion(parsedClass),
-                ATFD = GetAccessToForeignData(parsedClass)
+                ATFD = GetAccessToForeignData(parsedClass),
+                NOR = CountReturnStatements(parsedClass),
             };
         }
         public int GetLinesOfCode(string code)
@@ -122,6 +123,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
         {
             return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method));
+        }
+
+        private int CountReturnStatements(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Sum(method => method.Metrics.NOR);
         }
     }
 }

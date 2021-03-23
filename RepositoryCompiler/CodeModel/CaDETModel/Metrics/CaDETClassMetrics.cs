@@ -9,5 +9,10 @@
         public int WMC { get; set; }
         public int ATFD { get; set; }
         public double? TCC { get; set; }
+
+        /// <summary>
+        /// NOR: Number of return statements in a class
+        /// </summary>
+        public int NOR { get; set; }
     }
 }

@@ -85,7 +85,18 @@ namespace RepositoryCompilerTests.Unit
             class7.Metrics.TCC.ShouldBe(0.5);
             class8.Metrics.TCC.ShouldBe(0.5);
         }
-        
+
+        [Fact]
+        public void Calculates_number_of_return_statements_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOR.ShouldBe(3);
+        }
+
         [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
