@@ -32,6 +32,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOMO = CountNumberOfMathOperations(member),
                 NOPE = CountNumberOfParenthesizedExpressions(member),
                 NOLE = CountNumberOfLambdaExpressions(member),
+                MNB = CountMaxNestedBlocks(member),
             };
         }
 
@@ -240,6 +241,32 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountNumberOfLambdaExpressions(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LambdaExpressionSyntax>().Count();
+        }
+
+        private int CountMaxNestedBlocks(MemberDeclarationSyntax method)
+        {
+            try
+            {
+                BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
+                var blocks = baseMethod.Body.DescendantNodes().OfType<BlockSyntax>().ToList();
+
+                List<int> blocksAncestors = new List<int>();
+                foreach (var block in blocks)
+                {
+                    blocksAncestors.Add(block.Ancestors().Count(a => a.IsKind(SyntaxKind.Block)));
+                }
+
+                if (!blocksAncestors.Any())
+                {
+                    return 0;
+                }
+                return blocksAncestors.Max();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+            
         }
     }
 }

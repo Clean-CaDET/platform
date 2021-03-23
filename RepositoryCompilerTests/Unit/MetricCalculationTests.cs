@@ -291,5 +291,19 @@ namespace RepositoryCompilerTests.Unit
             firstClass.FindMember("CSharpCodeParserInit").Metrics.NOLE.ShouldBe(0);
             firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOLE.ShouldBe(2);
         }
+
+        [Fact]
+        public void Calculates_max_nested_blocks()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.MNB.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.MNB.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.MNB.ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.MNB.ShouldBe(4);
+        }
     }
 }

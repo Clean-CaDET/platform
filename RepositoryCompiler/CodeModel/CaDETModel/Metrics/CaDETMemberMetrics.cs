@@ -95,5 +95,10 @@
         /// NOLE: Number of lambda expressions
         /// </summary>
         public int NOLE { get; set; }
+
+        /// <summary>
+        /// MNB: Max nested blocks
+        /// </summary>
+        public int MNB { get; set; }
     }
 }
