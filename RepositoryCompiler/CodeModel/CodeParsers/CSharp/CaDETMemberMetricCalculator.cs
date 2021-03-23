@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -23,6 +24,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOL = CountLoops(member),
                 NOR = CountReturnStatements(member),
                 NOC = CountComparisonOperators(member),
+                NOMI = CountMethodInvocations(member),
+                RFC = CountUniqueMethodInvocations(member),
             };
         }
 
@@ -154,6 +157,25 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                             n.IsKind(SyntaxKind.LessThanOrEqualExpression) ||
                             n.IsKind(SyntaxKind.GreaterThanExpression) ||
                             n.IsKind(SyntaxKind.GreaterThanOrEqualExpression));
+        }
+
+        private int CountMethodInvocations(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<InvocationExpressionSyntax>().Count();
+        }
+
+        private int CountUniqueMethodInvocations(MemberDeclarationSyntax method)
+        {
+            List<string> uniqueInvokedMethods = new List<string>();
+            var allInvokedMethods = method.DescendantNodes().OfType<InvocationExpressionSyntax>();
+            foreach (var invokedMethod in allInvokedMethods)
+            {
+                if (!uniqueInvokedMethods.Contains(invokedMethod.Expression.ToString()))
+                {
+                    uniqueInvokedMethods.Add(invokedMethod.Expression.ToString());
+                }
+            }
+            return uniqueInvokedMethods.Count();
         }
     }
 }
