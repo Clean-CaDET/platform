@@ -19,5 +19,10 @@
         /// NOL: Number of loops in a class
         /// </summary>
         public int NOL { get; set; }
+
+        /// <summary>
+        /// NOC: Number of comparison operators
+        /// </summary>
+        public int NOC { get; set; }
     }
 }

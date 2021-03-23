@@ -23,6 +23,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 ATFD = GetAccessToForeignData(parsedClass),
                 NOR = CountReturnStatements(parsedClass),
                 NOL = CountLoops(parsedClass),
+                NOC = CountComparisonOperators(parsedClass),
             };
         }
         public int GetLinesOfCode(string code)
@@ -134,6 +135,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountLoops(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOL);
+        }
+
+        private int CountComparisonOperators(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Sum(method => method.Metrics.NOC);
         }
     }
 }

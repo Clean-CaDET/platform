@@ -109,6 +109,17 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
+        public void Calculates_number_of_comparisons_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOC.ShouldBe(7);
+        }
+
+        [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
