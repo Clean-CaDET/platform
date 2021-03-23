@@ -80,5 +80,10 @@
         /// NOSL: Number of string literals
         /// </summary>
         public int NOSL { get; set; }
+
+        /// <summary>
+        /// NOMO: Number of math operations
+        /// </summary>
+        public int NOMO { get; set; }
     }
 }

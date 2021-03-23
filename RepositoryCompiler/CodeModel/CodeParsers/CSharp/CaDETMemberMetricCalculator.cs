@@ -29,6 +29,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOA = CountNumberOfAssignments(member),
                 NONL = CountNumberOfNumericLiterals(member),
                 NOSL = CountNumberOfStringLiterals(member),
+                NOMO = CountNumberOfMathOperations(member),
             };
         }
 
@@ -194,6 +195,38 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountNumberOfStringLiterals(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LiteralExpressionSyntax>().Count(n => n.IsKind(SyntaxKind.StringLiteralExpression));
+        }
+
+        private int CountNumberOfMathOperations(MemberDeclarationSyntax method)
+        {
+            int count = CountBinaryExpressions(method);
+            count += CountUnaryExpressions(method);
+            return count;
+        }
+
+        private int CountBinaryExpressions(MemberDeclarationSyntax method)
+        {
+            return method.DescendantNodes().OfType<BinaryExpressionSyntax>()
+                .Count(n => n.IsKind(SyntaxKind.AddExpression) ||
+                            n.IsKind(SyntaxKind.SubtractExpression) ||
+                            n.IsKind(SyntaxKind.MultiplyExpression) ||
+                            n.IsKind(SyntaxKind.DivideExpression) ||
+                            n.IsKind(SyntaxKind.ModuloExpression) ||
+                            n.IsKind(SyntaxKind.LeftShiftExpression) ||
+                            n.IsKind(SyntaxKind.RightShiftExpression));
+        }
+
+        private int CountUnaryExpressions(MemberDeclarationSyntax method)
+        {
+            int count = method.DescendantNodes().OfType<PrefixUnaryExpressionSyntax>()
+                .Count(n => n.IsKind(SyntaxKind.PreIncrementExpression) ||
+                            n.IsKind(SyntaxKind.PreDecrementExpression) ||
+                            n.IsKind(SyntaxKind.UnaryPlusExpression) ||
+                            n.IsKind(SyntaxKind.UnaryMinusExpression));
+            count += method.DescendantNodes().OfType<PostfixUnaryExpressionSyntax>()
+                .Count(n => n.IsKind(SyntaxKind.PostIncrementExpression) ||
+                            n.IsKind(SyntaxKind.PostDecrementExpression));
+            return count;
         }
     }
 }

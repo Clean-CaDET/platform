@@ -254,5 +254,18 @@ namespace RepositoryCompilerTests.Unit
             firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOSL.ShouldBe(0);
             firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOSL.ShouldBe(2);
         }
+
+        [Fact]
+        public void Calculates_number_of_math_operations()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOMO.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOMO.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOMO.ShouldBe(6);
+        }
     }
 }
