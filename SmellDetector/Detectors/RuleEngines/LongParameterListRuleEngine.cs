@@ -1,4 +1,5 @@
-﻿using SmellDetector.Controllers;
+﻿using System.Collections.Generic;
+using SmellDetector.Controllers;
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
 
@@ -6,11 +7,11 @@ namespace SmellDetector.Detectors.RuleEngines
 {
     public class LongParameterListRuleEngine : IDetector
     {
-        public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
+        public PartialSmellDetectionReport FindIssues(CodeSnippetCollectionDTO codeSnippetCollectionDTO)
         {
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
-            foreach (var identifierAnalysis in caDetClassDto.CodeItemMetrics)
+            foreach (var identifierAnalysis in codeSnippetCollectionDTO.CodeItemMetrics)
             {
                 if (IsBadSmell(identifierAnalysis.Value))
                 {
@@ -22,6 +23,11 @@ namespace SmellDetector.Detectors.RuleEngines
             }
 
             return partialReport;
+        }
+
+        public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDto)
+        {
+            throw new System.NotImplementedException();
         }
 
         public bool IsBadSmell(MetricsDTO metrics)

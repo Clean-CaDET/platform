@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace SmellDetector.Detectors.RuleEngines
 {
     public class AndCriteria : Criteria

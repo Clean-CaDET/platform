@@ -1,4 +1,5 @@
-﻿using SmellDetector.Controllers;
+﻿using System.Collections.Generic;
+using SmellDetector.Controllers;
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
 
@@ -7,7 +8,7 @@ namespace SmellDetector.Detectors.RuleEngines
     public class LongMethodRuleEngine : IDetector
     {
 
-        public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
+        public PartialSmellDetectionReport FindIssues(CodeSnippetCollectionDTO caDetClassDto)
         {
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
@@ -25,6 +26,11 @@ namespace SmellDetector.Detectors.RuleEngines
             }
 
             return partialReport;
+        }
+
+        public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDto)
+        {
+            throw new System.NotImplementedException();
         }
 
         private bool IsBadSmell(MetricsDTO metrics)

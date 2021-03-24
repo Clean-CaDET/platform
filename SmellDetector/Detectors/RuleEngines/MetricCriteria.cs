@@ -20,6 +20,11 @@ namespace SmellDetector.Detectors.RuleEngines
         //This method should calculate the rule based on metric, operator and threshold and return true if the rule applies, otherwise false.
         public bool MeetCriteria(Dictionary<String, double> metrics)
         {
+            if (!metrics.ContainsKey(_metric))
+            {
+                return false;
+            }
+
             switch (_operation)
             {
                 case OperationEnum.EQUALS:

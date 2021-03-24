@@ -10,45 +10,58 @@ namespace SmellDetector.Detectors.RuleEngines
     internal class ClassMetricRuleEngine : IDetector
     {
         private readonly List<Rule> _rules;
-        public ClassMetricRuleEngine(List<Rule> rules)
+        public ClassMetricRuleEngine()
         {
-            _rules = rules;
+            Rule rule1 = new Rule("10.1109/WCRE.2005.15",
+                                  new AndCriteria(
+                                            new AndCriteria(
+                                                new MetricCriteria("ATFD", OperationEnum.GREATER_THAN, 2),
+                                                new MetricCriteria("WMC", OperationEnum.GREATER_THAN, 47)),
+                                            new MetricCriteria("TCC", OperationEnum.LESS_THAN, 0.33)),
+                                  SmellType.GOD_CLASS);
+            Rule rule2 = new Rule("10.1109/SCAM.2013.6648192",
+                                  new OrCriteria(
+                                      new MetricCriteria("LOC", OperationEnum.GREATER_THAN, 750),
+                                      new MetricCriteria("[NOM] + [NOF]", OperationEnum.GREATER_THAN, 20)
+                                      ),
+                                  SmellType.GOD_CLASS);
+            Rule rule3 = new Rule("10.1109/MSR.2007.21",
+                                  new OrCriteria(
+                                            new MetricCriteria("NMD", OperationEnum.GREATER_THAN, 15),
+                                            new MetricCriteria("NAD", OperationEnum.GREATER_THAN, 15)),
+                                  SmellType.GOD_CLASS);
+            _rules = new List<Rule>();
+            _rules.Add(rule1);
+            _rules.Add(rule2);
+            _rules.Add(rule3);
+        }
+
+        public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDtoList)
+        {
+            PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
+
+            foreach(CaDETClassDTO caDETClassDTO in caDetClassDtoList)
+            {
+                List<Issue> issues = ApplyRule(caDETClassDTO);
+                foreach (Issue issue in issues)
+                {
+                    if (issue != null)
+                    {
+                        partialReport.AddIssue(issue.CodeItemId, issue);
+                    }
+                }
+            }
+            return partialReport;
         }
 
         public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
         {
-            PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
-
-            foreach (var identifierAnalysis in caDetClassDto.CodeItemMetrics)
-            {
-
-                if (IsBadSmell(identifierAnalysis.Value))
-                {
-                    Issue newIssue = new Issue();
-                    newIssue.IssueType = SmellType.GOD_CLASS;
-                    newIssue.CodeItemId = identifierAnalysis.Key;
-                    partialReport.AddIssue(identifierAnalysis.Key, newIssue);
-                }
-
-            }
-
-            return partialReport;
+            throw new NotImplementedException();
         }
 
         private List<Issue> ApplyRule(CaDETClassDTO c)
         {
-            return (List<Issue>)_rules.Select(r => r.IsTriggered("", new Dictionary<string, double>()));
-        }
-
-        private bool IsBadSmell(MetricsDTO value)
-        {
-            //bool isBadSmell = false;
-            //foreach(Criteria criteria in criterias.Values)
-            //{
-            //    isBadSmell = criteria.MeetCriteria();
-            //}
-            //return isBadSmell;
-            return false;
+            return _rules.Select(r => r.IsTriggered(c.FullName, c.CodeItemMetrics)).ToList();
         }
     }
 }

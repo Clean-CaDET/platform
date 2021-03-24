@@ -7,10 +7,12 @@ namespace SmellDetector.Detectors.RuleEngines
 {
     public class Rule
     {
+        private readonly String _DOI;
         private readonly Criteria _criteria;
         private readonly SmellType _smellType;
-        public Rule(Criteria criteria, SmellType smellType)
+        public Rule(String DOI, Criteria criteria, SmellType smellType)
         {
+            _DOI = DOI;
             _criteria = criteria;
             _smellType = smellType;
         }

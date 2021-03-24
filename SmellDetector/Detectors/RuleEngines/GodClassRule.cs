@@ -2,6 +2,7 @@
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
 using System;
+using System.Collections.Generic;
 
 namespace SmellDetector.Detectors
 {
@@ -21,11 +22,11 @@ namespace SmellDetector.Detectors
             _tccThreshold = tccThreshold;
         }
 
-        public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
+        public PartialSmellDetectionReport FindIssues(CodeSnippetCollectionDTO codeSnippetCollectionDTO)
         {
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
-            foreach (var identifierAnalysis in caDetClassDto.CodeItemMetrics)
+            foreach (var identifierAnalysis in codeSnippetCollectionDTO.CodeItemMetrics)
             {
 
                 if (IsBadSmell(identifierAnalysis.Value))
@@ -39,6 +40,11 @@ namespace SmellDetector.Detectors
             }
 
             return partialReport;
+        }
+
+        public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDto)
+        {
+            throw new NotImplementedException();
         }
 
         private bool IsBadSmell(MetricsDTO metrics)
