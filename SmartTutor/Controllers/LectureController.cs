@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Buffers;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.Controllers.DTOs.Lecture;
@@ -28,11 +29,11 @@ namespace SmartTutor.Controllers
         }
 
         [HttpGet("get/{id}")]
-        public ActionResult<LectureDTO> GetLecture(int id)
+        public ActionResult<List<KnowledgeNodeDTO>> GetLectureNodes(int id)
         {
-            var lecture = _contentService.GetFullLecture(id);
-            if (lecture == null) NotFound();
-            return Ok(_mapper.Map<LectureDTO>(lecture));
+            var nodes = _contentService.GetKnowledgeNodes(id, null);
+            if (nodes == null) NotFound();
+            return Ok(_mapper.Map<List<KnowledgeNodeDTO>>(nodes));
         }
     }
 }

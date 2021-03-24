@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.Repository;
+using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.Controllers.Mappers;
 using SmartTutor.Recommenders;
 
@@ -29,13 +29,13 @@ namespace SmartTutor
                 options.JsonSerializerOptions.Converters.Add(new LearningObjectJsonConverter());
             });
 
-            services.AddDbContext<ContentModelContext>(opt =>
+            services.AddDbContext<LectureContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
 
             services.AddScoped<IContentService, ContentService>();
 
-            //services.AddScoped<IContentRepository, ContentDatabaseRepository>();
-            services.AddScoped<IContentRepository, ContentInMemoryRepository>();
+            //services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
+            services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 

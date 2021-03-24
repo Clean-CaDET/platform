@@ -1,17 +1,17 @@
 ﻿using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
 using SmartTutor.ContentModel.LearningObjects;
-using SmartTutor.ContentModel.Repository;
+using SmartTutor.ContentModel.LectureModel.Repository;
 
 namespace SmartTutor.Recommenders
 {
     public class KnowledgeBasedRecommender : IRecommender
     {
-        private readonly IContentRepository _contentRepository;
+        private readonly ILectureRepository _lectureRepository;
 
-        public KnowledgeBasedRecommender(IContentRepository contentRepository)
+        public KnowledgeBasedRecommender(ILectureRepository lectureRepository)
         {
-            _contentRepository = contentRepository;
+            _lectureRepository = lectureRepository;
         }
 
         public List<LearningObject> FindEducationalContent(List<SmellType> issues)

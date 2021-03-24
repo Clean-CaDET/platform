@@ -11,8 +11,10 @@ namespace SmartTutor.ContentModel.LectureModel
         public List<KnowledgeNode> PrerequisiteNodes { get; set; }
         public List<LearningObjectSummary> LearningObjectSummaries { get; set; }
 
-        //TODO: Remove when dynamic KN is introduced.
-        public List<LearningObject> LearningObjects { get; set; }
+        public bool HasNoPrerequisites()
+        {
+            return PrerequisiteNodes == null || PrerequisiteNodes.Count == 0;
+        }
     }
 
     public enum KnowledgeNodeType

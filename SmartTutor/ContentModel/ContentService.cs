@@ -1,29 +1,51 @@
-using System.Collections.Generic;
+using System;
 using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.Repository;
+using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.Recommenders;
+using System.Collections.Generic;
+using System.Linq;
+using SmartTutor.ContentModel.TraineeModel;
 
 namespace SmartTutor.ContentModel
 {
     public class ContentService : IContentService
     {
         private readonly IRecommender _recommender;
-        private readonly IContentRepository _contentRepository;
+        private readonly ILectureRepository _lectureRepository;
 
-        public ContentService(IRecommender recommender, IContentRepository repository)
+        public ContentService(IRecommender recommender, ILectureRepository repository)
         {
             _recommender = recommender;
-            _contentRepository = repository;
+            _lectureRepository = repository;
         }
 
         public List<Lecture> GetLectures()
         {
-            return _contentRepository.GetLectures();
+            return _lectureRepository.GetLectures();
         }
 
-        public Lecture GetFullLecture(int id)
+        public List<NodeProgress> GetKnowledgeNodes(int lectureId, int? traineeId)
         {
-            return _contentRepository.GetLecture(id);
+            var nodes = _lectureRepository.GetKnowledgeNodes(lectureId);
+            if (traineeId == null) return ShowSampleNodes(nodes);
+
+            return null;
+        }
+
+        private static List<NodeProgress> ShowSampleNodes(List<KnowledgeNode> nodes)
+        {
+            var sampleNodes = nodes.Where(n => n.HasNoPrerequisites());
+            return sampleNodes.Select(n => new NodeProgress { Node = n, Status = NodeStatus.Unlocked }).ToList();
+        }
+
+        public NodeProgress GetNodeProgress(int traineeId, int knowledgeNodeId)
+        {
+            //TODO: Load KN
+            //TODO: Load Trainee prefs
+            //TODO: Get recommender to build NodeProgress with LOs for Trainee
+            //TODO: Save started NodeProgress to repo
+            //TODO: Return NodeProgress
+            throw new NotImplementedException();
         }
     }
 }

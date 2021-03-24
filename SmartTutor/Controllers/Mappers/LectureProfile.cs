@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LectureModel;
+using SmartTutor.ContentModel.TraineeModel;
 using SmartTutor.Controllers.DTOs.Lecture;
 
 namespace SmartTutor.Controllers.Mappers
@@ -10,7 +11,9 @@ namespace SmartTutor.Controllers.Mappers
         public LectureProfile()
         {
             CreateMap<Lecture, LectureDTO>();
-            CreateMap<KnowledgeNode, KnowledgeNodeDTO>();
+            CreateMap<NodeProgress, KnowledgeNodeDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Node.Id))
+                .ForMember(dest => dest.LearningObjective, opt => opt.MapFrom(src => src.Node.LearningObjective));
 
             CreateMap<LearningObject, LearningObjectDTO>().IncludeAllDerived();
             CreateMap<Text, TextDTO>();
