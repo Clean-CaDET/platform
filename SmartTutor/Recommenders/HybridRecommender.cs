@@ -1,6 +1,6 @@
-﻿using SmartTutor.ContentModel.LectureModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SmartTutor.ContentModel.LearningObjects;
 
 namespace SmartTutor.Recommenders
 {

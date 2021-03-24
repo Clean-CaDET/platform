@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.LectureModel.LearningObjects;
 using SmartTutor.Controllers.DTOs.Lecture;
 
 namespace SmartTutor.Controllers.Mappers
@@ -13,9 +13,9 @@ namespace SmartTutor.Controllers.Mappers
             CreateMap<KnowledgeNode, KnowledgeNodeDTO>();
 
             CreateMap<LearningObject, LearningObjectDTO>().IncludeAllDerived();
-            CreateMap<LearningText, LearningTextDTO>();
-            CreateMap<LearningImage, LearningImageDTO>();
-            CreateMap<LearningVideo, LearningVideoDTO>();
+            CreateMap<Text, TextDTO>();
+            CreateMap<Image, ImageDTO>();
+            CreateMap<Video, VideoDTO>();
         }
     }
 }

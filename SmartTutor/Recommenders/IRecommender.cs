@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SmartTutor.ContentModel.LectureModel;
+using SmartTutor.ContentModel.LearningObjects;
 
 namespace SmartTutor.Recommenders
 {

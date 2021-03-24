@@ -1,6 +1,6 @@
-﻿namespace SmartTutor.Controllers.DTOs.Lecture
+﻿namespace SmartTutor.ContentModel.LearningObjects
 {
-    public class LearningObjectDTO
+    public class LearningObject
     {
         public int Id { get; set; }
         public int LearningObjectSummaryId { get; set; }

@@ -22,24 +22,25 @@ namespace SmartTutor.Controllers.Mappers
         {
             writer.WriteStartObject();
 
-            if (learningObject is LearningTextDTO text)
+            if (learningObject is TextDTO text)
             {
                 writer.WriteString("TypeDiscriminator", "text");
-                writer.WriteString("Text", text.Text);
+                writer.WriteString("Text", text.Content);
             }
-            else if (learningObject is LearningImageDTO image)
+            else if (learningObject is ImageDTO image)
             {
                 writer.WriteString("TypeDiscriminator", "image");
                 writer.WriteString("Url", image.Url);
                 writer.WriteString("Caption", image.Caption);
             }
-            else if (learningObject is LearningVideoDTO video)
+            else if (learningObject is VideoDTO video)
             {
                 writer.WriteString("TypeDiscriminator", "video");
                 writer.WriteString("Url", video.Url);
             }
 
             writer.WriteNumber("Id", learningObject.Id);
+            writer.WriteNumber("LearningObjectSummaryId", learningObject.LearningObjectSummaryId);
 
             writer.WriteEndObject();
         }
