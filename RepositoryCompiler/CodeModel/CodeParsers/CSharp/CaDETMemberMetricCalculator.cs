@@ -247,12 +247,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int CountMaxNestedBlocks(MemberDeclarationSyntax method)
         {
-            if (!method.Kind().Equals(SyntaxKind.MethodDeclaration))
-            {
-                return 0;
-            }
-            BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
-            var blocks = baseMethod.Body.DescendantNodes().OfType<BlockSyntax>().ToList();
+            var blocks = method.DescendantNodes().OfType<BlockSyntax>().ToList();
 
             List<int> blocksAncestors = new List<int>();
             foreach (var block in blocks)
@@ -260,19 +255,14 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 blocksAncestors.Add(block.Ancestors().Count(a => a.IsKind(SyntaxKind.Block)));
             }
 
-            if (!blocksAncestors.Any())
-            {
-                return 0;
-            }
+            if (!blocksAncestors.Any()) return 0;
             return blocksAncestors.Max();
         }
 
         private int CountNumberOfUniqueWords(MemberDeclarationSyntax method)
         {
-            if (!method.Kind().Equals(SyntaxKind.MethodDeclaration))
-            {
-                return 0;
-            }
+            if (!method.Kind().Equals(SyntaxKind.MethodDeclaration)) return 0;
+            
             BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
             string methodBody = baseMethod.Body.ToString();
             List<string> lines = GetLinesWithoutComments(methodBody);
