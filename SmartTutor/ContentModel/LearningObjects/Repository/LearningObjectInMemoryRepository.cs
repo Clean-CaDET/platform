@@ -153,9 +153,9 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             return summaries.Select(id => _learningObjectCache[id].First()).ToList();
         }
 
-        public List<LearningObject> GetLearningObjectsForChallenge(int challengeId)
+        public LearningObject GetLearningObjectForChallenge(int challengeId)
         {
-            return _learningObjectCache.SelectMany(LOs => LOs.Value.Where(LO => LO.Id == challengeId)).ToList();
+            return _learningObjectCache.SelectMany(LOs => LOs.Value.Where(LO => LO.Id == challengeId)).First();
         }
     }
 }
