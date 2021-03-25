@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using RepositoryCompiler.Controllers;
+using SmartTutor.ContentModel;
 using SmartTutor.Controllers.DTOs.Challenge;
-using System.Collections.Generic;
 
 namespace SmartTutor.Controllers
 {
@@ -10,14 +8,18 @@ namespace SmartTutor.Controllers
     [ApiController]
     public class ChallengeController : ControllerBase
     {
+        private readonly IChallengeService _challengeService;
+
+        public ChallengeController(IChallengeService challengeService)
+        {
+            _challengeService = challengeService;
+        }
+
         [HttpPost("check")]
         public ChallengeCheckResponseDTO CheckChallengeCompletion([FromBody] ChallengeCheckRequestDTO checkRequestDto)
         {
-            var text = checkRequestDto.ChallengeId == 1 ? "Fail." : "Success.";
-
-            // TODO: This will be moved to challenge service
-            List<CaDETClass> caDETClasses = new CodeRepositoryService().BuildClassesModel(checkRequestDto.SourceCode);
-
+            bool completed = _challengeService.CheckSubmittedChallengeCompletion(checkRequestDto.SourceCode, checkRequestDto.ChallengeId);
+            var text = completed ? "Success." : "Fail.";
             return new ChallengeCheckResponseDTO(text);
         }
     }

@@ -1,9 +1,7 @@
-﻿using SmartTutor.ContentModel.LearningObjects;
-
-namespace SmartTutor.ContentModel
+﻿namespace SmartTutor.ContentModel
 {
     public interface IChallengeService
     {
-        Challenge GetChallenge(int challengeId);
+        bool CheckSubmittedChallengeCompletion(string[] sourceCode, int challengeId);
     }
 }

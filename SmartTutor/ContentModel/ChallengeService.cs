@@ -1,5 +1,8 @@
-﻿using SmartTutor.ContentModel.LearningObjects;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.Controllers;
+using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
+using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel
 {
@@ -12,9 +15,26 @@ namespace SmartTutor.ContentModel
             _learningObjectRepository = learningObjectRepository;
         }
 
-        public Challenge GetChallenge(int challengeId)
+        public bool CheckSubmittedChallengeCompletion(string[] sourceCode, int challengeId)
+        {
+            List<CaDETClass> endState = GetChallenge(challengeId).EndState;
+            List<CaDETClass> submittetState = GetClassesFromSubmittedChallenge(sourceCode);
+
+            // TODO: Implement rang for correct state, current is the simplest stage
+            if (endState != submittetState)
+                return false;
+
+            return true;
+        }
+
+        private Challenge GetChallenge(int challengeId)
         {
             return _learningObjectRepository.GetLearningObjectForChallenge(challengeId) as Challenge;
+        }
+
+        private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)
+        {
+            return new CodeRepositoryService().BuildClassesModel(sourceCode);
         }
     }
 }
