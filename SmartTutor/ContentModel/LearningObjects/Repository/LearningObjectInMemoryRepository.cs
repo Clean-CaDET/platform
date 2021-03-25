@@ -1,4 +1,5 @@
-﻿using RepositoryCompiler.Controllers;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -135,11 +136,23 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                         }
                     }
                 }"
-                };
+            };
+            List<CaDETClass> endStateClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
+
+            Dictionary<string, double> metricsRange = new ChallengeService().GetMetricNamesFromClasses(endStateClasses);
+            metricsRange["ELOC 2 1"] = 1;
+            metricsRange["ELOC 2 2"] = 3;
 
             _learningObjectCache.Add(337, new List<LearningObject>
             {
-                new Challenge { Id = 3371, LearningObjectSummaryId = 337, Url = "https://github.com/Ana00000/Challenge-inspiration.git", EndState = new CodeRepositoryService().BuildClassesModel(sourceCode) }
+                new Challenge
+                {
+                    Id = 3371,
+                    LearningObjectSummaryId = 337,
+                    Url = "https://github.com/Ana00000/Challenge-inspiration.git",
+                    EndState = endStateClasses,
+                    MetricsRange = metricsRange
+                }
             });
         }
 

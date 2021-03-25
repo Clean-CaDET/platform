@@ -33,6 +33,8 @@ namespace SmartTutorTests.Integration
             challenge.EndState[1].Metrics.NMD.ShouldBe(2);
             challenge.EndState[1].Members[0].Metrics.ELOC.ShouldBe(4);
             challenge.EndState[1].Members[1].Metrics.ELOC.ShouldBe(3);
+            challenge.MetricsRange["ELOC 2 1"].ShouldBe(1);
+            challenge.MetricsRange["ELOC 2 2"].ShouldBe(3);
         }
     }
 }

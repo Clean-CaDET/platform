@@ -15,6 +15,34 @@ namespace SmartTutor.ContentModel
             _learningObjectRepository = learningObjectRepository;
         }
 
+        public ChallengeService() { }
+
+        internal Dictionary<string, double> GetMetricNamesFromClasses(List<CaDETClass> caDETClasses)
+        {
+            Dictionary<string, double> metrics = new Dictionary<string, double>();
+            int classCounter = 0;
+            foreach (CaDETClass caDETClass in caDETClasses)
+            {
+                metrics.Add("LOC " + ++classCounter, 0);
+                metrics.Add("LCOM " + classCounter, 0);
+                metrics.Add("NMD " + classCounter, 0);
+                metrics.Add("NAD " + classCounter, 0);
+                metrics.Add("WMC " + classCounter, 0);
+                metrics.Add("ATFD " + classCounter, 0);
+                metrics.Add("TCC " + classCounter, 0);
+
+                int memberCounter = 0;
+                foreach (CaDETMember caDETMember in caDETClass.Members)
+                {
+                    metrics.Add("CYCLO " + ++memberCounter + " " + classCounter, 0);
+                    metrics.Add("LOC " + memberCounter + " " + classCounter, 0);
+                    metrics.Add("ELOC " + memberCounter + " " + classCounter, 0);
+                    metrics.Add("NOP " + memberCounter + " " + classCounter, 0);
+                    metrics.Add("NOLV " + memberCounter + " " + classCounter, 0);
+                }
+            }
+            return metrics;
+        }
         public bool CheckSubmittedChallengeCompletion(string[] sourceCode, int challengeId)
         {
             List<CaDETClass> endState = GetChallenge(challengeId).EndState;
