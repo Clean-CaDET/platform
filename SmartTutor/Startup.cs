@@ -33,6 +33,9 @@ namespace SmartTutor
             services.AddDbContext<LectureContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
 
+            services.AddDbContext<LearningObjectContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
+
             services.AddScoped<IContentService, ContentService>();
 
             //services.AddScoped<ILectureRepository, LectureDatabaseRepository>();

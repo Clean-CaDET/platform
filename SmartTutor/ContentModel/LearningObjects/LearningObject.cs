@@ -1,8 +1,10 @@
-﻿namespace SmartTutor.ContentModel.LearningObjects
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartTutor.ContentModel.LearningObjects
 {
     public class LearningObject
     {
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
         public int LearningObjectSummaryId { get; set; }
     }
 }
