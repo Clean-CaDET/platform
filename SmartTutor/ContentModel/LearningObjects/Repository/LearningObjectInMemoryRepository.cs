@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RepositoryCompiler.Controllers;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
@@ -94,6 +95,54 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 {
                     Id = 3361, LearningObjectSummaryId = 336, Url = "https://www.youtube.com/watch?v=qE-Gmu_YuQE"
                 }
+            });
+
+            AddChallenge();
+
+        }
+
+        private void AddChallenge()
+        {
+            string[] sourceCode = new string[] {
+                @"using System;
+                namespace ExamplesApp.Method
+                {
+                   class Payment
+                   {
+    	               public int Cost { get; set; }
+    	               public bool IsExtra { get; set; }
+                   }
+                }",
+                @"using System;
+                namespace ExamplesApp.Method
+                {
+                    class PaymentService{
+	                    /// <summary>
+                        /// 1) Extract createPayment method.
+                        /// </summary>
+    	                private void CreatePayment(int price, int compensation) {
+		                    Payment payment = new Payment();
+		                    payment.Cost = price + compensation;
+		                    if(payment.Cost > 50000)
+		                        payment.IsExtra = true;
+		                    else
+		                        payment.IsExtra = false;
+
+      		                    PrintPaymentDetails();
+    	                }
+
+	                    private void PrintPaymentDetails() {
+      		                System.out.println(""Hello."");
+                            System.out.println(""Your payment is created."");
+                            System.out.println(""Cost is: "" + payment.Cost);
+                        }
+                    }
+                }"
+                };
+
+            _learningObjectCache.Add(337, new List<LearningObject>
+            {
+                new Challenge { Id = 3371, LearningObjectSummaryId = 337, Url = "https://github.com/Ana00000/Challenge-inspiration.git", EndState = new CodeRepositoryService().BuildClassesModel(sourceCode) }
             });
         }
 
