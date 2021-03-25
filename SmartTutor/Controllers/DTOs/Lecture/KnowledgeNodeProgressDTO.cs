@@ -3,7 +3,7 @@ using SmartTutor.ContentModel.TraineeModel;
 
 namespace SmartTutor.Controllers.DTOs.Lecture
 {
-    public class KnowledgeNodeDTO
+    public class KnowledgeNodeProgressDTO
     {
         public int Id { get; set; }
         public string LearningObjective { get; set; }

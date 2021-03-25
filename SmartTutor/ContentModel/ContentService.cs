@@ -38,12 +38,13 @@ namespace SmartTutor.ContentModel
             return sampleNodes.Select(n => new NodeProgress { Node = n, Status = NodeStatus.Unlocked }).ToList();
         }
 
-        public NodeProgress GetNodeProgress(int traineeId, int knowledgeNodeId)
+        public NodeProgress GetNodeContent(int knowledgeNodeId, int? traineeId)
         {
             //TODO: Load KN
             //TODO: Load Trainee prefs
             //TODO: Get recommender to build NodeProgress with LOs for Trainee
             //TODO: Save started NodeProgress to repo
+            //TODO: Create learning session
             //TODO: Return NodeProgress
             throw new NotImplementedException();
         }

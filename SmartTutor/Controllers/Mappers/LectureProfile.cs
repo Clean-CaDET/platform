@@ -11,7 +11,7 @@ namespace SmartTutor.Controllers.Mappers
         public LectureProfile()
         {
             CreateMap<Lecture, LectureDTO>();
-            CreateMap<NodeProgress, KnowledgeNodeDTO>()
+            CreateMap<NodeProgress, KnowledgeNodeProgressDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Node.Id))
                 .ForMember(dest => dest.LearningObjective, opt => opt.MapFrom(src => src.Node.LearningObjective));
 

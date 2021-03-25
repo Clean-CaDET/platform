@@ -28,12 +28,21 @@ namespace SmartTutor.Controllers
             return lectures.Select(l => _mapper.Map<LectureDTO>(l)).ToList();
         }
 
-        [HttpGet("get/{id}")]
-        public ActionResult<List<KnowledgeNodeDTO>> GetLectureNodes(int id)
+        [HttpGet("nodes/{lectureId}")]
+        public ActionResult<List<KnowledgeNodeProgressDTO>> GetLectureNodes(int lectureId)
         {
-            var nodes = _contentService.GetKnowledgeNodes(id, null);
+            //TODO: Extract and send trainee ID.
+            var nodes = _contentService.GetKnowledgeNodes(lectureId, null);
             if (nodes == null) NotFound();
-            return Ok(_mapper.Map<List<KnowledgeNodeDTO>>(nodes));
+            return Ok(_mapper.Map<List<KnowledgeNodeProgressDTO>>(nodes));
+        }
+
+        [HttpGet("content/{nodeId}")]
+        public ActionResult<KnowledgeNodeProgressDTO> GetNodeContent(int nodeId)
+        {
+            var nodes = _contentService.GetNodeContent(nodeId, null);
+            if (nodes == null) NotFound();
+            return Ok(_mapper.Map<KnowledgeNodeProgressDTO>(nodes));
         }
     }
 }

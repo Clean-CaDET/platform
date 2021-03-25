@@ -8,5 +8,6 @@ namespace SmartTutor.ContentModel
     {
         List<Lecture> GetLectures();
         List<NodeProgress> GetKnowledgeNodes(int lectureId, int? traineeId);
+        NodeProgress GetNodeContent(int nodeId, int? traineeId);
     }
 }
