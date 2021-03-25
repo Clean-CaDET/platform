@@ -5,7 +5,7 @@ using SmartTutor.Recommenders;
 using System.Collections.Generic;
 using System.Linq;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.TraineeModel;
+using SmartTutor.ContentModel.ProgressModel;
 
 namespace SmartTutor.ContentModel
 {

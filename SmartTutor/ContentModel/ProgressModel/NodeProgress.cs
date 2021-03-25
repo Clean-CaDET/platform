@@ -3,7 +3,7 @@ using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LectureModel;
 
-namespace SmartTutor.ContentModel.TraineeModel
+namespace SmartTutor.ContentModel.ProgressModel
 {
     public class NodeProgress
     {

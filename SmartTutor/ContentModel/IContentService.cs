@@ -1,6 +1,6 @@
 ﻿using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
-using SmartTutor.ContentModel.TraineeModel;
+using SmartTutor.ContentModel.ProgressModel;
 
 namespace SmartTutor.ContentModel
 {

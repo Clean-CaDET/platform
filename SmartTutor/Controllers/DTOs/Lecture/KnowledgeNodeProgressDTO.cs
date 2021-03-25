@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SmartTutor.ContentModel.TraineeModel;
+using SmartTutor.ContentModel.ProgressModel;
 
 namespace SmartTutor.Controllers.DTOs.Lecture
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SmartTutor.ContentModel.TraineeModel
+namespace SmartTutor.ContentModel.ProgressModel
 {
     public class Trainee
     {

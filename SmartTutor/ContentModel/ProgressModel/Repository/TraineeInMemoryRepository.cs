@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SmartTutor.ContentModel.TraineeModel.Repository
+namespace SmartTutor.ContentModel.ProgressModel.Repository
 {
     public class TraineeInMemoryRepository : ITraineeRepository
     {

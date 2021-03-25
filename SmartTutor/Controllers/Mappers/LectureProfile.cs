@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.TraineeModel;
+using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Controllers.DTOs.Lecture;
 
 namespace SmartTutor.Controllers.Mappers
