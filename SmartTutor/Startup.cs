@@ -5,9 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
-using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.ContentModel.LearningObjects.Repository;
+using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.Controllers.Mappers;
 using SmartTutor.Recommenders;
-using SmartTutor.Repository;
 
 namespace SmartTutor
 {
@@ -22,15 +23,21 @@ namespace SmartTutor
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers().AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.Converters.Add(new LearningObjectConverter());
+                options.JsonSerializerOptions.Converters.Add(new LearningObjectJsonConverter());
             });
 
-            services.AddEntityFrameworkNpgsql().AddDbContext<SmartTutorContext>(opt =>
+            services.AddDbContext<LectureContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
 
-            services.AddScoped<IContentRepository, ContentDatabaseRepository>();
+            services.AddScoped<IContentService, ContentService>();
+
+            //services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
+            services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
+            services.AddScoped<ILearningObjectRepository, LearningObjectInMemoryRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 

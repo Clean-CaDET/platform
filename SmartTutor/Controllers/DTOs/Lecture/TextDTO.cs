@@ -2,6 +2,6 @@
 {
     public class TextDTO : LearningObjectDTO
     {
-        public string Text { get; set; }
+        public string Content { get; set; }
     }
 }
