@@ -159,13 +159,17 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private int CountComparisonOperators(MemberDeclarationSyntax method)
         {
-            return method.DescendantNodes().OfType<BinaryExpressionSyntax>()
+            int count = method.DescendantNodes().OfType<AssignmentExpressionSyntax>()
+                .Count(n => n.IsKind(SyntaxKind.CoalesceAssignmentExpression));
+            count += method.DescendantNodes().OfType<BinaryExpressionSyntax>()
                 .Count(n => n.IsKind(SyntaxKind.EqualsExpression) || 
                             n.IsKind(SyntaxKind.NotEqualsExpression) ||
                             n.IsKind(SyntaxKind.LessThanExpression) ||
                             n.IsKind(SyntaxKind.LessThanOrEqualExpression) ||
                             n.IsKind(SyntaxKind.GreaterThanExpression) ||
-                            n.IsKind(SyntaxKind.GreaterThanOrEqualExpression));
+                            n.IsKind(SyntaxKind.GreaterThanOrEqualExpression) ||
+                            n.IsKind(SyntaxKind.CoalesceExpression));
+            return count;
         }
 
         private int CountMethodInvocations(MemberDeclarationSyntax method)
