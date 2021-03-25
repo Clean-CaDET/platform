@@ -137,9 +137,9 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     }
                 }"
             };
-            List<CaDETClass> endStateClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
+            List<CaDETClass> resolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
 
-            Dictionary<string, double> metricsRange = new ChallengeService().GetMetricNamesFromClasses(endStateClasses);
+            Dictionary<string, double> metricsRange = new ChallengeService().GetMetricNamesFromClasses(resolvedClasses);
             metricsRange["ELOC 2 1"] = 1;
             metricsRange["ELOC 2 2"] = 3;
 
@@ -150,7 +150,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3371,
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    EndState = endStateClasses,
+                    ResolvedClasses = resolvedClasses,
                     MetricsRange = metricsRange
                 }
             });

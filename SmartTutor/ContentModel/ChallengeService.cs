@@ -65,7 +65,7 @@ namespace SmartTutor.ContentModel
         {
             foreach (string metricName in submittetMetrics.Keys.ToList())
             {
-                Dictionary<string, double> resultMetrics = GetMetricsFromClasses(challenge.EndState);
+                Dictionary<string, double> resultMetrics = GetMetricsFromClasses(challenge.ResolvedClasses);
                 if (resultMetrics[metricName] - challenge.MetricsRange[metricName] <= submittetMetrics[metricName]
                     && submittetMetrics[metricName] <= resultMetrics[metricName] + challenge.MetricsRange[metricName])
                     return true;
