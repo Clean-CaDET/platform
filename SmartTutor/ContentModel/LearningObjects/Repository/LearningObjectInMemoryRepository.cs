@@ -123,12 +123,9 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
     	                private void CreatePayment(int price, int compensation) {
 		                    Payment payment = new Payment();
 		                    payment.Cost = price + compensation;
-		                    if(payment.Cost > 50000)
-		                        payment.IsExtra = true;
-		                    else
-		                        payment.IsExtra = false;
+                            payment.IsExtra = payment.Cost > 50000 ? true : false;
 
-      		                    PrintPaymentDetails();
+      		                PrintPaymentDetails();
     	                }
 
 	                    private void PrintPaymentDetails() {
@@ -154,6 +151,11 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         public List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries)
         {
             return summaries.Select(id => _learningObjectCache[id].First()).ToList();
+        }
+
+        public List<LearningObject> GetLearningObjectsForChallenge(int challengeId)
+        {
+            return _learningObjectCache.SelectMany(LOs => LOs.Value.Where(LO => LO.Id == challengeId)).ToList();
         }
     }
 }
