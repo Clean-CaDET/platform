@@ -9,5 +9,3 @@ namespace SmartTutor.ContentModel.LectureModel.Repository
         KnowledgeNode GetKnowledgeNodeWithSummaries(int id);
     }
 }
-
-

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
+using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.Controllers.Mappers;
 using SmartTutor.Recommenders;
@@ -36,6 +37,7 @@ namespace SmartTutor
 
             //services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
+            services.AddScoped<ILearningObjectRepository, LearningObjectInMemoryRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 

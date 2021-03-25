@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -61,5 +62,12 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         {
             return _learningObjectCache[summaryId];
         }
+
+        public List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries)
+        {
+            return summaries.Select(id => _learningObjectCache[id].First()).ToList();
+        }
+
+        
     }
 }

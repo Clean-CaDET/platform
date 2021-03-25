@@ -4,6 +4,7 @@ using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.Recommenders;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.TraineeModel;
 
 namespace SmartTutor.ContentModel
@@ -12,11 +13,13 @@ namespace SmartTutor.ContentModel
     {
         private readonly IRecommender _recommender;
         private readonly ILectureRepository _lectureRepository;
+        private readonly ILearningObjectRepository _learningObjectRepository;
 
-        public ContentService(IRecommender recommender, ILectureRepository repository)
+        public ContentService(IRecommender recommender, ILectureRepository lectureRepository, ILearningObjectRepository learningObjectRepository)
         {
             _recommender = recommender;
-            _lectureRepository = repository;
+            _lectureRepository = lectureRepository;
+            _learningObjectRepository = learningObjectRepository;
         }
 
         public List<Lecture> GetLectures()
@@ -40,12 +43,32 @@ namespace SmartTutor.ContentModel
 
         public NodeProgress GetNodeContent(int knowledgeNodeId, int? traineeId)
         {
-            //TODO: Load KN
+            if (traineeId != null)
+            {
+                return CreateNodeForTrainee(knowledgeNodeId, traineeId);
+            }
+            
+            var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
+            if (knowledgeNode == null) return null;
+
+            var learningObjects = _learningObjectRepository.GetFirstLearningObjectsForSummaries(
+                knowledgeNode.LearningObjectSummaries.Select(s => s.Id).ToList());
+            return new NodeProgress
+            {
+                Id = 0,
+                LearningObjects = learningObjects,
+                Node = knowledgeNode
+            };
+        }
+
+        private NodeProgress CreateNodeForTrainee(int knowledgeNodeId, int? traineeId)
+        {
             //TODO: Load Trainee prefs
             //TODO: Get recommender to build NodeProgress with LOs for Trainee
             //TODO: Save started NodeProgress to repo
             //TODO: Create learning session
             //TODO: Return NodeProgress
+
             throw new NotImplementedException();
         }
     }
