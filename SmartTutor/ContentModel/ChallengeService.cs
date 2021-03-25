@@ -19,15 +19,10 @@ namespace SmartTutor.ContentModel
         {
             List<CaDETClass> endState = GetChallenge(challengeId).EndState;
             List<CaDETClass> submittetState = GetClassesFromSubmittedChallenge(sourceCode);
-
-            // TODO: Implement rang for correct state, current is the simplest stage
-            if (endState != submittetState)
-                return false;
-
-            return true;
+            return CompareChallengeStates(endState, submittetState);
         }
 
-        private Challenge GetChallenge(int challengeId)
+        public Challenge GetChallenge(int challengeId)
         {
             return _learningObjectRepository.GetLearningObjectForChallenge(challengeId) as Challenge;
         }
@@ -35,6 +30,15 @@ namespace SmartTutor.ContentModel
         private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)
         {
             return new CodeRepositoryService().BuildClassesModel(sourceCode);
+        }
+
+        private bool CompareChallengeStates(List<CaDETClass> endState, List<CaDETClass> submittetState)
+        {
+            // TODO: Implement rang for correct state, current is the simplest stage
+            if (endState != submittetState)
+                return false;
+
+            return true;
         }
     }
 }
