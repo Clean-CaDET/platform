@@ -6,7 +6,6 @@ namespace SmellDetector.Detectors.RuleEngines
 {
     public class MetricCriteria : Criteria
     {
-        //This should be a single metric, so that we can compute the rule.
         private readonly String _metric;
         private readonly OperationEnum _operation;
         private readonly double _threshold;
@@ -17,7 +16,6 @@ namespace SmellDetector.Detectors.RuleEngines
             _threshold = threshold;
         }
 
-        //This method should calculate the rule based on metric, operator and threshold and return true if the rule applies, otherwise false.
         public bool MeetCriteria(Dictionary<String, double> metrics)
         {
             if (!metrics.ContainsKey(_metric))

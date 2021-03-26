@@ -6,17 +6,17 @@ namespace SmellDetector.SmellModel
     public class CaDETClassDTO
     {
         public string FullName { get; set; }
-        public Dictionary<string, double> CodeItemMetrics { get; set; }
+        public Dictionary<string, double> CodeSnippetMetrics { get; set; }
 
-        public CaDETClassDTO(string fullName, Dictionary<string, double> codeItemMetrics)
+        public CaDETClassDTO(string fullName, Dictionary<string, double> codeSnippetMetrics)
         {
             FullName = fullName;
-            CodeItemMetrics = codeItemMetrics;
+            CodeSnippetMetrics = codeSnippetMetrics;
         }
 
         public CaDETClassDTO()
         {
-            CodeItemMetrics = new Dictionary<string, double>();
+            CodeSnippetMetrics = new Dictionary<string, double>();
         }
     }
 }

@@ -5,11 +5,11 @@ namespace SmellDetector.SmellModel
 {
     public class CodeSnippetCollectionDTO
     {
-        public Dictionary<string, MetricsDTO> CodeItemMetrics { get; set; }
+        public Dictionary<string, MetricsDTO> CodeSnippetMetrics { get; set; }
 
         public CodeSnippetCollectionDTO()
         {
-            CodeItemMetrics = new Dictionary<string, MetricsDTO>();
+            CodeSnippetMetrics = new Dictionary<string, MetricsDTO>();
         }
 
     }

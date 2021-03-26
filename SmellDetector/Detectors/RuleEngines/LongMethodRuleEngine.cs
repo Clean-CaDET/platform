@@ -12,14 +12,14 @@ namespace SmellDetector.Detectors.RuleEngines
         {
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
-            foreach (var identifierAnalysis in caDetClassDto.CodeItemMetrics)
+            foreach (var identifierAnalysis in caDetClassDto.CodeSnippetMetrics)
             {
                 
                 if (IsBadSmell(identifierAnalysis.Value))
                 {
                     Issue newIssue = new Issue();
                     newIssue.IssueType = SmellType.LONG_METHOD;
-                    newIssue.CodeItemId = identifierAnalysis.Key;
+                    newIssue.CodeSnippetId = identifierAnalysis.Key;
                     partialReport.AddIssue(identifierAnalysis.Key, newIssue);
                 }
                 

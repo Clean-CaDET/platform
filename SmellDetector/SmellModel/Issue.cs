@@ -4,7 +4,7 @@
     {
         public SmellType IssueType { get; set; }
 
-        public string CodeItemId { get; set; }
+        public string CodeSnippetId { get; set; }
 
     }
 }

@@ -47,7 +47,7 @@ namespace SmellDetector.Detectors.RuleEngines
                 {
                     if (issue != null)
                     {
-                        partialReport.AddIssue(issue.CodeItemId, issue);
+                        partialReport.AddIssue(issue.CodeSnippetId, issue);
                     }
                 }
             }
@@ -61,7 +61,7 @@ namespace SmellDetector.Detectors.RuleEngines
 
         private List<Issue> ApplyRule(CaDETClassDTO c)
         {
-            return _rules.Select(r => r.IsTriggered(c.FullName, c.CodeItemMetrics)).ToList();
+            return _rules.Select(r => r.Validate(c.FullName, c.CodeSnippetMetrics)).ToList();
         }
     }
 }

@@ -17,13 +17,13 @@ namespace SmellDetector.Detectors.RuleEngines
             _smellType = smellType;
         }
 
-        public Issue IsTriggered(String codeSnippetId, Dictionary<String, double> metrics)
+        public Issue Validate(String codeSnippetId, Dictionary<String, double> metrics)
         {
             if (_criteria.MeetCriteria(metrics))
             {
                 Issue newIssue = new Issue();
                 newIssue.IssueType = _smellType;
-                newIssue.CodeItemId = codeSnippetId;
+                newIssue.CodeSnippetId = codeSnippetId;
                 return newIssue;
             }
             return null;
