@@ -53,7 +53,7 @@ namespace SmartTutor.ContentModel
 
         public Challenge GetChallenge(int challengeId)
         {
-            return _learningObjectRepository.GetLearningObjectForChallenge(challengeId) as Challenge;
+            return _learningObjectRepository.GetChallenge(challengeId);
         }
 
         private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)

@@ -6,6 +6,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
     {
         List<LearningObject> GetLearningObjectsForSummary(int summaryId);
         List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries);
-        LearningObject GetLearningObjectForChallenge(int challengeId);
+        Challenge GetChallenge(int challengeId);
     }
 }
