@@ -25,8 +25,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOL = CountLoops(member),
                 NOR = CountReturnStatements(member),
                 NOC = CountComparisonOperators(member),
-                NOMI = CountMethodInvocations(member),
-                RFC = CountUniqueMethodInvocations(member),
                 NOA = CountNumberOfAssignments(member),
                 NONL = CountNumberOfNumericLiterals(member),
                 NOSL = CountNumberOfStringLiterals(member),
@@ -176,25 +174,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                             n.IsKind(SyntaxKind.GreaterThanOrEqualExpression) ||
                             n.IsKind(SyntaxKind.CoalesceExpression));
             return count;
-        }
-
-        private int CountMethodInvocations(MemberDeclarationSyntax method)
-        {
-            return method.DescendantNodes().OfType<InvocationExpressionSyntax>().Count();
-        }
-
-        private int CountUniqueMethodInvocations(MemberDeclarationSyntax method)
-        {
-            List<string> uniqueInvokedMethods = new List<string>();
-            var allInvokedMethods = method.DescendantNodes().OfType<InvocationExpressionSyntax>();
-            foreach (var invokedMethod in allInvokedMethods)
-            {
-                if (!uniqueInvokedMethods.Contains(invokedMethod.Expression.ToString()))
-                {
-                    uniqueInvokedMethods.Add(invokedMethod.Expression.ToString());
-                }
-            }
-            return uniqueInvokedMethods.Count();
         }
 
         private int CountNumberOfAssignments(MemberDeclarationSyntax method)

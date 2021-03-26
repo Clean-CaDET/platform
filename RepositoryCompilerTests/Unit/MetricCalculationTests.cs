@@ -151,7 +151,7 @@ namespace RepositoryCompilerTests.Unit
             var firstClass = classes.First();
             firstClass.Metrics.NOPF.ShouldBe(2);
         }
-
+        
         [Fact]
         public void Calculates_max_nested_blocks_in_class()
         {
@@ -266,32 +266,6 @@ namespace RepositoryCompilerTests.Unit
             firstClass.FindMember("CSharpCodeParserInit").Metrics.NOC.ShouldBe(0);
             firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOC.ShouldBe(4);
             firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOC.ShouldBe(3);
-        }
-
-        [Fact]
-        public void Calculates_number_of_method_invocations()
-        {
-            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
-
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
-
-            var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOMI.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOMI.ShouldBe(2);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOMI.ShouldBe(5);
-        }
-
-        [Fact]
-        public void Calculates_number_of_unique_method_invocations()
-        {
-            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
-
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
-
-            var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.RFC.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.RFC.ShouldBe(2);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.RFC.ShouldBe(3);
         }
 
         [Fact]

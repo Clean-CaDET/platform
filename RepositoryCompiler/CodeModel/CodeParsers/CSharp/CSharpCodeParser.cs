@@ -209,6 +209,11 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                     memberBuilder.CalculateMetrics();
                 }
                 c.Metrics = _metricCalculator.CalculateClassMetrics(c);
+                c.InvokedMethods = new HashSet<CaDETMember>();
+                foreach (var member in c.Members)
+                {
+                    c.InvokedMethods.UnionWith(member.InvokedMethods.ToList());
+                }
             }
 
             return linkedClasses;
