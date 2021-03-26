@@ -5,7 +5,7 @@ using SmartTutor.ContentModel.LearningObjects.Repository;
 using System.Linq;
 using Xunit;
 
-namespace SmartTutorTests.Integration
+namespace SmartTutorTests.Unit
 {
     public class ChallengeServiceTests
     {
