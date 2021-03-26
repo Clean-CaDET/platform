@@ -44,13 +44,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int GetEffectiveLinesOfCode(MemberDeclarationSyntax member)
         {
             //string[] allLines = member.ToString().Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
-            var allCode = member.ToString();
-            
-            var allComments = member.DescendantTrivia().Where(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia) || t.IsKind(SyntaxKind.MultiLineCommentTrivia));
-            foreach (var comment in allComments)
-            {
-                allCode = allCode.Replace(comment.ToFullString(), "");
-            }
+            string allCode = RemoveCommentsFromCode(member);
             
             var allLines = allCode.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             int blankLines = CountBlankLines(allLines);
@@ -59,6 +53,18 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             
             return  allLines.Length - (blankLines + headerLines + openAndClosingBracketLines);
         }
+
+        private string RemoveCommentsFromCode(CSharpSyntaxNode member)
+        {
+            var allCode = member.ToString();
+            var allComments = member.DescendantTrivia().Where(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia) || t.IsKind(SyntaxKind.MultiLineCommentTrivia));
+            foreach (var comment in allComments)
+            {
+                allCode = allCode.Replace(comment.ToFullString(), "");
+            }
+            return allCode;
+        }
+        
 
         private int CountHeaderLines(string[] allLines)
         {
@@ -266,104 +272,72 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private int CountNumberOfUniqueWords(MemberDeclarationSyntax method)
         {
             if (!method.Kind().Equals(SyntaxKind.MethodDeclaration)) return 0;
-            
+
             BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
-            string methodBody = baseMethod.Body.ToString();
-            List<string> lines = GetLinesWithoutComments(methodBody);
-            List<string> words = GetWordsFromLines(lines);
+            string methodBody = RemoveCommentsFromCode(baseMethod.Body);
+            methodBody = RemoveSymbols(methodBody);
+            List<string> words = GetWords(methodBody);
+            words = BreakWords(words);
             words = FilterWords(words);
-            List<string> individualWords = BreakWords(words);
-            individualWords = FindAdditionalWords(individualWords);
-            return CleanWordsFromSymbols(individualWords).Distinct().ToList().Count();
+            return words.Distinct().Count();
         }
 
-        private List<string> GetLinesWithoutComments(string methodBody)
-        {
-            List<string> lines = methodBody.Split("\n")
-                .Select(line => line.Trim())
-                .Where(line => !line.StartsWith("//"))
-                .ToList();
-            return RemoveMultiLineComments(lines);
-        }
-
-        private List<string> RemoveMultiLineComments(List<string> lines)
-        {
-            List<string> linesToRemove = new List<string>();
-            for (int i = 0; i < lines.Count(); i++)
-            {
-                if (lines[i].StartsWith("/*"))
-                {
-                    linesToRemove.Add(lines[i]);
-                    int j = 1;
-                    while (!lines[i + j].EndsWith("*/"))
-                    {
-                        linesToRemove.Add(lines[i + j]);
-                        j++;
-                    }
-                    linesToRemove.Add(lines[i + j]);
-                }
-            }
-            lines.RemoveAll(line => linesToRemove.Contains(line));
-            return lines;
-        }
-
-        private List<string> GetWordsFromLines(List<string> lines)
+        private List<string> GetWords(string methodBody)
         {
             List<string> words = new List<string>();
+            
+            int index = 0;
+            while (index < methodBody.Length && char.IsWhiteSpace(methodBody[index]))
+                index++;
 
-            foreach (string line in lines)
+            int start;
+            while (index < methodBody.Length)
             {
-                int index = 0;
-                while (index < line.Length && char.IsWhiteSpace(line[index]))
+                start = index;
+                while (index < methodBody.Length && !char.IsWhiteSpace(methodBody[index]))
                     index++;
 
-                int start;
-                while (index < line.Length)
-                {
-                    start = index;
-                    while (index < line.Length && !char.IsWhiteSpace(line[index]))
-                        index++;
+                words.Add(methodBody.Substring(start, index - start));
 
-                    words.Add(line.Substring(start, index - start));
-
-                    while (index < line.Length && char.IsWhiteSpace(line[index]))
-                        index++;
-                }
+                while (index < methodBody.Length && char.IsWhiteSpace(methodBody[index]))
+                    index++;
             }
             return words;
+        }
+
+        private string RemoveSymbols(string words)
+        {
+            return words
+                .Replace("(", " ")
+                .Replace(")", " ")
+                .Replace("{", " ")
+                .Replace("}", " ")
+                .Replace("=", " ")
+                .Replace(">", " ")
+                .Replace("<", " ")
+                .Replace("&", " ")
+                .Replace("|", " ")
+                .Replace("!", " ")
+                .Replace("+", " ")
+                .Replace("*", " ")
+                .Replace("/", " ")
+                .Replace("-", " ")
+                .Replace(";", " ")
+                .Replace(":", " ")
+                .Replace(",", " ")
+                .Replace("[", " ")
+                .Replace("]", " ")
+                .Replace("\"", " ")
+                .Replace(".", " ")
+                .Replace("?", " ");
         }
 
         private List<string> FilterWords(List<string> words)
         {
-            for (int i = 0; i < words.Count(); i++)
-            {
-                words[i] = words[i]
-                    .Replace("(", " ")
-                    .Replace(")", " ")
-                    .Replace("{", " ")
-                    .Replace("}", " ")
-                    .Replace("=", " ")
-                    .Replace(">", " ")
-                    .Replace("<", " ")
-                    .Replace("&", " ")
-                    .Replace("|", " ")
-                    .Replace("!", " ")
-                    .Replace("+", " ")
-                    .Replace("*", " ")
-                    .Replace("/", " ")
-                    .Replace("-", " ")
-                    .Replace(";", " ")
-                    .Replace(":", " ")
-                    .Replace(",", " ")
-                    .Replace("[", " ")
-                    .Replace("]", " ")
-                    .Replace("\"", " ");
-            }
-            words = words.Where(word => !string.IsNullOrEmpty(word))
+            return words = words.Where(word => !string.IsNullOrEmpty(word))
                 .Where(word => !Regex.IsMatch(word, "[0-9]+"))
-                .Where(word => !getKeywords().Contains(word))
+                .Where(word => !GetKeywords().Contains(word))
                 .ToList();
-            return words;
         }
 
         private List<string> BreakWords(List<string> words)
@@ -371,81 +345,31 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             List<string> individualWords = new List<string>();
             foreach (string word in words)
             {
-                if (word.Length == 1)
-                {
-                    individualWords.Add(word.Trim());
-
-                }
-                else
-                {
-                    if (getKeywords().Contains(word.Trim()))
-                    {
-                        continue;
-                    }
-
-                    int current = 0;
-                    for (int i = 1; i < word.Length; i++)
-                    {
-                        if (word[i] == '_' || char.IsUpper(word[i]))
-                        {
-                            individualWords.Add(word.Substring(current, i - current).Trim());
-                            current = i + (word[i] == '_' ? 1 : 0);
-                        }
-                    }
-                    individualWords.Add(word.Substring(current).Trim());
-                }
+                List<string> wordParts = Regex.Split(word, "[_ ]").ToList();
+                List<string> camelCaseWords = GetCamelCaseWords(wordParts);
+                individualWords.AddRange(camelCaseWords);
             }
-            return individualWords.Where(word => !string.IsNullOrEmpty(word)).ToList();
+            return individualWords;
         }
 
-        private List<string> FindAdditionalWords(List<string> words)
+        private List<string> GetCamelCaseWords(List<string> words)
         {
-            List<string> result = new List<string>();
+            List<string> camelCaseWords = new List<string>();
             foreach (string word in words)
             {
-                if (word.Contains(" "))
+                var wordParts = Regex.Split(word, "[A-Z]");
+                var matches = Regex.Matches(word, "[A-Z]");
+                for (int i = 0; i < wordParts.Length - 1; i++)
                 {
-                    foreach (string w in word.Split(" "))
-                    {
-                        result.Add(w);
-                    }
+                    wordParts[i + 1] = matches[i] + wordParts[i + 1];
                 }
-                else
-                {
-                    result.Add(word);
-                }
+                camelCaseWords.AddRange(wordParts);
             }
-            return result;
+
+            return camelCaseWords;
         }
 
-        private List<string> CleanWordsFromSymbols(List<string> words)
-        {
-            List<string> cleanWords = new List<string>();
-            foreach (string word in words)
-            {
-                if (word.Length > 1)
-                {
-                    if (!char.IsLetter(word[0]))
-                    {
-                        cleanWords.Add(word.Substring(1));
-                    }
-                    else if (!char.IsLetter(word[word.Length - 1]))
-                        cleanWords.Add(word.Substring(0, word.Length - 2));
-                    else
-                    {
-                        cleanWords.Add(word);
-                    }
-
-                }
-                else
-                {
-                    cleanWords.Add(word);
-                }
-            }
-            return cleanWords;
-        }
-
-        private List<string> getKeywords()
+        private List<string> GetKeywords()
         {
             List<string> keywords = new List<string>();
             keywords.Add("abstract");
@@ -528,7 +452,6 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             keywords.Add("while");
             return keywords;
         }
-
 
     }
 }

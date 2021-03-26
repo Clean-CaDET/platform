@@ -392,7 +392,8 @@ namespace RepositoryCompilerTests.Unit
 
             var gitClass = classes.First();
             gitClass.FindMember("CSharpCodeParserInit").Metrics.NOUW.ShouldBe(5);
-            gitClass.FindMember("CreateClassMemberBuilders1").Metrics.NOUW.ShouldBe(23);
+            gitClass.FindMember("CreateClassMemberBuilders1").Metrics.NOUW.ShouldBe(22);
+            gitClass.FindMember("CreateClassMemberBuilders2").Metrics.NOUW.ShouldBe(33);
         }
     }
 }
