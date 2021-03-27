@@ -33,8 +33,10 @@ namespace SmartTutorTests.Unit
             challenge.ResolvedClasses[1].Metrics.NMD.ShouldBe(2);
             challenge.ResolvedClasses[1].Members[0].Metrics.ELOC.ShouldBe(4);
             challenge.ResolvedClasses[1].Members[1].Metrics.ELOC.ShouldBe(3);
-            challenge.MetricsRange["ELOC 2 1"].ShouldBe(1);
-            challenge.MetricsRange["ELOC 2 2"].ShouldBe(3);
+            challenge.ClassMetricRules[0].MetricName.ShouldBe("LOC");
+            challenge.ClassMetricRules[1].ToValue.ShouldBe(2);
+            challenge.MethodMetricRules[0].MetricName.ShouldBe("ELOC");
+            challenge.MethodMetricRules[1].FromValue.ShouldBe(1);
         }
     }
 }
