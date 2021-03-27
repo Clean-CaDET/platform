@@ -4,7 +4,7 @@ namespace SmartTutor.ContentModel
 {
     public interface IChallengeService
     {
-        bool CheckSubmittedChallengeCompletion(string[] sourceCode, int challengeId);
+        bool CheckChallengeCompletion(string[] sourceCode, int challengeId);
         Challenge GetChallenge(int challengeId);
     }
 }
