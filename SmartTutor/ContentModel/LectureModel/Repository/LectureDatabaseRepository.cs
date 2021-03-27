@@ -5,9 +5,9 @@ namespace SmartTutor.ContentModel.LectureModel.Repository
 {
     public class LectureDatabaseRepository : ILectureRepository
     {
-        private readonly LectureContext _dbContext;
+        private readonly SmartTutorContext _dbContext;
 
-        public LectureDatabaseRepository(LectureContext dbContext)
+        public LectureDatabaseRepository(SmartTutorContext dbContext)
         {
             _dbContext = dbContext;
         }
