@@ -1,6 +1,7 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using SmartTutor.ContentModel.LearningObjects.MetricRules;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects
 {
@@ -10,5 +11,37 @@ namespace SmartTutor.ContentModel.LearningObjects
         public List<CaDETClass> ResolvedClasses { get; internal set; }
         public List<MetricRangeRule> ClassMetricRules { get; internal set; }
         public List<MetricRangeRule> MethodMetricRules { get; internal set; }
+
+        // TODO: This is basic strategy, implement strategy pattern interface 
+        public bool CheckSubmittedChallengeCompletion(List<CaDETClass> submittetClasses)
+        {
+            List<CaDETMember> submittedMethods = GetMethodsFromClasses(submittetClasses);
+            if (!CheckClassesCompletion(submittetClasses) || !CheckMethodsCompletion(submittedMethods))
+                return false;
+            return true;
+        }
+
+        private List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)
+        {
+            return caDETClasses.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
+        }
+
+        private bool CheckClassesCompletion(List<CaDETClass> caDETClasses)
+        {
+            foreach (CaDETClass caDETClass in caDETClasses)
+                foreach (MetricRangeRule classMetricRule in ClassMetricRules)
+                    if (!classMetricRule.ClassMetricMeetsRequirements(caDETClass.Metrics))
+                        return false;
+            return true;
+        }
+
+        private bool CheckMethodsCompletion(List<CaDETMember> caDETMethods)
+        {
+            foreach (CaDETMember caDETMethod in caDETMethods)
+                foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
+                    if (!methodMetricRule.MethodMetricMeetsRequirements(caDETMethod.Metrics))
+                        return false;
+            return true;
+        }
     }
 }
