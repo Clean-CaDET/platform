@@ -1,5 +1,5 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using RepositoryCompiler.Controllers;
+﻿using RepositoryCompiler.Controllers;
+using SmartTutor.ContentModel.LearningObjects.MetricRules;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -126,22 +126,25 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 		                    payment.Cost = price + compensation;
                             payment.IsExtra = payment.Cost > 50000 ? true : false;
 
-      		                PrintPaymentDetails();
+      		                PrintPaymentDetails(payment.Cost);
     	                }
 
-	                    private void PrintPaymentDetails() {
+	                    private void PrintPaymentDetails(int cost) {
       		                System.out.println(""Hello."");
                             System.out.println(""Your payment is created."");
-                            System.out.println(""Cost is: "" + payment.Cost);
+                            System.out.println(""Cost is: "" + cost);
                         }
                     }
                 }"
             };
-            List<CaDETClass> resolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
 
-            Dictionary<string, double> metricsRange = new ChallengeService().GetMetricNamesFromClasses(resolvedClasses);
-            metricsRange["ELOC 2 1"] = 1;
-            metricsRange["ELOC 2 2"] = 3;
+            List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
+            classMetricRules.Add(new MetricRangeRule { MetricName = "LOC", FromValue = 3, ToValue = 30 });
+            classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
+
+            List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
+            methodMetricRules.Add(new MetricRangeRule { MetricName = "ELOC", FromValue = 2, ToValue = 5 });
+            methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
 
             _learningObjectCache.Add(337, new List<LearningObject>
             {
@@ -150,8 +153,9 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3371,
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    ResolvedClasses = resolvedClasses,
-                    MetricsRange = metricsRange
+                    ResolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode),
+                    ClassMetricRules = classMetricRules,
+                    MethodMetricRules = methodMetricRules
                 }
             });
         }
