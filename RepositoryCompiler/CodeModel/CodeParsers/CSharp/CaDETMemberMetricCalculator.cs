@@ -275,25 +275,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private List<string> GetWords(string methodBody)
         {
-            List<string> words = new List<string>();
-            
-            int index = 0;
-            while (index < methodBody.Length && char.IsWhiteSpace(methodBody[index]))
-                index++;
-
-            int start;
-            while (index < methodBody.Length)
-            {
-                start = index;
-                while (index < methodBody.Length && !char.IsWhiteSpace(methodBody[index]))
-                    index++;
-
-                words.Add(methodBody.Substring(start, index - start));
-
-                while (index < methodBody.Length && char.IsWhiteSpace(methodBody[index]))
-                    index++;
-            }
-            return words;
+            return Regex.Split(methodBody, "[\\s+]").Select(word => word.Trim()).ToList();
         }
 
         private string RemoveSymbols(string words)
