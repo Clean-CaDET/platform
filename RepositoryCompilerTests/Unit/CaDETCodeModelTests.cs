@@ -73,9 +73,6 @@ namespace RepositoryCompilerTests.Unit
             logChecked.InvokedMethods.ShouldContain(findDoctors);
             logChecked.InvokedMethods.ShouldContain(overlapsWith);
             logChecked.InvokedMethods.ShouldContain(doctor.FindMember("TestFunction"));
-
-            dateRange.InvokedMethods.Count().ShouldBe(0);
-            service.InvokedMethods.Count().ShouldBe(4);
         }
 
         [Fact]

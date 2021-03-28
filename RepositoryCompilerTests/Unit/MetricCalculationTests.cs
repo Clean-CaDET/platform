@@ -164,6 +164,20 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
+        public void Calculates_invoked_methods_in_a_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+
+            dateRange.Metrics.RFC.ShouldBe(0);
+            service.Metrics.RFC.ShouldBe(4);
+        }
+
+        [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);

@@ -28,7 +28,6 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public List<CaDETMember> Members { get; internal set; }
         public List<CaDETField> Fields { get; internal set; }
         public CaDETClassMetrics Metrics { get; internal set; }
-        public ISet<CaDETMember> InvokedMethods { get; internal set; }
 
         public CaDETMember FindMember(string name)
         {

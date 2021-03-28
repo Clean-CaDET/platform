@@ -142,11 +142,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return count;
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountTryCatchBlocks(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<TryStatementSyntax>().Count();
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountLoops(MemberDeclarationSyntax method)
         {
             int count = method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
@@ -156,11 +158,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return count;
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountReturnStatements(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<ReturnStatementSyntax>().Count();
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountComparisonOperators(MemberDeclarationSyntax method)
         {
             int count = method.DescendantNodes().OfType<AssignmentExpressionSyntax>()
@@ -176,21 +180,25 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return count;
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfAssignments(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<AssignmentExpressionSyntax>().Count();
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfNumericLiterals(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LiteralExpressionSyntax>().Count(n => n.IsKind(SyntaxKind.NumericLiteralExpression));
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfStringLiterals(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LiteralExpressionSyntax>().Count(n => n.IsKind(SyntaxKind.StringLiteralExpression));
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfMathOperations(MemberDeclarationSyntax method)
         {
             int count = CountBinaryExpressions(method);
@@ -223,17 +231,20 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return count;
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfParenthesizedExpressions(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<ExpressionSyntax>()
                 .Count(n => n.IsKind(SyntaxKind.ParenthesizedExpression));
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfLambdaExpressions(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LambdaExpressionSyntax>().Count();
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountMaxNestedBlocks(MemberDeclarationSyntax method)
         {
             var blocks = method.DescendantNodes().OfType<BlockSyntax>().ToList();
@@ -248,6 +259,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return blocksAncestors.Max();
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfUniqueWords(MemberDeclarationSyntax method)
         {
             if (!method.Kind().Equals(SyntaxKind.MethodDeclaration)) return 0;

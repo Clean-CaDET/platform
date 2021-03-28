@@ -27,7 +27,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOA = CountNumberOfAssignments(parsedClass),
                 NOPM = CountNumberOfPrivateMethods(parsedClass),
                 NOPF = CountNumberOfProtectedFields(parsedClass),
-                MNB = CountMaxNestedBlocks(parsedClass)
+                MNB = CountMaxNestedBlocks(parsedClass),
+                RFC = CountUniqueMethodInvocations(parsedClass)
             };
         }
         public int GetLinesOfCode(string code)
@@ -131,37 +132,44 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method));
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountReturnStatements(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOR);
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountLoops(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOL);
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountComparisonOperators(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOC);
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfAssignments(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics.NOA);
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfPrivateMethods(CaDETClass parsedClass)
         {
             return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method) &&
                                                        method.Modifiers.Any(m => m.Value == CaDETModifierValue.Private));
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountNumberOfProtectedFields(CaDETClass parsedClass)
         {
             return parsedClass.Fields.Count(field => field.Modifiers.Any(f => f.Value == CaDETModifierValue.Protected));
         }
 
+        // Implementation based on https://github.com/mauricioaniche/ck
         private int CountMaxNestedBlocks(CaDETClass parsedClass)
         {
             if (!parsedClass.Members.Any())
@@ -169,6 +177,16 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 return 0;
             }
             return parsedClass.Members.Max(method => method.Metrics.MNB);
+        }
+
+        private int CountUniqueMethodInvocations(CaDETClass parsedClass)
+        {
+            var invokedMethods = new HashSet<CaDETMember>();
+            foreach (var member in parsedClass.Members)
+            {
+                invokedMethods.UnionWith(member.InvokedMethods.ToList());
+            }
+            return invokedMethods.Count();
         }
     }
 }
