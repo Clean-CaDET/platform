@@ -111,7 +111,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 @"using System;
                 namespace ExamplesApp.Method
                 {
-                   class Payment
+                   class Pay
                    {
     	               public int Cost { get; set; }
     	               public bool IsExtra { get; set; }
@@ -125,7 +125,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                         /// 1) Extract createPayment method.
                         /// </summary>
     	                private void CreatePayment(int price, int compensation) {
-		                    Payment payment = new Payment();
+		                    Pay payment = new Pay();
 		                    payment.Cost = price + compensation;
                             payment.IsExtra = payment.Cost > 50000 ? true : false;
 
