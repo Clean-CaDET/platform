@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using SmartTutor.ContentModel.LearningObjects;
 
 namespace SmartTutor.ContentModel.LectureModel
 {
     public class KnowledgeNode
     {
-        public int Id { get; set; }
+        [Key] public int Id { get; set; }
         public string LearningObjective { get; set; }
         public KnowledgeNodeType Type { get; set; }
         public List<KnowledgeNode> PrerequisiteNodes { get; set; }

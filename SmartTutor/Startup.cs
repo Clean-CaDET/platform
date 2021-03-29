@@ -30,7 +30,7 @@ namespace SmartTutor
                 options.JsonSerializerOptions.Converters.Add(new LearningObjectJsonConverter());
             });
 
-            services.AddDbContext<LectureContext>(opt =>
+            services.AddDbContext<SmartTutorContext>(opt =>
                 opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
 
             services.AddScoped<IContentService, ContentService>();
