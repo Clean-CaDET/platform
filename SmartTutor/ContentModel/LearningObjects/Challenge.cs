@@ -16,9 +16,7 @@ namespace SmartTutor.ContentModel.LearningObjects
         public bool CheckSubmittedChallengeCompletion(List<CaDETClass> submittetClasses)
         {
             List<CaDETMember> submittedMethods = GetMethodsFromClasses(submittetClasses);
-            if (!CheckClassesCompletion(submittetClasses) || !CheckMethodsCompletion(submittedMethods))
-                return false;
-            return true;
+            return ValidateClassMetricRules(submittetClasses) && ValidateMethodMetricRules(submittedMethods);
         }
 
         private List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)
@@ -26,7 +24,7 @@ namespace SmartTutor.ContentModel.LearningObjects
             return caDETClasses.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
         }
 
-        private bool CheckClassesCompletion(List<CaDETClass> caDETClasses)
+        private bool ValidateClassMetricRules(List<CaDETClass> caDETClasses)
         {
             foreach (CaDETClass caDETClass in caDETClasses)
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
@@ -35,7 +33,7 @@ namespace SmartTutor.ContentModel.LearningObjects
             return true;
         }
 
-        private bool CheckMethodsCompletion(List<CaDETMember> caDETMethods)
+        private bool ValidateMethodMetricRules(List<CaDETMember> caDETMethods)
         {
             foreach (CaDETMember caDETMethod in caDETMethods)
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
