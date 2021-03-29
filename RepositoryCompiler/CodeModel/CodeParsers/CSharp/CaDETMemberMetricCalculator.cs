@@ -54,6 +54,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private string RemoveCommentsFromCode(CSharpSyntaxNode member)
         {
+            if (member == null) return ""; // when removing comments from the method body, the body can be empty
             var allCode = member.ToString();
             var allComments = member.DescendantTrivia().Where(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia) || t.IsKind(SyntaxKind.MultiLineCommentTrivia));
             foreach (var comment in allComments)
