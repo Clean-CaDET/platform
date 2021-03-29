@@ -35,5 +35,65 @@
         /// Also used as : LVAR
         /// </summary>
         public int NOLV { get; set; }
+
+        /// <summary>
+        /// NOTC: Number of try catch blocks
+        /// </summary>
+        public int NOTC { get; set; }
+
+        /// <summary>
+        /// NOL: Number of loops
+        /// </summary>
+        public int NOL { get; set; }
+
+        /// <summary>
+        /// NOR: Number of return statements
+        /// </summary>
+        public int NOR { get; set; }
+
+        /// <summary>
+        /// NOC: Number of comparison operators
+        /// </summary>
+        public int NOC { get; set; }
+
+        /// <summary>
+        /// NOA: Number of assignments
+        /// </summary>
+        public int NOA { get; set; }
+
+        /// <summary>
+        /// NONL: Number of numeric literals
+        /// </summary>
+        public int NONL { get; set; }
+
+        /// <summary>
+        /// NOSL: Number of string literals
+        /// </summary>
+        public int NOSL { get; set; }
+
+        /// <summary>
+        /// NOMO: Number of math operations
+        /// </summary>
+        public int NOMO { get; set; }
+
+        /// <summary>
+        /// NOPE: Number of parenthesized expressions
+        /// </summary>
+        public int NOPE { get; set; }
+
+        /// <summary>
+        /// NOLE: Number of lambda expressions
+        /// </summary>
+        public int NOLE { get; set; }
+
+        /// <summary>
+        /// MNB: Max nested blocks
+        /// </summary>
+        public int MNB { get; set; }
+
+        /// <summary>
+        /// NOUW: Number of unique words
+        /// </summary>
+        public int NOUW { get; set; }
     }
 }

@@ -85,7 +85,98 @@ namespace RepositoryCompilerTests.Unit
             class7.Metrics.TCC.ShouldBe(0.5);
             class8.Metrics.TCC.ShouldBe(0.5);
         }
+
+        [Fact]
+        public void Calculates_number_of_return_statements_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOR.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Calculates_number_of_loops_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOL.ShouldBe(7);
+        }
+
+        [Fact]
+        public void Calculates_number_of_comparisons_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOC.ShouldBe(7);
+        }
+
+        [Fact]
+        public void Calculates_number_of_assignments_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOA.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_number_of_private_methods_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOPM.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Calculates_number_of_protected_fields_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.NOPF.ShouldBe(2);
+        }
         
+        [Fact]
+        public void Calculates_max_nested_blocks_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.Metrics.MNB.ShouldBe(4);
+        }
+
+        [Fact]
+        public void Calculates_invoked_methods_in_a_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+
+            dateRange.Metrics.RFC.ShouldBe(0);
+            service.Metrics.RFC.ShouldBe(4);
+        }
+
         [Fact]
         public void Calculates_method_cyclomatic_complexity()
         {
@@ -135,6 +226,162 @@ namespace RepositoryCompilerTests.Unit
             var gitClass = classes.First();
             gitClass.FindMember("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);
             gitClass.FindMember("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
+        }
+
+        [Fact]
+        public void Calculates_number_of_try_catch_blocks()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOTC.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOTC.ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOTC.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOTC.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Calculates_number_of_loops()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOL.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOL.ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOL.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOL.ShouldBe(4);
+        }
+
+        [Fact]
+        public void Calculates_number_of_return_statements()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOR.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOR.ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOR.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_number_of_comparisons()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOC.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOC.ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOC.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Calculates_number_of_assignments()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOA.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOA.ShouldBe(0);
+        }
+
+        [Fact]
+        public void Calculates_number_of_numeric_literals()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NONL.ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NONL.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NONL.ShouldBe(12);
+        }
+
+        [Fact]
+        public void Calculates_number_of_string_literals()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOSL.ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOSL.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOSL.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_number_of_math_operations()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOMO.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOMO.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOMO.ShouldBe(6);
+        }
+
+        [Fact]
+        public void Calculates_number_of_parenthesized_expressions()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOPE.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOPE.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_number_of_lambda_expressions()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOLE.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOLE.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_max_nested_blocks()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var firstClass = classes.First();
+            firstClass.FindMember("CSharpCodeParserInit").Metrics.MNB.ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.MNB.ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.MNB.ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.MNB.ShouldBe(4);
+        }
+
+        [Fact]
+        public void Calculates_number_of_unique_words()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+
+            var gitClass = classes.First();
+            gitClass.FindMember("CSharpCodeParserInit").Metrics.NOUW.ShouldBe(5);
+            gitClass.FindMember("CreateClassMemberBuilders1").Metrics.NOUW.ShouldBe(22);
+            gitClass.FindMember("CreateClassMemberBuilders2").Metrics.NOUW.ShouldBe(33);
         }
     }
 }

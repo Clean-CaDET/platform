@@ -803,5 +803,147 @@ namespace RepositoryCompilerTests.DataFactories
                 }"
             };
         }
+
+        public IEnumerable<string> GetCodeBlocksClass()
+        {
+            return new[]
+            {
+                @"
+                using System;
+                namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
+                {
+                    
+                    public class CSharpCodeParser
+                    {
+
+                        private string Test1;
+                        public string Test2;
+                        protected string Test3;
+                        protected string Test4;
+                        public void CSharpCodeParserInit()
+                        {
+                            // try {} catch {}, foreach == while and return 0
+                            string testString = ""try this foreach < loop == 3"";
+                            int a;
+                            int b;
+                            b = 0;
+                            a = 5 + 3 - 20;
+                            
+                            // check();
+            
+                        }
+
+                        private void CreateClassMemberBuilders1(CaDETClass parent, IEnumerable<MemberDeclarationSyntax> members, SemanticModel semanticModel)
+                        {   
+                            var classMemberBuilders = new List<CSharpCaDETMemberBuilder>();
+                            foreach (var member in members)
+                            {
+                                try
+                                {
+                                    ValidateNoPartialModifier(member);
+                                }
+                                catch (InappropriateMemberTypeException)
+                                {
+                                    //MemberDeclarationSyntax is not property, constructor, or method.
+                                }
+                            }
+                            _memberBuilders.Add(parent, classMemberBuilders);
+                            return;
+                        }
+
+                        private int CreateClassMemberBuilders2(CaDETClass parent, IEnumerable<MemberDeclarationSyntax> members, SemanticModel semanticModel)
+                        {
+                            Func<int, int> square = x => x * x;
+                            Action line = () => Console.WriteLine();
+                            var classMemberBuilders = new List<CSharpCaDETMemberBuilder>();
+                            foreach (var member in members)
+                            {
+                                try
+                                {
+                                    int i = 0;
+                                    while (i < 10)
+                                    {
+                                        if (i != 5)
+                                        {
+                                            Console.WriteLine(""message"");
+                                        }
+                                        if (i >= 4 || i >= 2)
+                                        {
+                                            Console.WriteLine(""message!"");
+                                            int a = 5 + (3-2*(1+1)) ;
+                                        }
+                                        i++;
+                                    }
+                                }
+                                catch (InappropriateMemberTypeException)
+                                {
+                                    //MemberDeclarationSyntax is not property, constructor, or method.
+                                }
+
+                                try
+                                {
+                                    ValidateNoPartialModifier(member);
+                                }
+                                catch (InappropriateMemberTypeException)
+                                {
+                                    return 1;
+                                }
+                            }
+                            _memberBuilders.Add(parent, classMemberBuilders);
+                            return 0;
+                        }
+
+                        private void CreateClassMemberBuilders3(CaDETClass parent, IEnumerable<MemberDeclarationSyntax> members, SemanticModel semanticModel)
+                        {
+                            var classMemberBuilders = new List<CSharpCaDETMemberBuilder>();
+                            try
+                            {
+                                ValidateNoPartialModifier(member);
+                                try
+                                {
+                                    ValidateNoPartialModifier(member);
+                                }
+                                catch (InappropriateMemberTypeException)
+                                {
+                                    //MemberDeclarationSyntax is not property, constructor, or method.
+                                }
+                            }
+                            catch (InappropriateMemberTypeException)
+                            {
+                                //MemberDeclarationSyntax is not property, constructor, or method.
+                            }
+                            foreach (var member in members)
+                            {
+                                try
+                                {
+                                    int i = 0;
+                                    int a = 10;
+                                    while (i < 10)
+                                    {
+                                        for(int j = 0; j < 10; j++)
+                                        {
+                                           --a;
+                                           Console.WriteLine(""message""); 
+                                        }
+                                        i++;
+                                    }
+                                }
+                                catch (InappropriateMemberTypeException)
+                                {
+                                    //MemberDeclarationSyntax is not property, constructor, or method.
+                                }
+                            }
+                            _memberBuilders.Add(parent, classMemberBuilders);
+                            int k = 0;
+                            do 
+                            {
+                                Console.Write(""Hello"");
+                                k++;
+                            } while (k <= 10)
+                        }
+                    }
+                }",
+            };
+        }
     }
 }

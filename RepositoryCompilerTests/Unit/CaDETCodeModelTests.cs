@@ -74,6 +74,7 @@ namespace RepositoryCompilerTests.Unit
             logChecked.InvokedMethods.ShouldContain(overlapsWith);
             logChecked.InvokedMethods.ShouldContain(doctor.FindMember("TestFunction"));
         }
+
         [Fact]
         public void Calculates_accessed_fields()
         {
