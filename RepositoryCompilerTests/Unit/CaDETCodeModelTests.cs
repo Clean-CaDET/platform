@@ -24,8 +24,6 @@ namespace RepositoryCompilerTests.Unit
 
             classes.ShouldHaveSingleItem();
             var doctorClass = classes.First();
-            doctorClass.Metrics.NAD.ShouldBe(3);
-            doctorClass.Metrics.NMD.ShouldBe(1);
             doctorClass.Members.ShouldContain(method =>
                 method.Type.Equals(CaDETMemberType.Property) && method.Name.Equals("Email"));
             doctorClass.Members.ShouldContain(method => method.Type.Equals(CaDETMemberType.Constructor));

@@ -28,7 +28,7 @@ namespace SmartTutor.ContentModel.LearningObjects
         {
             foreach (CaDETClass caDETClass in caDETClasses)
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
-                    if (!classMetricRule.ClassMetricMeetsRequirements(caDETClass.Metrics))
+                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
                         return false;
             return true;
         }
@@ -37,7 +37,7 @@ namespace SmartTutor.ContentModel.LearningObjects
         {
             foreach (CaDETMember caDETMethod in caDETMethods)
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
-                    if (!methodMetricRule.MethodMetricMeetsRequirements(caDETMethod.Metrics))
+                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
                         return false;
             return true;
         }

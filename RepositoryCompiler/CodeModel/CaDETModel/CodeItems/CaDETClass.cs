@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
 {
@@ -23,11 +22,10 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public CaDETClass Parent { get; internal set; }
         public CaDETClass OuterClass { get; internal set; }
         public bool IsInnerClass => OuterClass != null;
-        public List<CaDETClass> InnerClasses { get; internal set; }
         public List<CaDETModifier> Modifiers { get; internal set; }
         public List<CaDETMember> Members { get; internal set; }
         public List<CaDETField> Fields { get; internal set; }
-        public CaDETClassMetrics Metrics { get; internal set; }
+        public Dictionary<CaDETMetric, double> Metrics { get; internal set; }
 
         public CaDETMember FindMember(string name)
         {

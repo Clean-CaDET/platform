@@ -1,23 +1,17 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
-using System;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.LearningObjects.MetricRules
 {
     public class MetricRangeRule
     {
-        public string MetricName { get; internal set; }
+        public CaDETMetric MetricName { get; internal set; }
         public double FromValue { get; internal set; }
         public double ToValue { get; internal set; }
 
-        // TODO: CaDETClassMetrics soon to be a Dictionary<string, double>, update
-        public bool ClassMetricMeetsRequirements(CaDETClassMetrics metrics) => MetricMeetsRequirements(metrics);
-
-        public bool MethodMetricMeetsRequirements(CaDETMemberMetrics metrics) => MetricMeetsRequirements(metrics);
-
-        private bool MetricMeetsRequirements(object metrics)
+        internal bool MetricMeetsRequirements(Dictionary<CaDETMetric, double> metrics)
         {
-            object metricObjectValue = metrics.GetType().GetProperty(MetricName).GetValue(metrics, null);
-            double metricValue = Convert.ToDouble(metricObjectValue);
+            var metricValue = metrics[MetricName];
             return (FromValue <= metricValue && metricValue <= ToValue);
         }
     }
