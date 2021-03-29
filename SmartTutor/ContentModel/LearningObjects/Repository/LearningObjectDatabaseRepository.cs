@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using SmartTutor.ContentModel.LectureModel.Repository;
+using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -18,6 +18,11 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         }
 
         public List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Challenge GetChallenge(int challengeId)
         {
             throw new System.NotImplementedException();
         }
