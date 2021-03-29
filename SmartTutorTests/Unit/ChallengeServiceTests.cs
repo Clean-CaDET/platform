@@ -38,6 +38,7 @@ namespace SmartTutorTests.Unit
             challenge.ClassMetricRules[1].ToValue.ShouldBe(2);
             challenge.MethodMetricRules[0].MetricName.ShouldBe(CaDETMetric.MELOC);
             challenge.MethodMetricRules[1].FromValue.ShouldBe(1);
+            challenge.FulfillmentStrategy.ShouldNotBe(null);
         }
     }
 }
