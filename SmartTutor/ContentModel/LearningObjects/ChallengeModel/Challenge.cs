@@ -13,7 +13,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
         public List<MetricRangeRule> MethodMetricRules { get; internal set; }
         public ChallengeFulfillmentStrategy FulfillmentStrategy { get; internal set; }
 
-        public bool CheckSubmittedChallengeCompletion(List<CaDETClass> submittetClasses, Challenge challenge)
+        public bool CheckChallengeFulfillment(List<CaDETClass> submittetClasses, Challenge challenge)
         {
             return FulfillmentStrategy.CheckChallengeFulfillment(submittetClasses, challenge);
         }
