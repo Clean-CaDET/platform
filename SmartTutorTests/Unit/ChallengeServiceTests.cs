@@ -1,9 +1,9 @@
-﻿using Shouldly;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using Shouldly;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using Xunit;
 
 namespace SmartTutorTests.Unit

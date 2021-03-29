@@ -1,8 +1,9 @@
-﻿using RepositoryCompiler.Controllers;
-using SmartTutor.ContentModel.LearningObjects.MetricRules;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.Controllers;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {

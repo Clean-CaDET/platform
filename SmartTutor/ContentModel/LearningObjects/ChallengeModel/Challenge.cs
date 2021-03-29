@@ -1,9 +1,9 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using SmartTutor.ContentModel.LearningObjects.MetricRules;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SmartTutor.ContentModel.LearningObjects
+namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
 {
     public class Challenge : LearningObject
     {

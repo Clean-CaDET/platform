@@ -1,4 +1,4 @@
-﻿using SmartTutor.ContentModel.LearningObjects;
+﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 
 namespace SmartTutor.ContentModel
 {

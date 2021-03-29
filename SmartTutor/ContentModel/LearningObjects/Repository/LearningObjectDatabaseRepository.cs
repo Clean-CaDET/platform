@@ -1,3 +1,4 @@
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LectureModel.Repository;
 using System.Collections.Generic;
 
