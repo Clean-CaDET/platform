@@ -56,5 +56,11 @@ namespace RepositoryCompiler.Controllers
             CodeModelFactory codeFactory = new CodeModelFactory(LanguageEnum.CSharp);
             return codeFactory.CreateClassModel(sourceCode);
         }
+
+        public List<CaDETClass> BuildClassesModel(string[] sourceCode)
+        {
+            CodeModelFactory codeFactory = new CodeModelFactory(LanguageEnum.CSharp);
+            return codeFactory.CreateClassModel(sourceCode);
+        }
     }
 }
