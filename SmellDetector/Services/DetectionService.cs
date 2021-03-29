@@ -19,13 +19,11 @@ namespace SmellDetector.Services
         {
             Detectors = new List<IDetector>
             {
-                new LongMethodRuleEngine(),
-                new LongParameterListRuleEngine(),
-                new GodClassRuleEngine(),
+                new ClassMetricRuleEngine()
             };
         }
 
-        public SmellDetectionReport GenerateSmellDetectionReport(CaDETClassDTO caDetClassDto)
+        public SmellDetectionReport GenerateSmellDetectionReport(List<CaDETClassDTO> caDetClassDto)
         {
             SmellDetectionReport smellDetectionReport = new SmellDetectionReport();
 

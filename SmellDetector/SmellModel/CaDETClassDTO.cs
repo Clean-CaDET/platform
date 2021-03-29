@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
-using SmellDetector.Controllers;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SmellDetector.SmellModel
 {
     public class CaDETClassDTO
     {
-        public Dictionary<string, MetricsDTO> CodeItemMetrics { get; set; }
+        public string FullName { get; set; }
+        public Dictionary<string, double> CodeSnippetMetrics { get; set; }
+
+        public CaDETClassDTO(string fullName, Dictionary<string, double> codeSnippetMetrics)
+        {
+            FullName = fullName;
+            CodeSnippetMetrics = codeSnippetMetrics;
+        }
 
         public CaDETClassDTO()
         {
-            CodeItemMetrics = new Dictionary<string, MetricsDTO>();
+            CodeSnippetMetrics = new Dictionary<string, double>();
         }
-
     }
 }
