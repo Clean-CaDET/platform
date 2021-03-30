@@ -157,9 +157,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
                     ResolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode),
-                    ClassMetricRules = classMetricRules,
-                    MethodMetricRules = methodMetricRules,
-                    FulfillmentStrategy = new BasicChallengeFulfillment()
+                    FulfillmentStrategy = new BasicChallengeFulfillment(classMetricRules, methodMetricRules)
                 }
             });
         }

@@ -7,10 +7,19 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 {
     public class BasicChallengeFulfillment : ChallengeFulfillmentStrategy
     {
-        public override bool CheckChallengeFulfillment(List<CaDETClass> submittetClasses, Challenge challenge)
+        private readonly List<MetricRangeRule> _classMetricRules;
+        private readonly List<MetricRangeRule> _methodMetricRules;
+
+        public BasicChallengeFulfillment(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules)
+        {
+            _classMetricRules = classMetricRules;
+            _methodMetricRules = methodMetricRules;
+        }
+
+        public override bool CheckChallengeFulfillment(List<CaDETClass> submittetClasses)
         {
             List<CaDETMember> submittedMethods = GetMethodsFromClasses(submittetClasses);
-            return ValidateClassMetricRules(submittetClasses, challenge) && ValidateMethodMetricRules(submittedMethods, challenge);
+            return ValidateClassMetricRules(submittetClasses) && ValidateMethodMetricRules(submittedMethods);
         }
 
         private List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)
@@ -18,19 +27,19 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             return caDETClasses.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
         }
 
-        private bool ValidateClassMetricRules(List<CaDETClass> caDETClasses, Challenge challenge)
+        private bool ValidateClassMetricRules(List<CaDETClass> caDETClasses)
         {
             foreach (CaDETClass caDETClass in caDETClasses)
-                foreach (MetricRangeRule classMetricRule in challenge.ClassMetricRules)
+                foreach (MetricRangeRule classMetricRule in _classMetricRules)
                     if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
                         return false;
             return true;
         }
 
-        private bool ValidateMethodMetricRules(List<CaDETMember> caDETMethods, Challenge challenge)
+        private bool ValidateMethodMetricRules(List<CaDETMember> caDETMethods)
         {
             foreach (CaDETMember caDETMethod in caDETMethods)
-                foreach (MetricRangeRule methodMetricRule in challenge.MethodMetricRules)
+                foreach (MetricRangeRule methodMetricRule in _methodMetricRules)
                     if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
                         return false;
             return true;

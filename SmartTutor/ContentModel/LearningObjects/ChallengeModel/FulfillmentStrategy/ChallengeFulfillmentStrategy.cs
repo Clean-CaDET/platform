@@ -5,6 +5,6 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 {
     public abstract class ChallengeFulfillmentStrategy
     {
-        public abstract bool CheckChallengeFulfillment(List<CaDETClass> submittetClasses, Challenge challenge);
+        public abstract bool CheckChallengeFulfillment(List<CaDETClass> submittetClasses);
     }
 }
