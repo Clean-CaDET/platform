@@ -1,9 +1,9 @@
-﻿using Shouldly;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using Shouldly;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -34,10 +34,7 @@ namespace SmartTutorTests.Unit
             challenge.ResolvedClasses[1].Metrics[CaDETMetric.NMD].ShouldBe(2);
             challenge.ResolvedClasses[1].Members[0].Metrics[CaDETMetric.MELOC].ShouldBe(4);
             challenge.ResolvedClasses[1].Members[1].Metrics[CaDETMetric.MELOC].ShouldBe(3);
-            challenge.ClassMetricRules[0].MetricName.ShouldBe(CaDETMetric.CLOC);
-            challenge.ClassMetricRules[1].ToValue.ShouldBe(2);
-            challenge.MethodMetricRules[0].MetricName.ShouldBe(CaDETMetric.MELOC);
-            challenge.MethodMetricRules[1].FromValue.ShouldBe(1);
+            challenge.FulfillmentStrategy.ShouldNotBe(null);
         }
     }
 }

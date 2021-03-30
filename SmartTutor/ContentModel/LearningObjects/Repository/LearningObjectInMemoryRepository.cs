@@ -1,8 +1,10 @@
-﻿using RepositoryCompiler.Controllers;
-using SmartTutor.ContentModel.LearningObjects.MetricRules;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.Controllers;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -155,8 +157,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
                     ResolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode),
-                    ClassMetricRules = classMetricRules,
-                    MethodMetricRules = methodMetricRules
+                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
                 }
             });
         }

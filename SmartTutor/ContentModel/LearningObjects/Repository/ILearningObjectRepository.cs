@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
