@@ -2,6 +2,8 @@
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -104,28 +106,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         }
 
-        private void AddChallenge()
-        {
-            List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
-            classMetricRules.Add(new MetricRangeRule { MetricName = "CLOC", FromValue = 3, ToValue = 30 });
-            classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
-
-            List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
-            methodMetricRules.Add(new MetricRangeRule { MetricName = "MELOC", FromValue = 2, ToValue = 5 });
-            methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
-
-            _learningObjectCache.Add(337, new List<LearningObject>
-            {
-                new Challenge
-                {
-                    Id = 3371,
-                    LearningObjectSummaryId = 337,
-                    Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
-                }
-            });
-        }
-
         public List<LearningObject> GetLearningObjectsForSummary(int summaryId)
         {
             return _learningObjectCache[summaryId];
@@ -139,6 +119,43 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         public Challenge GetChallenge(int challengeId)
         {
             return _learningObjectCache.SelectMany(LOs => LOs.Value.Where(LO => LO.Id == challengeId)).First() as Challenge;
+        }
+
+        private void AddChallenge()
+        {
+            List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
+            classMetricRules.Add(new MetricRangeRule { MetricName = "CLOC", FromValue = 3, ToValue = 30 });
+            classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
+
+            List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
+            methodMetricRules.Add(new MetricRangeRule { MetricName = "MELOC", FromValue = 2, ToValue = 5 });
+            methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
+
+            List<MetricHint> metricHints = new List<MetricHint>();
+            foreach (MetricRangeRule classMetricRule in classMetricRules)
+                metricHints.Add(NewMetricHint(classMetricRule));
+            foreach (MetricRangeRule methodMetricRule in methodMetricRules)
+                metricHints.Add(NewMetricHint(methodMetricRule));
+
+            _learningObjectCache.Add(337, new List<LearningObject>
+            {
+                new Challenge
+                {
+                    Id = 3371,
+                    LearningObjectSummaryId = 337,
+                    Url = "https://github.com/Ana00000/Challenge-inspiration.git",
+                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules, metricHints)
+                }
+            });
+        }
+
+        private MetricHint NewMetricHint(MetricRangeRule metricRangeRule)
+        {
+            return new MetricHint
+            {
+                Content =
+                "Metric rule " + metricRangeRule.MetricName + " should be between " + metricRangeRule.FromValue + " and " + metricRangeRule.ToValue + "."
+            };
         }
 
         public List<QuestionAnswer> GetQuestionAnswers(int questionId)
