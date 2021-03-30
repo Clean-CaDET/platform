@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SmartTutor.ContentModel.LearningObjects;
 
 namespace SmartTutor.ContentModel.LectureModel
 {
