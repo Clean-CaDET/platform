@@ -1,5 +1,6 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -23,7 +24,6 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             _metricHints = metricHints;
         }
 
-        //TODO: return object (with hints), not just bool
         public override bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
             List<CaDETMember> submittedMethods = GetMethodsFromClasses(solutionAttempt);

@@ -1,6 +1,7 @@
 ﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.Linq;
 
