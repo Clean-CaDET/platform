@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.Database;
 
 namespace SmartTutor.ContentModel.ProgressModel.Repository
 {

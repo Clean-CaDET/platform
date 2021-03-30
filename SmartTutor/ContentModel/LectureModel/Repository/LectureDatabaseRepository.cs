@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartTutor.Database;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.ContentModel.LectureModel.Repository
 {
@@ -14,17 +16,18 @@ namespace SmartTutor.ContentModel.LectureModel.Repository
 
         public List<Lecture> GetLectures()
         {
-            throw new NotImplementedException();
+            return _dbContext.Lectures.ToList();
         }
 
         public List<KnowledgeNode> GetKnowledgeNodes(int id)
         {
-            throw new NotImplementedException();
+            var lecture = _dbContext.Lectures.Where(l => l.Id == id).Include(l => l.KnowledgeNodes).FirstOrDefault();
+            return lecture?.KnowledgeNodes;
         }
 
         public KnowledgeNode GetKnowledgeNodeWithSummaries(int id)
         {
-            throw new NotImplementedException();
+            return _dbContext.KnowledgeNodes.Where(n => n.Id == id).Include(n => n.LearningObjectSummaries).FirstOrDefault();
         }
     }
 }

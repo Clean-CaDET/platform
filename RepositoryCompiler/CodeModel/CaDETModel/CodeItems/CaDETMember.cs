@@ -1,5 +1,4 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
@@ -12,7 +11,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public CaDETClass Parent { get; internal set; }
         public List<CaDETParameter> Params { get; internal set; }
         public List<CaDETModifier> Modifiers { get; internal set; }
-        public CaDETMemberMetrics Metrics { get; internal set; }
+        public Dictionary<CaDETMetric, double> Metrics { get; internal set; }
         public ISet<CaDETMember> InvokedMethods { get; internal set; }
         public ISet<CaDETMember> AccessedAccessors { get; internal set; }
         public ISet<CaDETField> AccessedFields { get; internal set; }

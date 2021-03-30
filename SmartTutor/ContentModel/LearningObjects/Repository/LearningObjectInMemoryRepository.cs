@@ -1,5 +1,8 @@
-﻿using RepositoryCompiler.Controllers;
-using SmartTutor.ContentModel.LearningObjects.MetricRules;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using RepositoryCompiler.Controllers;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -139,12 +142,12 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             };
 
             List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
-            classMetricRules.Add(new MetricRangeRule { MetricName = "LOC", FromValue = 3, ToValue = 30 });
-            classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
+            classMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.CLOC, FromValue = 3, ToValue = 30 });
+            classMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.NMD, FromValue = 0, ToValue = 2 });
 
             List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
-            methodMetricRules.Add(new MetricRangeRule { MetricName = "ELOC", FromValue = 2, ToValue = 5 });
-            methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
+            methodMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.MELOC, FromValue = 2, ToValue = 5 });
+            methodMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.NOP, FromValue = 1, ToValue = 4 });
 
             _learningObjectCache.Add(337, new List<LearningObject>
             {
@@ -154,8 +157,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
                     ResolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode),
-                    ClassMetricRules = classMetricRules,
-                    MethodMetricRules = methodMetricRules
+                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
                 }
             });
         }

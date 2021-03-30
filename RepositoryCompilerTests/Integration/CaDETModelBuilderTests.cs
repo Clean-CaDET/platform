@@ -26,20 +26,20 @@ namespace RepositoryCompilerTests.Integration
                 m.Name.Equals("Conflict") && m.Type.Equals(CaDETMemberType.Constructor) && m.AccessedFields.Count == 3);
             conflict.Members.ShouldContain(m =>
                 m.Name.Equals("Equals") && m.Type.Equals(CaDETMemberType.Method) && m.AccessedFields.Count == 1);
-            conflict.Metrics.LOC.ShouldBe(108);
-            conflict.Metrics.LCOM.ShouldBe(0.833);
-            conflict.Metrics.NAD.ShouldBe(4);
-            conflict.Metrics.NMD.ShouldBe(3);
-            conflict.Metrics.WMC.ShouldBe(8);
+            conflict.Metrics[CaDETMetric.CLOC].ShouldBe(108);
+            conflict.Metrics[CaDETMetric.LCOM].ShouldBe(0.833);
+            conflict.Metrics[CaDETMetric.NAD].ShouldBe(4);
+            conflict.Metrics[CaDETMetric.NMD].ShouldBe(3);
+            conflict.Metrics[CaDETMetric.WMC].ShouldBe(8);
             CaDETClass certificate = project.Classes.Find(c => c.FullName.Equals("LibGit2Sharp.Certificate"));
             certificate.ShouldNotBeNull();
             certificate.Members.ShouldBeEmpty();
             certificate.Fields.ShouldBeEmpty();
-            certificate.Metrics.LCOM.ShouldBeNull();
-            certificate.Metrics.LOC.ShouldBe(3);
-            certificate.Metrics.NAD.ShouldBe(0);
-            certificate.Metrics.NMD.ShouldBe(0);
-            certificate.Metrics.WMC.ShouldBe(0);
+            certificate.Metrics[CaDETMetric.LCOM].ShouldBe(-1);
+            certificate.Metrics[CaDETMetric.CLOC].ShouldBe(3);
+            certificate.Metrics[CaDETMetric.NAD].ShouldBe(0);
+            certificate.Metrics[CaDETMetric.NMD].ShouldBe(0);
+            certificate.Metrics[CaDETMetric.WMC].ShouldBe(0);
             CaDETClass handles =
                 project.Classes.Find(c => c.FullName.Equals("LibGit2Sharp.Core.Handles.Libgit2Object"));
             handles.ShouldNotBeNull();
@@ -49,11 +49,11 @@ namespace RepositoryCompilerTests.Integration
                                                                         && m.InvokedMethods.Count == 1 &&
                                                                         m.AccessedFields.Count == 0 &&
                                                                         m.AccessedAccessors.Count == 0);
-            handles.Metrics.LCOM.ShouldBe(0.667);
-            handles.Metrics.LOC.ShouldBe(100);
-            handles.Metrics.NAD.ShouldBe(3);
-            handles.Metrics.NMD.ShouldBe(4);
-            handles.Metrics.WMC.ShouldBe(10);
+            handles.Metrics[CaDETMetric.LCOM].ShouldBe(0.667);
+            handles.Metrics[CaDETMetric.CLOC].ShouldBe(100);
+            handles.Metrics[CaDETMetric.NAD].ShouldBe(3);
+            handles.Metrics[CaDETMetric.NMD].ShouldBe(4);
+            handles.Metrics[CaDETMetric.WMC].ShouldBe(10);
         }
 
         [Theory]

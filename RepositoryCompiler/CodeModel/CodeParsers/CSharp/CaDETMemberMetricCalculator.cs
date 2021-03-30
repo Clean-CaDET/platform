@@ -6,33 +6,32 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using RepositoryCompiler.CodeModel.CaDETModel.Metrics;
 
 namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 {
     internal class CaDETMemberMetricCalculator
     {
-        internal CaDETMemberMetrics CalculateMemberMetrics(MemberDeclarationSyntax member, CaDETMember method)
+        internal Dictionary<CaDETMetric, double> CalculateMemberMetrics(MemberDeclarationSyntax member, CaDETMember method)
         {
-            return new CaDETMemberMetrics
+            return new Dictionary<CaDETMetric, double>
             {
-                CYCLO = CalculateCyclomaticComplexity(member),
-                LOC = CountLinesOfText(member.ToString()),
-                ELOC = GetEffectiveLinesOfCode(member),
-                NOP = GetNumberOfParameters(method),
-                NOLV = GetNumberOfLocalVariables(member),
-                NOTC = CountTryCatchBlocks(member),
-                NOL = CountLoops(member),
-                NOR = CountReturnStatements(member),
-                NOC = CountComparisonOperators(member),
-                NOA = CountNumberOfAssignments(member),
-                NONL = CountNumberOfNumericLiterals(member),
-                NOSL = CountNumberOfStringLiterals(member),
-                NOMO = CountNumberOfMathOperations(member),
-                NOPE = CountNumberOfParenthesizedExpressions(member),
-                NOLE = CountNumberOfLambdaExpressions(member),
-                MNB = CountMaxNestedBlocks(member),
-                NOUW = CountNumberOfUniqueWords(member)
+                [CaDETMetric.CYCLO] = CalculateCyclomaticComplexity(member),
+                [CaDETMetric.MLOC] = CountLinesOfText(member.ToString()),
+                [CaDETMetric.MELOC] = GetEffectiveLinesOfCode(member),
+                [CaDETMetric.NOP] = GetNumberOfParameters(method),
+                [CaDETMetric.NOLV] = GetNumberOfLocalVariables(member),
+                [CaDETMetric.NOTC] = CountTryCatchBlocks(member),
+                [CaDETMetric.MNOL] = CountLoops(member),
+                [CaDETMetric.MNOR] = CountReturnStatements(member),
+                [CaDETMetric.MNOC] = CountComparisonOperators(member),
+                [CaDETMetric.MNOA] = CountNumberOfAssignments(member),
+                [CaDETMetric.NONL] = CountNumberOfNumericLiterals(member),
+                [CaDETMetric.NOSL] = CountNumberOfStringLiterals(member),
+                [CaDETMetric.NOMO] = CountNumberOfMathOperations(member),
+                [CaDETMetric.NOPE] = CountNumberOfParenthesizedExpressions(member),
+                [CaDETMetric.NOLE] = CountNumberOfLambdaExpressions(member),
+                [CaDETMetric.MMNB] = CountMaxNestedBlocks(member),
+                [CaDETMetric.NOUW] = CountNumberOfUniqueWords(member)
             };
         }
 

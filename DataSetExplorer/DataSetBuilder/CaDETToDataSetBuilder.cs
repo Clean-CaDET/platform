@@ -102,7 +102,7 @@ namespace DataSetExplorer.DataSetBuilder
         private List<DataSetInstance> BuildClasses()
         {
             var cadetClasses = _cadetProject.Classes.Where(
-                c => c.Metrics.NAD >= _minimumNAD || c.Metrics.NMD >= _minimumNMD).ToList();
+                c => c.Metrics[CaDETMetric.NAD] >= _minimumNAD || c.Metrics[CaDETMetric.NMD] >= _minimumNMD).ToList();
             if(_randomizeClassList) ShuffleList(cadetClasses);
             if(_percentileOfProjectCovered < 100) cadetClasses = cadetClasses.Take(DetermineNumberOfInstances(_cadetProject.Classes.Count)).ToList();
             return CaDETToDataSetClasses(cadetClasses);
@@ -142,7 +142,7 @@ namespace DataSetExplorer.DataSetBuilder
             var cadetMembers = new List<CaDETMember>();
             var allMembers= _cadetProject.Classes.SelectMany(c => c.Members).ToList();
             cadetMembers.AddRange(allMembers.Where(
-                    m => _acceptedMemberTypes.Contains(m.Type) && m.Metrics.ELOC >= _minimumELOC));
+                    m => _acceptedMemberTypes.Contains(m.Type) && m.Metrics[CaDETMetric.MELOC] >= _minimumELOC));
             if (_randomizeMemberList) ShuffleList(cadetMembers);
             if (_percentileOfProjectCovered < 100) cadetMembers = cadetMembers.Take(DetermineNumberOfInstances(allMembers.Count)).ToList();
 

@@ -20,9 +20,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetDoctorClassText());
 
             var doctorClass = classes.First();
-            doctorClass.Metrics.LOC.ShouldBe(22);
-            doctorClass.FindMember("Email").Metrics.LOC.ShouldBe(1);
-            doctorClass.FindMember("IsAvailable").Metrics.LOC.ShouldBe(8);
+            doctorClass.Metrics[CaDETMetric.CLOC].ShouldBe(22);
+            doctorClass.FindMember("Email").Metrics[CaDETMetric.MLOC].ShouldBe(1);
+            doctorClass.FindMember("IsAvailable").Metrics[CaDETMetric.MLOC].ShouldBe(8);
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.Metrics.WMC.ShouldBe(17);
+            gitClass.Metrics[CaDETMetric.WMC].ShouldBe(17);
         }
 
 
@@ -50,11 +50,11 @@ namespace RepositoryCompilerTests.Unit
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
             var class9 = classes.Find(c => c.Name.Equals("Class9"));
 
-            class1.Metrics.ATFD.ShouldBe(2);
-            class3.Metrics.ATFD.ShouldBe(1);
-            class5.Metrics.ATFD.ShouldBe(1);
-            class7.Metrics.ATFD.ShouldBe(3);
-            class9.Metrics.ATFD.ShouldBe(2);
+            class1.Metrics[CaDETMetric.ATFD].ShouldBe(2);
+            class3.Metrics[CaDETMetric.ATFD].ShouldBe(1);
+            class5.Metrics[CaDETMetric.ATFD].ShouldBe(1);
+            class7.Metrics[CaDETMetric.ATFD].ShouldBe(3);
+            class9.Metrics[CaDETMetric.ATFD].ShouldBe(2);
         }
 
         [Fact]
@@ -66,8 +66,8 @@ namespace RepositoryCompilerTests.Unit
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
-            dateRange.Metrics.LCOM.ShouldBe(0);
-            doctor.Metrics.LCOM.ShouldBe(0.75);
+            dateRange.Metrics[CaDETMetric.LCOM].ShouldBe(0);
+            doctor.Metrics[CaDETMetric.LCOM].ShouldBe(0.75);
         }
 
         [Fact]
@@ -81,9 +81,9 @@ namespace RepositoryCompilerTests.Unit
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
             var class8 = classes.Find(c => c.Name.Equals("Class8"));
 
-            class6.Metrics.TCC.ShouldBe(0.67);
-            class7.Metrics.TCC.ShouldBe(0.5);
-            class8.Metrics.TCC.ShouldBe(0.5);
+            class6.Metrics[CaDETMetric.TCC].ShouldBe(0.67);
+            class7.Metrics[CaDETMetric.TCC].ShouldBe(0.5);
+            class8.Metrics[CaDETMetric.TCC].ShouldBe(0.5);
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.Metrics.NOR.ShouldBe(3);
+            firstClass.Metrics[CaDETMetric.CNOR].ShouldBe(3);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.Metrics.NOL.ShouldBe(7);
+            firstClass.Metrics[CaDETMetric.CNOL].ShouldBe(7);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.Metrics.NOC.ShouldBe(7);
+            firstClass.Metrics[CaDETMetric.CNOC].ShouldBe(7);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.Metrics.NOA.ShouldBe(2);
+            firstClass.Metrics[CaDETMetric.CNOA].ShouldBe(2);
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.Metrics.NOPM.ShouldBe(3);
+            firstClass.Metrics[CaDETMetric.NOPM].ShouldBe(3);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.Metrics.NOPF.ShouldBe(2);
+            firstClass.Metrics[CaDETMetric.NOPF].ShouldBe(2);
         }
         
         [Fact]
@@ -160,7 +160,7 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.Metrics.MNB.ShouldBe(4);
+            firstClass.Metrics[CaDETMetric.CMNB].ShouldBe(4);
         }
 
         [Fact]
@@ -174,8 +174,8 @@ namespace RepositoryCompilerTests.Unit
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
 
-            dataRange.Metrics.CBO.ShouldBe(0);
-            doctor.Metrics.CBO.ShouldBe(1);
+            dataRange.Metrics[CaDETMetric.CBO].ShouldBe(0);
+            doctor.Metrics[CaDETMetric.CBO].ShouldBe(1);
         }
 
         [Fact]
@@ -188,8 +188,8 @@ namespace RepositoryCompilerTests.Unit
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
 
-            dateRange.Metrics.RFC.ShouldBe(0);
-            service.Metrics.RFC.ShouldBe(4);
+            dateRange.Metrics[CaDETMetric.RFC].ShouldBe(0);
+            service.Metrics[CaDETMetric.RFC].ShouldBe(4);
         }
 
         [Fact]
@@ -201,8 +201,8 @@ namespace RepositoryCompilerTests.Unit
 
             var gitClass = classes.First();
 
-            gitClass.FindMember("CheckoutCommit").Metrics.CYCLO.ShouldBe(2);
-            gitClass.FindMember("ParseDocuments").Metrics.CYCLO.ShouldBe(4);
+            gitClass.FindMember("CheckoutCommit").Metrics[CaDETMetric.CYCLO].ShouldBe(2);
+            gitClass.FindMember("ParseDocuments").Metrics[CaDETMetric.CYCLO].ShouldBe(4);
         }
 
         [Fact]
@@ -213,8 +213,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetEffectiveLinesOfCodeTest());
 
             var doctor = classes.First();
-            doctor.FindMember("Doctor").Metrics.ELOC.ShouldBe(1);
-            doctor.FindMember("IsAvailable").Metrics.ELOC.ShouldBe(2);
+            doctor.FindMember("Doctor").Metrics[CaDETMetric.MELOC].ShouldBe(1);
+            doctor.FindMember("IsAvailable").Metrics[CaDETMetric.MELOC].ShouldBe(2);
         }
 
         [Fact]
@@ -225,10 +225,10 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.FindMember("CheckForNewCommits").Metrics.NOP.ShouldBe(0);
-            gitClass.FindMember("PullChanges").Metrics.NOP.ShouldBe(0);
-            gitClass.FindMember("GetCommits").Metrics.NOP.ShouldBe(1);
-            gitClass.FindMember("CheckoutCommit").Metrics.NOP.ShouldBe(1);
+            gitClass.FindMember("CheckForNewCommits").Metrics[CaDETMetric.NOP].ShouldBe(0);
+            gitClass.FindMember("PullChanges").Metrics[CaDETMetric.NOP].ShouldBe(0);
+            gitClass.FindMember("GetCommits").Metrics[CaDETMetric.NOP].ShouldBe(1);
+            gitClass.FindMember("CheckoutCommit").Metrics[CaDETMetric.NOP].ShouldBe(1);
         }
 
         [Fact]
@@ -239,8 +239,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
 
             var gitClass = classes.First();
-            gitClass.FindMember("CheckForNewCommits").Metrics.NOLV.ShouldBe(2);
-            gitClass.FindMember("GetActiveCommit").Metrics.NOLV.ShouldBe(0);
+            gitClass.FindMember("CheckForNewCommits").Metrics[CaDETMetric.NOLV].ShouldBe(2);
+            gitClass.FindMember("GetActiveCommit").Metrics[CaDETMetric.NOLV].ShouldBe(0);
         }
 
         [Fact]
@@ -251,10 +251,10 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOTC.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOTC.ShouldBe(1);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOTC.ShouldBe(2);
-            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOTC.ShouldBe(3);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOTC].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOTC].ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOTC].ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics[CaDETMetric.NOTC].ShouldBe(3);
         }
 
         [Fact]
@@ -265,10 +265,10 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOL.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOL.ShouldBe(1);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOL.ShouldBe(2);
-            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOL.ShouldBe(4);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOL].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.MNOL].ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.MNOL].ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics[CaDETMetric.MNOL].ShouldBe(4);
         }
 
         [Fact]
@@ -279,9 +279,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOR.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOR.ShouldBe(1);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOR.ShouldBe(2);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOR].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.MNOR].ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.MNOR].ShouldBe(2);
         }
 
         [Fact]
@@ -292,9 +292,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOC.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOC.ShouldBe(4);
-            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.NOC.ShouldBe(3);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOC].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.MNOC].ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics[CaDETMetric.MNOC].ShouldBe(3);
         }
 
         [Fact]
@@ -305,8 +305,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOA.ShouldBe(2);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOA.ShouldBe(0);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOA].ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.MNOA].ShouldBe(0);
         }
 
         [Fact]
@@ -317,9 +317,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NONL.ShouldBe(4);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NONL.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NONL.ShouldBe(12);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NONL].ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NONL].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NONL].ShouldBe(12);
         }
 
         [Fact]
@@ -330,9 +330,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOSL.ShouldBe(1);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOSL.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOSL.ShouldBe(2);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOSL].ShouldBe(1);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOSL].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOSL].ShouldBe(2);
         }
 
         [Fact]
@@ -343,9 +343,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOMO.ShouldBe(2);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.NOMO.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOMO.ShouldBe(6);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOMO].ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOMO].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOMO].ShouldBe(6);
         }
 
         [Fact]
@@ -356,8 +356,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOPE.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOPE.ShouldBe(2);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOPE].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOPE].ShouldBe(2);
         }
 
         [Fact]
@@ -368,8 +368,8 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.NOLE.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.NOLE.ShouldBe(2);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOLE].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOLE].ShouldBe(2);
         }
 
         [Fact]
@@ -380,10 +380,10 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var firstClass = classes.First();
-            firstClass.FindMember("CSharpCodeParserInit").Metrics.MNB.ShouldBe(0);
-            firstClass.FindMember("CreateClassMemberBuilders1").Metrics.MNB.ShouldBe(2);
-            firstClass.FindMember("CreateClassMemberBuilders2").Metrics.MNB.ShouldBe(4);
-            firstClass.FindMember("CreateClassMemberBuilders3").Metrics.MNB.ShouldBe(4);
+            firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MMNB].ShouldBe(0);
+            firstClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.MMNB].ShouldBe(2);
+            firstClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.MMNB].ShouldBe(4);
+            firstClass.FindMember("CreateClassMemberBuilders3").Metrics[CaDETMetric.MMNB].ShouldBe(4);
         }
 
         [Fact]
@@ -394,9 +394,9 @@ namespace RepositoryCompilerTests.Unit
             List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
 
             var gitClass = classes.First();
-            gitClass.FindMember("CSharpCodeParserInit").Metrics.NOUW.ShouldBe(5);
-            gitClass.FindMember("CreateClassMemberBuilders1").Metrics.NOUW.ShouldBe(22);
-            gitClass.FindMember("CreateClassMemberBuilders2").Metrics.NOUW.ShouldBe(33);
+            gitClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOUW].ShouldBe(5);
+            gitClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOUW].ShouldBe(22);
+            gitClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOUW].ShouldBe(33);
         }
     }
 }

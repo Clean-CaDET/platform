@@ -1,4 +1,5 @@
-using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.Database;
 using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
