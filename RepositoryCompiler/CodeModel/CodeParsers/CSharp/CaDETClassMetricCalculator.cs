@@ -28,7 +28,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 NOPM = CountNumberOfPrivateMethods(parsedClass),
                 NOPF = CountNumberOfProtectedFields(parsedClass),
                 MNB = CountMaxNestedBlocks(parsedClass),
-                RFC = CountUniqueMethodInvocations(parsedClass)
+                RFC = CountUniqueMethodInvocations(parsedClass),
+                CBO = CountDependencies(parsedClass)
             };
         }
         public int GetLinesOfCode(string code)
@@ -187,6 +188,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 invokedMethods.UnionWith(member.InvokedMethods.ToList());
             }
             return invokedMethods.Count();
+        }
+
+        // Implementation based on https://github.com/mauricioaniche/ck
+        // TODO - add method return types, variable declarations, etc.
+        private int CountDependencies(CaDETClass parsedClass)
+        {
+            return parsedClass.FieldTypes.Count();
         }
     }
 }

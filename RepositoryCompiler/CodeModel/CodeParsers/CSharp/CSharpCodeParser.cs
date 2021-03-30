@@ -5,6 +5,7 @@ using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using RepositoryCompiler.CodeModel.CodeParsers.CSharp.Exceptions;
 
 
@@ -105,7 +106,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                     {
                         Name = field.Identifier.Text,
                         Parent = parent,
-                        Modifiers = GetModifiers(node)
+                        Modifiers = GetModifiers(node),
+                        Type = new CaDETClass() { Name = fieldDeclaration.Declaration.Type.ToString()}
                     }));
             }
             
@@ -182,6 +184,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 c.Parent = LinkParent(classes, c.Parent);
                 c.OuterClass = LinkOuterClass(classes, c.ContainerName);
+                c.FieldTypes = LinkFieldTypes(classes, c.Fields);
                 foreach (var memberBuilder in _memberBuilders[c])
                 {
                     memberBuilder.DetermineAccessedCodeItems(classes);
@@ -198,6 +201,48 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private CaDETClass LinkOuterClass(List<CaDETClass> classes, string containerName)
         {
             return classes.FirstOrDefault(c => c.FullName.Equals(containerName));
+        }
+        private List<CaDETClass> LinkFieldTypes(List<CaDETClass> classes, List<CaDETField> fields)
+        {
+            List<CaDETClass> fieldTypes = new List<CaDETClass>();
+            foreach (var f in fields)
+            {
+                fieldTypes.Add(classes.FirstOrDefault(c => c.Name.Equals(f.Type.Name)));
+                var collectionTypes = GetCollectionTypes(classes, f.Type.Name);
+                var arrayType = GetArrayType(classes, f.Type.Name);
+                fieldTypes.AddRange(collectionTypes);
+                fieldTypes.Add(arrayType);
+            }
+            return fieldTypes.Where(t => t != null).Distinct().ToList();
+        }
+
+        private List<CaDETClass> GetCollectionTypes(List<CaDETClass> classes, string type)
+        {
+            List<CaDETClass> collectionTypes = new List<CaDETClass>();
+            var match = Regex.Match(type, "<.+>");
+            if (!match.Success) return collectionTypes;
+
+            var value = match.Value.Substring(1, match.Value.Length - 2);
+            var types = value.Split(",").Select(t => t.Trim()).ToList();
+            if (types.Count() == 1)
+            {
+                collectionTypes.Add(classes.FirstOrDefault(c => c.Name.Equals(types[0])));
+                return collectionTypes.Where(ct => ct != null).Distinct().ToList();
+            }
+
+            foreach (var t in types)
+            {
+                collectionTypes.Add(classes.FirstOrDefault(c => c.Name.Equals(t)));
+            }
+            return collectionTypes.Where(ct => ct != null).Distinct().ToList();
+        }
+
+        private CaDETClass GetArrayType(List<CaDETClass> classes, string type)
+        {
+            if (!Regex.IsMatch(type, "\\[.*\\]")) return null;
+            
+            var typeName = type.Split("[")[0];
+            return classes.FirstOrDefault(c => c.Name.Equals(typeName));
         }
 
         private List<CaDETClass> CalculateMetrics(List<CaDETClass> linkedClasses)

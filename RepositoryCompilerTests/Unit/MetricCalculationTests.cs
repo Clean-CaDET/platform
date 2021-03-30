@@ -164,6 +164,21 @@ namespace RepositoryCompilerTests.Unit
         }
 
         [Fact]
+        public void Calculates_number_of_dependencies_in_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+
+            var dataRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+
+            dataRange.Metrics.CBO.ShouldBe(0);
+            doctor.Metrics.CBO.ShouldBe(1);
+        }
+
+        [Fact]
         public void Calculates_invoked_methods_in_a_class()
         {
             CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);

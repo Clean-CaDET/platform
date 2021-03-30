@@ -49,5 +49,10 @@
         /// RFC: Response for a class, counts the number of unique method invocations
         /// </summary>
         public int RFC { get; set; }
+
+        /// <summary>
+        /// CBO: Number of dependencies
+        /// </summary>
+        public int CBO { get; set; }
     }
 }
