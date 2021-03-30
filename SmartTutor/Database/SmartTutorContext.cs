@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.ProgressModel;
 
-namespace SmartTutor.ContentModel.LectureModel.Repository
+namespace SmartTutor.Database
 {
     public class SmartTutorContext : DbContext
     {

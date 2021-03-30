@@ -1,4 +1,4 @@
-using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.Database;
 using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository

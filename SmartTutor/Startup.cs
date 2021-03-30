@@ -8,6 +8,7 @@ using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.Controllers.Mappers;
+using SmartTutor.Database;
 using SmartTutor.Recommenders;
 
 namespace SmartTutor
