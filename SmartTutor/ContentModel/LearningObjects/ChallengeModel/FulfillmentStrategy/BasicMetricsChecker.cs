@@ -5,21 +5,21 @@ using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
 {
-    public class BasicChallengeFulfillment : ChallengeFulfillmentStrategy
+    public class BasicMetricsChecker : ChallengeFulfillmentStrategy
     {
         private readonly List<MetricRangeRule> _classMetricRules;
         private readonly List<MetricRangeRule> _methodMetricRules;
 
-        public BasicChallengeFulfillment(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules)
+        public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules)
         {
             _classMetricRules = classMetricRules;
             _methodMetricRules = methodMetricRules;
         }
 
-        public override bool CheckChallengeFulfillment(List<CaDETClass> submittetClasses)
+        public override bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
-            List<CaDETMember> submittedMethods = GetMethodsFromClasses(submittetClasses);
-            return ValidateClassMetricRules(submittetClasses) && ValidateMethodMetricRules(submittedMethods);
+            List<CaDETMember> submittedMethods = GetMethodsFromClasses(solutionAttempt);
+            return ValidateClassMetricRules(solutionAttempt) && ValidateMethodMetricRules(submittedMethods);
         }
 
         private List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)

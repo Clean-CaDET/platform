@@ -27,7 +27,7 @@ namespace SmartTutorTests.Unit
             challenge.Id.ShouldBe(3371);
             challenge.LearningObjectSummaryId.ShouldBe(337);
             challenge.Url.ShouldBe("https://github.com/Ana00000/Challenge-inspiration.git");
-            challenge.ResolvedClasses[0].Name.ShouldBe("Pay");
+            challenge.ResolvedClasses[0].Name.ShouldBe("Payment");
             challenge.ResolvedClasses[0].Members.Count().ShouldBe(2);
             challenge.ResolvedClasses[1].Name.ShouldBe("PaymentService");
             challenge.ResolvedClasses[1].Members.Count().ShouldBe(2);

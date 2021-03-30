@@ -10,9 +10,9 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
         public List<CaDETClass> ResolvedClasses { get; internal set; }
         public ChallengeFulfillmentStrategy FulfillmentStrategy { get; internal set; }
 
-        public bool CheckChallengeFulfillment(List<CaDETClass> submittetClasses)
+        public bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
-            return FulfillmentStrategy.CheckChallengeFulfillment(submittetClasses);
+            return FulfillmentStrategy.CheckChallengeFulfillment(solutionAttempt);
         }
     }
 }

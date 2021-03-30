@@ -111,7 +111,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 @"using System;
                 namespace ExamplesApp.Method
                 {
-                   class Pay
+                   class Payment
                    {
     	               public int Cost { get; set; }
     	               public bool IsExtra { get; set; }
@@ -125,7 +125,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                         /// 1) Extract createPayment method.
                         /// </summary>
     	                private void CreatePayment(int price, int compensation) {
-		                    Pay payment = new Pay();
+		                    Payment payment = new Payment();
 		                    payment.Cost = price + compensation;
                             payment.IsExtra = payment.Cost > 50000 ? true : false;
 
@@ -157,7 +157,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
                     ResolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode),
-                    FulfillmentStrategy = new BasicChallengeFulfillment(classMetricRules, methodMetricRules)
+                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
                 }
             });
         }

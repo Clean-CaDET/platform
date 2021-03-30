@@ -17,9 +17,9 @@ namespace SmartTutor.ContentModel
 
         public bool CheckChallengeCompletion(string[] sourceCode, int challengeId)
         {
-            List<CaDETClass> submittetClasses = GetClassesFromSubmittedChallenge(sourceCode);
+            List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
             Challenge challenge = GetChallenge(challengeId);
-            return challenge.CheckChallengeFulfillment(submittetClasses);
+            return challenge.CheckChallengeFulfillment(solutionAttempt);
         }
 
         public Challenge GetChallenge(int challengeId)
