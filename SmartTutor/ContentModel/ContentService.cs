@@ -1,11 +1,11 @@
-using System;
+using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Recommenders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.ProgressModel;
 
 namespace SmartTutor.ContentModel
 {
@@ -46,7 +46,7 @@ namespace SmartTutor.ContentModel
             {
                 return CreateNodeForTrainee(knowledgeNodeId, traineeId);
             }
-            
+
             var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
             if (knowledgeNode == null) return null;
 

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker
 {
