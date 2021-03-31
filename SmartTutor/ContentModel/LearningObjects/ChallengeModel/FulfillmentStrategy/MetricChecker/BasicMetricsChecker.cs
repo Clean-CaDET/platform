@@ -1,19 +1,22 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
-namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
+namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker
 {
+    [Table("BasicMetricCheckers")]
     public class BasicMetricsChecker : ChallengeFulfillmentStrategy
     {
-        private readonly List<MetricRangeRule> _classMetricRules;
-        private readonly List<MetricRangeRule> _methodMetricRules;
+        public List<MetricRangeRule> ClassMetricRules { get; set; }
+        public List<MetricRangeRule> MethodMetricRules { get; set; }
+
+        public BasicMetricsChecker() {}
 
         public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules)
         {
-            _classMetricRules = classMetricRules;
-            _methodMetricRules = methodMetricRules;
+            ClassMetricRules = classMetricRules;
+            MethodMetricRules = methodMetricRules;
         }
 
         public override bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
@@ -30,7 +33,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         private bool ValidateClassMetricRules(List<CaDETClass> caDETClasses)
         {
             foreach (CaDETClass caDETClass in caDETClasses)
-                foreach (MetricRangeRule classMetricRule in _classMetricRules)
+                foreach (MetricRangeRule classMetricRule in ClassMetricRules)
                     if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
                         return false;
             return true;
@@ -39,7 +42,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         private bool ValidateMethodMetricRules(List<CaDETMember> caDETMethods)
         {
             foreach (CaDETMember caDETMethod in caDETMethods)
-                foreach (MetricRangeRule methodMetricRule in _methodMetricRules)
+                foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
                     if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
                         return false;
             return true;

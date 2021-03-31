@@ -1,8 +1,7 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -107,47 +106,13 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         private void AddChallenge()
         {
-            string[] sourceCode = new string[] {
-                @"using System;
-                namespace ExamplesApp.Method
-                {
-                   class Payment
-                   {
-    	               public int Cost { get; set; }
-    	               public bool IsExtra { get; set; }
-                   }
-                }",
-                @"using System;
-                namespace ExamplesApp.Method
-                {
-                    class PaymentService{
-	                    /// <summary>
-                        /// 1) Extract createPayment method.
-                        /// </summary>
-    	                private void CreatePayment(int price, int compensation) {
-		                    Payment payment = new Payment();
-		                    payment.Cost = price + compensation;
-                            payment.IsExtra = payment.Cost > 50000 ? true : false;
-
-      		                PrintPaymentDetails(payment.Cost);
-    	                }
-
-	                    private void PrintPaymentDetails(int cost) {
-      		                System.out.println(""Hello."");
-                            System.out.println(""Your payment is created."");
-                            System.out.println(""Cost is: "" + cost);
-                        }
-                    }
-                }"
-            };
-
             List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
-            classMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.CLOC, FromValue = 3, ToValue = 30 });
-            classMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.NMD, FromValue = 0, ToValue = 2 });
+            classMetricRules.Add(new MetricRangeRule { MetricName = "CLOC", FromValue = 3, ToValue = 30 });
+            classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
 
             List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
-            methodMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.MELOC, FromValue = 2, ToValue = 5 });
-            methodMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.NOP, FromValue = 1, ToValue = 4 });
+            methodMetricRules.Add(new MetricRangeRule { MetricName = "MELOC", FromValue = 2, ToValue = 5 });
+            methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
 
             _learningObjectCache.Add(337, new List<LearningObject>
             {
@@ -156,7 +121,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3371,
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    ResolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode),
                     FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
                 }
             });
