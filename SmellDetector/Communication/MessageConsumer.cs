@@ -18,14 +18,20 @@ namespace SmellDetector.Communication
         public string QueueName { get; set; }
         public string ExchangeName { get; set; }
         public IConnection Connection { get; set; }
-        public IModel Channel { get; set; }
+
+        public List<IModel> Channel { get; set; }
         public MessageConsumer()
         {
             ConfigureInitialStates();
             CreateConnection();
-            Channel = Connection.CreateModel();
+            Channel = new List<IModel>();
+            for (int numberOfChannelsPerConnection = 0; numberOfChannelsPerConnection < 5; numberOfChannelsPerConnection++)
+            {
+                Channel.Add(Connection.CreateModel());
+            }
             DeclareQueue();
-            ConsumeMessage(DecodeMessage());
+
+            ConsumeMessage();
         }
 
         private void ConfigureInitialStates()
@@ -43,17 +49,24 @@ namespace SmellDetector.Communication
 
         private void DeclareQueue()
         {
-            Channel.QueueDeclare(queue: QueueName,
+            foreach (IModel channel in Channel)
+            {
+                channel.QueueDeclare(queue: QueueName,
                                                  durable: false,
                                                  exclusive: false,
                                                  autoDelete: false,
                                                  arguments: null);
+            }
         }
 
-        private EventingBasicConsumer DecodeMessage()
+        private void ConsumeMessage()
         {
-            var consumer = new EventingBasicConsumer(Channel);
-            consumer.Received += (model, deliveryArguments) =>
+
+            foreach (IModel channel in Channel)
+            {
+                var consumer = new EventingBasicConsumer(channel);
+
+                consumer.Received += (model, deliveryArguments) =>
             {
                 var body = deliveryArguments.Body.ToArray();
                 var jsonMessage = Encoding.UTF8.GetString(body);
@@ -68,14 +81,11 @@ namespace SmellDetector.Communication
                     //TODO: write exc
                 }
             };
-            return consumer;
-        }
 
-        private void ConsumeMessage(EventingBasicConsumer consumer)
-        {
-            Channel.BasicConsume(queue: QueueName,
-                                                 autoAck: true,
-                                                 consumer: consumer);
+                channel.BasicConsume(queue: QueueName,
+                                                     autoAck: true,
+                                                     consumer: consumer);
+            }
         }
 
         private void SendIssueReportToSmartTutor(SmellDetectionReport smellDetectionReport)

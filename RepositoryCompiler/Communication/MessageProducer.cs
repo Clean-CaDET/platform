@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 
@@ -15,13 +17,19 @@ namespace RepositoryCompiler.Communication
         public string QueueName { get; set; }
         public string ExchangeName { get; set; }
         public IConnection Connection { get; set; }
-        public IModel Channel { get; set; }
+        public List<IModel> Channel { get; set; }
 
         public MessageProducer()
         {
             ConfigureInitialStates();
             CreateConnection();
-            Channel = Connection.CreateModel();
+            Channel = new List<IModel>();
+         
+            for (int numberOfChannelsPerConnection = 0; numberOfChannelsPerConnection < 5; numberOfChannelsPerConnection++)
+            {
+                Channel.Add(Connection.CreateModel());
+            }
+         
             DeclareQueue();
         }
 
@@ -45,19 +53,24 @@ namespace RepositoryCompiler.Communication
 
         private void PublishMessage(byte[] body)
         {
-            Channel.BasicPublish(exchange: ExchangeName,
+            Random random = new Random();
+            int randomChannelIndex = random.Next(Channel.Count);
+            Channel[randomChannelIndex].BasicPublish(exchange: ExchangeName,
                 routingKey: QueueName,
                 basicProperties: null,
                 body: body);
         }
 
-        private void DeclareQueue()
+        private void DeclareQueue()    
         {
-            Channel.QueueDeclare(queue: QueueName,
+            foreach(IModel channel in Channel){
+                channel.QueueDeclare(queue: QueueName,
                 durable: false,
                 exclusive: false,
                 autoDelete: false,
                 arguments: null);
+            }
+           
         }
 
         private byte[] GetEncodedMessage(CaDETClassDTO reportMessage)
