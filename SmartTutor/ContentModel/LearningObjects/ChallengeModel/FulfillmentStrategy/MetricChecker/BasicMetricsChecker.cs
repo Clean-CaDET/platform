@@ -1,10 +1,8 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker
 {
@@ -13,8 +11,10 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     {
         public List<MetricRangeRule> ClassMetricRules { get; set; }
         public List<MetricRangeRule> MethodMetricRules { get; set; }
+
         private List<MetricHint> _metricHints;
-        public BasicMetricsChecker() {}
+
+        public BasicMetricsChecker() { }
 
         public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules, List<MetricHint> metricHints)
         {
@@ -40,6 +40,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             int flag = 0;
             _metricHints = new List<MetricHint>();
             foreach (CaDETClass caDETClass in caDETClasses)
+            {
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
                 {
                     if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
@@ -56,7 +57,9 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         {
             int flag = 0;
             foreach (CaDETMember caDETMethod in caDETMethods)
+            {
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
+                {
                     if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
                     {
                         flag++;
