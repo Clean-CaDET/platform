@@ -1,6 +1,5 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
