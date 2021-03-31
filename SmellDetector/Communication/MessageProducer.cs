@@ -19,13 +19,19 @@ namespace SmellDetector.Communication
         public string QueueName { get; set; }
         public string ExchangeName { get; set; }
         public IConnection Connection { get; set; }
-        public IModel Channel { get; set; }
+        public List<IModel> Channel { get; set; }
 
         public MessageProducer()
         {
             ConfigureInitialStates();
             CreateConnection();
-            Channel = Connection.CreateModel();
+            Channel = new List<IModel>();
+
+            for (int numberOfChannelsPerConnection = 0; numberOfChannelsPerConnection < 5; numberOfChannelsPerConnection++)
+            {
+                Channel.Add(Connection.CreateModel());
+            }
+
             DeclareQueue();
         }
 
@@ -49,7 +55,9 @@ namespace SmellDetector.Communication
 
         private void PublishMessage(byte[] body)
         {
-            Channel.BasicPublish(exchange: ExchangeName,
+            Random random = new Random();
+            int randomChannelIndex = random.Next(Channel.Count);
+            Channel[randomChannelIndex].BasicPublish(exchange: ExchangeName,
                                                  routingKey: QueueName,
                                                  basicProperties: null,
                                                  body: body);
@@ -57,11 +65,14 @@ namespace SmellDetector.Communication
 
         private void DeclareQueue()
         {
-            Channel.QueueDeclare(queue: QueueName,
+            foreach (IModel channel in Channel)
+            {
+                channel.QueueDeclare(queue: QueueName,
                                                  durable: false,
                                                  exclusive: false,
                                                  autoDelete: false,
                                                  arguments: null);
+            }
         }
 
         private byte[] GetEncodedMessage(SmellDetectionReport reportMessage)
