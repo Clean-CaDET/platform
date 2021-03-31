@@ -16,5 +16,16 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
         {
             throw new System.NotImplementedException();
         }
+
+        public Trainee GetTraineeById(int traineeId)
+        {
+            return _dbContext.Trainees.Find(traineeId);
+        }
+
+        public void SaveNodeProgress(NodeProgress nodeProgress)
+        {
+            _dbContext.NodeProgresses.Add(nodeProgress);
+            _dbContext.SaveChanges();
+        }
     }
 }

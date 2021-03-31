@@ -12,9 +12,10 @@ namespace SmartTutorTests.Unit
     public class NodeContentTests
     {
         private readonly ContentService _service;
+
         public NodeContentTests()
         {
-            _service = new ContentService(null, null, CreateMockRepository());
+            _service = new ContentService(null, null, CreateMockRepository(), null);
         }
 
         private static ILearningObjectRepository CreateMockRepository()
@@ -25,44 +26,63 @@ namespace SmartTutorTests.Unit
                 {
                     new QuestionAnswer
                     {
-                        Id = 10, Text = "First.", IsCorrect = false, Feedback = "This statement is false.", QuestionId = 19
+                        Id = 10, Text = "First.", IsCorrect = false, Feedback = "This statement is false.",
+                        QuestionId = 19
                     },
                     new QuestionAnswer
                     {
-                        Id = 11, Text = "Second.", IsCorrect = true, Feedback = "This statement is true.", QuestionId = 19
+                        Id = 11, Text = "Second.", IsCorrect = true, Feedback = "This statement is true.",
+                        QuestionId = 19
                     },
                     new QuestionAnswer
                     {
-                        Id = 12, Text = "Third.", IsCorrect = true, Feedback = "This statement is true.", QuestionId = 19
+                        Id = 12, Text = "Third.", IsCorrect = true, Feedback = "This statement is true.",
+                        QuestionId = 19
                     },
                     new QuestionAnswer
                     {
-                        Id = 13, Text = "Fourth.", IsCorrect = false, Feedback = "This statement is false.", QuestionId = 19
+                        Id = 13, Text = "Fourth.", IsCorrect = false, Feedback = "This statement is false.",
+                        QuestionId = 19
                     }
                 });
             learningObjectRepo.Setup(repo => repo.GetArrangeTaskContainers(32))
                 .Returns(new List<ArrangeTaskContainer>
                 {
-                    new ArrangeTaskContainer { Id = 1, Elements = new List<ArrangeTaskElement>
+                    new ArrangeTaskContainer
                     {
-                        new ArrangeTaskElement {Id = 1}
-                    }},
-                    new ArrangeTaskContainer { Id = 2, Elements = new List<ArrangeTaskElement>
+                        Id = 1, Elements = new List<ArrangeTaskElement>
+                        {
+                            new ArrangeTaskElement {Id = 1}
+                        }
+                    },
+                    new ArrangeTaskContainer
                     {
-                        new ArrangeTaskElement {Id = 2}
-                    }},
-                    new ArrangeTaskContainer { Id = 3, Elements = new List<ArrangeTaskElement>
+                        Id = 2, Elements = new List<ArrangeTaskElement>
+                        {
+                            new ArrangeTaskElement {Id = 2}
+                        }
+                    },
+                    new ArrangeTaskContainer
                     {
-                        new ArrangeTaskElement {Id = 3}
-                    }},
-                    new ArrangeTaskContainer { Id = 4, Elements = new List<ArrangeTaskElement>
+                        Id = 3, Elements = new List<ArrangeTaskElement>
+                        {
+                            new ArrangeTaskElement {Id = 3}
+                        }
+                    },
+                    new ArrangeTaskContainer
                     {
-                        new ArrangeTaskElement {Id = 4}
-                    }},
-                    new ArrangeTaskContainer { Id = 5, Elements = new List<ArrangeTaskElement>
+                        Id = 4, Elements = new List<ArrangeTaskElement>
+                        {
+                            new ArrangeTaskElement {Id = 4}
+                        }
+                    },
+                    new ArrangeTaskContainer
                     {
-                        new ArrangeTaskElement {Id = 5}
-                    }}
+                        Id = 5, Elements = new List<ArrangeTaskElement>
+                        {
+                            new ArrangeTaskElement {Id = 5}
+                        }
+                    }
                 });
             return learningObjectRepo.Object;
         }
@@ -99,7 +119,8 @@ namespace SmartTutorTests.Unit
 
         [Theory]
         [MemberData(nameof(ArrangeTasksTestData))]
-        public void Evaluates_arrange_task_submission(List<ArrangeTaskContainer> submittedAnswers, List<bool> expectedCorrectness)
+        public void Evaluates_arrange_task_submission(List<ArrangeTaskContainer> submittedAnswers,
+            List<bool> expectedCorrectness)
         {
             var results = _service.EvaluateArrangeTask(32, submittedAnswers);
 
@@ -114,24 +135,36 @@ namespace SmartTutorTests.Unit
                 {
                     new List<ArrangeTaskContainer>
                     {
-                        new ArrangeTaskContainer { Id = 1, Elements = new List<ArrangeTaskElement>
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 1},
-                            new ArrangeTaskElement {Id = 5}
-                        }},
-                        new ArrangeTaskContainer { Id = 2, Elements = new List<ArrangeTaskElement>
+                            Id = 1, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 1},
+                                new ArrangeTaskElement {Id = 5}
+                            }
+                        },
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 2}
-                        }},
-                        new ArrangeTaskContainer { Id = 3, Elements = new List<ArrangeTaskElement>
+                            Id = 2, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 2}
+                            }
+                        },
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 3}
-                        }},
-                        new ArrangeTaskContainer { Id = 4, Elements = new List<ArrangeTaskElement>()},
-                        new ArrangeTaskContainer { Id = 5, Elements = new List<ArrangeTaskElement>
+                            Id = 3, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 3}
+                            }
+                        },
+                        new ArrangeTaskContainer {Id = 4, Elements = new List<ArrangeTaskElement>()},
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 4}
-                        }}
+                            Id = 5, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 4}
+                            }
+                        }
                     },
                     new List<bool> {false, true, true, false, false}
                 },
@@ -139,18 +172,21 @@ namespace SmartTutorTests.Unit
                 {
                     new List<ArrangeTaskContainer>
                     {
-                        new ArrangeTaskContainer { Id = 1, Elements = new List<ArrangeTaskElement>
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 1},
-                            new ArrangeTaskElement {Id = 2},
-                            new ArrangeTaskElement {Id = 3},
-                            new ArrangeTaskElement {Id = 4},
-                            new ArrangeTaskElement {Id = 5}
-                        }},
-                        new ArrangeTaskContainer { Id = 2, Elements = new List<ArrangeTaskElement>()},
-                        new ArrangeTaskContainer { Id = 3, Elements = new List<ArrangeTaskElement>()},
-                        new ArrangeTaskContainer { Id = 4, Elements = new List<ArrangeTaskElement>()},
-                        new ArrangeTaskContainer { Id = 5, Elements = new List<ArrangeTaskElement>()}
+                            Id = 1, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 1},
+                                new ArrangeTaskElement {Id = 2},
+                                new ArrangeTaskElement {Id = 3},
+                                new ArrangeTaskElement {Id = 4},
+                                new ArrangeTaskElement {Id = 5}
+                            }
+                        },
+                        new ArrangeTaskContainer {Id = 2, Elements = new List<ArrangeTaskElement>()},
+                        new ArrangeTaskContainer {Id = 3, Elements = new List<ArrangeTaskElement>()},
+                        new ArrangeTaskContainer {Id = 4, Elements = new List<ArrangeTaskElement>()},
+                        new ArrangeTaskContainer {Id = 5, Elements = new List<ArrangeTaskElement>()}
                     },
                     new List<bool> {false, false, false, false, false}
                 },
@@ -158,26 +194,41 @@ namespace SmartTutorTests.Unit
                 {
                     new List<ArrangeTaskContainer>
                     {
-                        new ArrangeTaskContainer { Id = 1, Elements = new List<ArrangeTaskElement>
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 1}
-                        }},
-                        new ArrangeTaskContainer { Id = 2, Elements = new List<ArrangeTaskElement>
+                            Id = 1, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 1}
+                            }
+                        },
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 2}
-                        }},
-                        new ArrangeTaskContainer { Id = 3, Elements = new List<ArrangeTaskElement>
+                            Id = 2, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 2}
+                            }
+                        },
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 3}
-                        }},
-                        new ArrangeTaskContainer { Id = 4, Elements = new List<ArrangeTaskElement>
+                            Id = 3, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 3}
+                            }
+                        },
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 4}
-                        }},
-                        new ArrangeTaskContainer { Id = 5, Elements = new List<ArrangeTaskElement>
+                            Id = 4, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 4}
+                            }
+                        },
+                        new ArrangeTaskContainer
                         {
-                            new ArrangeTaskElement {Id = 5}
-                        }}
+                            Id = 5, Elements = new List<ArrangeTaskElement>
+                            {
+                                new ArrangeTaskElement {Id = 5}
+                            }
+                        }
                     },
                     new List<bool> {true, true, true, true, true}
                 }

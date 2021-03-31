@@ -1,5 +1,7 @@
 ﻿using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
 
 namespace SmartTutor.Recommenders
@@ -18,6 +20,11 @@ namespace SmartTutor.Recommenders
             var result = new List<LearningObject>();
             //TODO: Contact ContentService 
             return result;
+        }
+
+        public NodeProgress BuildNodeProgressForTrainee(Trainee trainee, KnowledgeNode knowledgeNode)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

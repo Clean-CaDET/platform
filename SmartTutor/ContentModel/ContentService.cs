@@ -1,4 +1,3 @@
-using System;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.Recommenders;
@@ -7,6 +6,7 @@ using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.ProgressModel.Repository;
 
 namespace SmartTutor.ContentModel
 {
@@ -15,12 +15,15 @@ namespace SmartTutor.ContentModel
         private readonly IRecommender _recommender;
         private readonly ILectureRepository _lectureRepository;
         private readonly ILearningObjectRepository _learningObjectRepository;
+        private readonly ITraineeRepository _traineeRepository;
 
-        public ContentService(IRecommender recommender, ILectureRepository lectureRepository, ILearningObjectRepository learningObjectRepository)
+        public ContentService(IRecommender recommender, ILectureRepository lectureRepository,
+            ILearningObjectRepository learningObjectRepository, ITraineeRepository traineeRepository)
         {
             _recommender = recommender;
             _lectureRepository = lectureRepository;
             _learningObjectRepository = learningObjectRepository;
+            _traineeRepository = traineeRepository;
         }
 
         public List<Lecture> GetLectures()
@@ -47,7 +50,7 @@ namespace SmartTutor.ContentModel
             {
                 return CreateNodeForTrainee(knowledgeNodeId, traineeId);
             }
-            
+
             var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
             if (knowledgeNode == null) return null;
 
@@ -63,13 +66,16 @@ namespace SmartTutor.ContentModel
 
         private NodeProgress CreateNodeForTrainee(int knowledgeNodeId, int? traineeId)
         {
-            //TODO: Load Trainee prefs
-            //TODO: Get recommender to build NodeProgress with LOs for Trainee
-            //TODO: Save started NodeProgress to repo
-            //TODO: Create learning session
-            //TODO: Return NodeProgress
+            if (traineeId == null) return null; // TODO: throw an exception?
+            var trainee = _traineeRepository.GetTraineeById(traineeId.Value);
+            var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
 
-            throw new NotImplementedException();
+            var nodeProgress = _recommender.BuildNodeProgressForTrainee(trainee, knowledgeNode);
+            _traineeRepository.SaveNodeProgress(nodeProgress);
+
+            //TODO: Create learning session
+
+            return nodeProgress;
         }
 
         public List<AnswerEvaluation> EvaluateAnswers(int questionId, List<int> submittedAnswers)

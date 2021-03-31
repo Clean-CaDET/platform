@@ -9,5 +9,15 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
         {
             throw new NotImplementedException();
         }
+
+        public Trainee GetTraineeById(int traineeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveNodeProgress(NodeProgress nodeProgress)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
