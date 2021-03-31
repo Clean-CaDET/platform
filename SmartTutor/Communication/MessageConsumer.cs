@@ -20,15 +20,19 @@ namespace SmartTutor.Communication
         public string QueueName { get; set; }
         public string ExchangeName { get; set; }
         public IConnection Connection { get; set; }
-        public IModel Channel { get; set; }
+        public List<IModel> Channel { get; set; }
 
         public MessageConsumer()
         {
             ConfigureInitialStates();
             CreateConnection();
-            Channel = Connection.CreateModel();
+            Channel = new List<IModel>();
+            for (int numberOfChannelsPerConnection = 0; numberOfChannelsPerConnection < 5; numberOfChannelsPerConnection++)
+            {
+                Channel.Add(Connection.CreateModel());
+            }
             DeclareQueue();
-            ConsumeMessage(DecodeMessage());
+            ConsumeMessage();
         }
 
         private void ConfigureInitialStates()
@@ -46,40 +50,14 @@ namespace SmartTutor.Communication
 
         private void DeclareQueue()
         {
-            Channel.QueueDeclare(queue: QueueName,
+            foreach (IModel channel in Channel)
+            {
+                channel.QueueDeclare(queue: QueueName,
                                                  durable: false,
                                                  exclusive: false,
                                                  autoDelete: false,
                                                  arguments: null);
-        }
-
-        private EventingBasicConsumer DecodeMessage()
-        {
-            ReportMessagesClass reportMessagesClass = ReportMessagesClass.Instance;
-            var consumer = new EventingBasicConsumer(Channel);
-            consumer.Received += (model, deliveryArguments) =>
-            {
-                var body = deliveryArguments.Body.ToArray();
-                var jsonMessage = Encoding.UTF8.GetString(body);
-                SmellDetectionReport reportMessage = new SmellDetectionReport();
-                try
-                {   
-                    reportMessage = JsonConvert.DeserializeObject<SmellDetectionReport>(jsonMessage);
-
-                    // TODO: Decide how many content we need in summary
-
-                    Random random = new Random();
-                    int numberOfeducationContents = FindEducationContentForReportMessage(reportMessage).Count();
-                    int randomEducatinContent = random.Next(numberOfeducationContents);
-
-                    reportMessagesClass.ReportMessages[reportMessage.Id] = FindEducationContentForReportMessage(reportMessage)[randomEducatinContent]; 
-                }
-                catch (Exception)  
-                {
-                   //TODO: write exc
-                }
-            };
-            return consumer;
+            }
         }
 
         private List<EducationContent> FindEducationContentForReportMessage(SmellDetectionReport reportMessage)
@@ -100,11 +78,40 @@ namespace SmartTutor.Communication
             return educationContent;
         }
 
-        private void ConsumeMessage(EventingBasicConsumer consumer)
+        private void ConsumeMessage()
         {
-            Channel.BasicConsume(queue: QueueName,
-                                                 autoAck: true,
-                                                 consumer: consumer);
+
+            ReportMessagesClass reportMessagesClass = ReportMessagesClass.Instance;
+            foreach (IModel channel in Channel)
+            {
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, deliveryArguments) =>
+                {
+                    var body = deliveryArguments.Body.ToArray();
+                    var jsonMessage = Encoding.UTF8.GetString(body);
+                    SmellDetectionReport reportMessage = new SmellDetectionReport();
+                    try
+                    {
+                        reportMessage = JsonConvert.DeserializeObject<SmellDetectionReport>(jsonMessage);
+
+                    // TODO: Decide how many content we need in summary
+
+                        Random random = new Random();
+                        int numberOfeducationContents = FindEducationContentForReportMessage(reportMessage).Count();
+                        int randomEducatinContent = random.Next(numberOfeducationContents);
+
+                        reportMessagesClass.ReportMessages[reportMessage.Id] = FindEducationContentForReportMessage(reportMessage)[randomEducatinContent];
+                    }
+                    catch (Exception)
+                    {
+                    //TODO: write exc
+                }
+                };
+
+                channel.BasicConsume(queue: QueueName,
+                                                     autoAck: true,
+                                                     consumer: consumer);
+            }
         }
     }
 }
