@@ -1,4 +1,7 @@
---TODO: NodeProgressId should be removed from this table as it is a many to many relationship (explore navigation options and EF Core configuration)
+DELETE FROM public."Lectures";
+DELETE FROM public."KnowledgeNodes";
+DELETE FROM public."LearningObjectSummaries";
+
 DELETE FROM public."LearningObjects";
 DELETE FROM public."Texts";
 DELETE FROM public."Images";
@@ -7,6 +10,48 @@ DELETE FROM public."Challenges";
 DELETE FROM public."QuestionAnswers";
 DELETE FROM public."Questions";
 
+INSERT INTO public."Lectures"(
+	"Id", "Name", "Description")
+	VALUES (1, 'Jasna imena', 'Imena pronalazimo u svim segmentima razvoja softvera - kao identifikator promenljive, funkcije, klase, ali i biblioteke i aplikacije. Jasno ime funkcije nas oslobađa od čitanja njenog tela, dok će misteriozno ime zahtevati dodatan mentalni napor da razumemo svrhu koncepta koji opisuje. U najgorem slučaju, loše ime će nas navesti na pogrešan put i drastično nam produžiti vreme razvoja. Kroz ovu lekciju ispitujemo dobre i loše prakse za imenovanje elemenata našeg koda.');
+	
+INSERT INTO public."Lectures"(
+	"Id", "Name", "Description")
+	VALUES (2, 'Kratke funkcije', 'Čest savet je da naše funkcije treba da imaju mali broj linija koda. Ovako povećavamo fokusiranost i jasnoću funkcije, kao i mogućnost ponovne upotrebe ovog parčeta koda. Međutim, greška je reći da nam je cilj da imamo kratke funkcije. Nama je cilj da ispoštujemo više dobrih praksi za formiranje čistih funkcija, a kao posledicu primene tih praksi ćemo dobiti kratke funkcije. Kroz ovu lekciju analiziramo dobre i loše prakse za formiranje čistih funkcija.');
+	
+INSERT INTO public."Lectures"(
+	"Id", "Name", "Description")
+	VALUES (3, 'Kohezija', 'U visoko kohezivnim timovima, svako član ima dobro razvijen odnos sa svakim članom tima pojedinačno. Ovo pre svega podrazumeva da svaki član dobro poznaje kako drugi članovi rade, gde su manje, a gde više efikasni i kako najbolje da sarađuju sa njima na nekom zadatku. Ovo svojstvo je primenljivo na softverske module, gde se svaki sastoji od elemenata koji međusobno sarađuju. Tako je visoko kohezivna klasa ona čija polja i metode su gusto umrežene. Kroz ovu lekciju ćemo ispitati kako takve module da formiramo.');
+	
+INSERT INTO public."Lectures"(
+	"Id", "Name", "Description")
+	VALUES (4, 'Spregnutost', 'Dva gusto spregnuta softverska modula u velikom stepenu zavise jedan od drugog i često se ponašaju kao jedan veliki modul. Ovakvi moduli imaju puno međusobnih veza (poput upotrebe atributa ili poziva metoda) i znaju razne detalje jedan o drugom. Izmena jednog takvog modula gotovo uvek povlači modifikaciju (i bagove) drugog. Ako je sistem prepun ovakvih sprega, postaje trom i težak za izmenu. Sa druge strane, ako modul sakriva mnoštvo logike iza jednostavnog API-a, značajno je ograničena mogućnost sprezanja sa takvim modulom. Kroz ovu lekciju učimo da pravimo ovakve module.');
+	
+INSERT INTO public."Lectures"(
+	"Id", "Name", "Description")
+	VALUES (5, 'Princip jedne odgovornosti', 'Vodeći princip inženjerstva softvera ističe da svaki modul treba da ispunjava jedan cilj koji je onoliko apstraktan koliko i sam modul. Privatna metoda koja radi sa detaljima će imati veoma konkretan cilj. Aplikacija ima jedan cilj na visokom nivou asptrakcije koji se razlaže na slučajeve korišćenja koje potom podržavamo sa manje apstraktnim objektima i njihovima metodama. U tako dizajniranom sistemu, svaka izmena je fokusirana samo na one module koji su vezani za cilj koji je afektovan. Kroz ovu lekciju razlažemo ovaj vodeći princip i gledamo kako vodi naš razvoj softvera.');
+	
+
+	
+--== Naming ==- FK Node	
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (1, 'Navedi osnovne vodilje za definisanje značajnih imena.', 0, NULL, 1);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (1, 'Definition', 1);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (2, 'Basic Example', 1);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (3, 'Word Type Heuristic', 1);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (4, 'Example', 1);
 -- Naming - FK Node
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -63,6 +108,27 @@ INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
 	VALUES (5, 'RegisterMember(Member newMember)', true, 'Ovakva funkcija je deo poslovne logike oko registracije novog člana (npr. biblioteke). Naspram toga, operacija registracije korisnika aplikacije (npr. RegisterUser) bi podrazumevala tehnološku logiku koja bi mogla da uključi poslovnu ako bi se prilikom registracije formirao i član koji nije samo sistemski korisnik.', 17);
 	
+
+	
+--== Naming =- PK Node 1
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (2, 'Primeni heuristiku odbacivanja beznačajnih reči radi formiranje boljih imena u kodu.', 1, 1, 1);
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (5, 'Algorithm', 2);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (9, 'Noise Word Heuristic', 2);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (10, 'Challenge Noise', 2);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description") -- Hidden
+	VALUES (11, 'Challenge Noise Solution');
 -- Naming - PK Node 1
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -114,7 +180,24 @@ INSERT INTO public."Videos"(
 	"Id", "Url")
 	VALUES (13, 'https://youtu.be/sR8hjHldAfI');
 	
+
+
+--== Naming ==- PK Node 2
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (3, 'Primeni osnovne tehnike refaktorisanja za formiranje boljih imena u kodu.', 1, 2, 1);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (6, 'Challenge Meaning', 3);
 	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (7, 'Magic Numbers Heuristic', 3);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description") -- Hidden
+	VALUES (8, 'Challenge Meaning Solution');
 -- Naming - PK Node 2
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -142,9 +225,25 @@ INSERT INTO public."LearningObjects"(
 INSERT INTO public."Videos"(
 	"Id", "Url")
 	VALUES (9, 'https://youtu.be/8OYsu0dza0k');
+	
 
 
--- Naming - CK Node
+--== Naming ==- CK Node	
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (4, 'Razumi uticaj jasnih i misterioznih imena u kodu na rad programera.', 2, 3, 1);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (12, 'Complex Example', 4);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (13, 'Programmer Motivation', 4);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (14, 'Conclusion', 4);
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (14, 12);
@@ -217,3 +316,5 @@ INSERT INTO public."QuestionAnswers"(
 INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
 	VALUES (15, 'Potrebno je dobro ime izabrati u startu, zato što je naknadna promena skupa.', false, 'Izjava nije tačna. Promena imena za gotovo svaki element koda je trivijalna operacija uz pomoć savremenih editora koda.', 19);
+	
+	
