@@ -37,6 +37,7 @@ namespace SmartTutor
             services.AddScoped<IContentService, ContentService>();
 
             //services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
+            //services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
             services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectInMemoryRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();

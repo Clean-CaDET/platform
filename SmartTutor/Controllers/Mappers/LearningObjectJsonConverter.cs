@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SmartTutor.Controllers.DTOs.Lecture;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using SmartTutor.Controllers.DTOs.Lecture;
 
 namespace SmartTutor.Controllers.Mappers
 {
     //Based on https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-core-3-1#support-polymorphic-deserialization
+    //TODO: Research a better solution and refactor this.
     internal class LearningObjectJsonConverter : JsonConverter<LearningObjectDTO>
     {
         public override bool CanConvert(Type typeToConvert) =>
@@ -37,6 +38,20 @@ namespace SmartTutor.Controllers.Mappers
             {
                 writer.WriteString("typeDiscriminator", "video");
                 writer.WriteString("url", video.Url);
+            }
+            else if (learningObject is ChallengeDTO challenge)
+            {
+                writer.WriteString("typeDiscriminator", "challenge");
+                writer.WriteString("url", challenge.Url);
+                writer.WriteString("description", challenge.Description);
+            }
+            else if (learningObject is QuestionDTO question)
+            {
+                writer.WriteString("typeDiscriminator", "challenge");
+                writer.WriteString("text", question.Text);
+                writer.WriteStartArray();
+                writer.WriteString("possibleAnswers", string.Join(",", question.PossibleAnswers));
+                writer.WriteEndArray();
             }
 
             writer.WriteNumber("id", learningObject.Id);

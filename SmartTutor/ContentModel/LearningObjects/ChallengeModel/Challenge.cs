@@ -9,6 +9,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
     public class Challenge : LearningObject
     {
         public string Url { get; internal set; }
+        public string Description { get; internal set; }
         public ChallengeFulfillmentStrategy FulfillmentStrategy { get; internal set; }
 
         public bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)

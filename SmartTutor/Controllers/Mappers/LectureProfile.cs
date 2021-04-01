@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Controllers.DTOs.Lecture;
@@ -19,6 +21,9 @@ namespace SmartTutor.Controllers.Mappers
             CreateMap<Text, TextDTO>();
             CreateMap<Image, ImageDTO>();
             CreateMap<Video, VideoDTO>();
+            CreateMap<Challenge, ChallengeDTO>();
+            CreateMap<Question, QuestionDTO>()
+                .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers.Select(a => a.Text)));
         }
     }
 }
