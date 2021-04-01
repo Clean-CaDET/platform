@@ -43,7 +43,7 @@ namespace SmellDetector.Communication
 
         private void CreateConnection()
         {
-            var connectionFactory = new ConnectionFactory() { HostName = NodeName };
+            var connectionFactory = new ConnectionFactory { HostName = NodeName, RequestedChannelMax = 10 };
             Connection = connectionFactory.CreateConnection();
         }
 
