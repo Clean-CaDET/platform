@@ -82,9 +82,11 @@ namespace SmartTutor.Communication
         {
 
             ReportMessagesClass reportMessagesClass = ReportMessagesClass.Instance;
-            foreach (IModel channel in Channel)
-            {
-                var consumer = new EventingBasicConsumer(channel);
+
+            Random random = new Random();
+            int randomChannelIndex = random.Next(Channel.Count);
+
+            var consumer = new EventingBasicConsumer(Channel[randomChannelIndex]);
                 consumer.Received += (model, deliveryArguments) =>
                 {
                     var body = deliveryArguments.Body.ToArray();
@@ -108,10 +110,10 @@ namespace SmartTutor.Communication
                 }
                 };
 
-                channel.BasicConsume(queue: QueueName,
+                Channel[randomChannelIndex].BasicConsume(queue: QueueName,
                                                      autoAck: true,
                                                      consumer: consumer);
-            }
+            
         }
     }
 }
