@@ -22,7 +22,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         {
             return new ChallengeHint
             {
-                Content = "Metric rule " + this.MetricName + " is violated."
+                Content = "Metric rule " + this.MetricName + " is violated.",
+                LearningObjectSummary = null
             };
         }
     }

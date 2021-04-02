@@ -5,6 +5,6 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     public class ChallengeEvaluation
     {
         public bool ChallengeCompleted { get; internal set; }
-        public List<ChallengeHint> ChallengeHints { get; internal set; } //relevant for the solutionAttempt
+        public List<ChallengeHint> ChallengeHints { get; internal set; }
     }
 }

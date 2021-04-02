@@ -128,7 +128,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             methodMetricRules.Add(new MetricRangeRule { MetricName = "MELOC", FromValue = 2, ToValue = 5 });
             methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
 
-
             _learningObjectCache.Add(337, new List<LearningObject>
             {
                 new Challenge
@@ -139,14 +138,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
                 }
             });
-        }
-
-        private ChallengeHint NewMetricHint(MetricRangeRule metricRangeRule)
-        {
-            return new ChallengeHint
-            {
-                Content = "Metric rule " + metricRangeRule.MetricName + " is violated."
-            };
         }
 
         public List<QuestionAnswer> GetQuestionAnswers(int questionId)
