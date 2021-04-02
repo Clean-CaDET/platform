@@ -12,11 +12,9 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public List<MetricRangeRule> ClassMetricRules { get; set; }
         public List<MetricRangeRule> MethodMetricRules { get; set; }
 
-        private List<MetricHint> _metricHints;
-
         public BasicMetricsChecker() { }
 
-        public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules, List<MetricHint> metricHints)
+        public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules)
         {
             ClassMetricRules = classMetricRules;
             MethodMetricRules = methodMetricRules;

@@ -139,5 +139,10 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 }
             });
         }
+
+        public List<QuestionAnswer> GetQuestionAnswers(int questionId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
