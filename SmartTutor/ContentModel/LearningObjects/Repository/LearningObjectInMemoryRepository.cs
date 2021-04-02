@@ -128,11 +128,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             methodMetricRules.Add(new MetricRangeRule { MetricName = "MELOC", FromValue = 2, ToValue = 5 });
             methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
 
-            List<MetricHint> metricHints = new List<MetricHint>();
-            foreach (MetricRangeRule classMetricRule in classMetricRules)
-                metricHints.Add(NewMetricHint(classMetricRule));
-            foreach (MetricRangeRule methodMetricRule in methodMetricRules)
-                metricHints.Add(NewMetricHint(methodMetricRule));
 
             _learningObjectCache.Add(337, new List<LearningObject>
             {
@@ -141,17 +136,16 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3371,
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules, metricHints)
+                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
                 }
             });
         }
 
-        private MetricHint NewMetricHint(MetricRangeRule metricRangeRule)
+        private ChallengeHint NewMetricHint(MetricRangeRule metricRangeRule)
         {
-            return new MetricHint
+            return new ChallengeHint
             {
-                Content =
-                "Metric rule " + metricRangeRule.MetricName + " should be between " + metricRangeRule.FromValue + " and " + metricRangeRule.ToValue + "."
+                Content = "Metric rule " + metricRangeRule.MetricName + " is violated."
             };
         }
 
