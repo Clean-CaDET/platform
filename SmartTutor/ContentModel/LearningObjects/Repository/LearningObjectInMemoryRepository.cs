@@ -1,6 +1,6 @@
 ﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -100,7 +100,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             });
 
             AddChallenge();
-
         }
 
         public List<LearningObject> GetLearningObjectsForSummary(int summaryId)
@@ -128,6 +127,16 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             methodMetricRules.Add(new MetricRangeRule { MetricName = "MELOC", FromValue = 2, ToValue = 5 });
             methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
 
+            List<string> bannedWords = new List<string>();
+            bannedWords.Add("Class");
+            bannedWords.Add("List");
+            bannedWords.Add("Method");
+            bannedWords.Add("Pay");
+            List<string> requiredWords = new List<string>();
+            requiredWords.Add("Payment");
+            requiredWords.Add("PaymentService");
+            requiredWords.Add("CreatePayment");
+
             _learningObjectCache.Add(337, new List<LearningObject>
             {
                 new Challenge
@@ -135,7 +144,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3371,
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
+                    //FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
+                    FulfillmentStrategy = new BasicNamesChecker(bannedWords, requiredWords)
                 }
             });
         }
