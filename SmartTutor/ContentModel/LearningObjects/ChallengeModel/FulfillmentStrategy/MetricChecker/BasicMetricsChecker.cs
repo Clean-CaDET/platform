@@ -12,16 +12,18 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public List<MetricRangeRule> ClassMetricRules { get; set; }
         public List<MetricRangeRule> MethodMetricRules { get; set; }
 
+        private List<MetricHint> _metricHints;
+
         public BasicMetricsChecker() { }
 
-        public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules, List<ChallengeHint> challengeHints)
+        public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules, List<MetricHint> metricHints)
         {
             ClassMetricRules = classMetricRules;
             MethodMetricRules = methodMetricRules;
-            ChallengeHints = challengeHints;
+            _metricHints = metricHints;
         }
 
-        public override bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
+        public override ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
             List<CaDETMember> submittedMethods = GetMethodsFromClasses(solutionAttempt);
             ChallengeEvaluation challengeEvaluation = new ChallengeEvaluation

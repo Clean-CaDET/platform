@@ -17,5 +17,13 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             var metricValue = metrics[(CaDETMetric)Enum.Parse(typeof(CaDETMetric), MetricName, true)];
             return (FromValue <= metricValue && metricValue <= ToValue);
         }
+
+        internal ChallengeHint GetHintForMetricRule()
+        {
+            return new ChallengeHint
+            {
+                Content = "Metric rule " + this.MetricName + " is violated."
+            };
+        }
     }
 }

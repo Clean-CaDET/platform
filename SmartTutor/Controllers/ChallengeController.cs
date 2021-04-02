@@ -24,5 +24,6 @@ namespace SmartTutor.Controllers
             var text = challengeEvaluation.ChallengeCompleted ? "Success." : "Fail.";
             return new ChallengeCheckResponseDTO(text);
         }
+        // TODO: getting all hints and only relevant hints
     }
 }
