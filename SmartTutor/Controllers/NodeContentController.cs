@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.Controllers.DTOs.Lecture;
@@ -24,6 +26,15 @@ namespace SmartTutor.Controllers
             var nodes = _contentService.GetNodeContent(nodeId, null);
             if (nodes == null) NotFound();
             return Ok(_mapper.Map<KnowledgeNodeProgressDTO>(nodes));
+        }
+
+        [HttpPost("{nodeId}/content/{questionId}")]
+        public ActionResult<List<AnswerEvaluationDTO>> SubmitQuestionAnswers(int nodeId, int questionId, [FromBody] List<QuestionAnswerDTO> submittedAnswers)
+        {
+            //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
+            var evaluation = _contentService.EvaluateAnswers(questionId, submittedAnswers.Select(a => a.Id).ToList());
+            if (evaluation == null) NotFound();
+            return Ok(_mapper.Map<AnswerEvaluationDTO>(evaluation));
         }
     }
 }

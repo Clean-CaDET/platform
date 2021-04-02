@@ -70,5 +70,23 @@ namespace SmartTutor.ContentModel
 
             throw new NotImplementedException();
         }
+
+        public List<AnswerEvaluation> EvaluateAnswers(int questionId, List<int> submittedAnswers)
+        {
+            var answers = _learningObjectRepository.GetQuestionAnswers(questionId);
+            //TODO: Tie in with the ProgressModel once it is setup, as the [submission]/[evaluation of submission] are important events.
+            //TODO: Some of the logic below should be moved to the LearningSession/NodeProgress aggregate
+            var evaluations = new List<AnswerEvaluation>();
+            foreach (var answer in answers)
+            {
+                var answerWasMarked = submittedAnswers.Contains(answer.Id);
+                evaluations.Add(new AnswerEvaluation
+                {
+                    FullAnswer = answer,
+                    SubmissionWasCorrect = answer.IsCorrect ? answerWasMarked : !answerWasMarked
+                });
+            }
+            return evaluations;
+        }
     }
 }

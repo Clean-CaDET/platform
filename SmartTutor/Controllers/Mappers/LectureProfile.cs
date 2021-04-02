@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LectureModel;
@@ -24,6 +23,11 @@ namespace SmartTutor.Controllers.Mappers
             CreateMap<Challenge, ChallengeDTO>();
             CreateMap<Question, QuestionDTO>();
             CreateMap<QuestionAnswer, QuestionAnswerDTO>();
+
+            CreateMap<AnswerEvaluation, AnswerEvaluationDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FullAnswer.Id))
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.FullAnswer.Text))
+                .ForMember(dest => dest.Feedback, opt => opt.MapFrom(src => src.FullAnswer.Feedback));
         }
     }
 }

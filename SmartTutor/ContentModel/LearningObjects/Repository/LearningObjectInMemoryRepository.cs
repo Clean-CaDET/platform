@@ -140,5 +140,10 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         {
             return _learningObjectCache.SelectMany(LOs => LOs.Value.Where(LO => LO.Id == challengeId)).First() as Challenge;
         }
+
+        public List<QuestionAnswer> GetQuestionAnswers(int questionId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

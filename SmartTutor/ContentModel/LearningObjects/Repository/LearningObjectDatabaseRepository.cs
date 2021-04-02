@@ -33,5 +33,10 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         {
             return _dbContext.Challenges.SingleOrDefault(c => c.Id == challengeId);
         }
+
+        public List<QuestionAnswer> GetQuestionAnswers(int questionId)
+        {
+            return _dbContext.QuestionAnswers.Where(a => a.QuestionId == questionId).ToList();
+        }
     }
 }
