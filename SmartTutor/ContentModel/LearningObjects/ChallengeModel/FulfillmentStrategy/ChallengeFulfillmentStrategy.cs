@@ -7,6 +7,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     public abstract class ChallengeFulfillmentStrategy
     {
         [Key] public int Id { get; set; }
-        public abstract bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt);
+        public List<ChallengeHint> ChallengeHints { get; internal set; }
+
+        public abstract ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt);
     }
 }
