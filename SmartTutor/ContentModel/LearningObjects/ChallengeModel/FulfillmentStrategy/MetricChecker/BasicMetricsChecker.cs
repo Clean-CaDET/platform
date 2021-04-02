@@ -66,17 +66,27 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         private List<ChallengeHint> GetChallengeHints()
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            challengeHints.AddRange(GetHintsForMetricRule(ClassMetricRules));
-            challengeHints.AddRange(GetHintsForMetricRule(MethodMetricRules));
+            challengeHints.AddRange(GetHintsForClassMetricRules(ClassMetricRules));
+            challengeHints.AddRange(GetHintsForMethodMetricRules(MethodMetricRules));
             return challengeHints;
         }
 
-        private List<ChallengeHint> GetHintsForMetricRule(List<MetricRangeRule> metricRangeRules)
+        private List<ChallengeHint> GetHintsForClassMetricRules(List<MetricRangeRule> metricRangeRules)
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
             foreach (MetricRangeRule metricRangeRule in metricRangeRules)
             {
-                challengeHints.Add(metricRangeRule.GetHintForMetricRule());
+                challengeHints.Add(metricRangeRule.GetHintForIncompleteClass());
+            }
+            return challengeHints;
+        }
+
+        private List<ChallengeHint> GetHintsForMethodMetricRules(List<MetricRangeRule> metricRangeRules)
+        {
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            foreach (MetricRangeRule metricRangeRule in metricRangeRules)
+            {
+                challengeHints.Add(metricRangeRule.GetHintForIncompleteMethod());
             }
             return challengeHints;
         }
@@ -84,12 +94,12 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         private List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> submittedClasses, List<CaDETMember> submittedMethods)
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            challengeHints.AddRange(GetApplicableClassHints(submittedClasses));
-            challengeHints.AddRange(GetApplicableMethodHints(submittedMethods));
+            challengeHints.AddRange(GetApplicableHintsForIncompleteClass(submittedClasses));
+            challengeHints.AddRange(GetApplicableHintsForIncompleteMethod(submittedMethods));
             return challengeHints;
         }
 
-        private List<ChallengeHint> GetApplicableClassHints(List<CaDETClass> solutionAttempt)
+        private List<ChallengeHint> GetApplicableHintsForIncompleteClass(List<CaDETClass> solutionAttempt)
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
             foreach (CaDETClass caDETClass in solutionAttempt)
@@ -97,13 +107,13 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
                 {
                     if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
-                        challengeHints.Add(classMetricRule.GetHintForMetricRule());
+                        challengeHints.Add(classMetricRule.GetApplicableHintForIncompleteClass(caDETClass));
                 }
             }
             return challengeHints;
         }
 
-        private List<ChallengeHint> GetApplicableMethodHints(List<CaDETMember> caDETMethods)
+        private List<ChallengeHint> GetApplicableHintsForIncompleteMethod(List<CaDETMember> caDETMethods)
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
             foreach (CaDETMember caDETMethod in caDETMethods)
@@ -111,7 +121,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
                 {
                     if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
-                        challengeHints.Add(methodMetricRule.GetHintForMetricRule());
+                        challengeHints.Add(methodMetricRule.GetApplicableHintForIncompleteMethod(caDETMethod));
                 }
             }
             return challengeHints;
