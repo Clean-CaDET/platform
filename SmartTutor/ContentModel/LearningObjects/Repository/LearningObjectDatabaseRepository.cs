@@ -26,7 +26,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         public List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries)
         {
-            return summaries.SelectMany(GetLearningObjectsForSummary).ToList();
+            return summaries.Select(summaryId => GetLearningObjectsForSummary(summaryId).First()).ToList();
         }
 
         public Challenge GetChallenge(int challengeId)
