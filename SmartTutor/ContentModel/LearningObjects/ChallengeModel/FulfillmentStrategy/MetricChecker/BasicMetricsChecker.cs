@@ -20,7 +20,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         {
             ClassMetricRules = classMetricRules;
             MethodMetricRules = methodMetricRules;
-            _metricHints = metricHints;
+            ChallengeHints = GetChallengeHints();
         }
 
         public override ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
@@ -29,7 +29,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             ChallengeEvaluation challengeEvaluation = new ChallengeEvaluation
             {
                 ChallengeCompleted = ValidateClassMetricRules(solutionAttempt) && ValidateMethodMetricRules(submittedMethods),
-                ChallengeHints = ChallengeHints
+                ChallengeHints = GetChallengeHints() // TODO: Get hints relevant for the solutionAttempt
             };
             return challengeEvaluation;
         }
@@ -41,45 +41,44 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private bool ValidateClassMetricRules(List<CaDETClass> caDETClasses)
         {
-            int flag = 0;
-            _metricHints = new List<MetricHint>();
             foreach (CaDETClass caDETClass in caDETClasses)
             {
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
                 {
-                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
-                    {
-                        flag++;
-                        AddHintForUnfulfilledMetricRule(classMetricRule);
-                    }
+                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics)) return false;
                 }
             }
-            return (flag == 0);
+            return true;
         }
 
         private bool ValidateMethodMetricRules(List<CaDETMember> caDETMethods)
         {
-            int flag = 0;
             foreach (CaDETMember caDETMethod in caDETMethods)
             {
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
                 {
-                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
-                    {
-                        flag++;
-                        AddHintForUnfulfilledMetricRule(methodMetricRule);
-                    }
+                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics)) return false;
                 }
             }
-            return (flag == 0);
+            return true;
         }
 
-        private void AddHintForUnfulfilledMetricRule(MetricRangeRule metricRule)
+        private List<ChallengeHint> GetChallengeHints()
         {
-            _metricHints.Add(new MetricHint
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            challengeHints.AddRange(GetHintsForMetricRule(ClassMetricRules));
+            challengeHints.AddRange(GetHintsForMetricRule(MethodMetricRules));
+            return challengeHints;
+        }
+
+        private List<ChallengeHint> GetHintsForMetricRule(List<MetricRangeRule> metricRangeRules)
+        {
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            foreach (MetricRangeRule metricRangeRule in metricRangeRules)
             {
-                Content = "Metric rule " + metricRule.MetricName + " should be between " + metricRule.FromValue + " and " + metricRule.ToValue + "."
-            });
+                challengeHints.Add(metricRangeRule.GetHintForMetricRule());
+            }
+            return challengeHints;
         }
     }
 }
