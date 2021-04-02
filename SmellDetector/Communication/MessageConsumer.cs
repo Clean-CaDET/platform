@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -61,31 +59,31 @@ namespace SmellDetector.Communication
 
         private void ConsumeMessage()
         {
+            Random random = new Random();
+            int randomChannelIndex = random.Next(Channel.Count);
 
-            foreach (IModel channel in Channel)
-            {
-                var consumer = new EventingBasicConsumer(channel);
+            var consumer = new EventingBasicConsumer(Channel[randomChannelIndex]);
 
-                consumer.Received += (model, deliveryArguments) =>
+            consumer.Received += (model, deliveryArguments) =>
             {
                 var body = deliveryArguments.Body.ToArray();
                 var jsonMessage = Encoding.UTF8.GetString(body);
                 CaDETClassDTO repositoryCompilerReport = new CaDETClassDTO();
-                try
-                {
-                    repositoryCompilerReport = JsonConvert.DeserializeObject<CaDETClassDTO>(jsonMessage);
-                    SendIssueReportToSmartTutor(ProcessRepositoryCompilerReport(repositoryCompilerReport));
-                }
-                catch (Exception)
-                {
-                    //TODO: write exc
-                }
+                    try
+                    {
+                        repositoryCompilerReport = JsonConvert.DeserializeObject<CaDETClassDTO>(jsonMessage);
+                        SendIssueReportToSmartTutor(ProcessRepositoryCompilerReport(repositoryCompilerReport));
+                    }
+                    catch (Exception)
+                    {
+                      //TODO: write exc
+                    }
             };
 
-                channel.BasicConsume(queue: QueueName,
+            Channel[randomChannelIndex].BasicConsume(queue: QueueName,
                                                      autoAck: true,
                                                      consumer: consumer);
-            }
+
         }
 
         private void SendIssueReportToSmartTutor(SmellDetectionReport smellDetectionReport)
