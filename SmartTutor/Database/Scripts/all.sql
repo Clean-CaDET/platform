@@ -1,10 +1,13 @@
 DELETE FROM public."Texts";
 DELETE FROM public."Images";
 DELETE FROM public."Videos";
-DELETE FROM public."ChallengeFulfillmentStrategies";
 DELETE FROM public."Challenges";
+DELETE FROM public."ChallengeFulfillmentStrategies";
 DELETE FROM public."QuestionAnswers";
 DELETE FROM public."Questions";
+DELETE FROM public."ArrangeTaskElements";
+DELETE FROM public."ArrangeTaskContainers";
+DELETE FROM public."ArrangeTasks";
 DELETE FROM public."LearningObjects";
 
 DELETE FROM public."LearningObjectSummaries";
@@ -323,4 +326,108 @@ INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
 	VALUES (15, 'Potrebno je dobro ime izabrati u startu, zato što je naknadna promena skupa.', false, 'Izjava nije tačna. Promena imena za gotovo svaki element koda je trivijalna operacija uz pomoć savremenih editora koda.', 19);
 	
+--== Methods ==- FK Node	
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (10, 'Analiziraj ideju da je funkcija fokusirana na jedan zadatak.', 0, NULL, 2);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
+	VALUES (30, 'Clean Function Definition', 10);
 	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (31, 'Long Function Example', 10);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (32, 'Short Function Example', 10);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (33, 'One Thing', 10);
+-- Methods - FK Node
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (30, 30);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (30, 'Funkcija predstavlja *imenovani* blok koda koji enkapsulira smislen zadatak. Ona predstavlja najjednostavniju grupaciju koda koja može samostalno da postoji. U objektno-orijentisanom programiranju funkcije su često metode koje definišu ponašanje objekta nad kojim se pozivaju. Principi koje poštujemo za formiranje čistih funkcija su jednako primenjivi na metode.
+
+Čista funkcija je *fokusirana na jedan zadatak*. Ovaj zadatak je jasno opisan kroz imena zaglavlja funkcije, što uključuje samo ime funkcije i imena njenih parametra. Čista funkcija ima jednostavno telo i sastoji se od koda koji zahteva malo mentalnog napora da se razume. Kao posledica, ovakve funkcije često sadrže mali broj linija koda.');
+		
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (31, 31);
+INSERT INTO public."Images"( --TODO: CodeSnippet gist
+	"Id", "Url", "Caption")
+	VALUES (31, 'TODO', 'Izdvoj vreme da opišeš sve high-level i low-level zadatke (segmente koda) koje "getFree" izvršava u pratećem kodu. Koje od navedenih zadataka vidiš da bi koristio u drugim kontekstima (i time duplirao kod)?');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (32, 32);
+INSERT INTO public."ArrangeTasks"(
+	"Id", "Text")
+	VALUES (32, 'Prateći kod predstavlja primer čiste funkcije.
+
+    public List<Doctor> GetSuitableDoctors(Operation operation){
+    	List<Doctor> doctors = doctorRepository.FindAll();
+    
+    	List<Doctor> suitableDoctors = new ArrayList<>();
+    	foreach(Doctor doctor in doctors){
+    		if(IsCapable(doctor, operation.GetRequiredCapabilities())
+    		    && IsAvailable(doctor, operation.GetTimeSlot())){
+    			suitableDoctors.Add(doctor);
+    		}
+    	}
+    
+    	return suitableDoctors;
+    }
+
+Rasporedi zahteve za izmenu softvera tako da su vezani za funkcije koje bismo verovatno menjali da bismo ih ispoštovali.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (1, 32, 'Nijedna od navedenih');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (1, 1, 'Dopuni format data transfer objekta da prikaže podatke novoj klijentskoj aplikaciji.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (2, 32, 'FindAll');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (2, 2, 'Potrebno je sačuvati podatke o lekarima u NoSQL bazi umesto u SQL bazi.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (3, 32, 'GetSuitableDoctors');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (3, 3, 'Od mogućih, bira lekar koji ima najveći stepen uspeha za dati tip operacije.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (4, 32, 'IsCapable');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (4, 4, 'Za izazovnu operaciju je potreban hirurg koji je bar jednom izveo dati tip operacije.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (5, 32, 'IsAvailable');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (5, 5, 'Uzima u obzir da li je lekar na bitnom sastanku u traženo vreme.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (33, 33);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (33, 'Šta tačno znači biti fokusiran na jedan zadatak? Idealno, funkcija koja radi jedan zadatak zna koji su koraci potrebni da se uradi taj zadatak, bez da poznaje detalje svakog od navedenih koraka (npr. bez da zna koji su koraci potrebni da bi se rešio njen prvi korak).
+
+Ovako će `getSuitableDoctors` da zna da je za operaciju potrebno pronaći lekare koji su sposobni da urade operaciju i dostupni u predloženom terminu. Ova funkcija neće znati šta znači da je "lekar sposoban", niti kako da interaguje sa skladištem podataka kako bi dobavila lekare. Dalje, `IsAvailable` će znati šta sve treba proveriti da se odredi da li je lekar dostupan, što podrazumeva pregled njegovog radnog vremena i razmatranje da li već ima bitne obaveze u datom vremenskom opsegu. Ova funkcija neće poznavati detalje ovih koraka, poput logike koja je potrebna da se uporede datum i vreme, a možda ni logike koja proverava tačno radno vreme lekara i uključuje ispitivanje da li je na godišnjem odmoru.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (34, 33);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (34, 'https://i.ibb.co/hd5ktG6/RS-Methods-One-Thing.png', '"Zadatak" može da opiše logiku na raznim nivoima apstrakcije - od "GetSuitableDoctors(operation)" do "Sum(a,b)".');

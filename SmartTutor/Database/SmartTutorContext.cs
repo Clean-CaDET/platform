@@ -21,6 +21,9 @@ namespace SmartTutor.Database
         public DbSet<Video> Videos { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
+        public DbSet<ArrangeTask> ArrangeTasks { get; set; }
+        public DbSet<ArrangeTaskContainer> ArrangeTaskContainers { get; set; }
+        public DbSet<ArrangeTaskElement> ArrangeTaskElements { get; set; }
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<ChallengeFulfillmentStrategy> ChallengeFulfillmentStrategies { get; set; }
         public DbSet<BasicMetricsChecker> MetricsCheckers { get; set; }

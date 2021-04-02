@@ -34,7 +34,7 @@ namespace SmartTutor.Controllers
             //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
             var evaluation = _contentService.EvaluateAnswers(questionId, submittedAnswers.Select(a => a.Id).ToList());
             if (evaluation == null) NotFound();
-            return Ok(_mapper.Map<AnswerEvaluationDTO>(evaluation));
+            return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
         }
     }
 }

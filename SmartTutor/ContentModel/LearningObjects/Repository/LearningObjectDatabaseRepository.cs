@@ -20,7 +20,9 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             var query = _dbContext.LearningObjects
                 .Where(lo => lo.LearningObjectSummaryId == summaryId)
                 // The Include below enables retrieval of associations related to derived types.
-                .Include(lo => (lo as Question).PossibleAnswers);
+                .Include(lo => (lo as Question).PossibleAnswers)
+                .Include(lo => (lo as ArrangeTask).Containers)
+                .ThenInclude(c => c.CorrectlyArrangedElements);
             return query.ToList();
         }
 

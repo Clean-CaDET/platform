@@ -1,6 +1,5 @@
 ﻿using SmartTutor.Controllers.DTOs.Lecture;
 using System;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -50,6 +49,10 @@ namespace SmartTutor.Controllers.Mappers
             {
                 WriteQuestion(writer, question);
             }
+            else if (learningObject is ArrangeTaskDTO task)
+            {
+                WriteArrangeTask(writer, task);
+            }
 
             writer.WriteNumber("id", learningObject.Id);
             writer.WriteNumber("learningObjectSummaryId", learningObject.LearningObjectSummaryId);
@@ -61,13 +64,41 @@ namespace SmartTutor.Controllers.Mappers
         {
             writer.WriteString("typeDiscriminator", "question");
             writer.WriteString("text", question.Text);
-
+            writer.WritePropertyName("possibleAnswers");
             writer.WriteStartArray();
             foreach (var answer in question.PossibleAnswers)
             {
                 writer.WriteStartObject();
                 writer.WriteNumber("id", answer.Id);
                 writer.WriteString("text", answer.Text);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+        }
+
+        private void WriteArrangeTask(Utf8JsonWriter writer, ArrangeTaskDTO task)
+        {
+            writer.WriteString("typeDiscriminator", "arrangeTask");
+            writer.WriteString("text", task.Text);
+            writer.WritePropertyName("containers");
+
+            writer.WriteStartArray();
+            foreach (var container in task.Containers)
+            {
+                writer.WriteStartObject();
+                writer.WriteNumber("id", container.Id);
+                writer.WriteString("title", container.Title);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+
+            writer.WritePropertyName("unarrangedElements");
+            writer.WriteStartArray();
+            foreach (var element in task.UnarrangedElements)
+            {
+                writer.WriteStartObject();
+                writer.WriteNumber("id", element.Id);
+                writer.WriteString("text", element.Text);
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();
