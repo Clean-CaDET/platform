@@ -1,14 +1,15 @@
-DELETE FROM public."Lectures";
-DELETE FROM public."KnowledgeNodes";
-DELETE FROM public."LearningObjectSummaries";
-
-DELETE FROM public."LearningObjects";
 DELETE FROM public."Texts";
 DELETE FROM public."Images";
 DELETE FROM public."Videos";
+DELETE FROM public."ChallengeFulfillmentStrategies";
 DELETE FROM public."Challenges";
 DELETE FROM public."QuestionAnswers";
 DELETE FROM public."Questions";
+DELETE FROM public."LearningObjects";
+
+DELETE FROM public."LearningObjectSummaries";
+DELETE FROM public."KnowledgeNodes";
+DELETE FROM public."Lectures";
 
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description")
@@ -244,6 +245,11 @@ INSERT INTO public."LearningObjectSummaries"(
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (14, 'Conclusion', 4);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (15, 'Recap', 4);
+	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (14, 12);

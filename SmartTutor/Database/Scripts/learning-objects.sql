@@ -3,6 +3,7 @@ DELETE FROM public."LearningObjects";
 DELETE FROM public."Texts";
 DELETE FROM public."Images";
 DELETE FROM public."Videos";
+DELETE FROM public."ChallengeFulfillmentStrategies";
 DELETE FROM public."Challenges";
 DELETE FROM public."QuestionAnswers";
 DELETE FROM public."Questions";

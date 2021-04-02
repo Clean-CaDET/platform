@@ -22,8 +22,8 @@ namespace SmartTutor.Controllers.Mappers
             CreateMap<Image, ImageDTO>();
             CreateMap<Video, VideoDTO>();
             CreateMap<Challenge, ChallengeDTO>();
-            CreateMap<Question, QuestionDTO>()
-                .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers.Select(a => a.Text)));
+            CreateMap<Question, QuestionDTO>();
+            CreateMap<QuestionAnswer, QuestionAnswerDTO>();
         }
     }
 }

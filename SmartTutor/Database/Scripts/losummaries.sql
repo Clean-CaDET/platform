@@ -60,4 +60,8 @@ INSERT INTO public."LearningObjectSummaries"(
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (14, 'Conclusion', 4);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (15, 'Recap', 4);
 

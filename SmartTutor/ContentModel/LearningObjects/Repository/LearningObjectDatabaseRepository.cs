@@ -2,6 +2,7 @@ using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -16,7 +17,11 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         public List<LearningObject> GetLearningObjectsForSummary(int summaryId)
         {
-            return _dbContext.LearningObjects.Where(lo => lo.LearningObjectSummaryId == summaryId).ToList();
+            var query = _dbContext.LearningObjects
+                .Where(lo => lo.LearningObjectSummaryId == summaryId)
+                // The Include below enables retrieval of associations related to derived types.
+                .Include(lo => (lo as Question).PossibleAnswers);
+            return query.ToList();
         }
 
         public List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries)

@@ -1,5 +1,6 @@
 ﻿using SmartTutor.Controllers.DTOs.Lecture;
 using System;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -47,17 +48,28 @@ namespace SmartTutor.Controllers.Mappers
             }
             else if (learningObject is QuestionDTO question)
             {
-                writer.WriteString("typeDiscriminator", "challenge");
-                writer.WriteString("text", question.Text);
-                writer.WriteStartArray();
-                writer.WriteString("possibleAnswers", string.Join(",", question.PossibleAnswers));
-                writer.WriteEndArray();
+                WriteQuestion(writer, question);
             }
 
             writer.WriteNumber("id", learningObject.Id);
             writer.WriteNumber("learningObjectSummaryId", learningObject.LearningObjectSummaryId);
 
             writer.WriteEndObject();
+        }
+
+        private static void WriteQuestion(Utf8JsonWriter writer, QuestionDTO question)
+        {
+            writer.WriteString("typeDiscriminator", "question");
+            writer.WriteString("text", question.Text);
+            var sb = new StringBuilder("[");
+            for (var i = 0; i < question.PossibleAnswers.Count; i++)
+            {
+                var answer = question.PossibleAnswers[i];
+                sb.Append("{ id: " + answer.Id + ", text: " + answer.Text + "}");
+                if (i < question.PossibleAnswers.Count - 1) sb.Append(",");
+            }
+            sb.Append("]");
+            writer.WriteString("possibleAnswers", sb.ToString());
         }
     }
 }
