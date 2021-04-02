@@ -61,15 +61,16 @@ namespace SmartTutor.Controllers.Mappers
         {
             writer.WriteString("typeDiscriminator", "question");
             writer.WriteString("text", question.Text);
-            var sb = new StringBuilder("[");
-            for (var i = 0; i < question.PossibleAnswers.Count; i++)
+
+            writer.WriteStartArray();
+            foreach (var answer in question.PossibleAnswers)
             {
-                var answer = question.PossibleAnswers[i];
-                sb.Append("{ id: " + answer.Id + ", text: " + answer.Text + "}");
-                if (i < question.PossibleAnswers.Count - 1) sb.Append(",");
+                writer.WriteStartObject();
+                writer.WriteNumber("id", answer.Id);
+                writer.WriteString("text", answer.Text);
+                writer.WriteEndObject();
             }
-            sb.Append("]");
-            writer.WriteString("possibleAnswers", sb.ToString());
+            writer.WriteEndArray();
         }
     }
 }
