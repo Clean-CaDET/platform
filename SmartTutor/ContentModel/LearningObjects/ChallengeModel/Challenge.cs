@@ -12,7 +12,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
         public string Description { get; internal set; }
         public ChallengeFulfillmentStrategy FulfillmentStrategy { get; internal set; }
 
-        public bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
+        public ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
             return FulfillmentStrategy.CheckChallengeFulfillment(solutionAttempt);
         }

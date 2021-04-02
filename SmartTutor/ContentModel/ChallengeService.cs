@@ -1,6 +1,7 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using System.Collections.Generic;
 
@@ -15,7 +16,7 @@ namespace SmartTutor.ContentModel
             _learningObjectRepository = learningObjectRepository;
         }
 
-        public bool CheckChallengeCompletion(string[] sourceCode, int challengeId)
+        public ChallengeEvaluation CheckChallengeCompletion(string[] sourceCode, int challengeId)
         {
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
             Challenge challenge = GetChallenge(challengeId);

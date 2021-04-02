@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.Controllers.DTOs.Challenge;
 
@@ -19,8 +20,8 @@ namespace SmartTutor.Controllers
         [HttpPost("check")]
         public ChallengeCheckResponseDTO CheckChallengeCompletion([FromBody] ChallengeCheckRequestDTO checkRequestDto)
         {
-            bool completed = _challengeService.CheckChallengeCompletion(checkRequestDto.SourceCode, checkRequestDto.ChallengeId);
-            var text = completed ? "Success." : "Fail.";
+            ChallengeEvaluation challengeEvaluation = _challengeService.CheckChallengeCompletion(checkRequestDto.SourceCode, checkRequestDto.ChallengeId);
+            var text = challengeEvaluation.ChallengeCompleted ? "Success." : "Fail.";
             return new ChallengeCheckResponseDTO(text);
         }
     }
