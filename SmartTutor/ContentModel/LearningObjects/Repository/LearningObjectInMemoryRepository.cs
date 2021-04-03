@@ -1,9 +1,8 @@
-﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -101,7 +100,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             });
 
             AddChallenge();
-
         }
 
         public List<LearningObject> GetLearningObjectsForSummary(int summaryId)
@@ -178,6 +176,31 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         }
 
         public List<ArrangeTaskContainer> GetArrangeTaskContainers(int arrangeTaskId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Image GetImageForSummary(int summaryId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Question GetQuestionForSummary(int summaryId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Text GetTextForSummary(int summaryId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Video GetVideoForSummary(int summaryId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Challenge GetChallengeForSummary(int summaryId)
         {
             throw new System.NotImplementedException();
         }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.ContentModel.ProgressModel.Repository;
 using SmartTutor.Controllers.Mappers;
 using SmartTutor.Database;
 using SmartTutor.Recommenders;
@@ -39,8 +40,10 @@ namespace SmartTutor
 
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
-            //services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
-            //services.AddScoped<ILearningObjectRepository, LearningObjectInMemoryRepository>();
+            services.AddScoped<ITraineeRepository, TraineeDatabaseRepository>();
+            // services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
+            // services.AddScoped<ILearningObjectRepository, LearningObjectInMemoryRepository>();
+            // services.AddScoped<ITraineeRepository, TraineeInMemoryRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 

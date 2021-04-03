@@ -55,5 +55,30 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             return _dbContext.ArrangeTaskContainers.Where(c => c.ArrangeTaskId == arrangeTaskId)
                 .Include(c => c.Elements).ToList();
         }
+
+        public Image GetImageForSummary(int summaryId)
+        {
+            return _dbContext.Images.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+        }
+
+        public Question GetQuestionForSummary(int summaryId)
+        {
+            return _dbContext.Questions.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+        }
+
+        public Text GetTextForSummary(int summaryId)
+        {
+            return _dbContext.Texts.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+        }
+
+        public Video GetVideoForSummary(int summaryId)
+        {
+            return _dbContext.Videos.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+        }
+
+        public Challenge GetChallengeForSummary(int summaryId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
