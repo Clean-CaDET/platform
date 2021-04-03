@@ -22,7 +22,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 // The Include below enables retrieval of associations related to derived types.
                 .Include(lo => (lo as Question).PossibleAnswers)
                 .Include(lo => (lo as ArrangeTask).Containers)
-                .ThenInclude(c => c.CorrectlyArrangedElements);
+                .ThenInclude(c => c.Elements);
             return query.ToList();
         }
 
@@ -39,6 +39,12 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         public List<QuestionAnswer> GetQuestionAnswers(int questionId)
         {
             return _dbContext.QuestionAnswers.Where(a => a.QuestionId == questionId).ToList();
+        }
+
+        public List<ArrangeTaskContainer> GetArrangeTaskContainers(int arrangeTaskId)
+        {
+            return _dbContext.ArrangeTaskContainers.Where(c => c.ArrangeTaskId == arrangeTaskId)
+                .Include(c => c.Elements).ToList();
         }
     }
 }

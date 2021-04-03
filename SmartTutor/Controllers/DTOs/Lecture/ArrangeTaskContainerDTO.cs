@@ -6,6 +6,6 @@ namespace SmartTutor.Controllers.DTOs.Lecture
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<ArrangeTaskElementDTO> SubmittedElements { get; set; }
+        public List<ArrangeTaskElementDTO> Elements { get; set; }
     }
 }

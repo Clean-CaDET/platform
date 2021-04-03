@@ -76,7 +76,9 @@ INSERT INTO public."LearningObjects"(
 	VALUES (3, 3);
 INSERT INTO public."Texts"(
 	"Id", "Content")
-	VALUES (3, 'Imena funkcija predstavljaju glagol, što označava da rade nešto (npr. *Buy(Product product), Create(WebPage newPage), Open(File file)*). Ostali identifikatori, poput promenljiva, polja, klasa i paketa, predstavljaju imenice (npr. *Invoice, PageHeader, FileParser*). Kod koji implementira poslovnu logiku treba da sadrži imenice i akcije iz poslovnog domena (npr. *Invoice, Order, OrderItem, submit(Payment p), cancel(Order o)*).');
+	VALUES (3, 'Imena funkcija predstavljaju glagol, što označava da rade nešto (npr. *Buy(Product product), Create(WebPage newPage), Open(File file)*). Ostali identifikatori, poput promenljiva, polja, klasa i paketa, predstavljaju imenice (npr. *Invoice, PageHeader, FileParser*). Kod koji implementira poslovnu logiku treba da sadrži imenice i akcije iz poslovnog domena (npr. *Invoice, Order, OrderItem, submit(Payment p), cancel(Order o)*).
+
+Pošto ime treba jasno da odredi neku operaciju ili pojam, treba da izbegavamo sinonime i da poštujemo timske konvencije. Ako za većinu entiteta koristimo metodu čije ime počinje sa "Get", programer će morati da zastane ako naleti na metodu koja učitava određeni entitet i ime joj počinje sa "Load". Postaviće se pitanje da li je Load drugačije od Get i da li treba nešto drugačije uraditi sa Load metodama.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -402,7 +404,7 @@ INSERT INTO public."ArrangeTaskContainers"(
 	VALUES (3, 32, 'GetSuitableDoctors');
 INSERT INTO public."ArrangeTaskElements"(
 	"Id", "ArrangeTaskContainerId", "Text")
-	VALUES (3, 3, 'Od mogućih, bira lekar koji ima najveći stepen uspeha za dati tip operacije.');
+	VALUES (3, 3, 'Od mogućih, uvek odabrati lekara koji ima najveći stepen uspeha za dati tip operacije, a prvog kada je nerešeno.');
 INSERT INTO public."ArrangeTaskContainers"(
 	"Id", "ArrangeTaskId", "Title")
 	VALUES (4, 32, 'IsCapable');

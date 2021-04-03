@@ -31,9 +31,14 @@ namespace SmartTutor.Controllers.Mappers
                 .ForMember(dest => dest.Feedback, opt => opt.MapFrom(src => src.FullAnswer.Feedback));
 
             CreateMap<ArrangeTask, ArrangeTaskDTO>()
-                .ForMember(dest => dest.UnarrangedElements, opt => opt.MapFrom(src => src.Containers.SelectMany(c => c.CorrectlyArrangedElements).ToList()));
+                .ForMember(dest => dest.UnarrangedElements, opt => opt.MapFrom(src => src.Containers.SelectMany(c => c.Elements).ToList()));
             CreateMap<ArrangeTaskContainer, ArrangeTaskContainerDTO>();
+            CreateMap<ArrangeTaskContainerDTO, ArrangeTaskContainer>();
             CreateMap<ArrangeTaskElement, ArrangeTaskElementDTO>();
+            CreateMap<ArrangeTaskElementDTO, ArrangeTaskElement>();
+            CreateMap<ArrangeTaskContainerEvaluation, ArrangeTaskContainerEvaluationDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FullAnswer.Id))
+                .ForMember(dest => dest.CorrectElements, opt => opt.MapFrom(src => src.FullAnswer.Elements));
         }
     }
 }

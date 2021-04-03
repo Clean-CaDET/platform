@@ -145,5 +145,10 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         {
             throw new System.NotImplementedException();
         }
+
+        public List<ArrangeTaskContainer> GetArrangeTaskContainers(int arrangeTaskId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
