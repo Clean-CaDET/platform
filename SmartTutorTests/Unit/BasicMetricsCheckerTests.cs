@@ -90,9 +90,11 @@ namespace SmartTutorTests.Unit
 
             challengeEvaluation.ChallengeCompleted.ShouldBeTrue();
             challengeEvaluation.ApplicableHints.Count().ShouldBe(2);
+            challengeEvaluation.ApplicableHints[0].Id.ShouldBe(337001);
             challengeEvaluation.ApplicableHints[0].Content.ShouldBe("Cohesion");
             challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Id.ShouldBe(331);
             challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Description.ShouldBe("Cohesion definition");
+            challengeEvaluation.ApplicableHints[1].Id.ShouldBe(337002);
             challengeEvaluation.ApplicableHints[1].Content.ShouldBe("Cohesion");
             challengeEvaluation.ApplicableHints[1].LearningObjectSummary.Id.ShouldBe(336);
             challengeEvaluation.ApplicableHints[1].LearningObjectSummary.Description.ShouldBe("Structural cohesion example");
@@ -141,6 +143,7 @@ namespace SmartTutorTests.Unit
 
             challengeEvaluation.ChallengeCompleted.ShouldBeFalse();
             challengeEvaluation.ApplicableHints.Count().ShouldBe(1);
+            challengeEvaluation.ApplicableHints[0].Id.ShouldBe(337002);
             challengeEvaluation.ApplicableHints[0].Content.ShouldBe("Cohesion");
             challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Id.ShouldBe(336);
             challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Description.ShouldBe("Structural cohesion example");
