@@ -13,7 +13,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public double ToValue { get; set; }
         public ChallengeHint Hint { get; set; }
 
-        public bool MetricMeetsRequirements(Dictionary<CaDETMetric, double> metrics)
+        internal bool MetricMeetsRequirements(Dictionary<CaDETMetric, double> metrics)
         {
             var metricValue = metrics[(CaDETMetric)Enum.Parse(typeof(CaDETMetric), MetricName, true)];
             return (FromValue <= metricValue && metricValue <= ToValue);

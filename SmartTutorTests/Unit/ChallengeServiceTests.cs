@@ -8,19 +8,17 @@ namespace SmartTutorTests.Unit
 {
     public class ChallengeServiceTests
     {
-        private readonly LearningObjectInMemoryRepository _learningObjectInMemoryRepository;
+        private readonly ChallengeService _challengeService;
 
         public ChallengeServiceTests()
         {
-            _learningObjectInMemoryRepository = new LearningObjectInMemoryRepository();
+            _challengeService = new ChallengeService(new LearningObjectInMemoryRepository());
         }
 
         [Fact]
         public void Gets_proper_challenge_content()
         {
-            ChallengeService challengeService = new ChallengeService(_learningObjectInMemoryRepository);
-
-            Challenge challenge = challengeService.GetChallenge(3371);
+            Challenge challenge = _challengeService.GetChallenge(3371);
 
             challenge.Id.ShouldBe(3371);
             challenge.LearningObjectSummaryId.ShouldBe(337);

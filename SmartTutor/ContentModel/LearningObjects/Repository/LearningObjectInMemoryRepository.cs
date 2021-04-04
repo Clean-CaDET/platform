@@ -124,30 +124,34 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
             classMetricRules.Add(new MetricRangeRule
             {
+                Id = 33701,
                 MetricName = "CLOC",
                 FromValue = 3,
                 ToValue = 30,
                 Hint = new ChallengeHint
                 {
+                    Id = 337001,
                     Content = "Cohesion",
                     LearningObjectSummary = new LearningObjectSummary { Id = 331, Description = "Cohesion definition" }
                 }
             });
-            classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
+            classMetricRules.Add(new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2 });
 
             List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
             methodMetricRules.Add(new MetricRangeRule
             {
+                Id = 33703,
                 MetricName = "MELOC",
                 FromValue = 2,
                 ToValue = 5,
                 Hint = new ChallengeHint
                 {
+                    Id = 337002,
                     Content = "Cohesion",
                     LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
                 }
             });
-            methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
+            methodMetricRules.Add(new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4 });
 
             _learningObjectCache.Add(337, new List<LearningObject>
             {

@@ -2,7 +2,6 @@
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,48 +11,49 @@ namespace SmartTutorTests.Unit
 {
     public class BasicMetricsCheckerTests
     {
-        private readonly LearningObjectInMemoryRepository _learningObjectInMemoryRepository;
-        private readonly List<MetricRangeRule> classMetricRules;
-        private readonly List<MetricRangeRule> methodMetricRules;
+        private readonly BasicMetricsChecker _basicMetricsChecker;
 
         public BasicMetricsCheckerTests()
         {
-            _learningObjectInMemoryRepository = new LearningObjectInMemoryRepository();
-
-            classMetricRules = new List<MetricRangeRule>();
-            classMetricRules.Add(new MetricRangeRule
+            _basicMetricsChecker = new BasicMetricsChecker(new List<MetricRangeRule>
             {
-                MetricName = "CLOC",
-                FromValue = 3,
-                ToValue = 30,
-                Hint = new ChallengeHint
+                new MetricRangeRule
                 {
-                    Content = "Cohesion",
-                    LearningObjectSummary = new LearningObjectSummary { Id = 331, Description = "Cohesion definition" }
-                }
-            });
-            classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
-
-            methodMetricRules = new List<MetricRangeRule>();
-            methodMetricRules.Add(new MetricRangeRule
+                    Id = 33701,
+                    MetricName = "CLOC",
+                    FromValue = 3,
+                    ToValue = 30,
+                    Hint = new ChallengeHint
+                    {
+                        Id = 337001,
+                        Content = "Cohesion",
+                        LearningObjectSummary = new LearningObjectSummary { Id = 331, Description = "Cohesion definition" }
+                    }
+                },
+                new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2 }
+            },
+            new List<MetricRangeRule>
             {
-                MetricName = "MELOC",
-                FromValue = 2,
-                ToValue = 5,
-                Hint = new ChallengeHint
+                new MetricRangeRule
                 {
-                    Content = "Cohesion",
-                    LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
-                }
+                    Id = 33703,
+                    MetricName = "MELOC",
+                    FromValue = 2,
+                    ToValue = 5,
+                    Hint = new ChallengeHint
+                    {
+                        Id = 337002,
+                        Content = "Cohesion",
+                        LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
+                    }
+                },
+                new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4 }
             });
-            methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
         }
 
         [Fact]
         public void Checks_completed_challenge_fulfillment()
         {
-            BasicMetricsChecker basicMetricsChecker = new BasicMetricsChecker(classMetricRules, methodMetricRules);
-
             string[] sourceCode = new string[] {
                 @"using System;
                 namespace ExamplesApp.Method
@@ -84,8 +84,9 @@ namespace SmartTutorTests.Unit
                         }
                     }
                 }"
-                };
-            ChallengeEvaluation challengeEvaluation = basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
+            };
+
+            ChallengeEvaluation challengeEvaluation = _basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
 
             challengeEvaluation.ChallengeCompleted.ShouldBeTrue();
             challengeEvaluation.ApplicableHints.Count().ShouldBe(2);
@@ -100,8 +101,6 @@ namespace SmartTutorTests.Unit
         [Fact]
         public void Checks_incompleted_challenge_fulfillment()
         {
-            BasicMetricsChecker basicMetricsChecker = new BasicMetricsChecker(classMetricRules, methodMetricRules);
-
             string[] sourceCode = new string[] {
                 @"using System;
                 namespace ExamplesApp.Method
@@ -136,8 +135,9 @@ namespace SmartTutorTests.Unit
                         }
                     }
                 }"
-                };
-            ChallengeEvaluation challengeEvaluation = basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
+            };
+
+            ChallengeEvaluation challengeEvaluation = _basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
 
             challengeEvaluation.ChallengeCompleted.ShouldBeFalse();
             challengeEvaluation.ApplicableHints.Count().ShouldBe(1);

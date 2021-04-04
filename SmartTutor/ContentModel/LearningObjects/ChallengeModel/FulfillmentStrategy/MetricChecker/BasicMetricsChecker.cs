@@ -8,8 +8,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     [Table("BasicMetricCheckers")]
     public class BasicMetricsChecker : ChallengeFulfillmentStrategy
     {
-        public List<MetricRangeRule> ClassMetricRules { get; set; }
-        public List<MetricRangeRule> MethodMetricRules { get; set; }
+        public List<MetricRangeRule> ClassMetricRules { get; private set; }
+        public List<MetricRangeRule> MethodMetricRules { get; private set; }
 
         public BasicMetricsChecker() { }
 
@@ -45,9 +45,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
             foreach (MetricRangeRule metricRangeRule in metricRangeRules)
-            {
                 if (metricRangeRule.Hint != null) challengeHints.Add(metricRangeRule.Hint);
-            }
             return challengeHints;
         }
 
@@ -66,11 +64,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             {
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
                 {
-                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
-                    {
-                        if (classMetricRule.Hint != null) challengeHints.Add(classMetricRule.Hint);
-                        continue;
-                    }
+                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics) && classMetricRule.Hint != null)
+                        challengeHints.Add(classMetricRule.Hint);
                 }
             }
             return challengeHints;
@@ -83,11 +78,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             {
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
                 {
-                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
-                    {
-                        if (methodMetricRule.Hint != null) challengeHints.Add(methodMetricRule.Hint);
-                        continue;
-                    }
+                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics) && methodMetricRule.Hint != null)
+                        challengeHints.Add(methodMetricRule.Hint);
                 }
             }
             return challengeHints;
