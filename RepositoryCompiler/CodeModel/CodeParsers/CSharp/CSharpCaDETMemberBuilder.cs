@@ -34,6 +34,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             _member.SourceCode = _cSharpMember.ToString();
             _member.Parent = parent;
             _member.Params = GetMethodParams();
+            _member.VariableNames = GetMethodVariableNames();
             return _member;
         }
 
@@ -110,6 +111,14 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             }
 
             return memberParams;
+        }
+
+        private List<string> GetMethodVariableNames()
+        {
+            var variables = _cSharpMember.DescendantNodes().OfType<VariableDeclaratorSyntax>().ToList();
+            List<string> variableNames = new List<string>();
+            variableNames.AddRange(variables.Select(v => v.Identifier.ToString()));
+            return variableNames;
         }
 
         private ISet<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)

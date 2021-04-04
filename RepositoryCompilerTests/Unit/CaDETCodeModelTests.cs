@@ -199,5 +199,29 @@ namespace RepositoryCompilerTests.Unit
 
             classes.Count.ShouldBe(0);
         }
+
+        [Fact]
+        public void Calculates_method_variables()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var service = classes.Find(c => c.Name.Equals("DoctorService"));
+            var overlapsWith = dateRange.FindMember("OverlapsWith");
+            var logChecked = service.FindMember("LogChecked");
+
+            overlapsWith.VariableNames.Count().ShouldBe(0);
+            logChecked.VariableNames.Count().ShouldBe(8);
+            logChecked.VariableNames.ShouldContain("test1");
+            logChecked.VariableNames.ShouldContain("test");
+            logChecked.VariableNames.ShouldContain("a");
+            logChecked.VariableNames.ShouldContain("b");
+            logChecked.VariableNames.ShouldContain("c");
+            logChecked.VariableNames.ShouldContain("temp1");
+            logChecked.VariableNames.ShouldContain("temp2");
+            logChecked.VariableNames.ShouldContain("test2");
+        }
     }
 }
