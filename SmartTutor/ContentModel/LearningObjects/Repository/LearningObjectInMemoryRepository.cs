@@ -1,6 +1,7 @@
 ﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
+using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -121,11 +122,31 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         private void AddChallenge()
         {
             List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
-            classMetricRules.Add(new MetricRangeRule { MetricName = "CLOC", FromValue = 3, ToValue = 30 });
+            classMetricRules.Add(new MetricRangeRule
+            {
+                MetricName = "CLOC",
+                FromValue = 3,
+                ToValue = 30,
+                Hint = new ChallengeHint
+                {
+                    Content = "Cohesion",
+                    LearningObjectSummary = new LearningObjectSummary { Id = 331, Description = "Cohesion definition" }
+                }
+            });
             classMetricRules.Add(new MetricRangeRule { MetricName = "NMD", FromValue = 0, ToValue = 2 });
 
             List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
-            methodMetricRules.Add(new MetricRangeRule { MetricName = "MELOC", FromValue = 2, ToValue = 5 });
+            methodMetricRules.Add(new MetricRangeRule
+            {
+                MetricName = "MELOC",
+                FromValue = 2,
+                ToValue = 5,
+                Hint = new ChallengeHint
+                {
+                    Content = "Cohesion",
+                    LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
+                }
+            });
             methodMetricRules.Add(new MetricRangeRule { MetricName = "NOP", FromValue = 1, ToValue = 4 });
 
             _learningObjectCache.Add(337, new List<LearningObject>

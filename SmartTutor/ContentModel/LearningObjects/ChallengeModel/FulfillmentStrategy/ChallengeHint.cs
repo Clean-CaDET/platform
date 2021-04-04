@@ -1,8 +1,10 @@
-﻿namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
+﻿using SmartTutor.ContentModel.LectureModel;
+
+namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
 {
     public class ChallengeHint
     {
-        public string Content { get; internal set; }
-        public int LearningObjectSummaryId { get; set; }
+        public string Content { get; set; }
+        public LearningObjectSummary LearningObjectSummary { get; set; }
     }
 }

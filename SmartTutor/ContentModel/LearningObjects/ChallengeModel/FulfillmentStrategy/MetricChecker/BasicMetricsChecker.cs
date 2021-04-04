@@ -1,5 +1,4 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricHints;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -24,12 +23,9 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public override ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
             List<CaDETMember> submittedMethods = GetMethodsFromClasses(solutionAttempt);
-            ChallengeEvaluation challengeEvaluation = new ChallengeEvaluation
-            {
-                ChallengeCompleted = ValidateClassMetricRules(solutionAttempt) && ValidateMethodMetricRules(submittedMethods),
-                ApplicableHints = GetHintsForSolutionAttempt(solutionAttempt, submittedMethods)
-            };
-            return challengeEvaluation;
+            List<ChallengeHint> challengeHints = GetHintsForSolutionAttempt(solutionAttempt, submittedMethods);
+            if (!challengeHints.Any()) return new ChallengeEvaluation(true, ChallengeHints);
+            return new ChallengeEvaluation(false, challengeHints);
         }
 
         private List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)
@@ -37,54 +33,20 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             return caDETClasses.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
         }
 
-        private bool ValidateClassMetricRules(List<CaDETClass> caDETClasses)
-        {
-            foreach (CaDETClass caDETClass in caDETClasses)
-            {
-                foreach (MetricRangeRule classMetricRule in ClassMetricRules)
-                {
-                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics)) return false;
-                }
-            }
-            return true;
-        }
-
-        private bool ValidateMethodMetricRules(List<CaDETMember> caDETMethods)
-        {
-            foreach (CaDETMember caDETMethod in caDETMethods)
-            {
-                foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
-                {
-                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics)) return false;
-                }
-            }
-            return true;
-        }
-
         private List<ChallengeHint> GetChallengeHints()
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            challengeHints.AddRange(GetHintsForClassMetricRules(ClassMetricRules));
-            challengeHints.AddRange(GetHintsForMethodMetricRules(MethodMetricRules));
+            challengeHints.AddRange(GetHintsForMetricRules(ClassMetricRules));
+            challengeHints.AddRange(GetHintsForMetricRules(MethodMetricRules));
             return challengeHints;
         }
 
-        private List<ChallengeHint> GetHintsForClassMetricRules(List<MetricRangeRule> metricRangeRules)
+        private List<ChallengeHint> GetHintsForMetricRules(List<MetricRangeRule> metricRangeRules)
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
             foreach (MetricRangeRule metricRangeRule in metricRangeRules)
             {
-                challengeHints.Add(metricRangeRule.GetHintForIncompleteClass());
-            }
-            return challengeHints;
-        }
-
-        private List<ChallengeHint> GetHintsForMethodMetricRules(List<MetricRangeRule> metricRangeRules)
-        {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            foreach (MetricRangeRule metricRangeRule in metricRangeRules)
-            {
-                challengeHints.Add(metricRangeRule.GetHintForIncompleteMethod());
+                if (metricRangeRule.Hint != null) challengeHints.Add(metricRangeRule.Hint);
             }
             return challengeHints;
         }
@@ -105,7 +67,10 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
                 {
                     if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
-                        challengeHints.Add(classMetricRule.GetApplicableHintForIncompleteClass(caDETClass));
+                    {
+                        if (classMetricRule.Hint != null) challengeHints.Add(classMetricRule.Hint);
+                        continue;
+                    }
                 }
             }
             return challengeHints;
@@ -119,7 +84,10 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
                 {
                     if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
-                        challengeHints.Add(methodMetricRule.GetApplicableHintForIncompleteMethod(caDETMethod));
+                    {
+                        if (methodMetricRule.Hint != null) challengeHints.Add(methodMetricRule.Hint);
+                        continue;
+                    }
                 }
             }
             return challengeHints;
