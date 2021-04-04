@@ -28,6 +28,16 @@ namespace SmartTutor.ContentModel
             return _learningObjectRepository.GetChallenge(challengeId);
         }
 
+        public List<ChallengeHint> GetAllHints(int challengeId)
+        {
+            return GetChallenge(challengeId).GetAllChallengeHints();
+        }
+
+        public List<ChallengeHint> GetHintsForSolutionAttempt(int challengeId, List<CaDETClass> solutionAttempt)
+        {
+            return GetChallenge(challengeId).GetApplicableChallengeHints(solutionAttempt);
+        }
+
         private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)
         {
             return new CodeRepositoryService().BuildClassesModel(sourceCode);

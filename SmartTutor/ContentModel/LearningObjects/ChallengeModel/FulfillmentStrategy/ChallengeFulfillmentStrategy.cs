@@ -10,5 +10,6 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public List<ChallengeHint> ChallengeHints { get; internal set; }
 
         public abstract ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt);
+        public abstract List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> submittedClasses);
     }
 }

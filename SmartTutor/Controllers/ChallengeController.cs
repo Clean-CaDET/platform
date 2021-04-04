@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.Controllers.DTOs.Challenge;
+using System.Collections.Generic;
 
 namespace SmartTutor.Controllers
 {
@@ -24,6 +26,15 @@ namespace SmartTutor.Controllers
             var text = challengeEvaluation.ChallengeCompleted ? "Success." : "Fail.";
             return new ChallengeCheckResponseDTO(text);
         }
-        // TODO: getting all hints and only relevant hints
+
+        public List<ChallengeHint> GetAllHints(int challengeId)
+        {
+            return _challengeService.GetAllHints(challengeId);
+        }
+
+        public List<ChallengeHint> GetHintsForSolutionAttempt(int challengeId, List<CaDETClass> solutionAttempt)
+        {
+            return _challengeService.GetHintsForSolutionAttempt(challengeId, solutionAttempt);
+        }
     }
 }
