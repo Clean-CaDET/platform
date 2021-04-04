@@ -2,7 +2,7 @@
 {
     public class ChallengeCheckResponseDTO
     {
-        public string ResponseText { get; set; }
+        public string ResponseText { get; private set; }
 
         public ChallengeCheckResponseDTO(string text)
         {
