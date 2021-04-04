@@ -29,7 +29,7 @@ namespace SmartTutor.Controllers
             return Ok(_mapper.Map<KnowledgeNodeProgressDTO>(nodes));
         }
 
-        [HttpPost("{nodeId}/content/{questionId}")]
+        [HttpPost("{nodeId}/content/question/{questionId}")]
         public ActionResult<List<AnswerEvaluationDTO>> SubmitQuestionAnswers(int nodeId, int questionId, [FromBody] List<QuestionAnswerDTO> submittedAnswers)
         {
             //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
@@ -38,7 +38,7 @@ namespace SmartTutor.Controllers
             return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
         }
 
-        [HttpPost("{nodeId}/content/{arrangeTaskId}")]
+        [HttpPost("{nodeId}/content/arrange-task/{arrangeTaskId}")]
         public ActionResult<List<ArrangeTaskContainerEvaluationDTO>> SubmitArrangeTask(int nodeId, int arrangeTaskId, [FromBody] List<ArrangeTaskContainerDTO> submittedAnswers)
         {
             //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
