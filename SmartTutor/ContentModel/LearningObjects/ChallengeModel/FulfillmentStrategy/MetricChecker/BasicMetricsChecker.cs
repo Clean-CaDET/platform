@@ -78,10 +78,5 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             }
             return challengeHints;
         }
-
-        private List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)
-        {
-            return caDETClasses.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
-        }
     }
 }
