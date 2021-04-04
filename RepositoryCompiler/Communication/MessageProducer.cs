@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+
 
 namespace RepositoryCompiler.Communication
 {
@@ -18,24 +21,24 @@ namespace RepositoryCompiler.Communication
         public string ExchangeName { get; set; }
         public IConnection Connection { get; set; }
         public List<IModel> Channel { get; set; }
+        public ConcurrentDictionary<ulong, byte[]> OutstandingConfirms { get; set; }
 
         public MessageProducer()
         {
             ConfigureInitialStates();
             CreateConnection();
-            Channel = new List<IModel>();
-         
-            for (int numberOfChannelsPerConnection = 0; numberOfChannelsPerConnection < 5; numberOfChannelsPerConnection++)
-            {
-                Channel.Add(Connection.CreateModel());
-            }
-         
+            CreateChannels(5);
             DeclareQueue();
         }
 
-        public void CreateNewMetricsReport(CaDETClassDTO reportMessage)
+        private void ConfigureInitialStates()
         {
-            PublishMessage(GetEncodedMessage(reportMessage));
+            NodeName = "localhost";
+            QueueName = "MetricsReports";
+            ExchangeName = "";
+
+            Channel = new List<IModel>();
+            OutstandingConfirms = new ConcurrentDictionary<ulong, byte[]>();
         }
 
         private void CreateConnection()
@@ -44,38 +47,83 @@ namespace RepositoryCompiler.Communication
             Connection = connectionFactory.CreateConnection();
         }
 
-        private void ConfigureInitialStates()
+        private void CreateChannels(int numberOfChannelsPerConnection)
         {
-            NodeName = "localhost";
-            QueueName = "MetricsReports";
-            ExchangeName = "";
-        }
-
-        private void PublishMessage(byte[] body)
-        {
-            Random random = new Random();
-            int randomChannelIndex = random.Next(Channel.Count);
-            Channel[randomChannelIndex].BasicPublish(exchange: ExchangeName,
-                routingKey: QueueName,
-                basicProperties: null,
-                body: body);
-        }
-
-        private void DeclareQueue()    
-        {
-            foreach(IModel channel in Channel){
-                channel.QueueDeclare(queue: QueueName,
-                durable: false,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
+            for (var i = 0; i < numberOfChannelsPerConnection; i++)
+            {
+                var channel = Connection.CreateModel();
+                channel.ConfirmSelect();
+                ConfigurePublisherConfirms(channel);
+                Channel.Add(channel);
             }
-           
+        }
+
+        private void ConfigurePublisherConfirms(IModel channel)
+        {
+            channel.BasicAcks += (sender, ea) =>
+            {
+                CleanOutstandingConfirms(ea.DeliveryTag, ea.Multiple);
+            };
+            channel.BasicNacks += (sender, ea) =>
+            {
+                OutstandingConfirms.TryGetValue(ea.DeliveryTag, out byte[] body);
+                // TODO: Make some handling for nacked messages
+                Console.WriteLine($"\n\nMessage with body {body} has been nack-ed. Sequence number: {ea.DeliveryTag}, multiple: {ea.Multiple} \n\n");
+                CleanOutstandingConfirms(ea.DeliveryTag, ea.Multiple);
+            };
+        }
+
+        private void CleanOutstandingConfirms(ulong sequenceNumber, bool multiple)
+        {
+            if (multiple)
+            {
+                var confirmed = OutstandingConfirms.Where(k => k.Key <= sequenceNumber);
+                foreach (var entry in confirmed)
+                {
+                    OutstandingConfirms.TryRemove(entry.Key, out _);
+                }
+            }
+            else
+            {
+                OutstandingConfirms.TryRemove(sequenceNumber, out _);
+            }
+        }
+
+        private void DeclareQueue()
+        {
+            foreach (var channel in Channel)
+            {
+                channel.QueueDeclare(queue: QueueName,
+                    durable: false,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null);
+            }
+
+        }
+
+        public void CreateNewMetricsReport(CaDETClassDTO reportMessage)
+        {
+            PublishMessage(GetEncodedMessage(reportMessage));
         }
 
         private byte[] GetEncodedMessage(CaDETClassDTO reportMessage)
         {
             return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(reportMessage));
         }
+
+        private void PublishMessage(byte[] body)
+        {
+            var random = new Random();
+            var randomChannelIndex = random.Next(Channel.Count);
+            var randomAvailableChannel = Channel[randomChannelIndex];
+
+            OutstandingConfirms.TryAdd(randomAvailableChannel.NextPublishSeqNo, body);
+            randomAvailableChannel.BasicPublish(exchange: ExchangeName,
+                routingKey: QueueName,
+                basicProperties: null,
+                body: body);
+        }
+
     }
 }
