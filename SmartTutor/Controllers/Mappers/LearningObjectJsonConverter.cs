@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SmartTutor.Controllers.DTOs.Lecture;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using SmartTutor.Controllers.DTOs.Lecture;
 
 namespace SmartTutor.Controllers.Mappers
 {
     //Based on https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-core-3-1#support-polymorphic-deserialization
+    //TODO: Research a better solution and refactor this.
     internal class LearningObjectJsonConverter : JsonConverter<LearningObjectDTO>
     {
         public override bool CanConvert(Type typeToConvert) =>
@@ -38,11 +39,69 @@ namespace SmartTutor.Controllers.Mappers
                 writer.WriteString("typeDiscriminator", "video");
                 writer.WriteString("url", video.Url);
             }
+            else if (learningObject is ChallengeDTO challenge)
+            {
+                writer.WriteString("typeDiscriminator", "challenge");
+                writer.WriteString("url", challenge.Url);
+                writer.WriteString("description", challenge.Description);
+            }
+            else if (learningObject is QuestionDTO question)
+            {
+                WriteQuestion(writer, question);
+            }
+            else if (learningObject is ArrangeTaskDTO task)
+            {
+                WriteArrangeTask(writer, task);
+            }
 
             writer.WriteNumber("id", learningObject.Id);
             writer.WriteNumber("learningObjectSummaryId", learningObject.LearningObjectSummaryId);
 
             writer.WriteEndObject();
+        }
+
+        private static void WriteQuestion(Utf8JsonWriter writer, QuestionDTO question)
+        {
+            writer.WriteString("typeDiscriminator", "question");
+            writer.WriteString("text", question.Text);
+            writer.WritePropertyName("possibleAnswers");
+            writer.WriteStartArray();
+            foreach (var answer in question.PossibleAnswers)
+            {
+                writer.WriteStartObject();
+                writer.WriteNumber("id", answer.Id);
+                writer.WriteString("text", answer.Text);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+        }
+
+        private void WriteArrangeTask(Utf8JsonWriter writer, ArrangeTaskDTO task)
+        {
+            writer.WriteString("typeDiscriminator", "arrangeTask");
+            writer.WriteString("text", task.Text);
+            writer.WritePropertyName("containers");
+
+            writer.WriteStartArray();
+            foreach (var container in task.Containers)
+            {
+                writer.WriteStartObject();
+                writer.WriteNumber("id", container.Id);
+                writer.WriteString("title", container.Title);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+
+            writer.WritePropertyName("unarrangedElements");
+            writer.WriteStartArray();
+            foreach (var element in task.UnarrangedElements)
+            {
+                writer.WriteStartObject();
+                writer.WriteNumber("id", element.Id);
+                writer.WriteString("text", element.Text);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
         }
     }
 }

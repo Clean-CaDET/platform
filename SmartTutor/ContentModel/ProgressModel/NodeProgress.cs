@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LectureModel;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects;
-using SmartTutor.ContentModel.LectureModel;
 
 namespace SmartTutor.ContentModel.ProgressModel
 {

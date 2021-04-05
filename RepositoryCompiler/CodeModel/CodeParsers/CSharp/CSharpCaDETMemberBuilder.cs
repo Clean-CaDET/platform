@@ -35,6 +35,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             _member.Parent = parent;
             _member.Params = GetMethodParams();
             _member.ReturnType = GetMethodReturnType();
+            _member.VariableNames = GetMethodVariableNames();
             return _member;
         }
 
@@ -116,7 +117,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private CaDETClass GetMethodReturnType()
         {
             if (_cSharpMember.GetType() != typeof(MethodDeclarationSyntax)) return null;
-            return new CaDETClass() { Name = _cSharpMember.DescendantNodes().OfType<TypeSyntax>().First().ToString() };
+            return new CaDETClass() {Name = _cSharpMember.DescendantNodes().OfType<TypeSyntax>().First().ToString()};
+        }
+        private List<string> GetMethodVariableNames()
+        {
+            var variables = _cSharpMember.DescendantNodes().OfType<VariableDeclaratorSyntax>().ToList();
+            return variables.Select(v => v.Identifier.ToString()).ToList();
         }
 
         private ISet<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)

@@ -1,40 +1,38 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using Shouldly;
+﻿using Shouldly;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using System.Linq;
 using Xunit;
 
 namespace SmartTutorTests.Unit
 {
     public class ChallengeServiceTests
     {
-        private readonly LearningObjectInMemoryRepository _learningObjectInMemoryRepository;
+        private readonly ChallengeService _challengeService;
 
         public ChallengeServiceTests()
         {
-            _learningObjectInMemoryRepository = new LearningObjectInMemoryRepository();
+            _challengeService = new ChallengeService(new LearningObjectInMemoryRepository());
         }
 
         [Fact]
         public void Gets_proper_challenge_content()
         {
-            ChallengeService challengeService = new ChallengeService(_learningObjectInMemoryRepository);
-
-            Challenge challenge = challengeService.GetChallenge(3371);
+            Challenge challenge = _challengeService.GetChallenge(3371);
 
             challenge.Id.ShouldBe(3371);
             challenge.LearningObjectSummaryId.ShouldBe(337);
             challenge.Url.ShouldBe("https://github.com/Ana00000/Challenge-inspiration.git");
-            challenge.ResolvedClasses[0].Name.ShouldBe("Payment");
-            challenge.ResolvedClasses[0].Members.Count().ShouldBe(2);
-            challenge.ResolvedClasses[1].Name.ShouldBe("PaymentService");
-            challenge.ResolvedClasses[1].Members.Count().ShouldBe(2);
-            challenge.ResolvedClasses[1].Metrics[CaDETMetric.NMD].ShouldBe(2);
-            challenge.ResolvedClasses[1].Members[0].Metrics[CaDETMetric.MELOC].ShouldBe(4);
-            challenge.ResolvedClasses[1].Members[1].Metrics[CaDETMetric.MELOC].ShouldBe(3);
             challenge.FulfillmentStrategy.ShouldNotBe(null);
+            challenge.FulfillmentStrategy.ChallengeHints.Count.ShouldBe(2);
+            challenge.FulfillmentStrategy.ChallengeHints[0].Id.ShouldBe(337001);
+            challenge.FulfillmentStrategy.ChallengeHints[0].Content.ShouldBe("Cohesion");
+            challenge.FulfillmentStrategy.ChallengeHints[0].LearningObjectSummary.Id.ShouldBe(331);
+            challenge.FulfillmentStrategy.ChallengeHints[0].LearningObjectSummary.Description.ShouldBe("Cohesion definition");
+            challenge.FulfillmentStrategy.ChallengeHints[1].Id.ShouldBe(337002);
+            challenge.FulfillmentStrategy.ChallengeHints[1].Content.ShouldBe("Cohesion");
+            challenge.FulfillmentStrategy.ChallengeHints[1].LearningObjectSummary.Id.ShouldBe(336);
+            challenge.FulfillmentStrategy.ChallengeHints[1].LearningObjectSummary.Description.ShouldBe("Structural cohesion example");
         }
     }
 }

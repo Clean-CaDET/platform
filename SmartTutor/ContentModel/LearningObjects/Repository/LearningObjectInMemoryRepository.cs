@@ -1,8 +1,7 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using RepositoryCompiler.Controllers;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.MetricRules;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -105,63 +104,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         }
 
-        private void AddChallenge()
-        {
-            string[] sourceCode = new string[] {
-                @"using System;
-                namespace ExamplesApp.Method
-                {
-                   class Payment
-                   {
-    	               public int Cost { get; set; }
-    	               public bool IsExtra { get; set; }
-                   }
-                }",
-                @"using System;
-                namespace ExamplesApp.Method
-                {
-                    class PaymentService{
-	                    /// <summary>
-                        /// 1) Extract createPayment method.
-                        /// </summary>
-    	                private void CreatePayment(int price, int compensation) {
-		                    Payment payment = new Payment();
-		                    payment.Cost = price + compensation;
-                            payment.IsExtra = payment.Cost > 50000 ? true : false;
-
-      		                PrintPaymentDetails(payment.Cost);
-    	                }
-
-	                    private void PrintPaymentDetails(int cost) {
-      		                System.out.println(""Hello."");
-                            System.out.println(""Your payment is created."");
-                            System.out.println(""Cost is: "" + cost);
-                        }
-                    }
-                }"
-            };
-
-            List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
-            classMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.CLOC, FromValue = 3, ToValue = 30 });
-            classMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.NMD, FromValue = 0, ToValue = 2 });
-
-            List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
-            methodMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.MELOC, FromValue = 2, ToValue = 5 });
-            methodMetricRules.Add(new MetricRangeRule { MetricName = CaDETMetric.NOP, FromValue = 1, ToValue = 4 });
-
-            _learningObjectCache.Add(337, new List<LearningObject>
-            {
-                new Challenge
-                {
-                    Id = 3371,
-                    LearningObjectSummaryId = 337,
-                    Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    ResolvedClasses = new CodeRepositoryService().BuildClassesModel(sourceCode),
-                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
-                }
-            });
-        }
-
         public List<LearningObject> GetLearningObjectsForSummary(int summaryId)
         {
             return _learningObjectCache[summaryId];
@@ -175,6 +117,62 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         public Challenge GetChallenge(int challengeId)
         {
             return _learningObjectCache.SelectMany(LOs => LOs.Value.Where(LO => LO.Id == challengeId)).First() as Challenge;
+        }
+
+        private void AddChallenge()
+        {
+            List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
+            classMetricRules.Add(new MetricRangeRule
+            {
+                Id = 33701,
+                MetricName = "CLOC",
+                FromValue = 3,
+                ToValue = 30,
+                Hint = new ChallengeHint
+                {
+                    Id = 337001,
+                    Content = "Cohesion",
+                    LearningObjectSummary = new LearningObjectSummary { Id = 331, Description = "Cohesion definition" }
+                }
+            });
+            classMetricRules.Add(new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2 });
+
+            List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
+            methodMetricRules.Add(new MetricRangeRule
+            {
+                Id = 33703,
+                MetricName = "MELOC",
+                FromValue = 2,
+                ToValue = 5,
+                Hint = new ChallengeHint
+                {
+                    Id = 337002,
+                    Content = "Cohesion",
+                    LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
+                }
+            });
+            methodMetricRules.Add(new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4 });
+
+            _learningObjectCache.Add(337, new List<LearningObject>
+            {
+                new Challenge
+                {
+                    Id = 3371,
+                    LearningObjectSummaryId = 337,
+                    Url = "https://github.com/Ana00000/Challenge-inspiration.git",
+                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
+                }
+            });
+        }
+
+        public List<QuestionAnswer> GetQuestionAnswers(int questionId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<ArrangeTaskContainer> GetArrangeTaskContainers(int arrangeTaskId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
