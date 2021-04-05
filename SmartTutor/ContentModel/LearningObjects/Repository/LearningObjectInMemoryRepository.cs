@@ -174,18 +174,26 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 }
             });
 
-            List<string> bannedWords = new List<string>
+            List<NamingRule> namingRules = new List<NamingRule>
             {
-                "Class",
-                "List",
-                "Method",
-                "Pay"
-            };
-            List<string> requiredWords = new List<string>
-            {
-                "Payment",
-                "PaymentService",
-                "CreatePayment"
+                new NamingRule
+                {
+                    Id = 3370001,
+                    BannedWords = new List<string> { "Class", "List", "CreatePaymentMethod" },
+                    RequiredWords = new List<string> { "Payment", "Service", "PaymentService" },
+                    Hint = new ChallengeHint
+                    {
+                        Id = 337003,
+                        Content = "Cohesion",
+                        LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
+                    }
+                },
+                new NamingRule
+                {
+                    Id = 3370002,
+                    BannedWords = new List<string> { "Pay" },
+                    RequiredWords = new List<string> { "Create", "Payment" }
+                }
             };
 
             _learningObjectCache.Add(338, new List<LearningObject>
@@ -195,7 +203,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3372,
                     LearningObjectSummaryId = 338,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    FulfillmentStrategy = new BasicNamesChecker(bannedWords, requiredWords)
+                    FulfillmentStrategy = new BasicNameChecker(namingRules)
                 }
             });
         }

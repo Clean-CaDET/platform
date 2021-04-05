@@ -15,7 +15,7 @@ namespace SmartTutorTests.Unit
 
         public BasicMetricsCheckerTests()
         {
-            _basicMetricChecker = new BasicMetricChecker
+            _basicMetricsChecker = new BasicMetricsChecker(new List<MetricRangeRule>
             {
                 ClassMetricRules = new List<MetricRangeRule>
                 {
