@@ -584,6 +584,10 @@ namespace RepositoryCompilerTests.DataFactories
                 {
                     public Doctor TestDoc {get;set;}
                     private List<Doctor> _doctors;
+                    public DateRange DateRangeTest()
+                    {
+                        return null;
+                    }
                     public Doctor FindAvailableDoctor(DateRange timeSpan)
                     {
                         foreach (Doctor d in _doctors)

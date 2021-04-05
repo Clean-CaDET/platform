@@ -185,6 +185,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 c.Parent = LinkParent(classes, c.Parent);
                 c.OuterClass = LinkOuterClass(classes, c.ContainerName);
                 c.FieldTypes = LinkFieldTypes(classes, c.Fields);
+                c.MethodReturnTypes = LinkMethodReturnTypes(classes, c.Members);
                 foreach (var memberBuilder in _memberBuilders[c])
                 {
                     memberBuilder.DetermineAccessedCodeItems(classes);
@@ -202,18 +203,34 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         {
             return classes.FirstOrDefault(c => c.FullName.Equals(containerName));
         }
+        
         private List<CaDETClass> LinkFieldTypes(List<CaDETClass> classes, List<CaDETField> fields)
         {
             List<CaDETClass> fieldTypes = new List<CaDETClass>();
             foreach (var f in fields)
             {
-                fieldTypes.Add(classes.FirstOrDefault(c => c.Name.Equals(f.Type.Name)));
-                var collectionTypes = GetCollectionTypes(classes, f.Type.Name);
-                var arrayType = GetArrayType(classes, f.Type.Name);
-                fieldTypes.AddRange(collectionTypes);
-                fieldTypes.Add(arrayType);
+                fieldTypes.AddRange(FindTypes(classes, f.Type.Name));
             }
             return fieldTypes.Where(t => t != null).Distinct().ToList();
+        }
+        private List<CaDETClass> LinkMethodReturnTypes(List<CaDETClass> classes, List<CaDETMember> members)
+        {
+            var methods = members.Where(m => m.Type == CaDETMemberType.Method).ToList();
+            List<CaDETClass> returnTypes = new List<CaDETClass>();
+            foreach (var m in methods)
+            {
+                returnTypes.AddRange(FindTypes(classes, m.ReturnType.Name));
+            }
+            return returnTypes.Where(t => t != null).Distinct().ToList();
+        }
+
+        private List<CaDETClass> FindTypes(List<CaDETClass> classes, string typeName)
+        {
+            List<CaDETClass> types = new List<CaDETClass>();
+            types.Add(classes.FirstOrDefault(c => c.Name.Equals(typeName)));
+            types.AddRange(GetCollectionTypes(classes, typeName));
+            types.Add(GetArrayType(classes, typeName));
+            return types;
         }
 
         private List<CaDETClass> GetCollectionTypes(List<CaDETClass> classes, string type)

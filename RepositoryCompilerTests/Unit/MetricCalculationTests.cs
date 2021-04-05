@@ -176,6 +176,7 @@ namespace RepositoryCompilerTests.Unit
 
             dataRange.Metrics[CaDETMetric.CBO].ShouldBe(0);
             doctor.Metrics[CaDETMetric.CBO].ShouldBe(1);
+            doctorService.Metrics[CaDETMetric.CBO].ShouldBe(2);
         }
 
         [Fact]

@@ -27,6 +27,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public List<CaDETField> Fields { get; internal set; }
         public Dictionary<CaDETMetric, double> Metrics { get; internal set; }
         public List<CaDETClass> FieldTypes { get; internal set; }
+        public List<CaDETClass> MethodReturnTypes { get; internal set; }
 
         public CaDETMember FindMember(string name)
         {

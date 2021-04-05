@@ -34,6 +34,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             _member.SourceCode = _cSharpMember.ToString();
             _member.Parent = parent;
             _member.Params = GetMethodParams();
+            _member.ReturnType = GetMethodReturnType();
             return _member;
         }
 
@@ -110,6 +111,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             }
 
             return memberParams;
+        }
+
+        private CaDETClass GetMethodReturnType()
+        {
+            if (_cSharpMember.GetType() != typeof(MethodDeclarationSyntax)) return null;
+            return new CaDETClass() { Name = _cSharpMember.DescendantNodes().OfType<TypeSyntax>().First().ToString() };
         }
 
         private ISet<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)

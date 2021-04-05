@@ -191,10 +191,13 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        // TODO - add method return types, variable declarations, etc.
         private int CountDependencies(CaDETClass parsedClass)
         {
-            return parsedClass.FieldTypes.Count();
+            List<CaDETClass> allDependencies = new List<CaDETClass>();
+            allDependencies.AddRange(parsedClass.FieldTypes);
+            allDependencies.AddRange(parsedClass.MethodReturnTypes);
+            var uniqueDependencies = allDependencies.GroupBy(d => d.FullName).Select(d => d.First());
+            return uniqueDependencies.ToList().Count();
         }
     }
 }
