@@ -174,7 +174,7 @@ INSERT INTO public."LearningObjects"(
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id")
 	VALUES (2);
--- TODO: NameStrategy and rules
+-- TODO: NameStrategy, rules, hints
 INSERT INTO public."Challenges"(
 	"Id", "Url", "Description", "FulfillmentStrategyId")
 	VALUES (12, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "01. Noise Words" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 2);
@@ -211,7 +211,7 @@ INSERT INTO public."LearningObjects"(
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id")
 	VALUES (1);
--- TODO: NameStrategy and rules
+-- TODO: NameStrategy, rules, hints (doc)
 INSERT INTO public."Challenges"(
 	"Id", "Url", "Description", "FulfillmentStrategyId")
 	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository', 1);
@@ -433,3 +433,148 @@ INSERT INTO public."LearningObjects"(
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
 	VALUES (34, 'https://i.ibb.co/hd5ktG6/RS-Methods-One-Thing.png', '"Zadatak" može da opiše logiku na raznim nivoima apstrakcije - od "GetSuitableDoctors(operation)" do "Sum(a,b)".');
+
+
+--== Methods ==- PK Node 1
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (11, 'Primeni extract method refaktorisanje za formiranje kraćih funkcija.', 0, NULL, 2);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
+	VALUES (40, 'Function Length Heuristic', 11);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (41, 'Function Length Challenge', 11);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description")
+	VALUES (42, 'Function Length Solution'); -- Hidden
+
+--== Methods ==- PK Node 2	
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (12, 'Primeni extract method refaktorisanje za formiranje jednostavnijih funkcija.', 0, NULL, 2);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (43, 'Function Comments Heuristic', 12);
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (44, 'Function Complexity Challenge', 12);
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description")
+	VALUES (45, 'Function Complexity Heuristic'); -- Hidden hint
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description")
+	VALUES (46, 'Function Complexity Challenge Solution');
+	
+--== Methods ==- PK Node 3	
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
+	VALUES (13, 'Primeni strategije za redukciju broja parametra za formiranje čistijih funkcija.', 0, NULL, 2);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (47, 'Parameter List Heuristic', 13);
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (48, 'Parameter List Reduction Strategy', 13);
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (49, 'Parameter List Challenge', 13);
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description")
+	VALUES (50, 'Parameter List Challenge Solution');
+
+
+
+-- Methods LO - PK Node 1
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (40, 40);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (40, 'Najjednostavnija heuristika za ispitivanje da li funkcija radi više zadataka podrazumeva posmatranje dužine funkcije. Svakako je moguće da funkcija sa 10 linija koda rešava više problema, ali je sasvim sigurno da funkcija sa 50 linija koda radi previše.
+	
+Kod dugačkih funkcija potrebno je identifikovati regione logički povezanog koda koji se može ekstrahovati u zasebnu funkciju za koju možemo da odredimo smisleno ime. Savremena integrisana razvojna okruženja nude Extract Method komandu sa kojom možemo označeni kod jednostavno izdvojiti u posebnu funkciju.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (41, 41);
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id")
+	VALUES (3);
+-- TODO: MetricRules, hints (include codeSnippetId that the hint relates to - on the front end we can have "Applies to:" for each hint).
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (42, 42);
+INSERT INTO public."Videos"(
+	"Id", "Url")
+	VALUES (42, 'https://youtu.be/79a8Zp6FBfU');
+	
+-- Methods LO - PK Node 2
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (43, 43);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (43, 'Komentari i prazan prostor (npr. dva prazna reda) u telu funkcije su *često* (ali ne uvek) signal da funkcija izvršava više zadataka. Takvi regioni se mogu ekstrahovati, gde će postojeći komentar pomoći pri formiranju imena za novu funkciju.');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (44, 44); -- TODO: Expand to have multiple strategies; Add challenge definition with description and LOSummary solution.
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id")
+	VALUES (4);
+-- TODO: MetricRules, hints (include codeSnippetId that the hint relates to - on the front end we can have "Applies to:" for each hint).
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (45, 45);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (45, 'Kada pravimo male, fokusirane funkcije možemo lako da apstrahujemo složenu logiku iza značajnog imena. Tako možemo da zamenimo složen uslovni izraz (npr. uslov u IF-u koji broji ima više relacionih i logičkih operatora) sa pozivom funkcije čije ime opisuje nameru iza tog izraza. Sa sličnim pristupom možemo zameniti petlje i kalkulacije.
+	
+Kada naletimo na kod sa dubokim ugnježdavanjem (npr. FOR u IF u FOR u TRY) treba da se zapitamo da li bi se jasnoća koda povećala sa ekstrakcijom nekog segmenta u zasebnu metodu.');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (46, 46);
+INSERT INTO public."Videos"(
+	"Id", "Url")
+	VALUES (46, 'https://youtu.be/-TF5b_R9JG4');
+	
+-- Methods LO - PK Node 3
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (47, 47);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (47, 'Razumljive funkcije treba da teže ka što manjem broju parametara. Ovaj broj je idealno nula, no svakako su funkcije sa jednim ili dva parametra prihvatljive i česte. Tako imamo funkcije koje prihvataju parametar da bi ga transformisali u novi objekat (npr. deserijalizacija stringa u objekat), funkcije koje ispituju neko svojstvo parametra, kao i funkcije koje izvršavaju komandu spram ulaznog podatka ili obrađuju prosleđeni događaj.
+
+Sve preko dva parametra je ozbiljan kandidat za refaktorisanje. Takve funkcije obično rešavaju više zadataka i konfigurišu svoje ponašanje spram ulaznih podataka (tipičan primer su tzv. flag parametri bool tipa) što ih čini manje razumljivim. Izuzetak na ovo pravilo su konstruktori koji često prihvataju više podataka kako bi formirali složeni objekat.');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (48, 48);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (48, 'https://i.ibb.co/5cFm6Np/params-strategy-rs.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (49, 49); -- TODO: Expand to have multiple strategies; Add challenge definition with description and LOSummary solution.
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id")
+	VALUES (5);
+-- TODO: MetricRules, hints (include codeSnippetId that the hint relates to - on the front end we can have "Applies to:" for each hint).
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (50, 50);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (50, 'TODO', 'TODO: 4 classes, one for each strategy. Side by side challenge solution images/video.');
