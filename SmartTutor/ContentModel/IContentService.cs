@@ -1,5 +1,5 @@
-﻿using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.LearningObjects;
+﻿using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.ProgressModel;
 using System.Collections.Generic;
 

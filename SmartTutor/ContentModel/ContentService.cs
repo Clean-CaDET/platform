@@ -1,6 +1,8 @@
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Recommenders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;

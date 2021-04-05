@@ -1,5 +1,6 @@
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LectureModel;
 using System.Collections.Generic;
 using System.Linq;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
@@ -99,7 +100,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 }
             });
 
-            AddChallenge();
+            AddChallenges();
+
         }
 
         public List<LearningObject> GetLearningObjectsForSummary(int summaryId)
@@ -117,39 +119,42 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             return _learningObjectCache.SelectMany(LOs => LOs.Value.Where(LO => LO.Id == challengeId)).First() as Challenge;
         }
 
-        private void AddChallenge()
+        private void AddChallenges()
         {
-            List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>();
-            classMetricRules.Add(new MetricRangeRule
+            List<MetricRangeRule> classMetricRules = new List<MetricRangeRule>
             {
-                Id = 33701,
-                MetricName = "CLOC",
-                FromValue = 3,
-                ToValue = 30,
-                Hint = new ChallengeHint
+                new MetricRangeRule
                 {
-                    Id = 337001,
-                    Content = "Cohesion",
-                    LearningObjectSummaryId = 331
-                }
-            });
-            classMetricRules.Add(new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2 });
-
-            List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>();
-            methodMetricRules.Add(new MetricRangeRule
+                    Id = 33701,
+                    MetricName = "CLOC",
+                    FromValue = 3,
+                    ToValue = 30,
+                    Hint = new ChallengeHint
+                    {
+                        Id = 337001,
+                        Content = "Cohesion",
+                        LearningObjectSummaryId = 331
+                    }
+                },
+                new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2 }
+            };
+            List<MetricRangeRule> methodMetricRules = new List<MetricRangeRule>
             {
-                Id = 33703,
-                MetricName = "MELOC",
-                FromValue = 2,
-                ToValue = 5,
-                Hint = new ChallengeHint
+                new MetricRangeRule
                 {
-                    Id = 337002,
-                    Content = "Cohesion",
-                    LearningObjectSummaryId = 336
-                }
-            });
-            methodMetricRules.Add(new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4 });
+                    Id = 33703,
+                    MetricName = "MELOC",
+                    FromValue = 2,
+                    ToValue = 5,
+                    Hint = new ChallengeHint
+                    {
+                        Id = 337002,
+                        Content = "Cohesion",
+                        LearningObjectSummaryId = 336
+                    }
+                },
+                new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4 }
+            };
 
             _learningObjectCache.Add(337, new List<LearningObject>
             {
@@ -166,6 +171,31 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                             MethodMetricRules = methodMetricRules
                         }
                     }
+                }
+            });
+
+            List<string> bannedWords = new List<string>
+            {
+                "Class",
+                "List",
+                "Method",
+                "Pay"
+            };
+            List<string> requiredWords = new List<string>
+            {
+                "Payment",
+                "PaymentService",
+                "CreatePayment"
+            };
+
+            _learningObjectCache.Add(338, new List<LearningObject>
+            {
+                new Challenge
+                {
+                    Id = 3372,
+                    LearningObjectSummaryId = 338,
+                    Url = "https://github.com/Ana00000/Challenge-inspiration.git",
+                    FulfillmentStrategy = new BasicNamesChecker(bannedWords, requiredWords)
                 }
             });
         }
