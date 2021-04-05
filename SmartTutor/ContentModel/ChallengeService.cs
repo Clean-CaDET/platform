@@ -33,11 +33,6 @@ namespace SmartTutor.ContentModel
             return GetChallenge(challengeId).GetAllChallengeHints();
         }
 
-        public List<ChallengeHint> GetHintsForSolutionAttempt(int challengeId, List<CaDETClass> solutionAttempt)
-        {
-            return GetChallenge(challengeId).GetApplicableChallengeHints(solutionAttempt);
-        }
-
         private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)
         {
             return new CodeRepositoryService().BuildClassesModel(sourceCode);

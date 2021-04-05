@@ -2,9 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="ContentModel\LearningObjects\ChallengeModel\FulfillmentStrategy\MetricChecker\MetricRangeRule.cs~RF190c2c3c.TMP" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />

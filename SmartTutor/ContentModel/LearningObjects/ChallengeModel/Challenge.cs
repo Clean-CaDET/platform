@@ -21,10 +21,5 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
         {
             return FulfillmentStrategy.ChallengeHints;
         }
-
-        internal List<ChallengeHint> GetApplicableChallengeHints(List<CaDETClass> solutionAttempt)
-        {
-            return FulfillmentStrategy.GetHintsForSolutionAttempt(solutionAttempt);
-        }
     }
 }

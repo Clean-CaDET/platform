@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Repository;
@@ -30,11 +29,6 @@ namespace SmartTutor.Controllers
         public List<ChallengeHint> GetAllHints(int challengeId)
         {
             return _challengeService.GetAllHints(challengeId);
-        }
-
-        public List<ChallengeHint> GetHintsForSolutionAttempt(int challengeId, List<CaDETClass> solutionAttempt)
-        {
-            return _challengeService.GetHintsForSolutionAttempt(challengeId, solutionAttempt);
         }
     }
 }

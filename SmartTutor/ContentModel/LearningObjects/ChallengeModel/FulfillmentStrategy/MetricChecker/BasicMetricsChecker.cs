@@ -27,14 +27,6 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             return new ChallengeEvaluation(false, challengeHints);
         }
 
-        public override List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> submittedClasses)
-        {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            challengeHints.AddRange(GetApplicableHintsForIncompleteClasses(submittedClasses));
-            challengeHints.AddRange(GetApplicableHintsForIncompleteMethods(submittedClasses));
-            return challengeHints;
-        }
-
         private List<ChallengeHint> GetChallengeHints()
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
@@ -48,6 +40,14 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
             foreach (MetricRangeRule metricRangeRule in metricRangeRules)
                 if (metricRangeRule.Hint != null) challengeHints.Add(metricRangeRule.Hint);
+            return challengeHints;
+        }
+
+        public List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> submittedClasses)
+        {
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            challengeHints.AddRange(GetApplicableHintsForIncompleteClasses(submittedClasses));
+            challengeHints.AddRange(GetApplicableHintsForIncompleteMethods(submittedClasses));
             return challengeHints;
         }
 
