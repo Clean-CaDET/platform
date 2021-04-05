@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker
 {
-    [Table("BasicNamesChecker")]
+    [Table("BasicNameCheckers")]
     public class BasicNameChecker : ChallengeFulfillmentStrategy
     {
         public List<NamingRule> NamingRules { get; private set; }
@@ -33,7 +33,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             return challengeHints;
         }
 
-        private List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> solutionAttempt)
+        public List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> solutionAttempt)
         {
             List<ChallengeHint> challengeHints = new List<ChallengeHint>();
             List<string> allNames = GetAllNamesFromClasses(solutionAttempt);

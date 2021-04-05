@@ -191,7 +191,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 new NamingRule
                 {
                     Id = 3370002,
-                    BannedWords = new List<string> { "Pay" },
+                    BannedWords = new List<string> (),
                     RequiredWords = new List<string> { "Create", "Payment" }
                 }
             };
