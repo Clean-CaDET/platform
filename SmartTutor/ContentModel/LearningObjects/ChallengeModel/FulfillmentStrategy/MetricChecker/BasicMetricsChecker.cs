@@ -1,51 +1,82 @@
-﻿using System.Collections.Generic;
+﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker
 {
     [Table("BasicMetricCheckers")]
     public class BasicMetricsChecker : ChallengeFulfillmentStrategy
     {
-        public List<MetricRangeRule> ClassMetricRules { get; set; }
-        public List<MetricRangeRule> MethodMetricRules { get; set; }
+        public List<MetricRangeRule> ClassMetricRules { get; private set; }
+        public List<MetricRangeRule> MethodMetricRules { get; private set; }
 
-        public BasicMetricsChecker() {}
+        public BasicMetricsChecker() { }
 
         public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules)
         {
             ClassMetricRules = classMetricRules;
             MethodMetricRules = methodMetricRules;
+            ChallengeHints = GetChallengeHints();
         }
 
-        public override bool CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
+        public override ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
-            List<CaDETMember> submittedMethods = GetMethodsFromClasses(solutionAttempt);
-            return ValidateClassMetricRules(solutionAttempt) && ValidateMethodMetricRules(submittedMethods);
+            List<ChallengeHint> challengeHints = GetHintsForSolutionAttempt(solutionAttempt);
+            if (!challengeHints.Any()) return new ChallengeEvaluation(true, ChallengeHints);
+            return new ChallengeEvaluation(false, challengeHints);
         }
 
-        private List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)
+        private List<ChallengeHint> GetChallengeHints()
         {
-            return caDETClasses.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            challengeHints.AddRange(GetHintsForMetricRules(ClassMetricRules));
+            challengeHints.AddRange(GetHintsForMetricRules(MethodMetricRules));
+            return challengeHints;
         }
 
-        private bool ValidateClassMetricRules(List<CaDETClass> caDETClasses)
+        private List<ChallengeHint> GetHintsForMetricRules(List<MetricRangeRule> metricRangeRules)
         {
-            foreach (CaDETClass caDETClass in caDETClasses)
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            foreach (MetricRangeRule metricRangeRule in metricRangeRules)
+                if (metricRangeRule.Hint != null) challengeHints.Add(metricRangeRule.Hint);
+            return challengeHints;
+        }
+
+        public List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> submittedClasses)
+        {
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            challengeHints.AddRange(GetApplicableHintsForIncompleteClasses(submittedClasses));
+            challengeHints.AddRange(GetApplicableHintsForIncompleteMethods(submittedClasses));
+            return challengeHints;
+        }
+
+        private List<ChallengeHint> GetApplicableHintsForIncompleteClasses(List<CaDETClass> solutionAttempt)
+        {
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            foreach (CaDETClass caDETClass in solutionAttempt)
+            {
                 foreach (MetricRangeRule classMetricRule in ClassMetricRules)
-                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics))
-                        return false;
-            return true;
+                {
+                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics) && classMetricRule.Hint != null)
+                        challengeHints.Add(classMetricRule.Hint);
+                }
+            }
+            return challengeHints;
         }
 
-        private bool ValidateMethodMetricRules(List<CaDETMember> caDETMethods)
+        private List<ChallengeHint> GetApplicableHintsForIncompleteMethods(List<CaDETClass> solutionAttempt)
         {
-            foreach (CaDETMember caDETMethod in caDETMethods)
+            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
+            foreach (CaDETMember caDETMethod in GetMethodsFromClasses(solutionAttempt))
+            {
                 foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
-                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics))
-                        return false;
-            return true;
+                {
+                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics) && methodMetricRule.Hint != null)
+                        challengeHints.Add(methodMetricRule.Hint);
+                }
+            }
+            return challengeHints;
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.Controllers.DTOs.Lecture;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.Controllers
 {
