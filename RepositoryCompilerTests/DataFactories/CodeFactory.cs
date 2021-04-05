@@ -566,6 +566,8 @@ namespace RepositoryCompilerTests.DataFactories
                     }
 
                     public DateRange TestFunction() {
+                        Doctor dr = new Doctor();
+                        DateRange dateR = new DateRange();
                         return TestProp;
                     }
 

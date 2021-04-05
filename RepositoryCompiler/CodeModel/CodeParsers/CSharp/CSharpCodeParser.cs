@@ -186,6 +186,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 c.OuterClass = LinkOuterClass(classes, c.ContainerName);
                 c.FieldTypes = LinkFieldTypes(classes, c.Fields);
                 c.MethodReturnTypes = LinkMethodReturnTypes(classes, c.Members);
+                c.MethodVariableTypes = LinkMethodVariableTypes(classes, c.Members);
                 foreach (var memberBuilder in _memberBuilders[c])
                 {
                     memberBuilder.DetermineAccessedCodeItems(classes);
@@ -209,7 +210,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             List<CaDETClass> fieldTypes = new List<CaDETClass>();
             foreach (var f in fields)
             {
-                fieldTypes.AddRange(FindTypes(classes, f.Type.Name));
+                fieldTypes.AddRange(FindTypes(classes, new List<CaDETClass>() { f.Type }));
             }
             return fieldTypes.Where(t => t != null).Distinct().ToList();
         }
@@ -219,18 +220,32 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             List<CaDETClass> returnTypes = new List<CaDETClass>();
             foreach (var m in methods)
             {
-                returnTypes.AddRange(FindTypes(classes, m.ReturnType.Name));
+                returnTypes.AddRange(FindTypes(classes, new List<CaDETClass>() { m.ReturnType}));
             }
             return returnTypes.Where(t => t != null).Distinct().ToList();
         }
 
-        private List<CaDETClass> FindTypes(List<CaDETClass> classes, string typeName)
+        private List<CaDETClass> LinkMethodVariableTypes(List<CaDETClass> classes, List<CaDETMember> members)
         {
-            List<CaDETClass> types = new List<CaDETClass>();
-            types.Add(classes.FirstOrDefault(c => c.Name.Equals(typeName)));
-            types.AddRange(GetCollectionTypes(classes, typeName));
-            types.Add(GetArrayType(classes, typeName));
-            return types;
+            var methods = members.Where(m => m.Type == CaDETMemberType.Method).ToList();
+            List<CaDETClass> variableTypes = new List<CaDETClass>();
+            foreach (var m in methods)
+            {
+                variableTypes.AddRange(FindTypes(classes, m.VariableTypes));
+            }
+            return variableTypes.Where(t => t != null).Distinct().ToList();
+        }
+
+        private List<CaDETClass> FindTypes(List<CaDETClass> classes, List<CaDETClass> types)
+        {
+            List<CaDETClass> foundTypes = new List<CaDETClass>();
+            foreach (var type in types)
+            {
+                foundTypes.Add(classes.FirstOrDefault(c => c.Name.Equals(type.Name)));
+                foundTypes.AddRange(GetCollectionTypes(classes, type.Name));
+                foundTypes.Add(GetArrayType(classes, type.Name));
+            }
+            return foundTypes;
         }
 
         private List<CaDETClass> GetCollectionTypes(List<CaDETClass> classes, string type)

@@ -196,6 +196,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             List<CaDETClass> allDependencies = new List<CaDETClass>();
             allDependencies.AddRange(parsedClass.FieldTypes);
             allDependencies.AddRange(parsedClass.MethodReturnTypes);
+            allDependencies.AddRange(parsedClass.MethodVariableTypes);
             var uniqueDependencies = allDependencies.GroupBy(d => d.FullName).Select(d => d.First());
             return uniqueDependencies.ToList().Count();
         }

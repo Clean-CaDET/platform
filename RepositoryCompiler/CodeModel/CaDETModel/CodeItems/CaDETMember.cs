@@ -17,6 +17,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public ISet<CaDETField> AccessedFields { get; internal set; }
         public CaDETClass ReturnType { get; internal set; }
         public List<string> VariableNames { get; internal set; }
+        public List<CaDETClass> VariableTypes { get; internal set; }
 
         public string Signature()
         {
