@@ -116,9 +116,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private List<string> GetMethodVariableNames()
         {
             var variables = _cSharpMember.DescendantNodes().OfType<VariableDeclaratorSyntax>().ToList();
-            List<string> variableNames = new List<string>();
-            variableNames.AddRange(variables.Select(v => v.Identifier.ToString()));
-            return variableNames;
+            return variables.Select(v => v.Identifier.ToString()).ToList();
         }
 
         private ISet<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)
