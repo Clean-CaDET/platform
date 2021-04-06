@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker
@@ -31,7 +32,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private bool CheckNamesContent(List<string> allNames)
         {
-            return FoundAllRequiredWords(allNames) && CheckAllWordsIfNotBanned(allNames);
+            return FoundAllRequiredWords(allNames) && CheckIfNotBannedWords(allNames);
         }
 
         private bool FoundAllRequiredWords(List<string> allNames)
@@ -43,13 +44,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private bool FoundRequiredWord(List<string> allNames, string requiredWord)
         {
-            return FoundWord(GetWordsFromNames(allNames), requiredWord) || FoundWord(allNames, requiredWord);
-        }
-
-        private bool FoundWord(List<string> words, string requiredWord)
-        {
             int flag = 0;
-            foreach (string word in words)
+            foreach (string word in GetWordsFromNames(allNames))
             {
                 if (word.Equals(requiredWord, StringComparison.OrdinalIgnoreCase))
                 {
@@ -60,14 +56,9 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             return flag != 0;
         }
 
-        private bool CheckAllWordsIfNotBanned(List<string> allNames)
+        private bool CheckIfNotBannedWords(List<string> allNames)
         {
-            return CheckIfNotBannedWords(GetWordsFromNames(allNames)) && CheckIfNotBannedWords(allNames);
-        }
-
-        private bool CheckIfNotBannedWords(List<string> words)
-        {
-            foreach (string word in words)
+            foreach (string word in GetWordsFromNames(allNames))
                 if (!CheckIfNotBannedWord(word)) return false;
             return true;
         }
@@ -89,11 +80,37 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private string[] GetWordsFromName(string name)
         {
+            string[] words = GetWordByWordFromName(name);
+            if (words.Length == 1) return words;
+            return GetSubstringWordsFromName(name);
+        }
+
+        private string[] GetWordByWordFromName(string name)
+        {
             var words = Regex.Split(name, "[A-Z]");
             var matches = Regex.Matches(name, "[A-Z]");
             for (int i = 0; i < words.Length - 1; i++)
                 words[i + 1] = matches[i] + words[i + 1];
-            return words;
+            return words.Where(val => val != "").ToArray();
+        }
+
+        private string[] GetSubstringWordsFromName(string name)
+        {
+            string[] words = GetWordByWordFromName(name);
+            List<string> substringWords = new List<string>();
+            substringWords.AddRange(words);
+            int startLength = 0;
+            for (var i = 0; i <= words.Length - 2; i++)
+            {
+                int endLength = words[i].Length;
+                for (var j = i + 1; j <= words.Length - 1; j++)
+                {
+                    endLength += words[j].Length;
+                    substringWords.Add(name.Substring(startLength, endLength));
+                }
+                startLength += words[i].Length;
+            }
+            return substringWords.ToArray();
         }
     }
 }
