@@ -32,7 +32,7 @@ namespace SmartTutor.Controllers
         {
             //TODO: Extract and send trainee ID.
             var nodes = _contentService.GetKnowledgeNodes(lectureId, null);
-            if (nodes == null) NotFound();
+            if (nodes == null) return NotFound();
             return Ok(_mapper.Map<List<KnowledgeNodeProgressDTO>>(nodes));
         }
     }

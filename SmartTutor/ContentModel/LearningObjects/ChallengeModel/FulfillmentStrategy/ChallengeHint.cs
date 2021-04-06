@@ -1,5 +1,4 @@
-﻿using SmartTutor.ContentModel.LectureModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
 {

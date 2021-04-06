@@ -25,7 +25,7 @@ namespace SmartTutor.Controllers
         public ActionResult<KnowledgeNodeProgressDTO> GetNodeContent(int nodeId)
         {
             var nodes = _contentService.GetNodeContent(nodeId, null);
-            if (nodes == null) NotFound();
+            if (nodes == null) return NotFound();
             return Ok(_mapper.Map<KnowledgeNodeProgressDTO>(nodes));
         }
 
@@ -34,7 +34,7 @@ namespace SmartTutor.Controllers
         {
             //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
             var evaluation = _contentService.EvaluateAnswers(questionId, submittedAnswers.Select(a => a.Id).ToList());
-            if (evaluation == null) NotFound();
+            if (evaluation == null) return NotFound();
             return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
         }
 
@@ -43,7 +43,7 @@ namespace SmartTutor.Controllers
         {
             //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
             var evaluation = _contentService.EvaluateArrangeTask(arrangeTaskId, _mapper.Map<List<ArrangeTaskContainer>>(submittedAnswers));
-            if (evaluation == null) NotFound();
+            if (evaluation == null) return NotFound();
             return Ok(_mapper.Map<List<ArrangeTaskContainerEvaluationDTO>>(evaluation));
         }
     }

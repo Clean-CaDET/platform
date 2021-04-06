@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
 {
@@ -42,6 +43,12 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             {
                 AddHints(codeSnippetId, other._directory[codeSnippetId]);
             }
+        }
+
+        public int[] GetDistinctLearningObjectSummaries()
+        {
+            var hints = _directory.Values.SelectMany(l => l);
+            return hints.Select(hint => hint.LearningObjectSummaryId).Where(id => id != 0).Distinct().ToArray();
         }
 
         public bool IsEmpty()
