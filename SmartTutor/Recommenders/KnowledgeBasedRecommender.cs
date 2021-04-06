@@ -37,7 +37,7 @@ namespace SmartTutor.Recommenders
             {
                 var learningObject = sortedPreferences
                     .Select(preference => GetLearningObjectForPreference(preference.Key, summary.Id))
-                    .FirstOrDefault() ?? GetDefaultLearningObject(summary.Id);
+                    .FirstOrDefault(learningObj => learningObj != null) ?? GetDefaultLearningObject(summary.Id);
                 learningObjects.Add(learningObject);
             }
 
