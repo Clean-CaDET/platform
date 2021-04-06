@@ -11,13 +11,13 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public string MetricName { get; set; }
         public double FromValue { get; set; }
         public double ToValue { get; set; }
-        public ChallengeHint BaseHint { get; set; }
+        public ChallengeHint Hint { get; set; }
 
         internal ChallengeHint Evaluate(Dictionary<CaDETMetric, double> metrics)
         {
             var metricValue = metrics[(CaDETMetric)Enum.Parse(typeof(CaDETMetric), MetricName, true)];
             var isFulfilled = FromValue <= metricValue && metricValue <= ToValue;
-            return isFulfilled ? null : new ChallengeHint(BaseHint);
+            return isFulfilled ? null : Hint;
         }
     }
 }

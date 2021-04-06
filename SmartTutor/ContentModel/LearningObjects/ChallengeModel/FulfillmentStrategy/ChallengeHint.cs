@@ -8,14 +8,20 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         [Key] public int Id { get; set; }
         public string Content { get; set; }
         public LearningObjectSummary LearningObjectSummary { get; set; }
-        public string ApplicableCodeSnippetId { get; set; }
 
-        public ChallengeHint() {}
-        public ChallengeHint(ChallengeHint hint)
+        public override int GetHashCode()
         {
-            Id = hint.Id;
-            Content = hint.Content;
-            LearningObjectSummary = hint.LearningObjectSummary;
+            return Id;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as ChallengeHint);
+        }
+
+        public bool Equals(ChallengeHint hint)
+        {
+            return Id.Equals(hint.Id);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     {
         [Key] public int Id { get; set; }
 
-        public abstract ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt);
+        public abstract HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt);
         public abstract List<ChallengeHint> GetAllHints();
 
         protected List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> classes)

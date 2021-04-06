@@ -18,9 +18,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
             var evaluation = new ChallengeEvaluation();
             foreach (var strategy in FulfillmentStrategies)
             {
-                var result = strategy.CheckChallengeFulfillment(solutionAttempt);
-                evaluation.ApplicableHints.AddRange(result.ApplicableHints);
-                evaluation.ChallengeCompleted &= result.ChallengeCompleted;
+                var result = strategy.EvaluateSubmission(solutionAttempt);
+                evaluation.ApplicableHints.MergeHints(result);
             }
 
             return evaluation;

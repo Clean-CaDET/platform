@@ -4,19 +4,12 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 {
     public class ChallengeEvaluation
     {
-        public bool ChallengeCompleted { get; internal set; }
-        public List<ChallengeHint> ApplicableHints { get; }
+        public bool ChallengeCompleted => ApplicableHints.IsEmpty();
+        public HintDirectory ApplicableHints { get; }
 
         public ChallengeEvaluation()
         {
-            ChallengeCompleted = true;
-            ApplicableHints = new List<ChallengeHint>();
-        }
-
-        public ChallengeEvaluation(bool challengeCompleted, List<ChallengeHint> applicableHints)
-        {
-            ChallengeCompleted = challengeCompleted;
-            ApplicableHints = applicableHints;
+            ApplicableHints = new HintDirectory();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SmartTutorTests.Unit
                         MetricName = "CLOC",
                         FromValue = 3,
                         ToValue = 30,
-                        BaseHint = new ChallengeHint
+                        Hint = new ChallengeHint
                         {
                             Id = 337001,
                             Content = "Cohesion",
@@ -34,7 +34,7 @@ namespace SmartTutorTests.Unit
                                 {Id = 331, Description = "Cohesion definition"}
                         }
                     },
-                    new MetricRangeRule {Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2, BaseHint = new ChallengeHint {Id = 5}}
+                    new MetricRangeRule {Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2, Hint = new ChallengeHint {Id = 5}}
                 },
                 MethodMetricRules = new List<MetricRangeRule>
                 {
@@ -44,7 +44,7 @@ namespace SmartTutorTests.Unit
                         MetricName = "MELOC",
                         FromValue = 2,
                         ToValue = 5,
-                        BaseHint = new ChallengeHint
+                        Hint = new ChallengeHint
                         {
                             Id = 337002,
                             Content = "Cohesion",
@@ -52,7 +52,7 @@ namespace SmartTutorTests.Unit
                                 {Id = 336, Description = "Structural cohesion example"}
                         }
                     },
-                    new MetricRangeRule {Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4, BaseHint = new ChallengeHint {Id = 6}}
+                    new MetricRangeRule {Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4, Hint = new ChallengeHint {Id = 6}}
                 }
             };
         }
@@ -92,11 +92,9 @@ namespace SmartTutorTests.Unit
                 }"
             };
 
-            ChallengeEvaluation challengeEvaluation = _basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
+            HintDirectory challengeEvaluation = _basicMetricsChecker.EvaluateSubmission(new CodeRepositoryService().BuildClassesModel(sourceCode));
 
-            challengeEvaluation.ChallengeCompleted.ShouldBeFalse();
-            challengeEvaluation.ApplicableHints.Count().ShouldBe(1);
-            challengeEvaluation.ApplicableHints[0].Id.ShouldBe(6);
+            
         }
 
         [Fact]
@@ -138,14 +136,8 @@ namespace SmartTutorTests.Unit
                 }"
             };
 
-            ChallengeEvaluation challengeEvaluation = _basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
+            HintDirectory challengeEvaluation = _basicMetricsChecker.EvaluateSubmission(new CodeRepositoryService().BuildClassesModel(sourceCode));
 
-            challengeEvaluation.ChallengeCompleted.ShouldBeFalse();
-            challengeEvaluation.ApplicableHints.Count().ShouldBe(2);
-            challengeEvaluation.ApplicableHints[0].Id.ShouldBe(337002);
-            challengeEvaluation.ApplicableHints[0].Content.ShouldBe("Cohesion");
-            challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Id.ShouldBe(336);
-            challengeEvaluation.ApplicableHints[1].Id.ShouldBe(6);
         }
 
         [Fact]
@@ -183,9 +175,8 @@ namespace SmartTutorTests.Unit
                 }"
             };
             List<CaDETClass> caDETClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
-            List<ChallengeHint> challengeHints = _basicMetricsChecker.GetHintsForSolutionAttempt(caDETClasses);
+            HintDirectory challengeHints = _basicMetricsChecker.EvaluateSubmission(caDETClasses);
 
-            challengeHints.Count.ShouldBe(1);
         }
 
         [Fact]
@@ -227,9 +218,8 @@ namespace SmartTutorTests.Unit
                 }"
             };
             List<CaDETClass> caDETClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
-            List<ChallengeHint> challengeHints = _basicMetricsChecker.GetHintsForSolutionAttempt(caDETClasses);
+            HintDirectory challengeHints = _basicMetricsChecker.EvaluateSubmission(caDETClasses);
 
-            challengeHints.Count.ShouldBe(2);
         }
     }
 }
