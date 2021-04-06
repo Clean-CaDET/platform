@@ -2,6 +2,7 @@
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
 {
@@ -10,16 +11,24 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
     {
         public string Url { get; internal set; }
         public string Description { get; internal set; }
-        public ChallengeFulfillmentStrategy FulfillmentStrategy { get; internal set; }
+        public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; internal set; }
 
         internal ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
-            return FulfillmentStrategy.CheckChallengeFulfillment(solutionAttempt);
+            var evaluation = new ChallengeEvaluation();
+            foreach (var strategy in FulfillmentStrategies)
+            {
+                var result = strategy.CheckChallengeFulfillment(solutionAttempt);
+                evaluation.ApplicableHints.AddRange(result.ApplicableHints);
+                evaluation.ChallengeCompleted &= result.ChallengeCompleted;
+            }
+
+            return evaluation;
         }
 
         internal List<ChallengeHint> GetAllChallengeHints()
         {
-            return FulfillmentStrategy.ChallengeHints;
+            return FulfillmentStrategies.SelectMany(s => s.GetAllHints().Where(h => h != null)).ToList();
         }
     }
 }

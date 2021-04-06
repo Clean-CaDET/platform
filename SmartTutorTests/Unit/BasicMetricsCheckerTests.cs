@@ -16,40 +16,45 @@ namespace SmartTutorTests.Unit
 
         public BasicMetricsCheckerTests()
         {
-            _basicMetricsChecker = new BasicMetricsChecker(new List<MetricRangeRule>
+            _basicMetricsChecker = new BasicMetricsChecker
             {
-                new MetricRangeRule
+                ClassMetricRules = new List<MetricRangeRule>
                 {
-                    Id = 33701,
-                    MetricName = "CLOC",
-                    FromValue = 3,
-                    ToValue = 30,
-                    Hint = new ChallengeHint
+                    new MetricRangeRule
                     {
-                        Id = 337001,
-                        Content = "Cohesion",
-                        LearningObjectSummary = new LearningObjectSummary { Id = 331, Description = "Cohesion definition" }
-                    }
+                        Id = 33701,
+                        MetricName = "CLOC",
+                        FromValue = 3,
+                        ToValue = 30,
+                        BaseHint = new ChallengeHint
+                        {
+                            Id = 337001,
+                            Content = "Cohesion",
+                            LearningObjectSummary = new LearningObjectSummary
+                                {Id = 331, Description = "Cohesion definition"}
+                        }
+                    },
+                    new MetricRangeRule {Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2, BaseHint = new ChallengeHint {Id = 5}}
                 },
-                new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2 }
-            },
-            new List<MetricRangeRule>
-            {
-                new MetricRangeRule
+                MethodMetricRules = new List<MetricRangeRule>
                 {
-                    Id = 33703,
-                    MetricName = "MELOC",
-                    FromValue = 2,
-                    ToValue = 5,
-                    Hint = new ChallengeHint
+                    new MetricRangeRule
                     {
-                        Id = 337002,
-                        Content = "Cohesion",
-                        LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
-                    }
-                },
-                new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4 }
-            });
+                        Id = 33703,
+                        MetricName = "MELOC",
+                        FromValue = 2,
+                        ToValue = 5,
+                        BaseHint = new ChallengeHint
+                        {
+                            Id = 337002,
+                            Content = "Cohesion",
+                            LearningObjectSummary = new LearningObjectSummary
+                                {Id = 336, Description = "Structural cohesion example"}
+                        }
+                    },
+                    new MetricRangeRule {Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4, BaseHint = new ChallengeHint {Id = 6}}
+                }
+            };
         }
 
         [Fact]
@@ -89,16 +94,9 @@ namespace SmartTutorTests.Unit
 
             ChallengeEvaluation challengeEvaluation = _basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
 
-            challengeEvaluation.ChallengeCompleted.ShouldBeTrue();
-            challengeEvaluation.ApplicableHints.Count().ShouldBe(2);
-            challengeEvaluation.ApplicableHints[0].Id.ShouldBe(337001);
-            challengeEvaluation.ApplicableHints[0].Content.ShouldBe("Cohesion");
-            challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Id.ShouldBe(331);
-            challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Description.ShouldBe("Cohesion definition");
-            challengeEvaluation.ApplicableHints[1].Id.ShouldBe(337002);
-            challengeEvaluation.ApplicableHints[1].Content.ShouldBe("Cohesion");
-            challengeEvaluation.ApplicableHints[1].LearningObjectSummary.Id.ShouldBe(336);
-            challengeEvaluation.ApplicableHints[1].LearningObjectSummary.Description.ShouldBe("Structural cohesion example");
+            challengeEvaluation.ChallengeCompleted.ShouldBeFalse();
+            challengeEvaluation.ApplicableHints.Count().ShouldBe(1);
+            challengeEvaluation.ApplicableHints[0].Id.ShouldBe(6);
         }
 
         [Fact]
@@ -143,11 +141,11 @@ namespace SmartTutorTests.Unit
             ChallengeEvaluation challengeEvaluation = _basicMetricsChecker.CheckChallengeFulfillment(new CodeRepositoryService().BuildClassesModel(sourceCode));
 
             challengeEvaluation.ChallengeCompleted.ShouldBeFalse();
-            challengeEvaluation.ApplicableHints.Count().ShouldBe(1);
+            challengeEvaluation.ApplicableHints.Count().ShouldBe(2);
             challengeEvaluation.ApplicableHints[0].Id.ShouldBe(337002);
             challengeEvaluation.ApplicableHints[0].Content.ShouldBe("Cohesion");
             challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Id.ShouldBe(336);
-            challengeEvaluation.ApplicableHints[0].LearningObjectSummary.Description.ShouldBe("Structural cohesion example");
+            challengeEvaluation.ApplicableHints[1].Id.ShouldBe(6);
         }
 
         [Fact]
@@ -187,7 +185,7 @@ namespace SmartTutorTests.Unit
             List<CaDETClass> caDETClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
             List<ChallengeHint> challengeHints = _basicMetricsChecker.GetHintsForSolutionAttempt(caDETClasses);
 
-            challengeHints.Count.ShouldBe(0);
+            challengeHints.Count.ShouldBe(1);
         }
 
         [Fact]
@@ -231,11 +229,7 @@ namespace SmartTutorTests.Unit
             List<CaDETClass> caDETClasses = new CodeRepositoryService().BuildClassesModel(sourceCode);
             List<ChallengeHint> challengeHints = _basicMetricsChecker.GetHintsForSolutionAttempt(caDETClasses);
 
-            challengeHints.Count.ShouldBe(1);
-            challengeHints[0].Id.ShouldBe(337002);
-            challengeHints[0].Content.ShouldBe("Cohesion");
-            challengeHints[0].LearningObjectSummary.Id.ShouldBe(336);
-            challengeHints[0].LearningObjectSummary.Description.ShouldBe("Structural cohesion example");
+            challengeHints.Count.ShouldBe(2);
         }
     }
 }

@@ -18,12 +18,11 @@ namespace SmartTutor.Controllers
             _challengeService = new ChallengeService(new LearningObjectInMemoryRepository());
         }
 
-        [HttpPost("check")]
-        public ChallengeCheckResponseDTO CheckChallengeCompletion([FromBody] ChallengeCheckRequestDTO checkRequestDto)
+        [HttpPost("evaluate-submission")]
+        public ChallengeEvaluationDTO EvaluateChallengeSubmission([FromBody] ChallengeSubmissionDTO challengeSubmission)
         {
-            ChallengeEvaluation challengeEvaluation = _challengeService.CheckChallengeCompletion(checkRequestDto.SourceCode, checkRequestDto.ChallengeId);
-            var text = challengeEvaluation.ChallengeCompleted ? "Success." : "Fail.";
-            return new ChallengeCheckResponseDTO(text);
+            ChallengeEvaluation challengeEvaluation = _challengeService.EvaluateSubmission(challengeSubmission.SourceCode, challengeSubmission.ChallengeId);
+            return new ChallengeEvaluationDTO();
         }
 
         public List<ChallengeHint> GetAllHints(int challengeId)

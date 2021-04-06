@@ -128,7 +128,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 MetricName = "CLOC",
                 FromValue = 3,
                 ToValue = 30,
-                Hint = new ChallengeHint
+                BaseHint = new ChallengeHint
                 {
                     Id = 337001,
                     Content = "Cohesion",
@@ -144,7 +144,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 MetricName = "MELOC",
                 FromValue = 2,
                 ToValue = 5,
-                Hint = new ChallengeHint
+                BaseHint = new ChallengeHint
                 {
                     Id = 337002,
                     Content = "Cohesion",
@@ -160,7 +160,14 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3371,
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
+                    FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
+                    {
+                        new BasicMetricsChecker
+                        {
+                            ClassMetricRules = classMetricRules,
+                            MethodMetricRules = methodMetricRules
+                        }
+                    }
                 }
             });
         }

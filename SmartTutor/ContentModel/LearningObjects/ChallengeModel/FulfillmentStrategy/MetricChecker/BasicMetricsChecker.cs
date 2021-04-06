@@ -8,38 +8,21 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     [Table("BasicMetricCheckers")]
     public class BasicMetricsChecker : ChallengeFulfillmentStrategy
     {
-        public List<MetricRangeRule> ClassMetricRules { get; private set; }
-        public List<MetricRangeRule> MethodMetricRules { get; private set; }
-
-        public BasicMetricsChecker() { }
-
-        public BasicMetricsChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules)
-        {
-            ClassMetricRules = classMetricRules;
-            MethodMetricRules = methodMetricRules;
-            ChallengeHints = GetChallengeHints();
-        }
+        public List<MetricRangeRule> ClassMetricRules { get; set; }
+        public List<MetricRangeRule> MethodMetricRules { get; set; }
 
         public override ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
-            List<ChallengeHint> challengeHints = GetHintsForSolutionAttempt(solutionAttempt);
-            if (!challengeHints.Any()) return new ChallengeEvaluation(true, ChallengeHints);
+            var challengeHints = GetHintsForSolutionAttempt(solutionAttempt);
+            if (!challengeHints.Any()) return new ChallengeEvaluation(true, GetAllHints());
             return new ChallengeEvaluation(false, challengeHints);
         }
 
-        private List<ChallengeHint> GetChallengeHints()
+        public override List<ChallengeHint> GetAllHints()
         {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            challengeHints.AddRange(GetHintsForMetricRules(ClassMetricRules));
-            challengeHints.AddRange(GetHintsForMetricRules(MethodMetricRules));
-            return challengeHints;
-        }
-
-        private List<ChallengeHint> GetHintsForMetricRules(List<MetricRangeRule> metricRangeRules)
-        {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            foreach (MetricRangeRule metricRangeRule in metricRangeRules)
-                if (metricRangeRule.Hint != null) challengeHints.Add(metricRangeRule.Hint);
+            var challengeHints = new List<ChallengeHint>();
+            challengeHints.AddRange(ClassMetricRules.Select(c => c.BaseHint));
+            challengeHints.AddRange(MethodMetricRules.Select(m => m.BaseHint));
             return challengeHints;
         }
 
@@ -53,13 +36,15 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private List<ChallengeHint> GetApplicableHintsForIncompleteClasses(List<CaDETClass> solutionAttempt)
         {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            foreach (CaDETClass caDETClass in solutionAttempt)
+            var challengeHints = new List<ChallengeHint>();
+            foreach (var caDETClass in solutionAttempt)
             {
-                foreach (MetricRangeRule classMetricRule in ClassMetricRules)
+                foreach (var metricRule in ClassMetricRules)
                 {
-                    if (!classMetricRule.MetricMeetsRequirements(caDETClass.Metrics) && classMetricRule.Hint != null)
-                        challengeHints.Add(classMetricRule.Hint);
+                    var result = metricRule.Evaluate(caDETClass.Metrics);
+                    if (result == null) continue;
+                    result.ApplicableCodeSnippetId = caDETClass.FullName;
+                    challengeHints.Add(result);
                 }
             }
             return challengeHints;
@@ -67,13 +52,15 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private List<ChallengeHint> GetApplicableHintsForIncompleteMethods(List<CaDETClass> solutionAttempt)
         {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            foreach (CaDETMember caDETMethod in GetMethodsFromClasses(solutionAttempt))
+            var challengeHints = new List<ChallengeHint>();
+            foreach (var caDETMethod in GetMethodsFromClasses(solutionAttempt))
             {
-                foreach (MetricRangeRule methodMetricRule in MethodMetricRules)
+                foreach (var metricRule in MethodMetricRules)
                 {
-                    if (!methodMetricRule.MetricMeetsRequirements(caDETMethod.Metrics) && methodMetricRule.Hint != null)
-                        challengeHints.Add(methodMetricRule.Hint);
+                    var result = metricRule.Evaluate(caDETMethod.Metrics);
+                    if (result == null) continue;
+                    result.ApplicableCodeSnippetId = caDETMethod.Signature();
+                    challengeHints.Add(result);
                 }
             }
             return challengeHints;

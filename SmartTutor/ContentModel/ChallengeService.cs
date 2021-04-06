@@ -16,26 +16,23 @@ namespace SmartTutor.ContentModel
             _learningObjectRepository = learningObjectRepository;
         }
 
-        public ChallengeEvaluation CheckChallengeCompletion(string[] sourceCode, int challengeId)
+        public ChallengeEvaluation EvaluateSubmission(string[] sourceCode, int challengeId)
         {
+            //TODO: Tie in with progress model and handle traineeId to get suitable LO for LO summaries.
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
-            Challenge challenge = GetChallenge(challengeId);
+            Challenge challenge = _learningObjectRepository.GetChallenge(challengeId);
             return challenge.CheckChallengeFulfillment(solutionAttempt);
-        }
-
-        public Challenge GetChallenge(int challengeId)
-        {
-            return _learningObjectRepository.GetChallenge(challengeId);
-        }
-
-        public List<ChallengeHint> GetAllHints(int challengeId)
-        {
-            return GetChallenge(challengeId).GetAllChallengeHints();
         }
 
         private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)
         {
+            //TODO: Adhere to DIP for CodeModelFactory/CodeRepoService (extract interface and add DI in startup)
             return new CodeRepositoryService().BuildClassesModel(sourceCode);
+        }
+
+        public List<ChallengeHint> GetAllHints(int challengeId)
+        {
+            return _learningObjectRepository.GetChallenge(challengeId).GetAllChallengeHints();
         }
     }
 }
