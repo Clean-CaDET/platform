@@ -6,7 +6,7 @@ using System.Linq;
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker
 {
     [Table("BasicMetricCheckers")]
-    public class BasicMetricsChecker : ChallengeFulfillmentStrategy
+    public class BasicMetricChecker : ChallengeFulfillmentStrategy
     {
         public List<MetricRangeRule> ClassMetricRules { get; set; }
         public List<MetricRangeRule> MethodMetricRules { get; set; }

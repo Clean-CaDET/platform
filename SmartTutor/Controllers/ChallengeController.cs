@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.Controllers.DTOs.Challenge;
 using System.Collections.Generic;
 
@@ -13,9 +12,9 @@ namespace SmartTutor.Controllers
     {
         private readonly IChallengeService _challengeService;
 
-        public ChallengeController()
+        public ChallengeController(IChallengeService service)
         {
-            _challengeService = new ChallengeService(new LearningObjectInMemoryRepository());
+            _challengeService = service;
         }
 
         [HttpPost("evaluate-submission")]

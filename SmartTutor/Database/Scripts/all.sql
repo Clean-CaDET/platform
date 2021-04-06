@@ -1,8 +1,11 @@
 DELETE FROM public."Texts";
 DELETE FROM public."Images";
 DELETE FROM public."Videos";
-DELETE FROM public."Challenges";
+DELETE FROM public."MetricRangeRules";
+DELETE FROM public."ChallengeHints";
+DELETE FROM public."BasicMetricCheckers";
 DELETE FROM public."ChallengeFulfillmentStrategies";
+DELETE FROM public."Challenges";
 DELETE FROM public."QuestionAnswers";
 DELETE FROM public."Questions";
 DELETE FROM public."ArrangeTaskElements";
@@ -171,13 +174,13 @@ Najzad, reči poput *Controller* i *Service* treba pažljivo koristiti, prateći
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (12, 10);
-INSERT INTO public."ChallengeFulfillmentStrategies"(
-	"Id")
-	VALUES (2);
--- TODO: NameStrategy, rules, hints
 INSERT INTO public."Challenges"(
-	"Id", "Url", "Description", "FulfillmentStrategyId")
-	VALUES (12, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "01. Noise Words" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 2);
+	"Id", "Description", "Url")
+	VALUES (12, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Naming/01. Noise Words" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId")
+	VALUES (2, 12);
+-- TODO: NameStrategy, rules, hints
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -208,13 +211,13 @@ INSERT INTO public."LearningObjectSummaries"(
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (7, 6);
-INSERT INTO public."ChallengeFulfillmentStrategies"(
-	"Id")
-	VALUES (1);
--- TODO: NameStrategy, rules, hints (doc)
 INSERT INTO public."Challenges"(
-	"Id", "Url", "Description", "FulfillmentStrategyId")
-	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository', 1);
+	"Id", "Description", "Url")
+	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "Naming/02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId")
+	VALUES (1, 7);
+-- TODO: NameStrategy, rules, hints (doc)
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -503,10 +506,15 @@ Kod dugačkih funkcija potrebno je identifikovati regione logički povezanog kod
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (41, 41);
+INSERT INTO public."Challenges"(
+	"Id", "Url", "Description")
+	VALUES (41, 'https://github.com/Clean-CaDET/challenge-repository', 'Da imamo kratke metode ne treba da bude naš konačan cilj, već posledica praćenja dobrih praksi. Ipak, funkcija koja prevazilazi nekoliko desetina linija je dobar kandidat za refaktorisanje. U sklopu direktorijuma "Methods/01. Small Methods" ekstrahuj logički povezan kod tako da završiš sa kolekcijom sitnijih metoda čije ime jasno označava njihovu svrhu.');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId")
+	VALUES (3, 41);
+INSERT INTO public."BasicMetricCheckers"(
 	"Id")
 	VALUES (3);
--- TODO: MetricRules, hints (include codeSnippetId that the hint relates to - on the front end we can have "Applies to:" for each hint).
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -525,11 +533,16 @@ INSERT INTO public."Texts"(
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
-	VALUES (44, 44); -- TODO: Expand to have multiple strategies; Add challenge definition with description and LOSummary solution.
+	VALUES (44, 44);
+INSERT INTO public."Challenges"(
+	"Id", "Url", "Description")
+	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Složene funkcije su one koje zahtevaju visok mentalni napor da se razume sva logika i tokovi kontrole. Mnogi aspekti koda doprinose otežanom razumevanju - čudna imena, dugački izrazi, duboko ugnježdavanje. U sklopu direktorijuma "Methods/01. Simple Methods" refaktoriši funkcije tako da ih pojednostaviš i smanjiš dupliranje koda.');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId")
+	VALUES (4, 44);
+INSERT INTO public."BasicMetricCheckers"(
 	"Id")
 	VALUES (4);
--- TODO: MetricRules, hints (include codeSnippetId that the hint relates to - on the front end we can have "Applies to:" for each hint).
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -566,15 +579,54 @@ INSERT INTO public."Images"(
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
-	VALUES (49, 49); -- TODO: Expand to have multiple strategies; Add challenge definition with description and LOSummary solution.
+	VALUES (49, 49);
+INSERT INTO public."Challenges"(
+	"Id", "Url", "Description")
+	VALUES (49, 'https://github.com/Clean-CaDET/challenge-repository', 'Redukcija broja parametra pozitivno utiče na razumevanje samog zaglavlja funkcije i informacije šta ona radi. Pored toga, redukcijom liste parametra često smanjujemo broj zadataka koje funkcija radi. U sklopu direktorijuma "Methods/03. Parameter Lists" primeni strategije za redukciju parametra i refaktoriši funkcije.');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId")
+	VALUES (5, 49);
+INSERT INTO public."BasicMetricCheckers"(
 	"Id")
 	VALUES (5);
--- TODO: MetricRules, hints (include codeSnippetId that the hint relates to - on the front end we can have "Applies to:" for each hint).
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (50, 50);
-INSERT INTO public."Images"(
-	"Id", "Url", "Caption")
-	VALUES (50, 'TODO', 'TODO: 4 classes, one for each strategy. Side by side challenge solution images/video.');
+INSERT INTO public."Videos"(
+	"Id", "Url")
+	VALUES (50, 'https://youtu.be/yKnxsH0CJzY');
+
+-- HINTS
+INSERT INTO public."ChallengeHints"(
+	"Id", "Content", "LearningObjectSummaryId")
+	VALUES (1, 'Ispitaj da li možeš datu funkciju da pojednostaviš reorganizacijom logike ili ekstrakcijom smislenog podskupa koda u funkciju kojoj možeš dati jasno ime.', 43);
+INSERT INTO public."ChallengeHints"(
+	"Id", "Content", "LearningObjectSummaryId")
+	VALUES (2, 'Razmisli kako bi pojednostavio datu metodu tako da smanjiš ugnježdavanje koda.', 45);
+INSERT INTO public."ChallengeHints"(
+	"Id", "Content", "LearningObjectSummaryId")
+	VALUES (3, 'Ne zaboravi da vodiš računa o linijama koda.', 40);
+INSERT INTO public."ChallengeHints"(
+	"Id", "Content", "LearningObjectSummaryId")
+	VALUES (4, 'Funkcija ti i dalje ima previše parametra. Ispitaj svaku od četiri strategije za redukciju parametra pre nego što se opredeliš za neku.', 48);
+INSERT INTO public."ChallengeHints"(
+	"Id", "Content", "LearningObjectSummaryId")
+	VALUES (5, 'Vredna strategija za redukciju parametra podrazumeva premeštanje metoda i polja klase tako da se ukloni potreba za parametrom. Razmisli da li ima smisla premestiti neku metodu iz ove klase u drugu.', NULL);
+	
+-- Challenge rules
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (1, 'ELOC', 1, 18, 1, NULL, 3);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (2, 'ELOC', 1, 12, 3, NULL, 4);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (3, 'CYCLO', 1, 5, 2, NULL, 4);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (4, 'NOP', 0, 1, 4, NULL, 5);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (5, 'NMD', 1, 2, 5, 5, NULL);

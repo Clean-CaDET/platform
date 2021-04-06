@@ -26,8 +26,9 @@ namespace SmartTutor.Database
         public DbSet<ArrangeTaskElement> ArrangeTaskElements { get; set; }
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<ChallengeFulfillmentStrategy> ChallengeFulfillmentStrategies { get; set; }
-        public DbSet<BasicMetricsChecker> MetricsCheckers { get; set; }
+        public DbSet<BasicMetricChecker> BasicMetricCheckers { get; set; }
         public DbSet<MetricRangeRule> MetricRangeRules { get; set; }
+        public DbSet<ChallengeHint> ChallengeHints { get; set; }
         #endregion
 
         public DbSet<NodeProgress> NodeProgresses { get; set; }
@@ -46,16 +47,16 @@ namespace SmartTutor.Database
         {
             // Add the shadow property to the model
             modelBuilder.Entity<MetricRangeRule>()
-                .Property<int>("ClassMetricCheckerForeignKey");
+                .Property<int?>("ClassMetricCheckerForeignKey").IsRequired(false);
             modelBuilder.Entity<MetricRangeRule>()
-                .Property<int>("MethodMetricCheckerForeignKey");
+                .Property<int?>("MethodMetricCheckerForeignKey").IsRequired(false);
 
             // Use the shadow property as a foreign key
-            modelBuilder.Entity<BasicMetricsChecker>()
+            modelBuilder.Entity<BasicMetricChecker>()
                 .HasMany(b => b.ClassMetricRules)
                 .WithOne()
                 .HasForeignKey("ClassMetricCheckerForeignKey");
-            modelBuilder.Entity<BasicMetricsChecker>()
+            modelBuilder.Entity<BasicMetricChecker>()
                 .HasMany(b => b.MethodMetricRules)
                 .WithOne()
                 .HasForeignKey("MethodMetricCheckerForeignKey");
