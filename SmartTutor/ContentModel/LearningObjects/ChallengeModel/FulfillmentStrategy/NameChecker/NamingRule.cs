@@ -97,8 +97,14 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         private string[] GetSubstringWordsFromName(string name)
         {
             string[] words = GetWordByWordFromName(name);
-            List<string> substringWords = new List<string>();
+            List<string> substringWords = GetMultipartSubstringWordsFromName(name, words);
             substringWords.AddRange(words);
+            return substringWords.ToArray();
+        }
+
+        private List<string> GetMultipartSubstringWordsFromName(string name, string[] words)
+        {
+            List<string> substringWords = new List<string>();
             int startLength = 0;
             for (var i = 0; i <= words.Length - 2; i++)
             {
@@ -110,7 +116,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
                 }
                 startLength += words[i].Length;
             }
-            return substringWords.ToArray();
+            return substringWords;
         }
     }
 }
