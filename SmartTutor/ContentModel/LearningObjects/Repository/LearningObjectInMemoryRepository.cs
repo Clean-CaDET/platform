@@ -185,7 +185,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             throw new System.NotImplementedException();
         }
 
-        public Question GetQuestionForSummary(int summaryId)
+        public LearningObject GetInteractiveLOForSummary(int summaryId)
         {
             throw new System.NotImplementedException();
         }
@@ -201,6 +201,11 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         }
 
         public Challenge GetChallengeForSummary(int summaryId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public LearningObject GetLearningObjectForSummary(int summaryId)
         {
             throw new System.NotImplementedException();
         }

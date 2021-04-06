@@ -35,13 +35,10 @@ namespace SmartTutor.Recommenders
 
             foreach (var summary in knowledgeNode.LearningObjectSummaries)
             {
-                foreach (var learningObject in sortedPreferences
+                var learningObject = sortedPreferences
                     .Select(preference => GetLearningObjectForPreference(preference.Key, summary.Id))
-                    .Where(learningObject => learningObject != null))
-                {
-                    learningObjects.Add(learningObject);
-                    break;
-                }
+                    .FirstOrDefault() ?? GetDefaultLearningObject(summary.Id);
+                learningObjects.Add(learningObject);
             }
 
             return new NodeProgress
@@ -55,11 +52,16 @@ namespace SmartTutor.Recommenders
             return learningPreference switch
             {
                 LearningPreference.Aural => _learningObjectRepository.GetVideoForSummary(summaryId),
-                LearningPreference.Kinaesthetic => _learningObjectRepository.GetQuestionForSummary(summaryId),
+                LearningPreference.Kinaesthetic => _learningObjectRepository.GetInteractiveLOForSummary(summaryId),
                 LearningPreference.Visual => _learningObjectRepository.GetImageForSummary(summaryId),
                 LearningPreference.ReadWrite => _learningObjectRepository.GetTextForSummary(summaryId),
                 _ => throw new ArgumentOutOfRangeException(nameof(learningPreference), learningPreference, null)
             };
+        }
+
+        private LearningObject GetDefaultLearningObject(int summaryId)
+        {
+            return _learningObjectRepository.GetLearningObjectForSummary(summaryId);
         }
     }
 }

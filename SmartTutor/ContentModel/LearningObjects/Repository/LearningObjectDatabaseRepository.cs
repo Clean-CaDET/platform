@@ -58,27 +58,35 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         public Image GetImageForSummary(int summaryId)
         {
-            return _dbContext.Images.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+            return _dbContext.Images.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
         }
 
-        public Question GetQuestionForSummary(int summaryId)
+        public LearningObject GetInteractiveLOForSummary(int summaryId)
         {
-            return _dbContext.Questions.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+            var interactiveLearningObjects = new List<LearningObject>();
+            interactiveLearningObjects.AddRange(_dbContext.ArrangeTasks);
+            interactiveLearningObjects.AddRange(_dbContext.Questions);
+            return interactiveLearningObjects.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
         }
 
         public Text GetTextForSummary(int summaryId)
         {
-            return _dbContext.Texts.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+            return _dbContext.Texts.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
         }
 
         public Video GetVideoForSummary(int summaryId)
         {
-            return _dbContext.Videos.FirstOrDefault(learningObj => learningObj.LearningObjectSummaryId == summaryId);
+            return _dbContext.Videos.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
         }
 
         public Challenge GetChallengeForSummary(int summaryId)
         {
             throw new System.NotImplementedException();
+        }
+
+        public LearningObject GetLearningObjectForSummary(int summaryId)
+        {
+            return _dbContext.LearningObjects.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
         }
     }
 }

@@ -41,14 +41,14 @@ namespace SmartTutor.ContentModel
 
         private static List<NodeProgress> ShowSampleNodes(List<KnowledgeNode> nodes)
         {
-            return nodes.Select(n => new NodeProgress { Node = n, Status = NodeStatus.Unlocked }).ToList();
+            return nodes.Select(n => new NodeProgress {Node = n, Status = NodeStatus.Unlocked}).ToList();
         }
 
         public NodeProgress GetNodeContent(int knowledgeNodeId, int? traineeId)
         {
             if (traineeId != null)
             {
-                return CreateNodeForTrainee(knowledgeNodeId, traineeId);
+                return CreateNodeForTrainee(knowledgeNodeId, (int) traineeId);
             }
 
             var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
@@ -64,10 +64,9 @@ namespace SmartTutor.ContentModel
             };
         }
 
-        private NodeProgress CreateNodeForTrainee(int knowledgeNodeId, int? traineeId)
+        private NodeProgress CreateNodeForTrainee(int knowledgeNodeId, int traineeId)
         {
-            if (traineeId == null) return null; // TODO: throw an exception?
-            var trainee = _traineeRepository.GetTraineeById(traineeId.Value);
+            var trainee = _traineeRepository.GetTraineeById(traineeId);
             var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
 
             var nodeProgress = _recommender.BuildNodeProgressForTrainee(trainee, knowledgeNode);
@@ -93,10 +92,12 @@ namespace SmartTutor.ContentModel
                     SubmissionWasCorrect = answer.IsCorrect ? answerWasMarked : !answerWasMarked
                 });
             }
+
             return evaluations;
         }
 
-        public List<ArrangeTaskContainerEvaluation> EvaluateArrangeTask(int arrangeTaskId, List<ArrangeTaskContainer> submittedAnswers)
+        public List<ArrangeTaskContainerEvaluation> EvaluateArrangeTask(int arrangeTaskId,
+            List<ArrangeTaskContainer> submittedAnswers)
         {
             var containers = _learningObjectRepository.GetArrangeTaskContainers(arrangeTaskId);
             //TODO: Tie in with the ProgressModel once it is setup, as the [submission]/[evaluation of submission] are important events.
@@ -114,6 +115,7 @@ namespace SmartTutor.ContentModel
                     SubmissionWasCorrect = container.IsCorrectSubmission(submittedContainer)
                 });
             }
+
             return evaluations;
         }
     }
