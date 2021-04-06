@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker
 {
@@ -30,7 +31,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private bool CheckNamesContent(List<string> allNames)
         {
-            return FoundAllRequiredWords(allNames) && CheckIfNotBannedWords(allNames);
+            return FoundAllRequiredWords(allNames) && CheckAllWordsIfNotBanned(allNames);
         }
 
         private bool FoundAllRequiredWords(List<string> allNames)
@@ -42,16 +43,26 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private bool FoundRequiredWord(List<string> allNames, string requiredWord)
         {
+            return FoundWord(GetWordsFromNames(allNames), requiredWord) || FoundWord(allNames, requiredWord);
+        }
+
+        private bool FoundWord(List<string> words, string requiredWord)
+        {
             int flag = 0;
-            foreach (string name in allNames)
+            foreach (string word in words)
             {
-                if (name.Contains(requiredWord, StringComparison.OrdinalIgnoreCase))
+                if (word.Equals(requiredWord, StringComparison.OrdinalIgnoreCase))
                 {
                     ++flag;
                     break;
                 }
             }
             return flag != 0;
+        }
+
+        private bool CheckAllWordsIfNotBanned(List<string> allNames)
+        {
+            return CheckIfNotBannedWords(GetWordsFromNames(allNames)) && CheckIfNotBannedWords(allNames);
         }
 
         private bool CheckIfNotBannedWords(List<string> words)
@@ -64,8 +75,25 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         private bool CheckIfNotBannedWord(string word)
         {
             foreach (string bannedWord in BannedWords)
-                if (word.Contains(bannedWord, StringComparison.OrdinalIgnoreCase)) return false;
+                if (word.Equals(bannedWord, StringComparison.OrdinalIgnoreCase)) return false;
             return true;
+        }
+
+        private List<string> GetWordsFromNames(List<string> names)
+        {
+            List<string> words = new List<string>();
+            foreach (string name in names)
+                words.AddRange(GetWordsFromName(name));
+            return words;
+        }
+
+        private string[] GetWordsFromName(string name)
+        {
+            var words = Regex.Split(name, "[A-Z]");
+            var matches = Regex.Matches(name, "[A-Z]");
+            for (int i = 0; i < words.Length - 1; i++)
+                words[i + 1] = matches[i] + words[i + 1];
+            return words;
         }
     }
 }
