@@ -5,50 +5,55 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 {
     public class HintDirectory
     {
-        private readonly Dictionary<string, List<ChallengeHint>> _directory;
+        private readonly Dictionary<ChallengeHint, List<string>> _directory;
 
         public HintDirectory()
         {
-            _directory = new Dictionary<string, List<ChallengeHint>>();
+            _directory = new Dictionary<ChallengeHint, List<string>>();
         }
 
-        public Dictionary<string, List<ChallengeHint>> GetHints()
+        public Dictionary<ChallengeHint, List<string>> GetDirectory()
         {
-            return new Dictionary<string, List<ChallengeHint>>(_directory);
+            return new Dictionary<ChallengeHint, List<string>>(_directory);
+        }
+
+        public List<ChallengeHint> GetHints()
+        {
+            return _directory.Keys.ToList();
         }
 
         public void AddHint(string codeSnippetId, ChallengeHint hint)
         {
-            if (_directory.ContainsKey(codeSnippetId))
+            if (_directory.ContainsKey(hint))
             {
-                if (!_directory[codeSnippetId].Contains(hint))
+                if (!_directory[hint].Contains(codeSnippetId))
                 {
-                    _directory[codeSnippetId].Add(hint);
+                    _directory[hint].Add(codeSnippetId);
                 }
             }
             else
             {
-                _directory[codeSnippetId] = new List<ChallengeHint> { hint };
+                _directory[hint] = new List<string> { codeSnippetId };
             }
         }
 
-        public void AddHints(string codeSnippetId, List<ChallengeHint> hints)
+        public void AddHints(ChallengeHint hint, List<string> codeSnippetIds)
         {
-            hints.ForEach(h => AddHint(codeSnippetId, h));
+            codeSnippetIds.ForEach(codeSnippetId => AddHint(codeSnippetId, hint));
         }
 
         public void MergeHints(HintDirectory other)
         {
-            foreach (var codeSnippetId in other._directory.Keys)
+            foreach (var hint in other._directory.Keys)
             {
-                AddHints(codeSnippetId, other._directory[codeSnippetId]);
+                AddHints(hint, other._directory[hint]);
             }
         }
 
-        public int[] GetDistinctLearningObjectSummaries()
+        public List<int> GetDistinctLearningObjectSummaries()
         {
-            var hints = _directory.Values.SelectMany(l => l);
-            return hints.Select(hint => hint.LearningObjectSummaryId).Where(id => id != 0).Distinct().ToArray();
+            return _directory.Keys.Select(hint => hint.LearningObjectSummaryId)
+                .Where(id => id != 0).Distinct().ToList();
         }
 
         public bool IsEmpty()

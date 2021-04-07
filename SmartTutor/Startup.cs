@@ -35,11 +35,12 @@ namespace SmartTutor
                 opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
 
             services.AddScoped<IContentService, ContentService>();
+            services.AddScoped<IChallengeService, ChallengeService>();
 
-            //services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
-            //services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
-            services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
-            services.AddScoped<ILearningObjectRepository, LearningObjectInMemoryRepository>();
+            services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
+            services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
+            //services.AddScoped<ILectureRepository, LectureInMemoryRepository>();
+            //services.AddScoped<ILearningObjectRepository, LearningObjectInMemoryRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 
@@ -49,6 +50,12 @@ namespace SmartTutor
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
 
             app.UseHttpsRedirection();
 

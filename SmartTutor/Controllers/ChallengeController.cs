@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.Controllers.DTOs.Challenge;
+using SmartTutor.Controllers.DTOs.Lecture;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.Controllers
 {
@@ -25,7 +27,22 @@ namespace SmartTutor.Controllers
         {
             var challengeEvaluation = _challengeService.EvaluateSubmission(challengeSubmission.SourceCode, challengeSubmission.ChallengeId);
             if (challengeEvaluation == null) return NotFound();
-            return Ok(_mapper.Map<ChallengeEvaluationDTO>(challengeEvaluation));
+            return Ok(_mapper.Map<ChallengeEvaluation, ChallengeEvaluationDTO>(challengeEvaluation, opt =>
+            {
+                opt.AfterMap((src, dest) =>
+                {
+                    var hintDirectory = src.ApplicableHints.GetDirectory();
+                    var directoryKeys = src.ApplicableHints.GetHints();
+                    foreach (var hintDto in dest.ApplicableHints)
+                    {
+                        var relatedHint = directoryKeys.First(h => h.Id == hintDto.Id);
+                        hintDto.ApplicableToCodeSnippets = hintDirectory[relatedHint];
+                        var relatedLO = src.ApplicableLOs
+                            .First(lo => lo.LearningObjectSummaryId == relatedHint.LearningObjectSummaryId);
+                        hintDto.LearningObject = _mapper.Map<LearningObjectDTO>(relatedLO);
+                    }
+                });
+            }));
         }
 
         public List<ChallengeHint> GetAllHints(int challengeId)

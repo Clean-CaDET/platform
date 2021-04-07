@@ -18,11 +18,17 @@ namespace SmartTutor.ContentModel
 
         public ChallengeEvaluation EvaluateSubmission(string[] sourceCode, int challengeId)
         {
-            //TODO: Tie in with progress model and handle traineeId to get suitable LO for LO summaries.
             //TODO: Exceptions for bad CaDETClass - BadRequest, No Challenge - NotFound etc. (reexamine best practices)
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
             Challenge challenge = _learningObjectRepository.GetChallenge(challengeId);
-            return challenge?.CheckChallengeFulfillment(solutionAttempt);
+            if (challenge == null) return null;
+
+            var evaluation = challenge.CheckChallengeFulfillment(solutionAttempt);
+            //TODO: Tie in with progress model and handle traineeId to get suitable LO for LO summaries.
+            evaluation.ApplicableLOs =
+                _learningObjectRepository.GetFirstLearningObjectsForSummaries(
+                    evaluation.ApplicableHints.GetDistinctLearningObjectSummaries());
+            return evaluation;
         }
 
         private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)

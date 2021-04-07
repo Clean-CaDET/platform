@@ -60,7 +60,7 @@ namespace SmartTutorTests.Unit
         {
             var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
             var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(caDETClasses);
-            var actualHints = challengeEvaluation.GetHints().Values.SelectMany(h => h).ToList();
+            var actualHints = challengeEvaluation.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);
             actualHints.All(expectedHints.Contains).ShouldBeTrue();
