@@ -108,24 +108,13 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             var challengeHints = new HintDirectory();
             foreach (var namingRule in NamingRules)
             {
-                var requiredWords = namingRule.RequiredWords;
-                var hint = namingRule.Hint;
-                if (requiredWords.Count != 0 && hint != null)
-                    challengeHints.AddHint(GetRequiredWordsCodeSnippetId(requiredWords), hint);
+                foreach (var requiredWord in namingRule.RequiredWords)
+                {
+                    if (namingRule.Hint == null) continue;
+                    challengeHints.AddHint(requiredWord, namingRule.Hint);
+                }
             }
             return challengeHints;
-        }
-
-        private string GetRequiredWordsCodeSnippetId(List<string> requiredWords)
-        {
-            string codeSnippetId = "";
-            for (int i = 0; i < requiredWords.Count; i++)
-            {
-                codeSnippetId += requiredWords[i];
-                if (i != requiredWords.Count - 1)
-                    codeSnippetId += " ";
-            }
-            return codeSnippetId;
         }
     }
 }
