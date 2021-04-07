@@ -13,52 +13,53 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public List<string> RequiredWords { get; set; }
         public ChallengeHint Hint { get; set; }
 
-        internal bool NamesMeetRequirements(List<string> allNames)
+        internal ChallengeHint Evaluate(string name)
         {
-            return CheckNamesLength(allNames) && CheckNamesContent(allNames);
+            return NameMeetRequirements(name) ? null : Hint;
         }
 
-        private bool CheckNamesLength(List<string> allNames)
+        private bool NameMeetRequirements(string name)
         {
-            foreach (string name in allNames)
-                if (!CheckNameLength(name)) return false;
-            return true;
+            return CheckNameLength(name) && CheckNameContent(name);
         }
 
         private bool CheckNameLength(string name)
         {
-            return name.Length >= 2 && name.Length <= 25;
+            return name.Length >= 2 && name.Length <= 35;
         }
 
-        private bool CheckNamesContent(List<string> allNames)
+        private bool CheckNameContent(string name)
         {
-            return FoundAllRequiredWords(allNames) && CheckIfNotBannedWords(allNames);
+            CheckIfNameIsRequiredWord(name);
+            return CheckIfNotBannedName(name);
         }
 
-        private bool FoundAllRequiredWords(List<string> allNames)
+        private void CheckIfNameIsRequiredWord(string name)
+        {
+            foreach (string word in GetWordsFromName(name))
+                CheckIfWordIsRequired(word);
+        }
+
+        private void CheckIfWordIsRequired(string name)
         {
             foreach (string requiredWord in RequiredWords)
-                if (!FoundRequiredWord(allNames, requiredWord)) return false;
-            return true;
-        }
-
-        private bool FoundRequiredWord(List<string> allNames, string requiredWord)
-        {
-            int flag = 0;
-            foreach (string word in GetWordsFromNames(allNames))
             {
-                if (word.Equals(requiredWord, StringComparison.OrdinalIgnoreCase))
+                if (name.Equals(requiredWord, StringComparison.OrdinalIgnoreCase))
                 {
-                    ++flag;
+                    RemoveRequiredWord(requiredWord);
                     break;
                 }
             }
-            return flag != 0;
         }
 
-        private bool CheckIfNotBannedWords(List<string> allNames)
+        private void RemoveRequiredWord(string requiredWord)
         {
-            foreach (string word in GetWordsFromNames(allNames))
+            RequiredWords.Remove(requiredWord);
+        }
+
+        private bool CheckIfNotBannedName(string name)
+        {
+            foreach (string word in GetWordsFromName(name))
                 if (!CheckIfNotBannedWord(word)) return false;
             return true;
         }
@@ -68,14 +69,6 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             foreach (string bannedWord in BannedWords)
                 if (word.Equals(bannedWord, StringComparison.OrdinalIgnoreCase)) return false;
             return true;
-        }
-
-        private List<string> GetWordsFromNames(List<string> names)
-        {
-            List<string> words = new List<string>();
-            foreach (string name in names)
-                words.AddRange(GetWordsFromName(name));
-            return words;
         }
 
         private string[] GetWordsFromName(string name)

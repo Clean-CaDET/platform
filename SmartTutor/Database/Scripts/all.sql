@@ -612,7 +612,7 @@ INSERT INTO public."ChallengeHints"(
 	VALUES (4, 'Funkcija ti i dalje ima previše parametra. Ispitaj svaku od četiri strategije za redukciju parametra i razmisli koja bi bila najpogodnija, pa je onda primeni.', 48);
 INSERT INTO public."ChallengeHints"(
 	"Id", "Content", "LearningObjectSummaryId")
-	VALUES (5, 'Vredna strategija za redukciju parametra podrazumeva premeštanje metoda i polja klase tako da se ukloni potreba za parametrom. Razmisli da li ima smisla premestiti neku metodu iz ove klase u drugu.', NULL);
+	VALUES (5, 'Vredna strategija za redukciju parametra podrazumeva premeštanje metoda i polja klase tako da se ukloni potreba za parametrom. Razmisli da li ima smisla premestiti neku metodu iz ove klase u drugu.', 49);
 	
 -- Challenge rules
 INSERT INTO public."MetricRangeRules"(

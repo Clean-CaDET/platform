@@ -8,89 +8,124 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     [Table("BasicNameCheckers")]
     public class BasicNameChecker : ChallengeFulfillmentStrategy
     {
-        public List<NamingRule> NamingRules { get; private set; }
+        public List<NamingRule> NamingRules { get; set; }
 
-        public BasicNameChecker() { }
-
-        public BasicNameChecker(List<NamingRule> namingRules)
+        public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
         {
-            NamingRules = namingRules;
-            ChallengeHints = GetChallengeHints();
-        }
-
-        public override ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
-        {
-            List<ChallengeHint> challengeHints = GetHintsForSolutionAttempt(solutionAttempt);
-            if (!challengeHints.Any()) return new ChallengeEvaluation(true, ChallengeHints);
-            return new ChallengeEvaluation(false, challengeHints);
-        }
-
-        private List<ChallengeHint> GetChallengeHints()
-        {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            foreach (NamingRule namingRule in NamingRules)
-                if (namingRule.Hint != null) challengeHints.Add(namingRule.Hint);
+            var challengeHints = GetApplicableHintsForClassNames(solutionAttempt);
+            challengeHints.MergeHints(GetApplicableHintsForFieldNames(solutionAttempt));
+            challengeHints.MergeHints(GetApplicableHintsForMemberNames(solutionAttempt));
+            challengeHints.MergeHints(GetApplicableHintsForVariableNames(solutionAttempt));
+            challengeHints.MergeHints(GetApplicableHintsForParameterNames(solutionAttempt));
+            challengeHints.MergeHints(GetApplicableHintsForRequiredWords(solutionAttempt));
             return challengeHints;
         }
 
-        public List<ChallengeHint> GetHintsForSolutionAttempt(List<CaDETClass> solutionAttempt)
+        public override List<ChallengeHint> GetAllHints()
         {
-            List<ChallengeHint> challengeHints = new List<ChallengeHint>();
-            List<string> allNames = GetAllNamesFromClasses(solutionAttempt);
-            foreach (NamingRule namingRule in NamingRules)
+            var challengeHints = new List<ChallengeHint>();
+            challengeHints.AddRange(NamingRules.Select(nr => nr.Hint));
+            return challengeHints;
+        }
+
+        private HintDirectory GetApplicableHintsForClassNames(List<CaDETClass> solutionAttempt)
+        {
+            var challengeHints = new HintDirectory();
+            foreach (var caDETClass in solutionAttempt)
             {
-                if (!namingRule.NamesMeetRequirements(allNames) && namingRule.Hint != null)
-                    challengeHints.Add(namingRule.Hint);
+                foreach (var namingRule in NamingRules)
+                {
+                    var result = namingRule.Evaluate(caDETClass.Name);
+                    if (result == null) continue;
+                    challengeHints.AddHint(caDETClass.FullName, result);
+                }
             }
             return challengeHints;
         }
 
-        private List<string> GetAllNamesFromClasses(List<CaDETClass> caDETClasses)
+        private HintDirectory GetApplicableHintsForFieldNames(List<CaDETClass> solutionAttempt)
         {
-            List<string> allNames = new List<string>();
-            foreach (CaDETClass caDETClass in caDETClasses)
-                allNames.AddRange(GetClassPartsNames(caDETClass));
-            return allNames;
+            var challengeHints = new HintDirectory();
+            foreach (var caDETField in GetFieldsFromClasses(solutionAttempt))
+            {
+                foreach (var namingRule in NamingRules)
+                {
+                    var result = namingRule.Evaluate(caDETField.Name);
+                    if (result == null) continue;
+                    challengeHints.AddHint(caDETField.Name, result);
+                }
+            }
+            return challengeHints;
         }
 
-        private List<string> GetClassPartsNames(CaDETClass caDETClass)
+        private HintDirectory GetApplicableHintsForMemberNames(List<CaDETClass> solutionAttempt)
         {
-            List<string> classPartsNames = new List<string> { caDETClass.Name };
-            classPartsNames.AddRange(GetClassFieldsNames(caDETClass.Fields));
-            classPartsNames.AddRange(GetMembersPartsNames(caDETClass.Members));
-            return classPartsNames;
+            var challengeHints = new HintDirectory();
+            foreach (var caDETMember in GetMembersFromClasses(solutionAttempt))
+            {
+                foreach (var namingRule in NamingRules)
+                {
+                    var result = namingRule.Evaluate(caDETMember.Name);
+                    if (result == null) continue;
+                    challengeHints.AddHint(caDETMember.Signature(), result);
+                }
+            }
+            return challengeHints;
         }
 
-        private List<string> GetClassFieldsNames(List<CaDETField> caDETFields)
+        private HintDirectory GetApplicableHintsForVariableNames(List<CaDETClass> solutionAttempt)
         {
-            List<string> classFieldsNames = new List<string>();
-            foreach (CaDETField caDETField in caDETFields)
-                classFieldsNames.Add(caDETField.Name);
-            return classFieldsNames;
+            var challengeHints = new HintDirectory();
+            foreach (var variableName in GetVariableNamesFromClasses(solutionAttempt))
+            {
+                foreach (var namingRule in NamingRules)
+                {
+                    var result = namingRule.Evaluate(variableName);
+                    if (result == null) continue;
+                    challengeHints.AddHint(variableName, result);
+                }
+            }
+            return challengeHints;
         }
 
-        private List<string> GetMembersPartsNames(List<CaDETMember> caDETMembers)
+        private HintDirectory GetApplicableHintsForParameterNames(List<CaDETClass> solutionAttempt)
         {
-            List<string> membersPartsNames = new List<string>();
-            foreach (CaDETMember caDETMember in caDETMembers)
-                membersPartsNames.AddRange(GetMemberPartsNames(caDETMember));
-            return membersPartsNames;
+            var challengeHints = new HintDirectory();
+            foreach (var parameter in GetParametersFromClasses(solutionAttempt))
+            {
+                foreach (var namingRule in NamingRules)
+                {
+                    var result = namingRule.Evaluate(parameter.Name);
+                    if (result == null) continue;
+                    challengeHints.AddHint(parameter.Name, result);
+                }
+            }
+            return challengeHints;
         }
 
-        private List<string> GetMemberPartsNames(CaDETMember caDETMember)
+        private HintDirectory GetApplicableHintsForRequiredWords(List<CaDETClass> solutionAttempt)
         {
-            List<string> memberPartsNames = new List<string> { caDETMember.Name };
-            memberPartsNames.AddRange(caDETMember.VariableNames);
-            memberPartsNames.AddRange(GetMemberParametersNames(caDETMember.Params));
-            return memberPartsNames;
+            var challengeHints = new HintDirectory();
+            foreach (var namingRule in NamingRules)
+            {
+                var requiredWords = namingRule.RequiredWords;
+                var hint = namingRule.Hint;
+                if (requiredWords.Count != 0 && hint != null)
+                    challengeHints.AddHint(GetRequiredWordsCodeSnippetId(requiredWords), hint);
+            }
+            return challengeHints;
         }
 
-        private List<string> GetMemberParametersNames(List<CaDETParameter> caDETParameters)
+        private string GetRequiredWordsCodeSnippetId(List<string> requiredWords)
         {
-            List<string> memberParametersNames = new List<string>();
-            foreach (CaDETParameter caDETParameter in caDETParameters)
-                memberParametersNames.Add(caDETParameter.Name);
-            return memberParametersNames;
+            string codeSnippetId = "";
+            for (int i = 0; i < requiredWords.Count; i++)
+            {
+                codeSnippetId += requiredWords[i];
+                if (i != requiredWords.Count - 1)
+                    codeSnippetId += " ";
+            }
+            return codeSnippetId;
         }
     }
 }

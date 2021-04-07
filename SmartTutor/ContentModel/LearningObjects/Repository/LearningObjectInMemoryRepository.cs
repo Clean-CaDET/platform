@@ -1,6 +1,7 @@
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
 using SmartTutor.ContentModel.LectureModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using System.Collections.Generic;
 using System.Linq;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
@@ -185,14 +186,14 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     {
                         Id = 337003,
                         Content = "Cohesion",
-                        LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
+                        LearningObjectSummaryId = 336
                     }
                 },
                 new NamingRule
                 {
                     Id = 3370002,
                     BannedWords = new List<string> (),
-                    RequiredWords = new List<string> { "Create", "Payment" }
+                    RequiredWords = new List<string> { "Create", "Payment", "price" }
                 }
             };
 
@@ -203,7 +204,10 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3372,
                     LearningObjectSummaryId = 338,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    FulfillmentStrategy = new BasicNameChecker(namingRules)
+                    FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
+                    {
+                        new BasicNameChecker { NamingRules = namingRules }
+                    }
                 }
             });
         }

@@ -16,5 +16,25 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         {
             return classes.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
         }
+
+        protected List<CaDETField> GetFieldsFromClasses(List<CaDETClass> classes)
+        {
+            return classes.SelectMany(c => c.Fields).ToList();
+        }
+
+        protected List<CaDETMember> GetMembersFromClasses(List<CaDETClass> classes)
+        {
+            return classes.SelectMany(c => c.Members).ToList();
+        }
+
+        protected List<string> GetVariableNamesFromClasses(List<CaDETClass> classes)
+        {
+            return classes.SelectMany(c => c.Members).SelectMany(m => m.VariableNames).ToList();
+        }
+
+        protected List<CaDETParameter> GetParametersFromClasses(List<CaDETClass> classes)
+        {
+            return classes.SelectMany(c => c.Members).SelectMany(m => m.Params).ToList();
+        }
     }
 }
