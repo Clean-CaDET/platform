@@ -90,7 +90,7 @@ namespace RepositoryCompiler.CodeModel
 
         private static string GetRelativePath(string basePath, string fullPath)
         {
-            return fullPath.Replace(basePath, "");
+            return fullPath.Replace(basePath, "").Replace("\\", "/");
         }
 
         private static CodeLocationLink GetSnippetLocationLink(string sourceCode, string fileText, string relativePath)
