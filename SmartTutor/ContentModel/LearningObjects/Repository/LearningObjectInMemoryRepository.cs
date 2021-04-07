@@ -200,11 +200,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             throw new System.NotImplementedException();
         }
 
-        public Challenge GetChallengeForSummary(int summaryId)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public LearningObject GetLearningObjectForSummary(int summaryId)
         {
             throw new System.NotImplementedException();

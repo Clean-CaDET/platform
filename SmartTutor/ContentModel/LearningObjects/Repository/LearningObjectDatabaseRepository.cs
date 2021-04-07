@@ -79,11 +79,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             return _dbContext.Videos.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
         }
 
-        public Challenge GetChallengeForSummary(int summaryId)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public LearningObject GetLearningObjectForSummary(int summaryId)
         {
             return _dbContext.LearningObjects.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);

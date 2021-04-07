@@ -14,7 +14,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         LearningObject GetInteractiveLOForSummary(int summaryId);
         Text GetTextForSummary(int summaryId);
         Video GetVideoForSummary(int summaryId);
-        Challenge GetChallengeForSummary(int summaryId);
         LearningObject GetLearningObjectForSummary(int summaryId);
     }
 }
