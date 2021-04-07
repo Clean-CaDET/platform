@@ -15,7 +15,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
 
         internal ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
-            var evaluation = new ChallengeEvaluation();
+            var evaluation = new ChallengeEvaluation { ChallengeId = Id };
             foreach (var strategy in FulfillmentStrategies)
             {
                 var result = strategy.EvaluateSubmission(solutionAttempt);
