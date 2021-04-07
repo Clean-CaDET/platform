@@ -4,7 +4,7 @@ using SmartTutor.Controllers.DTOs.Challenge;
 
 namespace SmartTutor.Controllers.Mappers
 {
-    public class ChallengeProfile: Profile
+    public class ChallengeProfile : Profile
     {
         public ChallengeProfile()
         {

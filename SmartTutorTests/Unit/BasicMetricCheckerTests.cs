@@ -10,12 +10,12 @@ using Xunit;
 namespace SmartTutorTests.Unit
 {
     public class BasicMetricsCheckerTests
-    {/*
+    {
         private readonly BasicMetricChecker _basicMetricChecker;
 
         public BasicMetricsCheckerTests()
         {
-            _basicMetricsChecker = new BasicMetricsChecker(new List<MetricRangeRule>
+            _basicMetricChecker = new BasicMetricChecker
             {
                 ClassMetricRules = new List<MetricRangeRule>
                 {
@@ -32,7 +32,7 @@ namespace SmartTutorTests.Unit
                             LearningObjectSummaryId = 331
                         }
                     },
-                    new MetricRangeRule {Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2, Hint = new ChallengeHint {Id = 5}}
+                    new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2, Hint = new ChallengeHint { Id = 5 } }
                 },
                 MethodMetricRules = new List<MetricRangeRule>
                 {
@@ -49,7 +49,7 @@ namespace SmartTutorTests.Unit
                             LearningObjectSummaryId = 336
                         }
                     },
-                    new MetricRangeRule {Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4, Hint = new ChallengeHint {Id = 6}}
+                    new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4, Hint = new ChallengeHint { Id = 6 } }
                 }
             };
         }
@@ -84,6 +84,6 @@ namespace SmartTutorTests.Unit
                         new ChallengeHint {Id = 337002}
                     }
                 }
-            };*/
+            };
     }
 }
