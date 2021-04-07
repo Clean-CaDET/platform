@@ -132,7 +132,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 {
                     Id = 337001,
                     Content = "Cohesion",
-                    LearningObjectSummary = new LearningObjectSummary { Id = 331, Description = "Cohesion definition" }
+                    LearningObjectSummaryId = 331
                 }
             });
             classMetricRules.Add(new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2 });
@@ -148,7 +148,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 {
                     Id = 337002,
                     Content = "Cohesion",
-                    LearningObjectSummary = new LearningObjectSummary { Id = 336, Description = "Structural cohesion example" }
+                    LearningObjectSummaryId = 336
                 }
             });
             methodMetricRules.Add(new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4 });
@@ -160,7 +160,14 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Id = 3371,
                     LearningObjectSummaryId = 337,
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
-                    FulfillmentStrategy = new BasicMetricsChecker(classMetricRules, methodMetricRules)
+                    FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
+                    {
+                        new BasicMetricChecker
+                        {
+                            ClassMetricRules = classMetricRules,
+                            MethodMetricRules = methodMetricRules
+                        }
+                    }
                 }
             });
         }

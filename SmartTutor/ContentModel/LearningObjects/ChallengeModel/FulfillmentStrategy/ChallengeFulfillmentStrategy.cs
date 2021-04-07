@@ -7,14 +7,14 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 {
     public abstract class ChallengeFulfillmentStrategy
     {
-        [Key] public int Id { get; private set; }
-        public List<ChallengeHint> ChallengeHints { get; internal set; }
+        [Key] public int Id { get; set; }
 
-        public abstract ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt);
+        public abstract HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt);
+        public abstract List<ChallengeHint> GetAllHints();
 
-        protected List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> caDETClasses)
+        protected List<CaDETMember> GetMethodsFromClasses(List<CaDETClass> classes)
         {
-            return caDETClasses.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
+            return classes.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
         }
     }
 }

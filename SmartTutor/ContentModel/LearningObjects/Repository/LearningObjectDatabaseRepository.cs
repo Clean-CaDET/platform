@@ -3,6 +3,7 @@ using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -33,7 +34,15 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         public Challenge GetChallenge(int challengeId)
         {
-            return _dbContext.Challenges.SingleOrDefault(c => c.Id == challengeId);
+            return _dbContext.Challenges
+                .Where(c => c.Id == challengeId)
+                .Include(c => c.FulfillmentStrategies)
+                    .ThenInclude(s => (s as BasicMetricChecker).ClassMetricRules)
+                    .ThenInclude(r => r.Hint)
+                .Include(c => c.FulfillmentStrategies)
+                    .ThenInclude(s => (s as BasicMetricChecker).MethodMetricRules)
+                    .ThenInclude(r => r.Hint)
+                .FirstOrDefault();
         }
 
         public List<QuestionAnswer> GetQuestionAnswers(int questionId)
