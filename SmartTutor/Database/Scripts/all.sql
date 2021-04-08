@@ -122,7 +122,7 @@ INSERT INTO public."QuestionAnswers"(
 --== Naming =- PK Node 1
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (2, 'Primeni heuristiku odbacivanja beznačajnih reči radi formiranje boljih imena u kodu.', 1, 1, 1);
+	VALUES (2, 'Primeni heuristiku odbacivanja beznačajnih reči radi formiranje boljih imena u kodu.', 1, NULL, 1);
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (5, 'Algorithm', 2);
@@ -194,7 +194,7 @@ INSERT INTO public."Videos"(
 --== Naming ==- PK Node 2
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (3, 'Primeni osnovne tehnike refaktorisanja za formiranje boljih imena u kodu.', 1, 2, 1);
+	VALUES (3, 'Primeni osnovne tehnike refaktorisanja za formiranje boljih imena u kodu.', 1, NULL, 1);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -240,7 +240,7 @@ INSERT INTO public."Videos"(
 --== Naming ==- CK Node	
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (4, 'Razumi uticaj jasnih i misterioznih imena u kodu na rad programera.', 2, 3, 1);
+	VALUES (4, 'Razumi uticaj jasnih i misterioznih imena u kodu na rad programera.', 2, NULL, 1);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -441,7 +441,7 @@ INSERT INTO public."Images"(
 --== Methods ==- PK Node 1
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (11, 'Primeni extract method refaktorisanje za formiranje kraćih funkcija.', 0, NULL, 2);
+	VALUES (11, 'Primeni extract method refaktorisanje za formiranje kraćih funkcija.', 1, NULL, 2);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
@@ -458,7 +458,7 @@ INSERT INTO public."LearningObjectSummaries"(
 --== Methods ==- PK Node 2	
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (12, 'Primeni extract method refaktorisanje za formiranje jednostavnijih funkcija.', 0, NULL, 2);
+	VALUES (12, 'Primeni extract method refaktorisanje za formiranje jednostavnijih funkcija.', 1, NULL, 2);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -476,7 +476,7 @@ INSERT INTO public."LearningObjectSummaries"(
 --== Methods ==- PK Node 3	
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (13, 'Primeni strategije za redukciju broja parametra za formiranje čistijih funkcija.', 0, NULL, 2);
+	VALUES (13, 'Primeni strategije za redukciju broja parametra za formiranje čistijih funkcija.', 1, NULL, 2);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -630,3 +630,120 @@ INSERT INTO public."MetricRangeRules"(
 INSERT INTO public."MetricRangeRules"(
 	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
 	VALUES (5, 'NMD', 0, 2, 5, 5, NULL);
+	
+	
+--== Methods ==- CK Node
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId") -- TODO: KN many to many prerequisites (after experiment)
+	VALUES (14, 'Razumi posledice održavanja koda koji se sastoji od funkcija gde je svaka fokusirana na manji broj zadataka (idealno jedan).', 2, NULL, 2);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (60, 'Refactoring Extract Method', 14);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
+	VALUES (61, 'Function LINQ', 14);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (62, 'Function Hierarchy', 14); -- Dva LO - slika i task
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (63, 'Refactoring One Thing', 14);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (64, 'Function Big Picture', 14);
+	
+-- Methods LO - CK Node
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (60, 60);
+INSERT INTO public."Videos"(
+	"Id", "Url")
+	VALUES (60, 'https://youtu.be/2goLaolzEV0');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (61, 61);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (61, 'https://i.ibb.co/Y8SM4qV/RS-Methods-LINQ.png', 'Razmisli na koji način nam IsActive funkcija apstrahuje logiku, a na koji način je enkapsulira.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (62, 62);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (62, 'https://i.ibb.co/rFJK6Z8/RS-Methods-Hierarchy.png', 'Kažemo da dobre metode treba da rade na jednom zadatku. Pitanje je kako definišemo zadatak. Uzmi po jednu metodu svake boje - opiši u rečenici šta rade, a šta ne rade. Da li uočavaš razliku u apstraktnosti tvog opisa?');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (63, 62);
+INSERT INTO public."ArrangeTasks"(
+	"Id", "Text")
+	VALUES (63, 'Zamisli sledeću strukturu funkcija:
+	
+- `GetSuitableDoctors` poziva `FindAllDoctors` i za svakog lekara `IsCapable` i `IsAvailable` metode.
+- `FindAllDoctors` poziva `ConnectToStorage` i `ParseDoctor` metode.
+- `IsAvailable` poziva `DoesTimeOverlap` metodu.
+
+Uzmimo da svaka od navedeninih 7 funkcija ima 10 linija koda. Dolazi programer koji nije familijaran sa kodom sa ciljem da implementira izmenu kako bi se ispoštovao novi zahtev. Programer kreće od `GetSuitableDoctors` funkcije i spušta se kroz funkcije koje ona poziva. Organizuj zahteve u kolone koje ističu koliko će linija starog koda (iz navedenih funkcija) programer morati da pročita pre nego što će naći linije koje treba da izmeni..');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (6, 63, '1-10');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (6, 6, 'Od mogućih, uvek odabrati lekara koji ima najveći stepen uspeha za dati tip operacije, a prvog kada je nerešeno.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (7, 63, '11-20');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (7, 7, 'Uzima u obzir da li je lekar na bitnom sastanku u traženo vreme.');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (8, 7, 'Za izazovnu operaciju je potreban hirurg koji je bar jednom izveo dati tip operacije.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (8, 63, '21-30');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (9, 8, 'Potrebno je sačuvati podatke o lekarima u NoSQL bazi umesto u SQL bazi.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (9, 63, '31-40');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (10, 63, '41-50');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (64, 63);
+INSERT INTO public."Videos"(
+	"Id", "Url")
+	VALUES (64, 'https://youtu.be/JQPIh0VcLK4');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (65, 64);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (64, 'Zamisli aplikaciju koja se razvija duže vreme. Sadrži mnogo klasa, gde se većina sastoji od više čistih metoda koje su fokusirane na jedan zadatak. Kompletan sistem podržava razne slučajeve korišćenja kroz koordinaciju ovih mnogobrojnih funkcija.
+Stiže novi zahtev koji zahteva izmenu kako se neki zadatak izvršava. Programer kreće od korisničke kontrole (forme, tastera) koja će pružiti drugačije ponašanje/podatke kada se ispuni zahtev i ispituje telo povezane metode/endpoint-a. Potom rekurzivno primenjuje sledeći algoritam:
+
+1. Ispitaj telo metode u potrazi za logikom koju treba menjati.
+2. Za svako ime metode koja se poziva, analiziraj njegovo značenje
+	a. Ako ime određuje logiku relevantnu za novi zahtev skoči na telo date funkcije i primeni korak 1.
+	b. U suprotnom ignoriši.
+
+Ovako programer izbegava analizu stotina linija koda i svede posao na analizu nekoliko imena. Programer leti kroz kod uz pomoć prečica svog integrisanog razvojnog okruženja i ne zamara se sa detaljima funkcija koje nisu relevantne za dati zahtev.
+Kada konačno pronađu funkciju čije ponašanje treba promeniti, izmena je sitna i fokusirana, što smanjuje šansu uvođenja *bug*a. Programer ispunjuje novi zahtev bez da je potrošio mnogo mentalne energije.
+
+Sada zamisli sličnu aplikaciju koja je sastavljena od golemih funkcija koje broje stotine linija koda i poseduju misteriozna imena. Nova izmena zahteva od programera da istražuje kod. Potreban je veliki mentalni napor kako bi se očuvao visok fokus dok se identifikuje koje deo kompleksne logike treba izmeniti, a koji ignorisati. Sama izmena je rizična aktivnost i u ovakvom kodu se *bug* lako potkrade. Zbog toga je potrebno pažljivo raditi ovaj mukotrpan proces, koji može trajati više sati (na dovoljno složenom problemu i više dana). Na kraju, programer je istrošen i opterećen mislima da je nešto prevideo i da će njegova izmena srušiti sistem u produkciji.
+
+Pisanje čistih funkcija je teže nego kucanje koda dok ne proradi. Za čiste funkcije svakako treba napraviti nešto što radi, a onda još treba organizovati tu logiku u smislene celine ispred kojih stavljamo jasno ime. Sa druge strane, čitanje aljkavo napisanih funkcija je teže od čistanja čistih funkcija. Postavlja se pitanje - u koji aspekt vredi uložiti više truda i energije? Za softver koji je dovoljno dugo u razvoju (npr. više od mesec dana, razvijan od strane pet ili više ljudi) većina programerovog vremena odlazi na čitanje koda.');
+
+-- TODO: Final question
