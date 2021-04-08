@@ -1,10 +1,9 @@
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
