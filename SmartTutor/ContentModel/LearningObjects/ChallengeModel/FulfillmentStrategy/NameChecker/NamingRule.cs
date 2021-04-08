@@ -12,6 +12,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public List<string> BannedWords { get; set; }
         public List<string> RequiredWords { get; set; }
         public ChallengeHint Hint { get; set; }
+        public int MaxLength { get; set; } = 35;
+        public int MinLength { get; set; } = 2;
 
         internal ChallengeHint Evaluate(string name)
         {
@@ -25,7 +27,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         private bool CheckNameLength(string name)
         {
-            return name.Length >= 2 && name.Length <= 35;
+            return name.Length >= MinLength && name.Length <= MaxLength;
         }
 
         private bool CheckNameContent(string name)

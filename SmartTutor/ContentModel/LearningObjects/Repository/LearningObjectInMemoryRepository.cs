@@ -187,7 +187,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                         Id = 337003,
                         Content = "Cohesion",
                         LearningObjectSummaryId = 336
-                    }
+                    },
+                    MinLength = 3
                 },
                 new NamingRule
                 {

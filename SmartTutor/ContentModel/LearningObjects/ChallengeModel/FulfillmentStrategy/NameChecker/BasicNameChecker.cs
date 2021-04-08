@@ -17,7 +17,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             challengeHints.MergeHints(GetApplicableHintsForMemberNames(solutionAttempt));
             challengeHints.MergeHints(GetApplicableHintsForVariableNames(solutionAttempt));
             challengeHints.MergeHints(GetApplicableHintsForParameterNames(solutionAttempt));
-            challengeHints.MergeHints(GetApplicableHintsForRequiredWords(solutionAttempt));
+            challengeHints.MergeHints(GetApplicableHintsForRequiredWords());
             return challengeHints;
         }
 
@@ -32,78 +32,65 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         {
             var challengeHints = new HintDirectory();
             foreach (var caDETClass in solutionAttempt)
-            {
-                foreach (var namingRule in NamingRules)
-                {
-                    var result = namingRule.Evaluate(caDETClass.Name);
-                    if (result == null) continue;
-                    challengeHints.AddHint(caDETClass.FullName, result);
-                }
-            }
+                challengeHints.MergeHints(EvaluateName(caDETClass.Name, caDETClass.FullName));
             return challengeHints;
         }
 
         private HintDirectory GetApplicableHintsForFieldNames(List<CaDETClass> solutionAttempt)
         {
             var challengeHints = new HintDirectory();
-            foreach (var caDETField in GetFieldsFromClasses(solutionAttempt))
-            {
-                foreach (var namingRule in NamingRules)
-                {
-                    var result = namingRule.Evaluate(caDETField.Name);
-                    if (result == null) continue;
-                    challengeHints.AddHint(caDETField.Name, result);
-                }
-            }
+            foreach (var field in GetFieldsFromClasses(solutionAttempt))
+                challengeHints.MergeHints(EvaluateName(field.Name, field.Parent.FullName));
             return challengeHints;
+        }
+
+        private List<CaDETField> GetFieldsFromClasses(List<CaDETClass> classes)
+        {
+            return classes.SelectMany(c => c.Fields).ToList();
         }
 
         private HintDirectory GetApplicableHintsForMemberNames(List<CaDETClass> solutionAttempt)
         {
             var challengeHints = new HintDirectory();
             foreach (var caDETMember in GetMembersFromClasses(solutionAttempt))
-            {
-                foreach (var namingRule in NamingRules)
-                {
-                    var result = namingRule.Evaluate(caDETMember.Name);
-                    if (result == null) continue;
-                    challengeHints.AddHint(caDETMember.Signature(), result);
-                }
-            }
+                challengeHints.MergeHints(EvaluateName(caDETMember.Name, caDETMember.Signature()));
             return challengeHints;
         }
 
         private HintDirectory GetApplicableHintsForVariableNames(List<CaDETClass> solutionAttempt)
         {
             var challengeHints = new HintDirectory();
-            foreach (var variableName in GetVariableNamesFromClasses(solutionAttempt))
-            {
-                foreach (var namingRule in NamingRules)
-                {
-                    var result = namingRule.Evaluate(variableName);
-                    if (result == null) continue;
-                    challengeHints.AddHint(variableName, result);
-                }
-            }
+            foreach (var (member, variableName) in GetMembersFromClasses(solutionAttempt).SelectMany(m => m.VariableNames.Select(vn => (m, vn))))
+                challengeHints.MergeHints(EvaluateName(variableName, member.Signature()));
             return challengeHints;
         }
 
         private HintDirectory GetApplicableHintsForParameterNames(List<CaDETClass> solutionAttempt)
         {
             var challengeHints = new HintDirectory();
-            foreach (var parameter in GetParametersFromClasses(solutionAttempt))
+            foreach (var (member, parameter) in GetMembersFromClasses(solutionAttempt).SelectMany(m => m.Params.Select(p => (m, p))))
+                challengeHints.MergeHints(EvaluateName(parameter.Name, member.Signature()));
+            return challengeHints;
+        }
+
+        private List<CaDETMember> GetMembersFromClasses(List<CaDETClass> classes)
+        {
+            return classes.SelectMany(c => c.Members).ToList();
+        }
+
+        private HintDirectory EvaluateName(string name, string codeSnippetId)
+        {
+            var challengeHints = new HintDirectory();
+            foreach (var namingRule in NamingRules)
             {
-                foreach (var namingRule in NamingRules)
-                {
-                    var result = namingRule.Evaluate(parameter.Name);
-                    if (result == null) continue;
-                    challengeHints.AddHint(parameter.Name, result);
-                }
+                var result = namingRule.Evaluate(name);
+                if (result == null) continue;
+                challengeHints.AddHint(codeSnippetId, result);
             }
             return challengeHints;
         }
 
-        private HintDirectory GetApplicableHintsForRequiredWords(List<CaDETClass> solutionAttempt)
+        private HintDirectory GetApplicableHintsForRequiredWords()
         {
             var challengeHints = new HintDirectory();
             foreach (var namingRule in NamingRules)
