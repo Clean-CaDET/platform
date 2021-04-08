@@ -122,7 +122,7 @@ namespace DataSetExplorer.DataSetBuilder
         private string GetCodeUrl(string snippetId)
         {
             _cadetProject.CodeLinks.TryGetValue(snippetId, out var codeLink);
-            return _projectAndCommitUrl + "\\" + codeLink.FileLocation + "#L" + codeLink.StartLoC + "-L" + codeLink.EndLoC;
+            return _projectAndCommitUrl + codeLink.FileLocation + "#L" + codeLink.StartLoC + "-L" + codeLink.EndLoC;
         }
 
         private static void ShuffleList<T>(IList<T> list)
