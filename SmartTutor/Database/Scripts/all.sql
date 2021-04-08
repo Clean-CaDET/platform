@@ -366,7 +366,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (31, 31);
 INSERT INTO public."Images"( --TODO: CodeSnippet gist
 	"Id", "Url", "Caption")
-	VALUES (31, 'TODO', 'Izdvoj vreme da opišeš sve high-level i low-level zadatke (segmente koda) koje "getFree" izvršava u pratećem kodu. Koje od navedenih zadataka vidiš da bi koristio u drugim kontekstima (i time duplirao kod)?');
+	VALUES (31, 'https://i.ibb.co/dbthB3H/RS-Methods-Long.png', 'Izdvoj vreme da opišeš sve high-level i low-level zadatke (segmente koda) koje "getFree" izvršava u pratećem kodu. Koje od navedenih zadataka vidiš da bi koristio u drugim kontekstima (i time duplirao kod)?');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -731,16 +731,14 @@ INSERT INTO public."LearningObjects"(
 	VALUES (65, 64);
 INSERT INTO public."Texts"(
 	"Id", "Content")
-	VALUES (64, 'Zamisli aplikaciju koja se razvija duže vreme. Sadrži mnogo klasa, gde se većina sastoji od više čistih metoda koje su fokusirane na jedan zadatak. Kompletan sistem podržava razne slučajeve korišćenja kroz koordinaciju ovih mnogobrojnih funkcija.
+	VALUES (65, 'Zamisli aplikaciju koja se razvija duže vreme. Sadrži mnogo klasa, gde se većina sastoji od više čistih metoda koje su fokusirane na jedan zadatak. Kompletan sistem podržava razne slučajeve korišćenja kroz koordinaciju ovih mnogobrojnih funkcija.
 Stiže novi zahtev koji zahteva izmenu kako se neki zadatak izvršava. Programer kreće od korisničke kontrole (forme, tastera) koja će pružiti drugačije ponašanje/podatke kada se ispuni zahtev i ispituje telo povezane metode/endpoint-a. Potom rekurzivno primenjuje sledeći algoritam:
 
 1. Ispitaj telo metode u potrazi za logikom koju treba menjati.
-2. Za svako ime metode koja se poziva, analiziraj njegovo značenje
-	a. Ako ime određuje logiku relevantnu za novi zahtev skoči na telo date funkcije i primeni korak 1.
-	b. U suprotnom ignoriši.
+2. Za svako ime metode koja se poziva, analiziraj njegovo značenje. Ako ime određuje logiku relevantnu za novi zahtev skoči na telo date funkcije i primeni korak 1. U suprotnom ignoriši.
 
 Ovako programer izbegava analizu stotina linija koda i svede posao na analizu nekoliko imena. Programer leti kroz kod uz pomoć prečica svog integrisanog razvojnog okruženja i ne zamara se sa detaljima funkcija koje nisu relevantne za dati zahtev.
-Kada konačno pronađu funkciju čije ponašanje treba promeniti, izmena je sitna i fokusirana, što smanjuje šansu uvođenja *bug*a. Programer ispunjuje novi zahtev bez da je potrošio mnogo mentalne energije.
+Kada konačno pronađu funkciju čije ponašanje treba promeniti, izmena je sitna i fokusirana, što smanjuje šansu da se uvede *bug*. Programer ispunjuje novi zahtev bez da je potrošio mnogo mentalne energije.
 
 Sada zamisli sličnu aplikaciju koja je sastavljena od golemih funkcija koje broje stotine linija koda i poseduju misteriozna imena. Nova izmena zahteva od programera da istražuje kod. Potreban je veliki mentalni napor kako bi se očuvao visok fokus dok se identifikuje koje deo kompleksne logike treba izmeniti, a koji ignorisati. Sama izmena je rizična aktivnost i u ovakvom kodu se *bug* lako potkrade. Zbog toga je potrebno pažljivo raditi ovaj mukotrpan proces, koji može trajati više sati (na dovoljno složenom problemu i više dana). Na kraju, programer je istrošen i opterećen mislima da je nešto prevideo i da će njegova izmena srušiti sistem u produkciji.
 
