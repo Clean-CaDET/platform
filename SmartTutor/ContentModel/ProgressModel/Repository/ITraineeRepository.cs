@@ -8,5 +8,9 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
         /// Returns Nodes that have been completed or at least started.
         /// </summary>
         List<NodeProgress> GetActivatedNodes(int traineeId);
+
+        Trainee GetTraineeById(int traineeId);
+
+        void SaveNodeProgress(NodeProgress nodeProgress);
     }
 }

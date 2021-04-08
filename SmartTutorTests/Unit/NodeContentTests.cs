@@ -14,7 +14,7 @@ namespace SmartTutorTests.Unit
         private readonly ContentService _service;
         public NodeContentTests()
         {
-            _service = new ContentService(null, null, CreateMockRepository());
+            _service = new ContentService(null, null, CreateMockRepository(), null);
         }
 
         private static ILearningObjectRepository CreateMockRepository()
