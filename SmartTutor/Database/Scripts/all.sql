@@ -575,7 +575,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (48, 48);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (48, 'https://i.ibb.co/5cFm6Np/params-strategy-rs.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
+	VALUES (48, 'https://i.ibb.co/tpCkJp0/params-strategy-rs.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
