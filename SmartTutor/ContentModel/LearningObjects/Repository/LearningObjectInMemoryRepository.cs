@@ -174,29 +174,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 }
             });
 
-            List<NamingRule> namingRules = new List<NamingRule>
-            {
-                new NamingRule
-                {
-                    Id = 3370001,
-                    BannedWords = new List<string> { "Class", "List", "Method" },
-                    RequiredWords = new List<string> { "Payment", "Service", "PaymentService", "compensation" },
-                    Hint = new ChallengeHint
-                    {
-                        Id = 337003,
-                        Content = "Cohesion",
-                        LearningObjectSummaryId = 336
-                    },
-                    MinLength = 3
-                },
-                new NamingRule
-                {
-                    Id = 3370002,
-                    BannedWords = new List<string> (),
-                    RequiredWords = new List<string> { "Create", "Payment", "price" }
-                }
-            };
-
             _learningObjectCache.Add(338, new List<LearningObject>
             {
                 new Challenge
@@ -206,7 +183,23 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     Url = "https://github.com/Ana00000/Challenge-inspiration.git",
                     FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
                     {
-                        new BasicNameChecker { NamingRules = namingRules }
+                        new BasicNameChecker {
+                            Id = 3370001,
+                            BannedWords = new List<string> { "Class", "List", "Method" },
+                            RequiredWords = new List<string> { "Payment", "Service", "PaymentService", "compensation" },
+                            Hint = new ChallengeHint
+                            {
+                                Id = 337003,
+                                Content = "Cohesion",
+                                LearningObjectSummaryId = 336
+                            }
+                        },
+                        new BasicNameChecker
+                        {
+                            Id = 3370002,
+                            BannedWords = new List<string> (),
+                            RequiredWords = new List<string> { "Create", "Payment", "price" }
+                        }
                     }
                 }
             });

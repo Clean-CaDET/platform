@@ -1,76 +1,46 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker
 {
     [Table("BasicNameCheckers")]
     public class BasicNameChecker : ChallengeFulfillmentStrategy
     {
-        public List<NamingRule> NamingRules { get; set; }
+        //TODO: Delegate to several rule types as our understanding grows - e.g., NameLengthRule, RequiredWordRule. For now we are going with the simplest solution.
+        //TODO: Currently this checker should either define (some subset of) banned OR required words and make a related hint.
+        public List<string> BannedWords { get; set; }
+        public List<string> RequiredWords { get; set; }
+        public ChallengeHint Hint { get; set; }
 
         public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
         {
-            var challengeHints = GetApplicableHintsForClassNames(solutionAttempt);
-            challengeHints.MergeHints(GetApplicableHintsForFieldNames(solutionAttempt));
-            challengeHints.MergeHints(GetApplicableHintsForMemberNames(solutionAttempt));
-            challengeHints.MergeHints(GetApplicableHintsForVariableNames(solutionAttempt));
-            challengeHints.MergeHints(GetApplicableHintsForParameterNames(solutionAttempt));
-            challengeHints.MergeHints(GetApplicableHintsForRequiredWords());
-            return challengeHints;
+            var usedNames = GetUsedNames(solutionAttempt);
+            return EvaluateNames(usedNames);
         }
 
-        public override List<ChallengeHint> GetAllHints()
+        private Dictionary<string, List<string>> GetUsedNames(List<CaDETClass> solutionAttempt)
         {
-            var challengeHints = new List<ChallengeHint>();
-            challengeHints.AddRange(NamingRules.Select(nr => nr.Hint));
-            return challengeHints;
+            var namesUsedInCodeSnippet = new Dictionary<string, List<string>>();
+
+            solutionAttempt.ForEach(c => namesUsedInCodeSnippet.Add(c.FullName, GetClassNames(c)));
+
+            foreach (var member in GetMembersFromClasses(solutionAttempt))
+            {
+                namesUsedInCodeSnippet.Add(member.Signature(), GetMemberNames(member));
+            }
+
+            return namesUsedInCodeSnippet;
         }
 
-        private HintDirectory GetApplicableHintsForClassNames(List<CaDETClass> solutionAttempt)
+        private List<string> GetClassNames(CaDETClass caDETClass)
         {
-            var challengeHints = new HintDirectory();
-            foreach (var caDETClass in solutionAttempt)
-                challengeHints.MergeHints(EvaluateName(caDETClass.Name, caDETClass.FullName));
-            return challengeHints;
-        }
-
-        private HintDirectory GetApplicableHintsForFieldNames(List<CaDETClass> solutionAttempt)
-        {
-            var challengeHints = new HintDirectory();
-            foreach (var field in GetFieldsFromClasses(solutionAttempt))
-                challengeHints.MergeHints(EvaluateName(field.Name, field.Parent.FullName));
-            return challengeHints;
-        }
-
-        private List<CaDETField> GetFieldsFromClasses(List<CaDETClass> classes)
-        {
-            return classes.SelectMany(c => c.Fields).ToList();
-        }
-
-        private HintDirectory GetApplicableHintsForMemberNames(List<CaDETClass> solutionAttempt)
-        {
-            var challengeHints = new HintDirectory();
-            foreach (var caDETMember in GetMembersFromClasses(solutionAttempt))
-                challengeHints.MergeHints(EvaluateName(caDETMember.Name, caDETMember.Signature()));
-            return challengeHints;
-        }
-
-        private HintDirectory GetApplicableHintsForVariableNames(List<CaDETClass> solutionAttempt)
-        {
-            var challengeHints = new HintDirectory();
-            foreach (var (member, variableName) in GetMembersFromClasses(solutionAttempt).SelectMany(m => m.VariableNames.Select(vn => (m, vn))))
-                challengeHints.MergeHints(EvaluateName(variableName, member.Signature()));
-            return challengeHints;
-        }
-
-        private HintDirectory GetApplicableHintsForParameterNames(List<CaDETClass> solutionAttempt)
-        {
-            var challengeHints = new HintDirectory();
-            foreach (var (member, parameter) in GetMembersFromClasses(solutionAttempt).SelectMany(m => m.Params.Select(p => (m, p))))
-                challengeHints.MergeHints(EvaluateName(parameter.Name, member.Signature()));
-            return challengeHints;
+            var names = new List<string> { caDETClass.Name };
+            names.AddRange(caDETClass.Fields.Select(f => f.Name));
+            return names;
         }
 
         private List<CaDETMember> GetMembersFromClasses(List<CaDETClass> classes)
@@ -78,30 +48,95 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
             return classes.SelectMany(c => c.Members).ToList();
         }
 
-        private HintDirectory EvaluateName(string name, string codeSnippetId)
+        private List<string> GetMemberNames(CaDETMember member)
         {
-            var challengeHints = new HintDirectory();
-            foreach (var namingRule in NamingRules)
-            {
-                var result = namingRule.Evaluate(name);
-                if (result == null) continue;
-                challengeHints.AddHint(codeSnippetId, result);
-            }
-            return challengeHints;
+            var memberNames = new List<string> { member.Name };
+            memberNames.AddRange(member.VariableNames);
+            memberNames.AddRange(member.Params.Select(p => p.Name));
+            return memberNames;
         }
 
-        private HintDirectory GetApplicableHintsForRequiredWords()
+        private HintDirectory EvaluateNames(Dictionary<string, List<string>> namesUsedInCodeSnippet)
         {
-            var challengeHints = new HintDirectory();
-            foreach (var namingRule in NamingRules)
+            var hints = new HintDirectory();
+            hints.MergeHints(EvaluateBannedWords(namesUsedInCodeSnippet));
+            hints.MergeHints(EvaluateRequiredWords(namesUsedInCodeSnippet));
+            return hints;
+        }
+
+        private HintDirectory EvaluateBannedWords(Dictionary<string, List<string>> namesUsedInCodeSnippet)
+        {
+            if (BannedWords == null || BannedWords.Count == 0) return null;
+
+            var hints = new HintDirectory();
+            foreach (var codeSnippetId in namesUsedInCodeSnippet.Keys)
             {
-                foreach (var requiredWord in namingRule.RequiredWords)
-                {
-                    if (namingRule.Hint == null) continue;
-                    challengeHints.AddHint(requiredWord, namingRule.Hint);
-                }
+                if (ContainsBannedName(namesUsedInCodeSnippet[codeSnippetId]))
+                    hints.AddHint(codeSnippetId, Hint);
             }
-            return challengeHints;
+
+            return hints;
+        }
+
+        private bool ContainsBannedName(List<string> names)
+        {
+            foreach (var word in names.SelectMany(GetWordsFromName))
+            {
+                if (BannedWords.Contains(word, StringComparer.OrdinalIgnoreCase)) return true;
+            }
+
+            return false;
+        }
+
+        private HintDirectory EvaluateRequiredWords(Dictionary<string, List<string>> namesUsedInCodeSnippet)
+        {
+            if (RequiredWords == null || RequiredWords.Count == 0) return null;
+            
+            var allNames = namesUsedInCodeSnippet.Values.SelectMany(n => n);
+            var allWords = allNames.SelectMany(GetWordsFromName).ToList();
+            if (RequiredWords.All(req => allWords.Contains(req, StringComparer.OrdinalIgnoreCase))) return null;
+
+            var hints = new HintDirectory();
+            hints.AddHint("ALL", Hint);
+            return hints;
+        }
+
+        private string[] GetWordsFromName(string name)
+        {
+            var words = Regex.Split(name, "[A-Z]");
+
+            var matches = Regex.Matches(name, "[A-Z]");
+            for (int i = 0; i < words.Length - 1; i++)
+            {
+                words[i + 1] = matches[i] + words[i + 1];
+            }
+
+            var singleWords = words.Where(val => val != "").ToArray();
+            var allWords = GetSyntagmFromName(name, singleWords);
+            allWords.AddRange(singleWords);
+            return allWords.Distinct().ToArray();
+        }
+
+        private List<string> GetSyntagmFromName(string name, string[] words)
+        {
+            List<string> syntagms = new List<string>();
+            int startLength = 0;
+            for (var i = 0; i <= words.Length - 2; i++)
+            {
+                int endLength = words[i].Length;
+                for (var j = i + 1; j <= words.Length - 1; j++)
+                {
+                    endLength += words[j].Length;
+                    syntagms.Add(name.Substring(startLength, endLength));
+                }
+                startLength += words[i].Length;
+            }
+            return syntagms;
+        }
+
+        public override List<ChallengeHint> GetAllHints()
+        {
+            return new List<ChallengeHint> { Hint };
         }
     }
 }

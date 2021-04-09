@@ -59,7 +59,7 @@
                         /// </summary>
     	                private void CreatePayment(int pricee, int cOOmpensation) {
 		                    Payment payment = new Payment();
-		                    payment.Cost = price + compensation;
+		                    payment.Cost = price + cOOmpensation;
                             payment.IsExtra = payment.Cost > 50000 ? true : false;
 
       		                System.out.println(""Hello."");

@@ -1,55 +1,42 @@
 ﻿using RepositoryCompiler.Controllers;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using SmartTutorTests.DataFactories;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using Xunit;
 
 namespace SmartTutorTests.Unit
 {
     public class BasicNameCheckerTests
     {
-        private readonly BasicNameChecker _basicNameChecker;
-
-        public BasicNameCheckerTests()
-        {
-            _basicNameChecker = new BasicNameChecker
-            {
-                NamingRules = new List<NamingRule>
-                {
-                    new NamingRule
-                    {
-                        Id = 3370001,
-                        BannedWords = new List<string> { "Class", "List", "Method" },
-                        RequiredWords = new List<string> { "Payment", "Service", "PaymentService", "compensation" },
-                        Hint = new ChallengeHint
-                        {
-                            Id = 337003,
-                            Content = "Cohesion",
-                            LearningObjectSummaryId = 336
-                        },
-                        MinLength = 3
-                    },
-                    new NamingRule
-                    {
-                        Id = 3370002,
-                        BannedWords = new List<string> (),
-                        RequiredWords = new List<string> { "Create", "Payment", "price" },
-                        Hint = new ChallengeHint { Id = 7 }
-                    }
-                }
-            };
-        }
 
         [Theory]
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
         {
+            var challenge = new Challenge { FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
+            {
+                new BasicNameChecker
+                {
+                    Id = 1,
+                    RequiredWords = new List<string> { "Payment", "PaymentService", "compensation" },
+                    Hint = new ChallengeHint { Id = 11 }
+                },
+
+                new BasicNameChecker
+                {
+                    Id = 2,
+                    BannedWords = new List<string> { "Class", "List", "Method" },
+                    Hint = new ChallengeHint { Id = 21 }
+                }
+            }};
+
             var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
-            var challengeEvaluation = _basicNameChecker.EvaluateSubmission(caDETClasses);
-            var actualHints = challengeEvaluation.GetHints();
+            var challengeEvaluation = challenge.CheckChallengeFulfillment(caDETClasses);
+            var actualHints = challengeEvaluation.ApplicableHints.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);
             actualHints.All(expectedHints.Contains).ShouldBeTrue();
@@ -69,8 +56,8 @@ namespace SmartTutorTests.Unit
                     ChallengeTestData.GetTwoViolatingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint {Id = 7},
-                        new ChallengeHint {Id = 337003}
+                        new ChallengeHint {Id = 11},
+                        new ChallengeHint {Id = 21}
                     }
                 }
             };

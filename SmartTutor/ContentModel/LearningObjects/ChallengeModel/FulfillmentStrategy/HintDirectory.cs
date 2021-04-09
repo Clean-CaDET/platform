@@ -44,6 +44,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         public void MergeHints(HintDirectory other)
         {
+            if (other == null) return;
             foreach (var hint in other._directory.Keys)
             {
                 AddHints(hint, other._directory[hint]);

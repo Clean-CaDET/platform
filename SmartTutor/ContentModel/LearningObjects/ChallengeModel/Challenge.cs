@@ -11,9 +11,9 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
     {
         public string Url { get; internal set; }
         public string Description { get; internal set; }
-        public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; internal set; }
+        public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; set; }
 
-        internal ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
+        public ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
             var evaluation = new ChallengeEvaluation { ChallengeId = Id };
             foreach (var strategy in FulfillmentStrategies)
