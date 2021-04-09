@@ -1,7 +1,7 @@
 ﻿using RepositoryCompiler.Controllers;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using SmartTutorTests.DataFactories;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,47 +9,36 @@ using Xunit;
 
 namespace SmartTutorTests.Unit
 {
-    public class BasicMetricsCheckerTests
+    public class BasicNameCheckerTests
     {
-        private readonly BasicMetricChecker _basicMetricChecker;
+        private readonly BasicNameChecker _basicNameChecker;
 
-        public BasicMetricsCheckerTests()
+        public BasicNameCheckerTests()
         {
-            _basicMetricChecker = new BasicMetricChecker
+            _basicNameChecker = new BasicNameChecker
             {
-                ClassMetricRules = new List<MetricRangeRule>
+                NamingRules = new List<NamingRule>
                 {
-                    new MetricRangeRule
+                    new NamingRule
                     {
-                        Id = 33701,
-                        MetricName = "CLOC",
-                        FromValue = 3,
-                        ToValue = 30,
+                        Id = 3370001,
+                        BannedWords = new List<string> { "Class", "List", "Method" },
+                        RequiredWords = new List<string> { "Payment", "Service", "PaymentService", "compensation" },
                         Hint = new ChallengeHint
                         {
-                            Id = 337001,
-                            Content = "Cohesion",
-                            LearningObjectSummaryId = 331
-                        }
-                    },
-                    new MetricRangeRule {Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2, Hint = new ChallengeHint {Id = 5}}
-                },
-                MethodMetricRules = new List<MetricRangeRule>
-                {
-                    new MetricRangeRule
-                    {
-                        Id = 33703,
-                        MetricName = "MELOC",
-                        FromValue = 2,
-                        ToValue = 5,
-                        Hint = new ChallengeHint
-                        {
-                            Id = 337002,
+                            Id = 337003,
                             Content = "Cohesion",
                             LearningObjectSummaryId = 336
-                        }
+                        },
+                        MinLength = 3
                     },
-                    new MetricRangeRule {Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4, Hint = new ChallengeHint {Id = 6}}
+                    new NamingRule
+                    {
+                        Id = 3370002,
+                        BannedWords = new List<string> (),
+                        RequiredWords = new List<string> { "Create", "Payment", "price" },
+                        Hint = new ChallengeHint { Id = 7 }
+                    }
                 }
             };
         }
@@ -59,7 +48,7 @@ namespace SmartTutorTests.Unit
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
         {
             var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
-            var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(caDETClasses);
+            var challengeEvaluation = _basicNameChecker.EvaluateSubmission(caDETClasses);
             var actualHints = challengeEvaluation.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);
@@ -80,8 +69,8 @@ namespace SmartTutorTests.Unit
                     ChallengeTestData.GetTwoViolatingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint {Id = 6},
-                        new ChallengeHint {Id = 337002}
+                        new ChallengeHint {Id = 7},
+                        new ChallengeHint {Id = 337003}
                     }
                 }
             };

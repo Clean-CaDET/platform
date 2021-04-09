@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {

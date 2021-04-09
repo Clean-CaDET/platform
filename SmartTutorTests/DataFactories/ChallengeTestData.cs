@@ -1,6 +1,6 @@
 ﻿namespace SmartTutorTests.DataFactories
 {
-    class ChallengeTestData
+    internal class ChallengeTestData
     {
         public static string[] GetTwoPassingClasses()
         {
@@ -27,10 +27,10 @@
                             payment.IsExtra = payment.Cost > 50000 ? true : false;
       		                PrintPaymentDetails();
     	                }
-	                    private void PrintPaymentDetails(int a) {
+	                    private void PrintPaymentDetails(int cost) {
       		                System.out.println(""Hello."");
                             System.out.println(""Your payment is created."");
-                            System.out.println(""Cost is: "" + payment.Cost);
+                            System.out.println(""Cost is: "" + Cost);
                         }
                     }
                 }"
@@ -44,7 +44,7 @@
                 @"using System;
                 namespace ExamplesApp.Method
                 {
-                   class Payment
+                   class PaymentClass
                    {
     	               public int Cost { get; set; }
     	               public bool IsExtra { get; set; }
@@ -57,7 +57,7 @@
 	                    /// <summary>
                         /// 1) Extract createPayment method.
                         /// </summary>
-    	                private void CreatePayment(int price, int compensation) {
+    	                private void CreatePayment(int pricee, int cOOmpensation) {
 		                    Payment payment = new Payment();
 		                    payment.Cost = price + compensation;
                             payment.IsExtra = payment.Cost > 50000 ? true : false;
@@ -70,7 +70,7 @@
 	                    private void PrintPaymentDetails() {
       		                System.out.println(""Hello."");
                             System.out.println(""Your payment is created."");
-                            System.out.println(""Cost is: "" + payment.Cost);
+                            System.out.println(""Cost is: "" + cost);
                         }
                     }
                 }"
