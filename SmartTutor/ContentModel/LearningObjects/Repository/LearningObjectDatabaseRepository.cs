@@ -4,6 +4,7 @@ using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -42,6 +43,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 .Include(c => c.FulfillmentStrategies)
                     .ThenInclude(s => (s as BasicMetricChecker).MethodMetricRules)
                     .ThenInclude(r => r.Hint)
+                .Include(c => c.FulfillmentStrategies)
+                    .ThenInclude(s => (s as BasicNameChecker).Hint)
                 .FirstOrDefault();
         }
 

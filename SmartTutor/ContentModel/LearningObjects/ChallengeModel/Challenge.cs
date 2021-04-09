@@ -22,10 +22,15 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
                 evaluation.ApplicableHints.MergeHints(result);
             }
 
+            if (evaluation.ApplicableHints.IsEmpty())
+            {
+                evaluation.ChallengeCompleted = true;
+                evaluation.ApplicableHints.AddAllHints(GetAllChallengeHints());
+            }
             return evaluation;
         }
 
-        internal List<ChallengeHint> GetAllChallengeHints()
+        private List<ChallengeHint> GetAllChallengeHints()
         {
             return FulfillmentStrategies.SelectMany(s => s.GetAllHints().Where(h => h != null)).ToList();
         }

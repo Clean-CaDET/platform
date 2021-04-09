@@ -5,7 +5,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     public class ChallengeEvaluation
     {
         public int ChallengeId { get; set; }
-        public bool ChallengeCompleted => ApplicableHints.IsEmpty();
+        public bool ChallengeCompleted { get; set; }
         public HintDirectory ApplicableHints { get; }
         public List<LearningObject> ApplicableLOs { get; set; }
 

@@ -15,7 +15,7 @@ namespace SmartTutorTests.Unit
 
         [Theory]
         [MemberData(nameof(ChallengeTest))]
-        public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
+        public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints, bool expectedCompletion)
         {
             var challenge = new Challenge { FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
             {
@@ -40,6 +40,7 @@ namespace SmartTutorTests.Unit
 
             actualHints.Count.ShouldBe(expectedHints.Count);
             actualHints.All(expectedHints.Contains).ShouldBeTrue();
+            challengeEvaluation.ChallengeCompleted.ShouldBe(expectedCompletion);
         }
 
         public static IEnumerable<object[]> ChallengeTest =>
@@ -49,7 +50,12 @@ namespace SmartTutorTests.Unit
                 {
                     //TODO: Find better names for these methods and add more test data and more thorough HintDirectory evaluation (probably separate tests for MetricRangeRules and HintDirectory)
                     ChallengeTestData.GetTwoPassingClasses(),
-                    new List<ChallengeHint>()
+                    new List<ChallengeHint>
+                    {
+                        new ChallengeHint {Id = 11},
+                        new ChallengeHint {Id = 21}
+                    },
+                    true
                 },
                 new object[]
                 {
@@ -58,7 +64,8 @@ namespace SmartTutorTests.Unit
                     {
                         new ChallengeHint {Id = 11},
                         new ChallengeHint {Id = 21}
-                    }
+                    },
+                    false
                 }
             };
     }

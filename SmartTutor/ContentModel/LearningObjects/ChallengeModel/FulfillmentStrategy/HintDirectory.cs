@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
@@ -24,6 +25,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         public void AddHint(string codeSnippetId, ChallengeHint hint)
         {
+            if(hint == null) throw new InvalidOperationException("Hint cannot be null.");
             if (_directory.ContainsKey(hint))
             {
                 if (!_directory[hint].Contains(codeSnippetId))
@@ -60,6 +62,14 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public bool IsEmpty()
         {
             return _directory.Count == 0;
+        }
+
+        public void AddAllHints(List<ChallengeHint> allHints)
+        {
+            foreach (var hint in allHints)
+            {
+                _directory.Add(hint, new List<string> {"ALL"});
+            }
         }
     }
 }
