@@ -3,6 +3,7 @@ using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using SmartTutor.ContentModel.LectureModel;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
 {
@@ -11,6 +12,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
     {
         public string Url { get; internal set; }
         public string Description { get; internal set; }
+        public LearningObjectSummary Solution { get; internal set; }
         public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; set; }
 
         public ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)

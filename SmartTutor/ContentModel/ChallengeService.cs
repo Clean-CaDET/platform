@@ -28,6 +28,8 @@ namespace SmartTutor.ContentModel
             evaluation.ApplicableLOs =
                 _learningObjectRepository.GetFirstLearningObjectsForSummaries(
                     evaluation.ApplicableHints.GetDistinctLearningObjectSummaries());
+            evaluation.SolutionLO = _learningObjectRepository.GetLearningObjectForSummary(challenge.Solution.Id);
+            
             return evaluation;
         }
 

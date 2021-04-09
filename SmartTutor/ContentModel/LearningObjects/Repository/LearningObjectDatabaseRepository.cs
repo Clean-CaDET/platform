@@ -37,6 +37,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         {
             return _dbContext.Challenges
                 .Where(c => c.Id == challengeId)
+                .Include(c => c.Solution)
                 .Include(c => c.FulfillmentStrategies)
                     .ThenInclude(s => (s as BasicMetricChecker).ClassMetricRules)
                     .ThenInclude(r => r.Hint)

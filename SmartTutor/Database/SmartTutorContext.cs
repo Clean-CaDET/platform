@@ -53,6 +53,9 @@ namespace SmartTutor.Database
             modelBuilder.Entity<MetricRangeRule>()
                 .Property<int?>("MethodMetricCheckerForeignKey").IsRequired(false);
 
+            modelBuilder.Entity<Challenge>()
+                .Property<int>("SolutionIdForeignKey");
+
             // Use the shadow property as a foreign key
             modelBuilder.Entity<BasicMetricChecker>()
                 .HasMany(b => b.ClassMetricRules)
@@ -62,6 +65,11 @@ namespace SmartTutor.Database
                 .HasMany(b => b.MethodMetricRules)
                 .WithOne()
                 .HasForeignKey("MethodMetricCheckerForeignKey");
+
+            modelBuilder.Entity<Challenge>()
+                .HasOne(b => b.Solution)
+                .WithMany()
+                .HasForeignKey("SolutionIdForeignKey");
         }
     }
 }

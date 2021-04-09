@@ -8,6 +8,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         public bool ChallengeCompleted { get; set; }
         public HintDirectory ApplicableHints { get; }
         public List<LearningObject> ApplicableLOs { get; set; }
+        public LearningObject SolutionLO { get; set; }
 
         public ChallengeEvaluation()
         {
