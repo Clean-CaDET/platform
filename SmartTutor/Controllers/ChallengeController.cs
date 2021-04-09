@@ -45,10 +45,5 @@ namespace SmartTutor.Controllers
                 });
             }));
         }
-
-        public List<ChallengeHint> GetAllHints(int challengeId)
-        {
-            return _challengeService.GetAllHints(challengeId);
-        }
     }
 }
