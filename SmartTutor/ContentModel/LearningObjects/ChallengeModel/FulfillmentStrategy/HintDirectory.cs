@@ -53,8 +53,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
 
         public List<int> GetDistinctLearningObjectSummaries()
         {
-            return _directory.Keys.Select(hint => hint.LearningObjectSummaryId)
-                .Where(id => id != 0).Distinct().ToList();
+            return _directory.Keys.Where(hint => hint.LearningObjectSummaryId != null)
+                .Select(hint => (int)hint.LearningObjectSummaryId).Distinct().ToList();
         }
 
         public bool IsEmpty()

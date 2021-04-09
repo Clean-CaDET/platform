@@ -37,7 +37,7 @@ namespace SmartTutor.Controllers
                     {
                         var relatedHint = directoryKeys.First(h => h.Id == hintDto.Id);
                         hintDto.ApplicableToCodeSnippets = hintDirectory[relatedHint];
-                        if (relatedHint.LearningObjectSummaryId == 0) continue;
+                        if (relatedHint.LearningObjectSummaryId == null) continue;
                         var relatedLO = src.ApplicableLOs
                             .First(lo => lo.LearningObjectSummaryId == relatedHint.LearningObjectSummaryId);
                         hintDto.LearningObject = _mapper.Map<LearningObjectDTO>(relatedLO);
