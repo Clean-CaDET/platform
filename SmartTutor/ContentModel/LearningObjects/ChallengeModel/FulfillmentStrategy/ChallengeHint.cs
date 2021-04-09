@@ -6,7 +6,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
     {
         [Key] public int Id { get; set; }
         public string Content { get; set; }
-        public int LearningObjectSummaryId { get; set; }
+        public int? LearningObjectSummaryId { get; set; }
 
         public override int GetHashCode()
         {

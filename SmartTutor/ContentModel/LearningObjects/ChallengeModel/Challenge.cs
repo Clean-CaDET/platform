@@ -11,9 +11,9 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
     {
         public string Url { get; internal set; }
         public string Description { get; internal set; }
-        public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; internal set; }
+        public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; set; }
 
-        internal ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
+        public ChallengeEvaluation CheckChallengeFulfillment(List<CaDETClass> solutionAttempt)
         {
             var evaluation = new ChallengeEvaluation { ChallengeId = Id };
             foreach (var strategy in FulfillmentStrategies)
@@ -22,10 +22,15 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
                 evaluation.ApplicableHints.MergeHints(result);
             }
 
+            if (evaluation.ApplicableHints.IsEmpty())
+            {
+                evaluation.ChallengeCompleted = true;
+                evaluation.ApplicableHints.AddAllHints(GetAllChallengeHints());
+            }
             return evaluation;
         }
 
-        internal List<ChallengeHint> GetAllChallengeHints()
+        private List<ChallengeHint> GetAllChallengeHints()
         {
             return FulfillmentStrategies.SelectMany(s => s.GetAllHints().Where(h => h != null)).ToList();
         }

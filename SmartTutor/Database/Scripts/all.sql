@@ -180,7 +180,13 @@ INSERT INTO public."Challenges"(
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (2, 12);
--- TODO: NameStrategy, rules, hints
+	
+INSERT INTO public."ChallengeHints"(
+	"Id", "Content", "LearningObjectSummaryId")
+	VALUES (6, 'Izbegavaj generične reči koje se mogu koristiti da opišu bilo kakav kod (npr. Manager, Data), kao i one koje ponavljaju informacije koje već stoje u imenu tipa (npr. List, Num).', 9);
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "BannedWords", "HintId")
+	VALUES (2, '{"Data","Info","Str","Set","The"}', 6);
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -217,7 +223,13 @@ INSERT INTO public."Challenges"(
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (1, 7);
--- TODO: NameStrategy, rules, hints (doc)
+	
+INSERT INTO public."ChallengeHints"(
+	"Id", "Content", "LearningObjectSummaryId")
+	VALUES (7, 'Razmisli kako da integrišeš domenski značajne reči poput "Enroll", "newCourse", "Maximum" i "Count" u imena koja koristiš u svom kodu.', 7);
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "RequiredWords", "HintId")
+	VALUES (1, '{"Enroll","newCourse","Maximum","Count"}', 7);
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -575,7 +587,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (48, 48);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (48, 'https://i.ibb.co/5cFm6Np/params-strategy-rs.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
+	VALUES (48, 'https://i.ibb.co/tpCkJp0/params-strategy-rs.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")

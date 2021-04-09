@@ -36,10 +36,5 @@ namespace SmartTutor.ContentModel
             //TODO: Adhere to DIP for CodeModelFactory/CodeRepoService (extract interface and add DI in startup)
             return new CodeRepositoryService().BuildClassesModel(sourceCode);
         }
-
-        public List<ChallengeHint> GetAllHints(int challengeId)
-        {
-            return _learningObjectRepository.GetChallenge(challengeId).GetAllChallengeHints();
-        }
     }
 }

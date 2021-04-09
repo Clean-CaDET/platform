@@ -1,11 +1,11 @@
-using System;
-using SmartTutor.ContentModel.LectureModel;
-using System.Collections.Generic;
-using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
+using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.ContentModel.ProgressModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.Recommenders
 {
@@ -43,7 +43,10 @@ namespace SmartTutor.Recommenders
 
             return new NodeProgress
             {
-                Trainee = trainee, Node = knowledgeNode, Status = NodeStatus.Started, LearningObjects = learningObjects
+                Trainee = trainee,
+                Node = knowledgeNode,
+                Status = NodeStatus.Started,
+                LearningObjects = learningObjects
             };
         }
 

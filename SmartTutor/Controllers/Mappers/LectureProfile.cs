@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Controllers.DTOs.Lecture;
+using System.Linq;
 
 namespace SmartTutor.Controllers.Mappers
 {

@@ -3,6 +3,7 @@ using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.ProgressModel;
 
@@ -27,6 +28,7 @@ namespace SmartTutor.Database
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<ChallengeFulfillmentStrategy> ChallengeFulfillmentStrategies { get; set; }
         public DbSet<BasicMetricChecker> BasicMetricCheckers { get; set; }
+        public DbSet<BasicNameChecker> BasicNameCheckers { get; set; }
         public DbSet<MetricRangeRule> MetricRangeRules { get; set; }
         public DbSet<ChallengeHint> ChallengeHints { get; set; }
         #endregion

@@ -1,12 +1,12 @@
+using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.LectureModel.Repository;
+using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.ProgressModel.Repository;
 using SmartTutor.Recommenders;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects;
-using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.ProgressModel;
-using SmartTutor.ContentModel.ProgressModel.Repository;
 
 namespace SmartTutor.ContentModel
 {
@@ -41,14 +41,14 @@ namespace SmartTutor.ContentModel
 
         private static List<NodeProgress> ShowSampleNodes(List<KnowledgeNode> nodes)
         {
-            return nodes.Select(n => new NodeProgress {Node = n, Status = NodeStatus.Unlocked}).ToList();
+            return nodes.Select(n => new NodeProgress { Node = n, Status = NodeStatus.Unlocked }).ToList();
         }
 
         public NodeProgress GetNodeContent(int knowledgeNodeId, int? traineeId)
         {
             if (traineeId != null)
             {
-                return CreateNodeForTrainee(knowledgeNodeId, (int) traineeId);
+                return CreateNodeForTrainee(knowledgeNodeId, (int)traineeId);
             }
 
             var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);

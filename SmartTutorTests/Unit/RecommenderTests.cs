@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Moq;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects;
@@ -6,6 +5,7 @@ using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Recommenders;
+using System.Collections.Generic;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -86,13 +86,13 @@ namespace SmartTutorTests.Unit
             };
 
         private static readonly Trainee Trainee1 = new Trainee
-            {Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4};
+        { Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4 };
 
         private static readonly Trainee Trainee2 = new Trainee
-            {Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1};
+        { Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1 };
 
         private static readonly Trainee Trainee3 = new Trainee
-            {Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1};
+        { Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1 };
 
         private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode
         {
@@ -104,13 +104,13 @@ namespace SmartTutorTests.Unit
             }
         };
 
-        private static readonly Text Text1 = new Text {Id = 1, LearningObjectSummaryId = 1};
-        private static readonly Text Text2 = new Text {Id = 2, LearningObjectSummaryId = 2};
-        private static readonly Text Text3 = new Text {Id = 3, LearningObjectSummaryId = 3};
-        private static readonly Video Video1 = new Video {Id = 4, LearningObjectSummaryId = 1};
-        private static readonly Image Image1 = new Image {Id = 5, LearningObjectSummaryId = 1};
-        private static readonly Image Image2 = new Image {Id = 6, LearningObjectSummaryId = 2};
-        private static readonly Question Question1 = new Question {Id = 7, LearningObjectSummaryId = 1};
-        private static readonly ArrangeTask ArrangeTask2 = new ArrangeTask {Id = 8, LearningObjectSummaryId = 1};
+        private static readonly Text Text1 = new Text { Id = 1, LearningObjectSummaryId = 1 };
+        private static readonly Text Text2 = new Text { Id = 2, LearningObjectSummaryId = 2 };
+        private static readonly Text Text3 = new Text { Id = 3, LearningObjectSummaryId = 3 };
+        private static readonly Video Video1 = new Video { Id = 4, LearningObjectSummaryId = 1 };
+        private static readonly Image Image1 = new Image { Id = 5, LearningObjectSummaryId = 1 };
+        private static readonly Image Image2 = new Image { Id = 6, LearningObjectSummaryId = 2 };
+        private static readonly Question Question1 = new Question { Id = 7, LearningObjectSummaryId = 1 };
+        private static readonly ArrangeTask ArrangeTask2 = new ArrangeTask { Id = 8, LearningObjectSummaryId = 1 };
     }
 }
