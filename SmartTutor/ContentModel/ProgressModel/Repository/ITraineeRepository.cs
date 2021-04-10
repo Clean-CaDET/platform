@@ -12,5 +12,6 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
         Trainee GetTraineeById(int traineeId);
 
         void SaveNodeProgress(NodeProgress nodeProgress);
+        NodeProgress GetNodeProgressForTrainee(int traineeId, int nodeId);
     }
 }

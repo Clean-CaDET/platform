@@ -1,5 +1,6 @@
 using SmartTutor.Database;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.ContentModel.ProgressModel.Repository
 {
@@ -26,6 +27,12 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
         {
             _dbContext.NodeProgresses.Add(nodeProgress);
             _dbContext.SaveChanges();
+        }
+
+        public NodeProgress GetNodeProgressForTrainee(int traineeId, int nodeId)
+        {
+            return _dbContext.NodeProgresses.FirstOrDefault(nodeProgress =>
+                nodeProgress.Trainee.Id == traineeId && nodeProgress.Node.Id == nodeId);
         }
     }
 }
