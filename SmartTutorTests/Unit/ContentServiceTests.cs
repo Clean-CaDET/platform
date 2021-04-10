@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Moq;
+using Shouldly;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LectureModel;
 using SmartTutor.ContentModel.LectureModel.Repository;
@@ -13,18 +14,17 @@ namespace SmartTutorTests.Unit
     public class ContentServiceTests
     {
         private readonly IContentService _contentService;
-        private readonly Mock<IRecommender> _recommender = new Mock<IRecommender>();
 
         public ContentServiceTests()
         {
-            _contentService = new ContentService(_recommender.Object, CreateMockLectureRepository(), null,
+            _contentService = new ContentService(CreateMockRecommender(), CreateMockLectureRepository(), null,
                 CreateMockTraineeRepository());
         }
 
         private static ITraineeRepository CreateMockTraineeRepository()
         {
             Mock<ITraineeRepository> traineeRepo = new Mock<ITraineeRepository>();
-            traineeRepo.Setup(repo => repo.GetNodeProgressForTrainee(1, 1)).Returns(new NodeProgress());
+            traineeRepo.Setup(repo => repo.GetNodeProgressForTrainee(1, 1)).Returns(new NodeProgress {Id = 1});
             traineeRepo.Setup(repo => repo.GetTraineeById(1)).Returns(Trainee);
             return traineeRepo.Object;
         }
@@ -36,13 +36,20 @@ namespace SmartTutorTests.Unit
             return lectureRepo.Object;
         }
 
+        private static IRecommender CreateMockRecommender()
+        {
+            Mock<IRecommender> recommender = new Mock<IRecommender>();
+            recommender.Setup(r => r.BuildNodeProgressForTrainee(Trainee, KnowledgeNode))
+                .Returns(new NodeProgress {Id = 10});
+            return recommender.Object;
+        }
+
         [Theory]
         [MemberData(nameof(TraineeTestData))]
-        public void Creates_node_content(int nodeId, int traineeId, int numOfInvocations)
+        public void Creates_node_content(int nodeId, int traineeId, int nodeProgressId)
         {
-            _contentService.GetNodeContent(nodeId, traineeId);
-            _recommender.Verify(recommender => recommender.BuildNodeProgressForTrainee(Trainee, KnowledgeNode),
-                Times.Exactly(numOfInvocations));
+            var result = _contentService.GetNodeContent(nodeId, traineeId);
+            result.Id.ShouldBe(nodeProgressId);
         }
 
         public static IEnumerable<object[]> TraineeTestData =>
@@ -52,18 +59,17 @@ namespace SmartTutorTests.Unit
                 {
                     1,
                     1,
-                    0
+                    1
                 },
                 new object[]
                 {
                     2,
                     1,
-                    1
+                    10
                 }
             };
 
         private static readonly Trainee Trainee = new Trainee {Id = 1};
-
-        private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode {Id = 1};
+        private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode {Id = 2};
     }
 }
