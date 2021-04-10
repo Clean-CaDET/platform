@@ -670,6 +670,10 @@ INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (64, 'Function Big Picture', 14);
 	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (65, 'Function Recap', 14);
+	
 -- Methods LO - CK Node
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -757,4 +761,30 @@ Sada zamisli sličnu aplikaciju koja je sastavljena od golemih funkcija koje bro
 
 Pisanje čistih funkcija je teže nego kucanje koda dok ne proradi. Za čiste funkcije svakako treba napraviti nešto što radi, a onda još treba organizovati tu logiku u smislene celine ispred kojih stavljamo jasno ime. Sa druge strane, čitanje aljkavo napisanih funkcija je teže od čistanja čistih funkcija. Postavlja se pitanje - u koji aspekt vredi uložiti više truda i energije? Za softver koji je dovoljno dugo u razvoju (npr. više od mesec dana, razvijan od strane pet ili više ljudi) većina programerovog vremena odlazi na čitanje koda.');
 
--- TODO: Final question
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (66, 65);
+INSERT INTO public."Questions"(
+	"Id", "Text")
+	VALUES (66, 'Iz sledećeg spiska odaberi istinite tvrdnje:');
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (20, 'Treba težiti ka funkcijama sa što manje linija koda.', false, 'Izjava nije tačna. Prvo, ne treba postaviti mali broj linija koda kao cilj - ovo je posledica praćenja drugih heuristika. Drugo, preterivanje u ovom pravilu će rezultovati klasama koje broje desetine ili stotine funkcija čiji kod se u potpunosti mapira na ime funkcije, čime ništa nije postignuto. Funkcija treba da bude fokusirana na jedan zadatak, što podrazumeva da ima i neku pamet.', 66);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (21, 'Funkcija treba da radi jednu stvar.', true, 'Izjava je tačna. Kada funkcija radi jednu stvar hoćemo da kažemo da funkcija izvršava jedan zadatak.', 66);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (22, 'Uslovni izraz sa više logičkih operatora je dobar kandidat za ekstrakciju funkcije.', true, 'Izjava je tačna. Kada ekstrahujemo uslovni izraz koji definiše kontrolu toka programa, dajemo semantički značaj (kroz ime nove funkcije) datoj logici što olakšava razumevanje originalne funkcije.', 66);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (23, 'Težimo ka metodama sa 3 ili manje parametra.', false, 'Izjava nije dovoljno rigorozna. Idealno će metoda imati 0 parametra, dok su 1 i 2 prihatljiva. Sve preko toga je kandidat za refaktorisanje, što naravno ne znači da nećemo nikad imati funkciju sa više od 2 parametra.', 66);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (24, 'Sitne funkcije sa jasnim imenima pospešuju princip OOP koji zovemo apstrakcija.', true, 'Izjava je tačna. Jasno ime funkcije dobro apstrahuje njene detalje, zbog čega možemo brže da zaključimo koji deo koda nas interesuje, a koji ne.', 66);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (25, 'Formiranje čistih funkcija je izazovno, dok je prolazak kroz kod pun fokusiranih funkcija jednostavan.', true, 'Izjava je tačna. Potreban je trud da se identifikuje smislen deo logike i da se formira ime koje dobro opisuje datu logiku.', 66);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (26, 'Kada pišemo čiste funkcije, naši klijenti mogu da čitaju i razumeju naš kod.', false, 'Izjava nije tačna. Čiste funkcije koje opisuju poslovnu logiku treba da budu razumljive našim klijentima. Međutim, ne treba zaboraviti značajan deo logike koja će omogućiti obrau HTTP zahteva, interakciju sa bazom, kriptografiju i ostale tehničke detalje koji su poznati inženjnerima softvera, ali ne i ljudima za koje se pravi softver.', 66);
