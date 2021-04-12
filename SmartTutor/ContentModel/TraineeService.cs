@@ -13,7 +13,7 @@ namespace SmartTutor.ContentModel
             _traineeRepository = traineeRepository;
         }
 
-        public void RegisterTrainee(Trainee trainee)
+        public Trainee RegisterTrainee(Trainee trainee)
         {
             if (_traineeRepository.GetTraineeByIndex(trainee.StudentIndex) != null)
             {
@@ -21,6 +21,14 @@ namespace SmartTutor.ContentModel
             }
 
             _traineeRepository.SaveTrainee(trainee);
+            return trainee;
+        }
+
+        public Trainee LoginTrainee(string studentIndex)
+        {
+            var trainee = _traineeRepository.GetTraineeByIndex(studentIndex);
+            if (trainee == null) throw new TraineeWIthStudentIndexNotFound();
+            return trainee;
         }
     }
 }

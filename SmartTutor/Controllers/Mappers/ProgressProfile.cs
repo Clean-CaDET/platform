@@ -9,6 +9,7 @@ namespace SmartTutor.Controllers.Mappers
         public ProgressProfile()
         {
             CreateMap<TraineeDTO, Trainee>();
+            CreateMap<Trainee, TraineeDTO>();
         }
     }
 }

@@ -20,19 +20,32 @@ namespace SmartTutor.Controllers
             _traineeService = traineeService;
         }
 
-        [HttpPost("")]
-        public ActionResult SubmitQuestionAnswers([FromBody] TraineeDTO trainee)
+        [HttpPost("/register")]
+        public ActionResult<TraineeDTO> RegisterTrainee([FromBody] TraineeDTO trainee)
         {
             try
             {
-                _traineeService.RegisterTrainee(_mapper.Map<Trainee>(trainee));
+                var registeredTrainee = _traineeService.RegisterTrainee(_mapper.Map<Trainee>(trainee));
+                return Ok(_mapper.Map<TraineeDTO>(registeredTrainee));
             }
             catch (TraineeWithStudentIndexAlreadyExists)
             {
                 return BadRequest();
             }
+        }
 
-            return Ok();
+        [HttpPost("/login")]
+        public ActionResult<TraineeDTO> LoginTrainee([FromBody] LoginDTO login)
+        {
+            try
+            {
+                var loggedInTrainee = _traineeService.LoginTrainee(login.StudentIndex);
+                return Ok(_mapper.Map<TraineeDTO>(loggedInTrainee));
+            }
+            catch (TraineeWIthStudentIndexNotFound)
+            {
+                return BadRequest();
+            }
         }
     }
 }

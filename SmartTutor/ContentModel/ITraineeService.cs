@@ -4,6 +4,7 @@ namespace SmartTutor.ContentModel
 {
     public interface ITraineeService
     {
-        void RegisterTrainee(Trainee trainee);
+        Trainee RegisterTrainee(Trainee trainee);
+        Trainee LoginTrainee(string studentIndex);
     }
 }
