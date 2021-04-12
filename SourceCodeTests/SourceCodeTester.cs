@@ -1,22 +1,20 @@
-using System.IO;
+﻿using System.IO;
 
-namespace SourceCodeTests
+namespace FileTests
 {
     public class SourceCodeTester
     {
-        public bool ValidSourceCode(string[] sourceCode)
+        public static void ValidateSourceCode(string[] sourceCode)
         {
-            string file = GetFileFromCode(sourceCode);
-            bool validSourceCode = new ExecutableFileTests(file).Check_If_Executable_File_Tests_Have_Passed();
-            return validSourceCode;
+            CreateFileFromCode(sourceCode);
+            new ExecutableFileTests().Check_If_Executable_File();
         }
 
-        private string GetFileFromCode(string[] sourceCode)
+        private static void CreateFileFromCode(string[] sourceCode)
         {
-            string path = @"..\SourceCodeTests\DataFactories\ExecutableFile.txt";
+            string path = @"..\SourceCodeTests\FileStorage\SourceCodeFile.txt";
             foreach (var line in sourceCode)
                 File.WriteAllText(path, line);
-            return path;
         }
     }
 }
