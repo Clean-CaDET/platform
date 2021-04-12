@@ -3,7 +3,6 @@ using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.ProgressModel.Repository;
 using System;
 using System.Collections.Generic;
 using SmartTutor.ContentModel.ProgressModel;
@@ -23,6 +22,7 @@ namespace SmartTutor.ContentModel
 
         public ChallengeEvaluation EvaluateSubmission(string[] sourceCode, int challengeId, string traineeId)
         {
+            //TODO: Exceptions for bad CaDETClass - BadRequest, No Challenge - NotFound etc. (reexamine best practices)
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
             if (solutionAttempt == null || solutionAttempt.Count == 0) throw new InvalidOperationException("Invalid submission.");
 
@@ -44,7 +44,7 @@ namespace SmartTutor.ContentModel
                 _learningObjectRepository.GetFirstLearningObjectsForSummaries(
                     evaluation.ApplicableHints.GetDistinctLearningObjectSummaries());
             evaluation.SolutionLO = _learningObjectRepository.GetLearningObjectForSummary(challenge.Solution.Id);
-            
+
             return evaluation;
         }
 
