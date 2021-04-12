@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ namespace SmartTutor
             });
 
             services.AddDbContext<SmartTutorContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("SmartTutorConnection")));
+                opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
 
             services.AddScoped<IContentService, ContentService>();
             services.AddScoped<IChallengeService, ChallengeService>();
@@ -65,6 +66,19 @@ namespace SmartTutor
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        private string CreateConnectionStringFromEnvironment()
+        {
+            string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
+            string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
+            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "smart-tutor-db";
+            string user = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "postgres";
+            string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "super";
+            string integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
+            string pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
+
+            return $"Server={server};Port={port};Database={database};User ID={user};Password={password};Integrated Security={integratedSecurity};Pooling={pooling};";
         }
     }
 }
