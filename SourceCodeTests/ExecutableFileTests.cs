@@ -8,6 +8,7 @@ namespace FileTests
     public class ExecutableFileTests
     {
         public byte[] FileContent { get; set; }
+        public bool IsExecutable { get; set; } = true;
 
         public ExecutableFileTests()
         {
@@ -29,7 +30,8 @@ namespace FileTests
             }
             catch (Exception)
             {
-                throw new Exception("Code can not be executed!");
+                IsExecutable = false;
+                IsExecutable.ShouldBeFalse();
             }
         }
     }

@@ -4,13 +4,16 @@ namespace FileTests
 {
     public class SourceCodeTester
     {
-        public static void ValidateSourceCode(string[] sourceCode)
+        private readonly ExecutableFileTests _executableFileTests = new ExecutableFileTests();
+
+        public bool ValidSourceCode(string[] sourceCode)
         {
             CreateFileFromCode(sourceCode);
-            new ExecutableFileTests().Check_If_Executable_File();
+            _executableFileTests.Check_If_Executable_File();
+            return _executableFileTests.IsExecutable;
         }
 
-        private static void CreateFileFromCode(string[] sourceCode)
+        private void CreateFileFromCode(string[] sourceCode)
         {
             string path = @"..\SourceCodeTests\FileStorage\SourceCodeFile.txt";
             foreach (var line in sourceCode)
