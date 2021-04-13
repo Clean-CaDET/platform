@@ -41,14 +41,15 @@ namespace SmartTutor.ContentModel
 
         private static List<NodeProgress> ShowSampleNodes(List<KnowledgeNode> nodes)
         {
-            return nodes.Select(n => new NodeProgress { Node = n, Status = NodeStatus.Unlocked }).ToList();
+            return nodes.Select(n => new NodeProgress {Node = n, Status = NodeStatus.Unlocked}).ToList();
         }
 
         public NodeProgress GetNodeContent(int knowledgeNodeId, int? traineeId)
         {
             if (traineeId != null)
             {
-                return CreateNodeForTrainee(knowledgeNodeId, (int)traineeId);
+                var nodeProgress = _traineeRepository.GetNodeProgressForTrainee((int) traineeId, knowledgeNodeId);
+                return nodeProgress ?? CreateNodeForTrainee(knowledgeNodeId, (int) traineeId);
             }
 
             var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
