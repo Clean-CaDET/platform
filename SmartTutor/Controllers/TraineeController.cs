@@ -35,9 +35,9 @@ namespace SmartTutor.Controllers
                 var loggedInTrainee = _traineeService.LoginTrainee(login.StudentIndex);
                 return Ok(_mapper.Map<TraineeDTO>(loggedInTrainee));
             }
-            catch (TraineeWIthStudentIndexNotFound)
+            catch (TraineeWIthStudentIndexNotFound e)
             {
-                return BadRequest();
+                return NotFound(e.Message);
             }
         }
     }

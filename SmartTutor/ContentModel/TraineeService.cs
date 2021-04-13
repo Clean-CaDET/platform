@@ -34,7 +34,7 @@ namespace SmartTutor.ContentModel
         public Trainee LoginTrainee(string studentIndex)
         {
             var trainee = _traineeRepository.GetTraineeByIndex(studentIndex);
-            if (trainee == null) throw new TraineeWIthStudentIndexNotFound();
+            if (trainee == null) throw new TraineeWIthStudentIndexNotFound(studentIndex);
             return trainee;
         }
     }
