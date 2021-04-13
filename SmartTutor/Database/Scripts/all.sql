@@ -205,11 +205,11 @@ INSERT INTO public."KnowledgeNodes"(
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
-	VALUES (6, 'Challenge Meaning', 3);
+	VALUES (6, 'Magic Numbers Heuristic', 3);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
-	VALUES (7, 'Magic Numbers Heuristic', 3);
+	VALUES (7, 'Challenge Meaning', 3);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description") -- Hidden
@@ -217,7 +217,7 @@ INSERT INTO public."LearningObjectSummaries"(
 -- Naming - PK Node 2
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
-	VALUES (7, 6);
+	VALUES (7, 7);
 INSERT INTO public."Challenges"(
 	"Id", "Description", "Url", "SolutionIdForeignKey")
 	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "Naming/02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository', 8);
@@ -227,14 +227,14 @@ INSERT INTO public."ChallengeFulfillmentStrategies"(
 	
 INSERT INTO public."ChallengeHints"(
 	"Id", "Content", "LearningObjectSummaryId")
-	VALUES (7, 'Razmisli kako da integrišeš domenski značajne reči poput "Enroll", "newCourse", "Maximum" i "Active" u imena koja koristiš u svom kodu.', 7);
+	VALUES (7, 'Razmisli kako da integrišeš domenski značajne reči poput "Enroll", "newCourse", "Maximum" i "Active" u imena koja koristiš u svom kodu.', 6);
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "RequiredWords", "HintId")
 	VALUES (1, '{"Enroll","newCourse","Maximum","Active"}', 7);
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
-	VALUES (8, 7);
+	VALUES (8, 6);
 INSERT INTO public."Texts"(
 	"Id", "Content")
 	VALUES (8, 'Dodeljivanje značajnih imena elementima koda pomaže sa aspekta pretrage koda. Kada u velikom projektu želimo pretragom da lociramo promenljivu ili funkciju, ako je ime tog elementa kratko (broji par karaktera), mala je šansa da ćemo brzo doći do datog elementa. Naspram toga, ako ime broji nekoliko reči, pretraga nam može u istom momentu locirati dati element.
