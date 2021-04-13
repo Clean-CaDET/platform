@@ -33,6 +33,7 @@ namespace SmartTutor.Database
         public DbSet<ChallengeHint> ChallengeHints { get; set; }
         #endregion
 
+        public DbSet<ChallengeSubmission> ChallengeSubmission { get; set; }
         public DbSet<NodeProgress> NodeProgresses { get; set; }
         public DbSet<Trainee> Trainees { get; set; }
 
@@ -47,14 +48,13 @@ namespace SmartTutor.Database
 
         private static void ConfigureBasicMetricChecker(ModelBuilder modelBuilder)
         {
+            //TODO: Look for patterns for better DBContext code organization when using Fluent API extensively.
+
             // Add the shadow property to the model
             modelBuilder.Entity<MetricRangeRule>()
                 .Property<int?>("ClassMetricCheckerForeignKey").IsRequired(false);
             modelBuilder.Entity<MetricRangeRule>()
                 .Property<int?>("MethodMetricCheckerForeignKey").IsRequired(false);
-
-            modelBuilder.Entity<Challenge>()
-                .Property<int>("SolutionIdForeignKey");
 
             // Use the shadow property as a foreign key
             modelBuilder.Entity<BasicMetricChecker>()
@@ -65,7 +65,10 @@ namespace SmartTutor.Database
                 .HasMany(b => b.MethodMetricRules)
                 .WithOne()
                 .HasForeignKey("MethodMetricCheckerForeignKey");
+            
 
+            modelBuilder.Entity<Challenge>()
+                .Property<int>("SolutionIdForeignKey");
             modelBuilder.Entity<Challenge>()
                 .HasOne(b => b.Solution)
                 .WithMany()

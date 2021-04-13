@@ -12,6 +12,8 @@ namespace SmartTutor.ContentModel
 {
     public class ContentService : IContentService
     {
+        //TODO: Redesign the modules as this is quickly becoming a god class.
+        //TODO: Establish test suite and refactor.
         private readonly IRecommender _recommender;
         private readonly ILectureRepository _lectureRepository;
         private readonly ILearningObjectRepository _learningObjectRepository;
@@ -119,5 +121,7 @@ namespace SmartTutor.ContentModel
 
             return evaluations;
         }
+
+
     }
 }

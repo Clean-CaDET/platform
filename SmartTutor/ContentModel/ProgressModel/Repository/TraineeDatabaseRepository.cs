@@ -34,5 +34,11 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
             return _dbContext.NodeProgresses.FirstOrDefault(nodeProgress =>
                 nodeProgress.Trainee.Id == traineeId && nodeProgress.Node.Id == nodeId);
         }
+
+        public void SaveChallengeSubmission(ChallengeSubmission submission)
+        {
+            _dbContext.ChallengeSubmission.Add(submission);
+            _dbContext.SaveChanges();
+        }
     }
 }

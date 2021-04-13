@@ -1,11 +1,10 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.Controllers.DTOs.Challenge;
 using SmartTutor.Controllers.DTOs.Lecture;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 
 namespace SmartTutor.Controllers
@@ -31,7 +30,8 @@ namespace SmartTutor.Controllers
             {
                 challengeEvaluation =
                     _challengeService.EvaluateSubmission(challengeSubmission.SourceCode,
-                        challengeSubmission.ChallengeId);
+                        challengeSubmission.ChallengeId,
+                        challengeSubmission.TraineeId);
             }
             catch (InvalidOperationException e)
             {
