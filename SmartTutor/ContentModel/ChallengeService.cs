@@ -1,4 +1,5 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+﻿using System;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
@@ -20,6 +21,7 @@ namespace SmartTutor.ContentModel
         {
             //TODO: Exceptions for bad CaDETClass - BadRequest, No Challenge - NotFound etc. (reexamine best practices)
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
+            if (solutionAttempt == null || solutionAttempt.Count == 0) throw new InvalidOperationException("Invalid submission.");
             Challenge challenge = _learningObjectRepository.GetChallenge(challengeId);
             if (challenge == null) return null;
 

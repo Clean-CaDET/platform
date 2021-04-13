@@ -227,10 +227,10 @@ INSERT INTO public."ChallengeFulfillmentStrategies"(
 	
 INSERT INTO public."ChallengeHints"(
 	"Id", "Content", "LearningObjectSummaryId")
-	VALUES (7, 'Razmisli kako da integrišeš domenski značajne reči poput "Enroll", "newCourse", "Maximum" i "Count" u imena koja koristiš u svom kodu.', 7);
+	VALUES (7, 'Razmisli kako da integrišeš domenski značajne reči poput "Enroll", "newCourse", "Maximum" i "Active" u imena koja koristiš u svom kodu.', 7);
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "RequiredWords", "HintId")
-	VALUES (1, '{"Enroll","newCourse","Maximum","Count"}', 7);
+	VALUES (1, '{"Enroll","newCourse","Maximum","Active"}', 7);
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -549,7 +549,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (44, 44);
 INSERT INTO public."Challenges"(
 	"Id", "Url", "Description", "SolutionIdForeignKey")
-	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Složene funkcije su one koje zahtevaju visok mentalni napor da se razume sva logika i tokovi kontrole. Mnogi aspekti koda doprinose otežanom razumevanju - čudna imena, dugački izrazi, duboko ugnježdavanje. U sklopu direktorijuma "Methods/01. Simple Methods" refaktoriši funkcije tako da ih pojednostaviš i smanjiš dupliranje koda.', 46);
+	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Složene funkcije su one koje zahtevaju visok mentalni napor da se razume sva logika i tokovi kontrole. Mnogi aspekti koda doprinose otežanom razumevanju - čudna imena, dugački izrazi, duboko ugnježdavanje. U sklopu direktorijuma "Methods/02. Simple Methods" refaktoriši funkcije tako da ih pojednostaviš i smanjiš dupliranje koda.', 46);
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (4, 44);
@@ -630,10 +630,10 @@ INSERT INTO public."ChallengeHints"(
 -- Challenge rules
 INSERT INTO public."MetricRangeRules"(
 	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
-	VALUES (1, 'ELOC', 1, 18, 1, NULL, 3);
+	VALUES (1, 'MELOC', 1, 18, 1, NULL, 3);
 INSERT INTO public."MetricRangeRules"(
 	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
-	VALUES (2, 'ELOC', 1, 12, 3, NULL, 4);
+	VALUES (2, 'MELOC', 1, 12, 3, NULL, 4);
 INSERT INTO public."MetricRangeRules"(
 	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
 	VALUES (3, 'CYCLO', 1, 5, 2, NULL, 4);

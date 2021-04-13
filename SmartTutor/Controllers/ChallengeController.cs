@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
@@ -25,7 +26,18 @@ namespace SmartTutor.Controllers
         [HttpPost("evaluate-submission")]
         public ActionResult<ChallengeEvaluationDTO> EvaluateChallengeSubmission([FromBody] ChallengeSubmissionDTO challengeSubmission)
         {
-            var challengeEvaluation = _challengeService.EvaluateSubmission(challengeSubmission.SourceCode, challengeSubmission.ChallengeId);
+            ChallengeEvaluation challengeEvaluation = null;
+            try
+            {
+                challengeEvaluation =
+                    _challengeService.EvaluateSubmission(challengeSubmission.SourceCode,
+                        challengeSubmission.ChallengeId);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            
             if (challengeEvaluation == null) return NotFound();
             return Ok(_mapper.Map<ChallengeEvaluation, ChallengeEvaluationDTO>(challengeEvaluation, opt =>
             {
