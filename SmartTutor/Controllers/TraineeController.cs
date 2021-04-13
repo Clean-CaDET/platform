@@ -20,21 +20,14 @@ namespace SmartTutor.Controllers
             _traineeService = traineeService;
         }
 
-        [HttpPost("/register")]
+        [HttpPost("register")]
         public ActionResult<TraineeDTO> RegisterTrainee([FromBody] TraineeDTO trainee)
         {
-            try
-            {
-                var registeredTrainee = _traineeService.RegisterTrainee(_mapper.Map<Trainee>(trainee));
-                return Ok(_mapper.Map<TraineeDTO>(registeredTrainee));
-            }
-            catch (TraineeWithStudentIndexAlreadyExists)
-            {
-                return BadRequest();
-            }
+            var registeredTrainee = _traineeService.RegisterTrainee(_mapper.Map<Trainee>(trainee));
+            return Ok(_mapper.Map<TraineeDTO>(registeredTrainee));
         }
 
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public ActionResult<TraineeDTO> LoginTrainee([FromBody] LoginDTO login)
         {
             try

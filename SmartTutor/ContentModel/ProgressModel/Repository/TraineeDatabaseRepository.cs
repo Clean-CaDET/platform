@@ -45,5 +45,11 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
             _dbContext.Trainees.Add(trainee);
             _dbContext.SaveChanges();
         }
+
+        public void UpdateTrainee(Trainee trainee)
+        {
+            _dbContext.Trainees.Update(trainee);
+            _dbContext.SaveChanges();
+        }
     }
 }

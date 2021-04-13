@@ -15,9 +15,16 @@ namespace SmartTutor.ContentModel
 
         public Trainee RegisterTrainee(Trainee trainee)
         {
-            if (_traineeRepository.GetTraineeByIndex(trainee.StudentIndex) != null)
+            var loadedTrainee = _traineeRepository.GetTraineeByIndex(trainee.StudentIndex);
+            if (loadedTrainee != null)
             {
-                throw new TraineeWithStudentIndexAlreadyExists();
+                trainee.Id = loadedTrainee.Id;
+                if (trainee.AuralScore == 0) trainee.AuralScore = loadedTrainee.AuralScore;
+                if (trainee.KinaestheticScore == 0) trainee.KinaestheticScore = loadedTrainee.KinaestheticScore;
+                if (trainee.VisualScore == 0) trainee.VisualScore = loadedTrainee.VisualScore;
+                if (trainee.ReadWriteScore == 0) trainee.ReadWriteScore = loadedTrainee.ReadWriteScore;
+                _traineeRepository.UpdateTrainee(trainee);
+                return trainee;
             }
 
             _traineeRepository.SaveTrainee(trainee);
