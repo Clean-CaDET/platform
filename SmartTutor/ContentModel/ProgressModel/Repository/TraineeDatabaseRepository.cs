@@ -1,6 +1,7 @@
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartTutor.ContentModel.ProgressModel.Repository
 {
@@ -37,7 +38,7 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
 
         public Trainee GetTraineeByIndex(string index)
         {
-            return _dbContext.Trainees.FirstOrDefault(trainee => trainee.StudentIndex.Equals(index));
+            return _dbContext.Trainees.AsNoTracking().FirstOrDefault(trainee => trainee.StudentIndex.Equals(index));
         }
 
         public void SaveTrainee(Trainee trainee)
