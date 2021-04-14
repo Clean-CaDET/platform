@@ -1,3 +1,4 @@
+using System;
 using SmartTutor.ContentModel.FeedbackModel;
 using SmartTutor.ContentModel.FeedbackModel.Repository;
 
@@ -14,7 +15,10 @@ namespace SmartTutor.ContentModel
 
         public void SubmitFeedback(LearningObjectFeedback feedback)
         {
-            _feedbackRepository.SaveFeedback(feedback);
+            feedback.TimeStamp = DateTime.Now;
+            var loadedFeedback = _feedbackRepository.GetFeedback(feedback.LearningObjectId, feedback.TraineeId);
+            if (loadedFeedback == null) _feedbackRepository.SaveFeedback(feedback);
+            else _feedbackRepository.UpdateFeedback(feedback);
         }
     }
 }
