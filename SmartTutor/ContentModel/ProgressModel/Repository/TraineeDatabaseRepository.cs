@@ -18,35 +18,35 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
         {
             throw new System.NotImplementedException();
         }
-
-        public Trainee GetTraineeById(int traineeId)
-        {
-            return _dbContext.Trainees.Find(traineeId);
-        }
-
         public void SaveNodeProgress(NodeProgress nodeProgress)
         {
             _dbContext.NodeProgresses.Add(nodeProgress);
             _dbContext.SaveChanges();
         }
-
         public NodeProgress GetNodeProgressForTrainee(int traineeId, int nodeId)
         {
             return _dbContext.NodeProgresses.FirstOrDefault(nodeProgress =>
                 nodeProgress.Trainee.Id == traineeId && nodeProgress.Node.Id == nodeId);
         }
 
+        public void SaveChallengeSubmission(ChallengeSubmission submission)
+        {
+            _dbContext.ChallengeSubmission.Add(submission);
+        }
+
+        public Trainee GetTraineeById(int traineeId)
+        {
+            return _dbContext.Trainees.Find(traineeId);
+        }
         public Trainee GetTraineeByIndex(string index)
         {
             return _dbContext.Trainees.AsNoTracking().FirstOrDefault(trainee => trainee.StudentIndex.Equals(index));
         }
-
         public void SaveTrainee(Trainee trainee)
         {
             _dbContext.Trainees.Add(trainee);
             _dbContext.SaveChanges();
         }
-
         public void UpdateTrainee(Trainee trainee)
         {
             _dbContext.Trainees.Update(trainee);
