@@ -31,6 +31,9 @@ namespace SmartTutor.Controllers.Mappers
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.FullAnswer.Text))
                 .ForMember(dest => dest.Feedback, opt => opt.MapFrom(src => src.FullAnswer.Feedback));
 
+            CreateMap<QuestionSubmissionDTO, QuestionSubmission>()
+                .ForMember(dest => dest.submittedAnswerIds, opt => opt.MapFrom(src => src.Answers.Select(a => a.Id)));
+
             CreateMap<ArrangeTask, ArrangeTaskDTO>()
                 .ForMember(dest => dest.UnarrangedElements, opt => opt.MapFrom(src => src.Containers.SelectMany(c => c.Elements).ToList()));
             CreateMap<ArrangeTaskContainer, ArrangeTaskContainerDTO>();

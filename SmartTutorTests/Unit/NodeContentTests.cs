@@ -5,6 +5,8 @@ using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.ProgressModel.Repository;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -14,7 +16,7 @@ namespace SmartTutorTests.Unit
         private readonly ContentService _service;
         public NodeContentTests()
         {
-            _service = new ContentService(null, null, CreateMockRepository(), null);
+            _service = new ContentService(null, null, CreateMockRepository(), new Mock<ITraineeRepository>().Object);
         }
 
         private static ILearningObjectRepository CreateMockRepository()
@@ -69,9 +71,9 @@ namespace SmartTutorTests.Unit
 
         [Theory]
         [MemberData(nameof(AnswersTestData))]
-        public void Evaluates_answer_submission(List<int> submittedAnswers, List<bool> expectedCorrectness)
+        public void Evaluates_answer_submission(QuestionSubmission submission, List<bool> expectedCorrectness)
         {
-            var results = _service.EvaluateAnswers(19, submittedAnswers);
+            var results = _service.EvaluateAnswers(submission);
 
             var correctness = results.Select(a => a.SubmissionWasCorrect);
             correctness.ShouldBe(expectedCorrectness);
@@ -82,17 +84,17 @@ namespace SmartTutorTests.Unit
             {
                 new object[]
                 {
-                    new List<int> {10, 11, 12, 13},
+                    new QuestionSubmission { submittedAnswerIds = new List<int> {10, 11, 12, 13}, QuestionId = 19},
                     new List<bool> {false, true, true, false}
                 },
                 new object[]
                 {
-                    new List<int> {10, 13},
+                    new QuestionSubmission { submittedAnswerIds = new List<int> {10, 13}, QuestionId = 19},
                     new List<bool> {false, false, false, false}
                 },
                 new object[]
                 {
-                    new List<int> {11, 12},
+                    new QuestionSubmission { submittedAnswerIds = new List<int> {11, 12}, QuestionId = 19},
                     new List<bool> {true, true, true, true}
                 }
             };

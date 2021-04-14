@@ -80,21 +80,25 @@ namespace SmartTutor.ContentModel
             return nodeProgress;
         }
 
-        public List<AnswerEvaluation> EvaluateAnswers(int questionId, List<int> submittedAnswers)
+        public List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission)
         {
-            var answers = _learningObjectRepository.GetQuestionAnswers(questionId);
-            //TODO: Tie in with the ProgressModel once it is setup, as the [submission]/[evaluation of submission] are important events.
+            //TODO: Discuss what is a submission and what is an evaluation and ensure we are using the appropriate terminology for our UL.
+            var answers = _learningObjectRepository.GetQuestionAnswers(submission.QuestionId);
             //TODO: Some of the logic below should be moved to the LearningSession/NodeProgress aggregate
+            //TODO: Probably need a QuestionEvaluation here.
             var evaluations = new List<AnswerEvaluation>();
             foreach (var answer in answers)
             {
-                var answerWasMarked = submittedAnswers.Contains(answer.Id);
+                var answerWasMarked = submission.submittedAnswerIds.Contains(answer.Id);
                 evaluations.Add(new AnswerEvaluation
                 {
                     FullAnswer = answer,
                     SubmissionWasCorrect = answer.IsCorrect ? answerWasMarked : !answerWasMarked
                 });
             }
+
+            submission.IsCorrect = evaluations.Select(a => a.SubmissionWasCorrect).All(c => c);
+            _traineeRepository.SaveQuestionSubmission(submission);
 
             return evaluations;
         }

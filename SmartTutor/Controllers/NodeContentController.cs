@@ -5,6 +5,7 @@ using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.Controllers.DTOs.Lecture;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.ProgressModel;
 
 namespace SmartTutor.Controllers
 {
@@ -29,11 +30,11 @@ namespace SmartTutor.Controllers
             return Ok(_mapper.Map<KnowledgeNodeProgressDTO>(nodes));
         }
 
-        [HttpPost("{nodeId}/content/question/{questionId}")]
-        public ActionResult<List<AnswerEvaluationDTO>> SubmitQuestionAnswers(int nodeId, int questionId, [FromBody] List<QuestionAnswerDTO> submittedAnswers)
+        [HttpPost("{nodeId}/content/question")]
+        public ActionResult<List<AnswerEvaluationDTO>> SubmitQuestionAnswers(int nodeId, [FromBody] QuestionSubmissionDTO submission)
         {
             //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
-            var evaluation = _contentService.EvaluateAnswers(questionId, submittedAnswers.Select(a => a.Id).ToList());
+            var evaluation = _contentService.EvaluateAnswers(_mapper.Map<QuestionSubmission>(submission));
             if (evaluation == null) return NotFound();
             return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
         }
