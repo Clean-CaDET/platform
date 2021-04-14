@@ -7,6 +7,6 @@ namespace SmartTutor.Controllers.DTOs.Lecture
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<KnowledgeNodeProgressDTO> KnowledgeNodes { get; set; }
+        public List<int> KnowledgeNodeIds { get; set; }
     }
 }

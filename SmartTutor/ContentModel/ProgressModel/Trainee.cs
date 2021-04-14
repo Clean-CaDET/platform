@@ -6,6 +6,7 @@ namespace SmartTutor.ContentModel.ProgressModel
     public class Trainee
     {
         [Key] public int Id { get; set; }
+        public string StudentIndex { get; set; }
         public List<NodeProgress> Progress { get; set; }
 
         // TODO: Entity framework cannot map dictionaries, requires refactoring
