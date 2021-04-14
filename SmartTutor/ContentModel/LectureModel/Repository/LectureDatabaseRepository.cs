@@ -16,7 +16,7 @@ namespace SmartTutor.ContentModel.LectureModel.Repository
 
         public List<Lecture> GetLectures()
         {
-            return _dbContext.Lectures.ToList();
+            return _dbContext.Lectures.Include(l => l.KnowledgeNodes).ToList();
         }
 
         public List<KnowledgeNode> GetKnowledgeNodes(int id)
