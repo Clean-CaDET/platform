@@ -8,12 +8,14 @@ Clean CaDET started as a project funded by the [Science Fund of the Republic of 
 For an overview of the platform and its composing elements, check the [wiki pages](https://github.com/Clean-CaDET/platform/wiki).
 
 In order to build SmartTutor service run following command:
-`docker build -t cleancadet/smart-tutor --build-arg PROJECT=SmartTutor --target final .`
+`docker build -t cleancadet/smart-tutor --build-arg PROJECT=SmartTutor --target final .` 
+By default it downloads source code form master branch and builds it, but using SRC_URL different source code url can be set:
+`docker build -t cleancadet/smart-tutor --build-arg PROJECT=SmartTutor --build-arg SRC_URL=https://github.com/Clean-CaDET/platform/archive/refs/heads/develop.tar.gz --target final .`
 
 In order to build Gateway service run following command (add --no-cache option if layers are chached):
 `docker build -t cleancadet/gateway --target gatewayWithFront --build-arg 'GATEWAY_URL=http:\/\/localhost:8080\/smart-tutor\/api\/' .`
 
-In order to build complete infrasturece run following command in `stacks/scripts` directory:
+In order to create complete infrasturece run following command in `stacks/scripts` directory:
 `./start.sh`
 
 In order to update specefic service run following command in `stacks/scripts` directory:
