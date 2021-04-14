@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
+using SmartTutor.ContentModel.FeedbackModel.Repository;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.LectureModel.Repository;
 using SmartTutor.ContentModel.ProgressModel.Repository;
@@ -39,10 +40,12 @@ namespace SmartTutor
             services.AddScoped<IContentService, ContentService>();
             services.AddScoped<IChallengeService, ChallengeService>();
             services.AddScoped<ITraineeService, TraineeService>();
+            services.AddScoped<IFeedbackService, FeedbackService>();
 
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
             services.AddScoped<ITraineeRepository, TraineeDatabaseRepository>();
+            services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
             services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
         }
 
@@ -78,7 +81,8 @@ namespace SmartTutor
             string integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             string pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
-            return $"Server={server};Port={port};Database={database};User ID={user};Password={password};Integrated Security={integratedSecurity};Pooling={pooling};";
+            return
+                $"Server={server};Port={port};Database={database};User ID={user};Password={password};Integrated Security={integratedSecurity};Pooling={pooling};";
         }
     }
 }
