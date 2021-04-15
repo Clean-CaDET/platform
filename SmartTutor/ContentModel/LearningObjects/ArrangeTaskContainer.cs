@@ -11,11 +11,10 @@ namespace SmartTutor.ContentModel.LearningObjects
         public string Title { get; set; }
         public List<ArrangeTaskElement> Elements { get; set; }
 
-        public bool IsCorrectSubmission(ArrangeTaskContainer submittedContainer)
+        public bool IsCorrectSubmission(List<int> elementIds)
         {
-            var submittedElements = submittedContainer.Elements;
-            return submittedElements.Count == Elements.Count
-                   && Elements.All(submittedElements.Contains);
+            return elementIds.Count == Elements.Count
+                   && Elements.Select(e => e.Id).All(elementIds.Contains);
         }
     }
 }

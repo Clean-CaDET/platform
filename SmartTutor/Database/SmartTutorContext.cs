@@ -33,9 +33,12 @@ namespace SmartTutor.Database
         public DbSet<ChallengeHint> ChallengeHints { get; set; }
         #endregion
 
-        public DbSet<ChallengeSubmission> ChallengeSubmission { get; set; }
+        public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
         public DbSet<NodeProgress> NodeProgresses { get; set; }
         public DbSet<Trainee> Trainees { get; set; }
+        public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
+        public DbSet<ArrangeTaskSubmission> ArrangeTaskSubmissions { get; set; }
+        public DbSet<ArrangeTaskContainerSubmission> ArrangeTaskContainerSubmissions { get; set; }
 
         public SmartTutorContext(DbContextOptions<SmartTutorContext> options) : base(options)
         {

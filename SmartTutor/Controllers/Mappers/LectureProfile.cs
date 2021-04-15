@@ -31,15 +31,22 @@ namespace SmartTutor.Controllers.Mappers
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.FullAnswer.Text))
                 .ForMember(dest => dest.Feedback, opt => opt.MapFrom(src => src.FullAnswer.Feedback));
 
+            CreateMap<QuestionSubmissionDTO, QuestionSubmission>()
+                .ForMember(dest => dest.submittedAnswerIds, opt => opt.MapFrom(src => src.Answers.Select(a => a.Id)));
+
             CreateMap<ArrangeTask, ArrangeTaskDTO>()
                 .ForMember(dest => dest.UnarrangedElements, opt => opt.MapFrom(src => src.Containers.SelectMany(c => c.Elements).ToList()));
             CreateMap<ArrangeTaskContainer, ArrangeTaskContainerDTO>();
-            CreateMap<ArrangeTaskContainerDTO, ArrangeTaskContainer>();
             CreateMap<ArrangeTaskElement, ArrangeTaskElementDTO>();
-            CreateMap<ArrangeTaskElementDTO, ArrangeTaskElement>();
+            
             CreateMap<ArrangeTaskContainerEvaluation, ArrangeTaskContainerEvaluationDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.FullAnswer.Id))
                 .ForMember(dest => dest.CorrectElements, opt => opt.MapFrom(src => src.FullAnswer.Elements));
+            CreateMap<ArrangeTaskSubmissionDTO, ArrangeTaskSubmission>();
+            CreateMap<ArrangeTaskContainerDTO, ArrangeTaskContainerSubmission>()
+                .ForMember(dest => dest.ElementIds, opt => opt.MapFrom(src => src.Elements.Select(e => e.Id)))
+                .ForMember(dest => dest.ContainerId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }
