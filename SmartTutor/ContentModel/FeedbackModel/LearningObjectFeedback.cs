@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartTutor.ContentModel.FeedbackModel
 {
-    [Table("LearningObjectFeedbacks")]
     public class LearningObjectFeedback
     {
         [Key] public int Id { get; set; }
