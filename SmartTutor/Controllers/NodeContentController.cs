@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Controllers.DTOs.Lecture;
 using System.Collections.Generic;
-using System.Linq;
-using SmartTutor.ContentModel.ProgressModel;
 
 namespace SmartTutor.Controllers
 {
@@ -39,11 +37,11 @@ namespace SmartTutor.Controllers
             return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
         }
 
-        [HttpPost("{nodeId}/content/arrange-task/{arrangeTaskId}")]
-        public ActionResult<List<ArrangeTaskContainerEvaluationDTO>> SubmitArrangeTask(int nodeId, int arrangeTaskId, [FromBody] List<ArrangeTaskContainerDTO> submittedAnswers)
+        [HttpPost("{nodeId}/content/arrange-task")]
+        public ActionResult<List<ArrangeTaskContainerEvaluationDTO>> SubmitArrangeTask(int nodeId, [FromBody] ArrangeTaskSubmissionDTO submission)
         {
             //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
-            var evaluation = _contentService.EvaluateArrangeTask(arrangeTaskId, _mapper.Map<List<ArrangeTaskContainer>>(submittedAnswers));
+            var evaluation = _contentService.EvaluateArrangeTask(_mapper.Map<ArrangeTaskSubmission>(submission));
             if (evaluation == null) return NotFound();
             return Ok(_mapper.Map<List<ArrangeTaskContainerEvaluationDTO>>(evaluation));
         }

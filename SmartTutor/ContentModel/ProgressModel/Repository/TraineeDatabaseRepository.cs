@@ -41,6 +41,13 @@ namespace SmartTutor.ContentModel.ProgressModel.Repository
             _dbContext.SaveChanges();
         }
 
+        public void SaveArrangeTaskSubmission(ArrangeTaskSubmission submission)
+        {
+            //TODO: FIX
+            _dbContext.ArrangeTaskSubmissions.Add(submission);
+            _dbContext.SaveChanges();
+        }
+
         public Trainee GetTraineeById(int traineeId)
         {
             return _dbContext.Trainees.Find(traineeId);
