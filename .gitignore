@@ -546,3 +546,5 @@ $RECYCLE.BIN/
 #JetBrains
 .DS_Store
 .idea
+
+.vscode
