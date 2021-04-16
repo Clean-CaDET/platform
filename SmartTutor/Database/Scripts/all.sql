@@ -588,7 +588,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (48, 48);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (48, 'https://i.ibb.co/tpCkJp0/params-strategy-rs.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
+	VALUES (48, 'https://i.ibb.co/kDfx5DJ/a-RS-Methods-Params-Startegy.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -687,7 +687,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (61, 61);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (61, 'https://i.ibb.co/Y8SM4qV/RS-Methods-LINQ.png', 'Razmisli na koji način nam IsActive funkcija apstrahuje logiku, a na koji način je enkapsulira.');
+	VALUES (61, 'https://i.ibb.co/ydsGxjM/a-RS-Methods-LINQ.png', 'Razmisli na koji način nam IsActive funkcija apstrahuje logiku, a na koji način je enkapsulira.');
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -787,4 +787,4 @@ INSERT INTO public."QuestionAnswers"(
 	VALUES (25, 'Formiranje čistih funkcija je izazovno, dok je prolazak kroz kod pun fokusiranih funkcija jednostavan.', true, 'Izjava je tačna. Potreban je trud da se identifikuje smislen deo logike i da se formira ime koje dobro opisuje datu logiku.', 66);
 INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
-	VALUES (26, 'Kada pišemo čiste funkcije, naši klijenti mogu da čitaju i razumeju naš kod.', false, 'Izjava nije tačna. Čiste funkcije koje opisuju poslovnu logiku treba da budu razumljive našim klijentima. Međutim, ne treba zaboraviti značajan deo logike koja će omogućiti obrau HTTP zahteva, interakciju sa bazom, kriptografiju i ostale tehničke detalje koji su poznati inženjnerima softvera, ali ne i ljudima za koje se pravi softver.', 66);
+	VALUES (26, 'Kada pišemo čiste funkcije, naši klijenti mogu da čitaju i razumeju naš kod.', false, 'Izjava nije tačna. Čiste funkcije koje opisuju poslovnu logiku treba da budu razumljive našim klijentima. Međutim, ne treba zaboraviti značajan deo logike koja će omogućiti obradu HTTP zahteva, interakciju sa bazom, kriptografiju i ostale tehničke detalje koji su poznati inženjnerima softvera, ali ne i ljudima za koje se pravi softver.', 66);
