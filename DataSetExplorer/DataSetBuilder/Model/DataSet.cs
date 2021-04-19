@@ -47,5 +47,10 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
             return _instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
         }
+
+        public List<DataSetInstance> GetAllInstances()
+        {
+            return _instances.ToList();
+        }
     }
 }
