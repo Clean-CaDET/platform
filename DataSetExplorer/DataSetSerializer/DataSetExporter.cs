@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using DataSetExplorer.DataSetBuilder.Model;
 using OfficeOpenXml;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace DataSetExplorer.DataSetSerializer
 {
@@ -45,27 +43,18 @@ namespace DataSetExplorer.DataSetSerializer
         
         private void PopulateMetrics(ExportedDataSetInstance instance, int row)
         {
-            var allMetrics = Enum.GetValues(typeof(CaDETMetric));
-
-            for (var i = 0; i < allMetrics.Length; i++)
+            var i = 0;
+            foreach (var key in instance.Metrics.Keys)
             {
-                CaDETMetric metric = (CaDETMetric)allMetrics.GetValue(i);
-                sheet.Cells[1, 5 + i].Value = metric;
-
-                if (instance.Metrics.ContainsKey(metric))
-                {
-                    sheet.Cells[row, 5 + i].Value = instance.Metrics[metric];
-                }
-                else
-                {
-                    sheet.Cells[row, 5 + i].Value = "/";
-                }
+                sheet.Cells[1, 5 + i].Value = key;
+                sheet.Cells[row, 5 + i].Value = instance.Metrics[key];
+                i++;
             }
         }
 
         private void PopulateAnnotations(ExportedDataSetInstance instance, int row)
         {
-            var numOfMetrics = Enum.GetValues(typeof(CaDETMetric)).Length;
+            var numOfMetrics = instance.Metrics.Count;
             var maxNumberOfAnnotations = ExportedDataSetInstance.MaxNumberOfAnnotations;
 
             for (var i = 0; i < maxNumberOfAnnotations; i++)

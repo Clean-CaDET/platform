@@ -48,19 +48,40 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
             projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
 
-            var dataForExport = new List<ExportedDataSetInstance>();
+            Dictionary<string, List<ExportedDataSetInstance>> dataForExport = new Dictionary<string, List<ExportedDataSetInstance>>();
+
             foreach (var key in projects.Keys)
             {
                 CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
                 
                 var dataset = LoadDataSet(projects[key].ToString());
-                var annotatedInstances = dataset.GetAllInstances();
-                dataForExport.AddRange(GetDataForExport(annotatedInstances, project));
+
+                var dataGroupedByCodeSmell = GetDataForExport(dataset.GetAllInstances(), project)
+                    .GroupBy(instance => instance.CodeSmellType);
+                JoinDataForExport(dataGroupedByCodeSmell, ref dataForExport);
             }
             
-            var exporter = new DataSetExporter("C:/dataset/output/");
-            exporter.Export(dataForExport, "DataSet");
+            foreach (var key in dataForExport.Keys)
+            {
+                var exporter = new DataSetExporter("C:/dataset/output/");
+                exporter.Export(dataForExport[key], "DataSet_" + key);
+            }
+        }
+
+        private static void JoinDataForExport(IEnumerable<IGrouping<string, ExportedDataSetInstance>> dataGroupedByCodeSmell, ref Dictionary<string, List<ExportedDataSetInstance>> dataForExport)
+        {
+            foreach (var codeSmellData in dataGroupedByCodeSmell)
+            {
+                if (dataForExport.ContainsKey(codeSmellData.Key))
+                {
+                    dataForExport[codeSmellData.Key].AddRange(codeSmellData);
+                }
+                else
+                {
+                    dataForExport[codeSmellData.Key] = codeSmellData.ToList();
+                }
+            }
         }
 
         private static List<ExportedDataSetInstance> GetDataForExport(List<DataSetInstance> annotatedInstances, CaDETProject project)
