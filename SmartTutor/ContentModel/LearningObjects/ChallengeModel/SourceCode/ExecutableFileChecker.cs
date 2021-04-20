@@ -9,7 +9,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode
 
         public ExecutableFileChecker()
         {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\SourceCodeTests\\FileStorage\\SourceCodeFile.cs");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "\\FileStorage\\SourceCode.cs");
             FileContent = File.ReadAllBytes(filePath);
         }
 

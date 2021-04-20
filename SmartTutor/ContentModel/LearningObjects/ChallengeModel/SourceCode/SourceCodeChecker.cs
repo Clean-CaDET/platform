@@ -19,7 +19,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode
 
         private void CreateFileFromCode(string[] sourceCode)
         {
-            string path = @"..\SourceCodeTests\FileStorage\SourceCodeFile.cs";
+            string path = @"..\FileStorage\SourceCode.cs";
             foreach (var line in sourceCode)
                 File.WriteAllText(path, line);
         }
