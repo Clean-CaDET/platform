@@ -2,6 +2,7 @@
 using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using System;
 using System.Collections.Generic;

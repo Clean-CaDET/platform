@@ -18,6 +18,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RepositoryCompiler\RepositoryCompiler.csproj" />
-    <ProjectReference Include="..\SourceCodeTests\SourceCodeTests.csproj" />
   </ItemGroup>
 </Project>
