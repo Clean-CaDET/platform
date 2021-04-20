@@ -5,7 +5,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode
 {
     public class ExecutableFileChecker
     {
-        public byte[] FileContent { get; set; }
+        private byte[] FileContent { get; set; }
 
         public ExecutableFileChecker()
         {
