@@ -3,8 +3,8 @@ using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode;
+using SmartTutor.ContentModel.LearningObjects.Exceptions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using System;
 using System.Collections.Generic;
 using SmartTutor.ContentModel.ProgressModel;
 
@@ -23,6 +23,9 @@ namespace SmartTutor.ContentModel
 
         public ChallengeEvaluation EvaluateSubmission(string[] sourceCode, int challengeId, string traineeId)
         {
+            if (!new SourceCodeChecker().ValidSourceCode(sourceCode))
+                throw new InvalidStateException("Code can not be executed!");
+
             //TODO: Exceptions for bad CaDETClass - BadRequest, No Challenge - NotFound etc. (reexamine best practices)
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
             if (solutionAttempt == null || solutionAttempt.Count == 0) throw new InvalidOperationException("Invalid submission.");
