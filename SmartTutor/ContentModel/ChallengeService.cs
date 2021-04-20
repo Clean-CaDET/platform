@@ -1,12 +1,13 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode;
 using SmartTutor.ContentModel.LearningObjects.Exceptions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using System.Collections.Generic;
 using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.ProgressModel.Repository;
+using System;
+using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel
 {
