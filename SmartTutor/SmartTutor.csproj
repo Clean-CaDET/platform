@@ -2,12 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="ContentModel\LearningObjects\ChallengeModel\SourceCode\FileStorage\SourceCode.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ContentModel\LearningObjects\ChallengeModel\SourceCode\FileStorage\SourceCode.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />

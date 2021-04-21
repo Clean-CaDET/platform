@@ -7,7 +7,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode
         public bool ValidSourceCode(string[] sourceCode)
         {
             CreateFileFromCode(sourceCode);
-            return new ExecutableFileChecker().IsExecutableFile();
+            return new ExecutableFileChecker().IsExecutableFile() && new BracketsChecker().BracketsMatching(sourceCode);
         }
 
         private void CreateFileFromCode(string[] sourceCode)
