@@ -1,23 +1,25 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode
 {
     public class ExecutableFileChecker
     {
-        private byte[] FileContent { get; set; }
+        private readonly byte[] _fileContent;
+        private readonly byte[] EXE_SIGNATURE = { 239, 187 };
 
         public ExecutableFileChecker()
         {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "\\FileStorage\\SourceCode.cs");
-            FileContent = File.ReadAllBytes(filePath);
+            var filePath = @".\ContentModel\LearningObjects\ChallengeModel\SourceCode\FileStorage\SourceCode.cs";
+            _fileContent = File.ReadAllBytes(filePath);
         }
 
         public bool IsExecutableFile()
         {
             byte[] result = new byte[2];
-            Array.Copy(FileContent, 0, result, 0, 2);
-            return result[0] == 239 && result[1] == 187;
+            Array.Copy(_fileContent, 0, result, 0, 2);
+            return result.SequenceEqual(EXE_SIGNATURE);
         }
     }
 }

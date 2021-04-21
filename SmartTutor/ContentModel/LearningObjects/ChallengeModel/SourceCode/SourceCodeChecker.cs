@@ -4,22 +4,15 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.SourceCode
 {
     public class SourceCodeChecker
     {
-        private readonly ExecutableFileChecker _executableFileChecker;
-
-        public SourceCodeChecker()
-        {
-            _executableFileChecker = new ExecutableFileChecker();
-        }
-
         public bool ValidSourceCode(string[] sourceCode)
         {
             CreateFileFromCode(sourceCode);
-            return _executableFileChecker.IsExecutableFile();
+            return new ExecutableFileChecker().IsExecutableFile();
         }
 
         private void CreateFileFromCode(string[] sourceCode)
         {
-            string path = @"..\FileStorage\SourceCode.cs";
+            string path = @".\ContentModel\LearningObjects\ChallengeModel\SourceCode\FileStorage\SourceCode.cs";
             foreach (var line in sourceCode)
                 File.WriteAllText(path, line);
         }

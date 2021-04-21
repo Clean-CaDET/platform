@@ -8,6 +8,7 @@ using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.ContentModel.ProgressModel.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SmartTutor.ContentModel
 {
@@ -25,7 +26,10 @@ namespace SmartTutor.ContentModel
         public ChallengeEvaluation EvaluateSubmission(string[] sourceCode, int challengeId, string traineeId)
         {
             if (!new SourceCodeChecker().ValidSourceCode(sourceCode))
+            {
+                File.Delete(@".\ContentModel\LearningObjects\ChallengeModel\SourceCode\FileStorage\SourceCode.cs");
                 throw new InvalidStateException("Code can not be executed!");
+            }
 
             //TODO: Exceptions for bad CaDETClass - BadRequest, No Challenge - NotFound etc. (reexamine best practices)
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
