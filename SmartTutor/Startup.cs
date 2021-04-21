@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
 using SmartTutor.ProgressModel.Submissions.Repository;
+using SmartTutor.KeycloakAuth;
 
 namespace SmartTutor
 {
@@ -71,7 +73,7 @@ namespace SmartTutor
                 o.Audience = Configuration["Jwt:Audience"];
                 o.RequireHttpsMetadata = false;
                 o.SaveToken = true;
-                o.Events = new JwtBearerEvents()
+                o.Events = new JwtBearerEvents
 
                 {
                     OnAuthenticationFailed = c =>
@@ -92,7 +94,7 @@ namespace SmartTutor
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("testPolicy", policy =>
-                    policy.Requirements.Add(new KeycloakRoleAllowed("Administrators")));
+                    policy.Requirements.Add(new AllowedKeycloakRole("Administrator")));
             });
             services.AddSingleton<IAuthorizationHandler, AllowedKeycloakRoleHandler>();
         }
@@ -111,6 +113,8 @@ namespace SmartTutor
                 .AllowCredentials()); // allow credentials
 
             app.UseHttpsRedirection();
+            
+            app.UseAuthentication();
 
             app.UseRouting();
 

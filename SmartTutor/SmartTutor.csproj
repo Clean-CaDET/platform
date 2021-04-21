@@ -20,8 +20,4 @@
   <ItemGroup>
     <ProjectReference Include="..\RepositoryCompiler\RepositoryCompiler.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="KeycloakAuth" />
-  </ItemGroup>
 </Project>
