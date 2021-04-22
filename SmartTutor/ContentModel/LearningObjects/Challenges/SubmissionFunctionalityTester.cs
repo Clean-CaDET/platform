@@ -10,7 +10,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
         {
             var syntaxErrors = new List<string>();
             var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
-            
+
             var diagnostics = syntaxTree.GetDiagnostics().ToList();
             if (diagnostics.Count > 0)
             {

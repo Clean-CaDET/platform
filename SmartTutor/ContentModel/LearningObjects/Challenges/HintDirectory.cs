@@ -25,7 +25,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
 
         public void AddHint(string codeSnippetId, ChallengeHint hint)
         {
-            if(hint == null) throw new InvalidOperationException("Hint cannot be null.");
+            if (hint == null) throw new InvalidOperationException("Hint cannot be null.");
             if (_directory.ContainsKey(hint))
             {
                 if (!_directory[hint].Contains(codeSnippetId))
@@ -68,7 +68,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
         {
             foreach (var hint in allHints)
             {
-                _directory.Add(hint, new List<string> {"ALL"});
+                _directory.Add(hint, new List<string> { "ALL" });
             }
         }
     }
