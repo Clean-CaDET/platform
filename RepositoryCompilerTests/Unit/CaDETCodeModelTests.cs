@@ -156,13 +156,13 @@ namespace RepositoryCompilerTests.Unit
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var overlapTimeSpanParam = dateRange.FindMember("OverlapsWith").Params.First();
             overlapTimeSpanParam.Name.ShouldBe("timeSpan");
-            overlapTimeSpanParam.Type.ShouldBe("DoctorApp.Model.Data.DateR.DateRange");
+            overlapTimeSpanParam.Type.FullType.ShouldBe("DoctorApp.Model.Data.DateR.DateRange");
             var serviceTimeSpanParam = service.FindMember("FindAvailableDoctor").Params.First();
             serviceTimeSpanParam.Name.ShouldBe("timeSpan");
-            serviceTimeSpanParam.Type.ShouldBe("DoctorApp.Model.Data.DateR.DateRange");
+            serviceTimeSpanParam.Type.FullType.ShouldBe("DoctorApp.Model.Data.DateR.DateRange");
             var logParam = service.FindMember("LogChecked").Params.First();
             logParam.Name.ShouldBe("testData");
-            logParam.Type.ShouldBe("int");
+            logParam.Type.FullType.ShouldBe("int");
         }
 
         [Fact]
@@ -212,16 +212,80 @@ namespace RepositoryCompilerTests.Unit
             var overlapsWith = dateRange.FindMember("OverlapsWith");
             var logChecked = service.FindMember("LogChecked");
 
-            overlapsWith.VariableNames.Count().ShouldBe(0);
-            logChecked.VariableNames.Count().ShouldBe(8);
-            logChecked.VariableNames.ShouldContain("test1");
-            logChecked.VariableNames.ShouldContain("test");
-            logChecked.VariableNames.ShouldContain("a");
-            logChecked.VariableNames.ShouldContain("b");
-            logChecked.VariableNames.ShouldContain("c");
-            logChecked.VariableNames.ShouldContain("temp1");
-            logChecked.VariableNames.ShouldContain("temp2");
-            logChecked.VariableNames.ShouldContain("test2");
+            overlapsWith.Variables.Count().ShouldBe(0);
+            logChecked.Variables.Count().ShouldBe(8);
+
+            logChecked.Variables.Count(v => v.Name.Equals("test1")).ShouldBe(1);
+            logChecked.Variables.Count(v => v.Name.Equals("test")).ShouldBe(1);
+            logChecked.Variables.Count(v => v.Name.Equals("a")).ShouldBe(1);
+            logChecked.Variables.Count(v => v.Name.Equals("b")).ShouldBe(1);
+            logChecked.Variables.Count(v => v.Name.Equals("c")).ShouldBe(1);
+            logChecked.Variables.Count(v => v.Name.Equals("temp1")).ShouldBe(1);
+            logChecked.Variables.Count(v => v.Name.Equals("temp2")).ShouldBe(1);
+            logChecked.Variables.Count(v => v.Name.Equals("temp2")).ShouldBe(1);
+        }
+
+        [Fact]
+        public void Checks_field_linked_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> otherClasses = factory.CreateClassModel(_testDataFactory.GetClassesFromDifferentNamespace());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var otherDoctor = otherClasses.Find(c => c.Name.Equals("Doctor"));
+            var otherDateRange = otherClasses.Find(c => c.Name.Equals("DateRange"));
+
+            dateRange.FindField("testDictionary").GetLinkedTypes().ShouldContain(doctor);
+            dateRange.FindField("testDictionary").GetLinkedTypes().ShouldNotContain(otherDoctor);
+            dateRange.FindField("testDictionary").GetLinkedTypes().ShouldContain(doctorService);
+            doctor.FindField("TestDR").GetLinkedTypes().ShouldContain(dateRange);
+            doctor.FindField("TestDR").GetLinkedTypes().ShouldNotContain(otherDateRange);
+            doctorService.FindField("_doctors").GetLinkedTypes().ShouldContain(doctor);
+        }
+
+        [Fact]
+        public void Checks_method_linked_return_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> otherClasses = factory.CreateClassModel(_testDataFactory.GetClassesFromDifferentNamespace());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var otherDoctor = otherClasses.Find(c => c.Name.Equals("Doctor"));
+            var otherDateRange = otherClasses.Find(c => c.Name.Equals("DateRange"));
+
+            doctor.FindMember("TestFunction").GetLinkedReturnTypes().ShouldContain(dateRange);
+            doctor.FindMember("TestFunction").GetLinkedReturnTypes().ShouldNotContain(otherDateRange);
+            doctorService.FindMember("FindAvailableDoctor").GetLinkedReturnTypes().ShouldContain(doctor);
+            doctorService.FindMember("FindAvailableDoctor").GetLinkedReturnTypes().ShouldNotContain(otherDoctor);
+        }
+
+        [Fact]
+        public void Checks_variable_linked_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> otherClasses = factory.CreateClassModel(_testDataFactory.GetClassesFromDifferentNamespace());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var otherDoctor = otherClasses.Find(c => c.Name.Equals("Doctor"));
+            var otherDateRange = otherClasses.Find(c => c.Name.Equals("DateRange"));
+
+            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldContain(doctor);
+            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldNotContain(otherDoctor);
+            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldContain(dateRange);
+            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldNotContain(otherDateRange);
+            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldNotContain(doctorService);
         }
     }
 }

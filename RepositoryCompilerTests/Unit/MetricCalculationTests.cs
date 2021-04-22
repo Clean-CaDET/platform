@@ -174,7 +174,7 @@ namespace RepositoryCompilerTests.Unit
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
             var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
 
-            dataRange.Metrics[CaDETMetric.CBO].ShouldBe(0);
+            dataRange.Metrics[CaDETMetric.CBO].ShouldBe(2);
             doctor.Metrics[CaDETMetric.CBO].ShouldBe(2);
             doctorService.Metrics[CaDETMetric.CBO].ShouldBe(2);
         }
