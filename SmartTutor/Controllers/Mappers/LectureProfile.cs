@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.Lectures;
 using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Submissions;
 using System.Linq;
 
 namespace SmartTutor.Controllers.Mappers
@@ -32,7 +33,7 @@ namespace SmartTutor.Controllers.Mappers
                 .ForMember(dest => dest.Feedback, opt => opt.MapFrom(src => src.FullAnswer.Feedback));
 
             CreateMap<QuestionSubmissionDTO, QuestionSubmission>()
-                .ForMember(dest => dest.submittedAnswerIds, opt => opt.MapFrom(src => src.Answers.Select(a => a.Id)));
+                .ForMember(dest => dest.SubmittedAnswerIds, opt => opt.MapFrom(src => src.Answers.Select(a => a.Id)));
 
             CreateMap<ArrangeTask, ArrangeTaskDTO>()
                 .ForMember(dest => dest.UnarrangedElements, opt => opt.MapFrom(src => src.Containers.SelectMany(c => c.Elements).ToList()));

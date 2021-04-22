@@ -1,6 +1,6 @@
 using AutoMapper;
-using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Controllers.DTOs.Trainee;
+using SmartTutor.LearnerModel.Learners;
 
 namespace SmartTutor.Controllers.Mappers
 {
@@ -8,8 +8,8 @@ namespace SmartTutor.Controllers.Mappers
     {
         public ProgressProfile()
         {
-            CreateMap<TraineeDTO, Trainee>();
-            CreateMap<Trainee, TraineeDTO>();
+            CreateMap<LearnerDTO, Learner>();
+            CreateMap<Learner, LearnerDTO>();
         }
     }
 }

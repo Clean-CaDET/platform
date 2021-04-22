@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.ProgressModel.Submissions;
 using System.Collections.Generic;
 
 namespace SmartTutor.Controllers

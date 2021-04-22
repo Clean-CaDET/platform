@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.FeedbackModel;
+using SmartTutor.ContentModel.Feedback;
 using SmartTutor.Controllers.DTOs.Feedback;
 
 namespace SmartTutor.Controllers

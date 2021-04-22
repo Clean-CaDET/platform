@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartTutor.ContentModel.FeedbackModel;
+using SmartTutor.ContentModel.Feedback;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
 using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
-using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.Lectures;
+using SmartTutor.LearnerModel.Learners;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Submissions;
 
 namespace SmartTutor.Database
 {
@@ -36,7 +38,7 @@ namespace SmartTutor.Database
 
         public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
         public DbSet<NodeProgress> NodeProgresses { get; set; }
-        public DbSet<Trainee> Trainees { get; set; }
+        public DbSet<Learner> Trainees { get; set; }
         public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<ArrangeTaskSubmission> ArrangeTaskSubmissions { get; set; }
         public DbSet<ArrangeTaskContainerSubmission> ArrangeTaskContainerSubmissions { get; set; }

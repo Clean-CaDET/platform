@@ -1,5 +1,6 @@
-﻿using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.ProgressModel;
+﻿using SmartTutor.ContentModel.Lectures;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Submissions;
 using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel

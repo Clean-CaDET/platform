@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,13 +5,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.FeedbackModel.Repository;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.LectureModel.Repository;
-using SmartTutor.ContentModel.ProgressModel.Repository;
 using SmartTutor.Controllers.Mappers;
 using SmartTutor.Database;
-using SmartTutor.Recommenders;
+using SmartTutor.InstructionalModel;
+using SmartTutor.LearnerModel;
+using System;
+using SmartTutor.ContentModel.Feedback.Repository;
+using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.ProgressModel.Repository;
 
 namespace SmartTutor
 {
@@ -39,14 +40,14 @@ namespace SmartTutor
 
             services.AddScoped<IContentService, ContentService>();
             services.AddScoped<IChallengeService, ChallengeService>();
-            services.AddScoped<ITraineeService, TraineeService>();
+            services.AddScoped<ILearnerService, LearnerService>();
             services.AddScoped<IFeedbackService, FeedbackService>();
 
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
-            services.AddScoped<ITraineeRepository, TraineeDatabaseRepository>();
+            services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
-            services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
+            services.AddScoped<IInstructor, KnowledgeBasedRecommender>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

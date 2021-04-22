@@ -1,6 +1,6 @@
+using SmartTutor.ContentModel.Feedback;
 using System;
-using SmartTutor.ContentModel.FeedbackModel;
-using SmartTutor.ContentModel.FeedbackModel.Repository;
+using SmartTutor.ContentModel.Feedback.Repository;
 
 namespace SmartTutor.ContentModel
 {

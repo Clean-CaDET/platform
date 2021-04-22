@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartTutor.Controllers.DTOs.Trainee
 {
-    public class TraineeDTO
+    public class LearnerDTO
     {
         public int Id { get; set; }
 

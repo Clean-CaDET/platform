@@ -1,5 +1,5 @@
 using AutoMapper;
-using SmartTutor.ContentModel.FeedbackModel;
+using SmartTutor.ContentModel.Feedback;
 using SmartTutor.Controllers.DTOs.Feedback;
 
 namespace SmartTutor.Controllers.Mappers

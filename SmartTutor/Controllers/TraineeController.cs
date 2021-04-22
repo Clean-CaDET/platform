@@ -1,9 +1,9 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.ProgressModel;
 using SmartTutor.Controllers.DTOs.Trainee;
-using SmartTutor.Exceptions;
+using SmartTutor.LearnerModel;
+using SmartTutor.LearnerModel.Exceptions;
+using SmartTutor.LearnerModel.Learners;
 
 namespace SmartTutor.Controllers
 {
@@ -12,30 +12,30 @@ namespace SmartTutor.Controllers
     public class TraineeController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ITraineeService _traineeService;
+        private readonly ILearnerService _learnerService;
 
-        public TraineeController(IMapper mapper, ITraineeService traineeService)
+        public TraineeController(IMapper mapper, ILearnerService learnerService)
         {
             _mapper = mapper;
-            _traineeService = traineeService;
+            _learnerService = learnerService;
         }
 
         [HttpPost("register")]
-        public ActionResult<TraineeDTO> RegisterTrainee([FromBody] TraineeDTO trainee)
+        public ActionResult<LearnerDTO> RegisterTrainee([FromBody] LearnerDTO learner)
         {
-            var registeredTrainee = _traineeService.RegisterTrainee(_mapper.Map<Trainee>(trainee));
-            return Ok(_mapper.Map<TraineeDTO>(registeredTrainee));
+            var registeredTrainee = _learnerService.Register(_mapper.Map<Learner>(learner));
+            return Ok(_mapper.Map<LearnerDTO>(registeredTrainee));
         }
 
         [HttpPost("login")]
-        public ActionResult<TraineeDTO> LoginTrainee([FromBody] LoginDTO login)
+        public ActionResult<LearnerDTO> LoginTrainee([FromBody] LoginDTO login)
         {
             try
             {
-                var loggedInTrainee = _traineeService.LoginTrainee(login.StudentIndex);
-                return Ok(_mapper.Map<TraineeDTO>(loggedInTrainee));
+                var loggedInTrainee = _learnerService.Login(login.StudentIndex);
+                return Ok(_mapper.Map<LearnerDTO>(loggedInTrainee));
             }
-            catch (TraineeWIthStudentIndexNotFound e)
+            catch (LearnerWithStudentIndexNotFound e)
             {
                 return NotFound(e.Message);
             }

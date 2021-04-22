@@ -1,10 +1,10 @@
-using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.LectureModel.Repository;
-using SmartTutor.ContentModel.ProgressModel;
-using SmartTutor.ContentModel.ProgressModel.Repository;
-using SmartTutor.Recommenders;
+using SmartTutor.ContentModel.Lectures;
+using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.InstructionalModel;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Repository;
+using SmartTutor.ProgressModel.Submissions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,18 +14,18 @@ namespace SmartTutor.ContentModel
     {
         //TODO: Redesign the modules as this is quickly becoming a god class.
         //TODO: Establish test suite and refactor.
-        private readonly IRecommender _recommender;
+        private readonly IInstructor _instructor;
         private readonly ILectureRepository _lectureRepository;
         private readonly ILearningObjectRepository _learningObjectRepository;
-        private readonly ITraineeRepository _traineeRepository;
+        private readonly ILearnerRepository _learnerRepository;
 
-        public ContentService(IRecommender recommender, ILectureRepository lectureRepository,
-            ILearningObjectRepository learningObjectRepository, ITraineeRepository traineeRepository)
+        public ContentService(IInstructor instructor, ILectureRepository lectureRepository,
+            ILearningObjectRepository learningObjectRepository, ILearnerRepository learnerRepository)
         {
-            _recommender = recommender;
+            _instructor = instructor;
             _lectureRepository = lectureRepository;
             _learningObjectRepository = learningObjectRepository;
-            _traineeRepository = traineeRepository;
+            _learnerRepository = learnerRepository;
         }
 
         public List<Lecture> GetLectures()
@@ -48,14 +48,14 @@ namespace SmartTutor.ContentModel
 
         public NodeProgress GetNodeContent(int knowledgeNodeId, int? traineeId)
         {
-            if (traineeId != null)
-            {
-                var nodeProgress = _traineeRepository.GetNodeProgressForTrainee((int) traineeId, knowledgeNodeId);
-                return nodeProgress ?? CreateNodeForTrainee(knowledgeNodeId, (int) traineeId);
-            }
-
             var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
             if (knowledgeNode == null) return null;
+
+            if (traineeId != null)
+            {
+                var nodeProgress = _learnerRepository.GetNodeProgressForTrainee((int) traineeId, knowledgeNodeId);
+                return nodeProgress ?? CreateNodeForTrainee(knowledgeNode, (int) traineeId);
+            }
 
             var learningObjects = _learningObjectRepository.GetFirstLearningObjectsForSummaries(
                 knowledgeNode.LearningObjectSummaries.Select(s => s.Id).ToList());
@@ -67,13 +67,11 @@ namespace SmartTutor.ContentModel
             };
         }
 
-        private NodeProgress CreateNodeForTrainee(int knowledgeNodeId, int traineeId)
+        private NodeProgress CreateNodeForTrainee(KnowledgeNode node, int traineeId)
         {
-            var trainee = _traineeRepository.GetTraineeById(traineeId);
-            var knowledgeNode = _lectureRepository.GetKnowledgeNodeWithSummaries(knowledgeNodeId);
-
-            var nodeProgress = _recommender.BuildNodeProgressForTrainee(trainee, knowledgeNode);
-            _traineeRepository.SaveNodeProgress(nodeProgress);
+            var trainee = _learnerRepository.GetTraineeById(traineeId);
+            var nodeProgress = _instructor.BuildNodeProgressForTrainee(trainee, node);
+            _learnerRepository.SaveNodeProgress(nodeProgress);
 
             //TODO: Create learning session
 
@@ -89,7 +87,7 @@ namespace SmartTutor.ContentModel
             var evaluations = new List<AnswerEvaluation>();
             foreach (var answer in answers)
             {
-                var answerWasMarked = submission.submittedAnswerIds.Contains(answer.Id);
+                var answerWasMarked = submission.SubmittedAnswerIds.Contains(answer.Id);
                 evaluations.Add(new AnswerEvaluation
                 {
                     FullAnswer = answer,
@@ -98,7 +96,7 @@ namespace SmartTutor.ContentModel
             }
 
             submission.IsCorrect = evaluations.Select(a => a.SubmissionWasCorrect).All(c => c);
-            _traineeRepository.SaveQuestionSubmission(submission);
+            _learnerRepository.SaveQuestionSubmission(submission);
 
             return evaluations;
         }
@@ -122,7 +120,7 @@ namespace SmartTutor.ContentModel
             }
 
             submission.IsCorrect = evaluations.Select(e => e.SubmissionWasCorrect).All(c => c);
-            _traineeRepository.SaveArrangeTaskSubmission(submission);
+            _learnerRepository.SaveArrangeTaskSubmission(submission);
 
             return evaluations;
         }

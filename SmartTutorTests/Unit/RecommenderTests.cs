@@ -2,21 +2,22 @@ using Moq;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.ProgressModel;
-using SmartTutor.Recommenders;
+using SmartTutor.ContentModel.Lectures;
+using SmartTutor.InstructionalModel;
+using SmartTutor.ProgressModel;
 using System.Collections.Generic;
+using SmartTutor.LearnerModel.Learners;
 using Xunit;
 
 namespace SmartTutorTests.Unit
 {
     public class RecommenderTests
     {
-        private readonly IRecommender _recommender;
+        private readonly IInstructor _instructor;
 
         public RecommenderTests()
         {
-            _recommender = new KnowledgeBasedRecommender(null, CreateMockRepository());
+            _instructor = new KnowledgeBasedRecommender(null, CreateMockRepository());
         }
 
         private static ILearningObjectRepository CreateMockRepository()
@@ -43,10 +44,10 @@ namespace SmartTutorTests.Unit
 
         [Theory]
         [MemberData(nameof(TraineeTestData))]
-        public void Builds_node_progress_for_trainee(Trainee trainee, KnowledgeNode node,
+        public void Builds_node_progress_for_trainee(Learner learner, KnowledgeNode node,
             NodeProgress expectedNodeProgress)
         {
-            var result = _recommender.BuildNodeProgressForTrainee(trainee, node);
+            var result = _instructor.BuildNodeProgressForTrainee(learner, node);
             result.LearningObjects.ShouldBe(expectedNodeProgress.LearningObjects);
         }
 
@@ -59,7 +60,7 @@ namespace SmartTutorTests.Unit
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Trainee = Trainee1, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        Learner = Trainee1, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Text1, Text2, Text3}
                     }
                 },
@@ -69,7 +70,7 @@ namespace SmartTutorTests.Unit
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Trainee = Trainee2, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        Learner = Trainee2, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Video1, Image2, Text3}
                     }
                 },
@@ -79,19 +80,19 @@ namespace SmartTutorTests.Unit
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Trainee = Trainee3, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        Learner = Trainee3, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Question1, ArrangeTask2, Text3}
                     }
                 }
             };
 
-        private static readonly Trainee Trainee1 = new Trainee
+        private static readonly Learner Trainee1 = new Learner
         { Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4 };
 
-        private static readonly Trainee Trainee2 = new Trainee
+        private static readonly Learner Trainee2 = new Learner
         { Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1 };
 
-        private static readonly Trainee Trainee3 = new Trainee
+        private static readonly Learner Trainee3 = new Learner
         { Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1 };
 
         private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode

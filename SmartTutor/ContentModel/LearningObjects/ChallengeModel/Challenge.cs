@@ -3,7 +3,7 @@ using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using SmartTutor.ContentModel.LectureModel;
+using SmartTutor.ContentModel.Lectures;
 
 namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
 {

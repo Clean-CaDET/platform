@@ -5,8 +5,8 @@ using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.ProgressModel;
-using SmartTutor.ContentModel.ProgressModel.Repository;
+using SmartTutor.ProgressModel.Repository;
+using SmartTutor.ProgressModel.Submissions;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -16,7 +16,7 @@ namespace SmartTutorTests.Unit
         private readonly ContentService _service;
         public NodeContentTests()
         {
-            _service = new ContentService(null, null, CreateMockRepository(), new Mock<ITraineeRepository>().Object);
+            _service = new ContentService(null, null, CreateMockRepository(), new Mock<ILearnerRepository>().Object);
         }
 
         private static ILearningObjectRepository CreateMockRepository()
@@ -84,17 +84,17 @@ namespace SmartTutorTests.Unit
             {
                 new object[]
                 {
-                    new QuestionSubmission { submittedAnswerIds = new List<int> {10, 11, 12, 13}, QuestionId = 19},
+                    new QuestionSubmission { SubmittedAnswerIds = new List<int> {10, 11, 12, 13}, QuestionId = 19},
                     new List<bool> {false, true, true, false}
                 },
                 new object[]
                 {
-                    new QuestionSubmission { submittedAnswerIds = new List<int> {10, 13}, QuestionId = 19},
+                    new QuestionSubmission { SubmittedAnswerIds = new List<int> {10, 13}, QuestionId = 19},
                     new List<bool> {false, false, false, false}
                 },
                 new object[]
                 {
-                    new QuestionSubmission { submittedAnswerIds = new List<int> {11, 12}, QuestionId = 19},
+                    new QuestionSubmission { SubmittedAnswerIds = new List<int> {11, 12}, QuestionId = 19},
                     new List<bool> {true, true, true, true}
                 }
             };
@@ -119,11 +119,11 @@ namespace SmartTutorTests.Unit
                         ArrangeTaskId = 32,
                         Containers = new List<ArrangeTaskContainerSubmission>
                         {
-                            new ArrangeTaskContainerSubmission { Id = 1, ElementIds = new List<int> { 1, 5} },
-                            new ArrangeTaskContainerSubmission { Id = 2, ElementIds = new List<int> { 2 } },
-                            new ArrangeTaskContainerSubmission { Id = 3, ElementIds = new List<int> { 3 } },
-                            new ArrangeTaskContainerSubmission { Id = 4, ElementIds = new List<int> { } },
-                            new ArrangeTaskContainerSubmission { Id = 5, ElementIds = new List<int> { 4 } }
+                            new ArrangeTaskContainerSubmission { Id = 1, ContainerId = 1, ElementIds = new List<int> { 1, 5} },
+                            new ArrangeTaskContainerSubmission { Id = 2, ContainerId = 2, ElementIds = new List<int> { 2 } },
+                            new ArrangeTaskContainerSubmission { Id = 3, ContainerId = 3, ElementIds = new List<int> { 3 } },
+                            new ArrangeTaskContainerSubmission { Id = 4, ContainerId = 4, ElementIds = new List<int> { } },
+                            new ArrangeTaskContainerSubmission { Id = 5, ContainerId = 5, ElementIds = new List<int> { 4 } }
                         }
                     },
                     new List<bool> {false, true, true, false, false}
@@ -135,11 +135,11 @@ namespace SmartTutorTests.Unit
                         ArrangeTaskId = 32,
                         Containers = new List<ArrangeTaskContainerSubmission>
                         {
-                            new ArrangeTaskContainerSubmission { Id = 1, ElementIds = new List<int> { 1, 2, 3, 4, 5} },
-                            new ArrangeTaskContainerSubmission { Id = 2, ElementIds = new List<int> {} },
-                            new ArrangeTaskContainerSubmission { Id = 3, ElementIds = new List<int> {} },
-                            new ArrangeTaskContainerSubmission { Id = 4, ElementIds = new List<int> {} },
-                            new ArrangeTaskContainerSubmission { Id = 5, ElementIds = new List<int> {} }
+                            new ArrangeTaskContainerSubmission { Id = 1, ContainerId = 1, ElementIds = new List<int> { 1, 2, 3, 4, 5} },
+                            new ArrangeTaskContainerSubmission { Id = 2, ContainerId = 2, ElementIds = new List<int> {} },
+                            new ArrangeTaskContainerSubmission { Id = 3, ContainerId = 3, ElementIds = new List<int> {} },
+                            new ArrangeTaskContainerSubmission { Id = 4, ContainerId = 4, ElementIds = new List<int> {} },
+                            new ArrangeTaskContainerSubmission { Id = 5, ContainerId = 5, ElementIds = new List<int> {} }
                         }
                     },
                     new List<bool> {false, false, false, false, false}
@@ -151,11 +151,11 @@ namespace SmartTutorTests.Unit
                         ArrangeTaskId = 32,
                         Containers = new List<ArrangeTaskContainerSubmission>
                         {
-                            new ArrangeTaskContainerSubmission { Id = 1, ElementIds = new List<int> { 1 } },
-                            new ArrangeTaskContainerSubmission { Id = 2, ElementIds = new List<int> { 2 } },
-                            new ArrangeTaskContainerSubmission { Id = 3, ElementIds = new List<int> { 3 } },
-                            new ArrangeTaskContainerSubmission { Id = 4, ElementIds = new List<int> { 4 } },
-                            new ArrangeTaskContainerSubmission { Id = 5, ElementIds = new List<int> { 5 } }
+                            new ArrangeTaskContainerSubmission { Id = 1, ContainerId = 1, ElementIds = new List<int> { 1 } },
+                            new ArrangeTaskContainerSubmission { Id = 2, ContainerId = 2, ElementIds = new List<int> { 2 } },
+                            new ArrangeTaskContainerSubmission { Id = 3, ContainerId = 3, ElementIds = new List<int> { 3 } },
+                            new ArrangeTaskContainerSubmission { Id = 4, ContainerId = 4, ElementIds = new List<int> { 4 } },
+                            new ArrangeTaskContainerSubmission { Id = 5, ContainerId = 5, ElementIds = new List<int> { 5 } }
                         }
                     },
                     new List<bool> {true, true, true, true, true}
