@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
@@ -35,9 +34,25 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             _member.Parent = parent;
             _member.Params = GetMethodParams();
             _member.ReturnType = GetMethodReturnType();
-            _member.VariableNames = GetMethodVariableNames();
-            _member.VariableTypes = GetMethodVariableTypes();
+            _member.Variables = GetMethodVariables();
             return _member;
+        }
+
+        private List<CaDETVariable> GetMethodVariables()
+        {
+            if (_cSharpMember is PropertyDeclarationSyntax) return null;
+            var variableDeclarations = _cSharpMember.DescendantNodes().OfType<VariableDeclarationSyntax>();
+            
+            List<CaDETVariable> methodVariables = new List<CaDETVariable>();
+            foreach (var variableDeclaration in variableDeclarations)
+            {
+                foreach (var variable in variableDeclaration.Variables)
+                {
+                    methodVariables.Add(new CaDETVariable(variable.Identifier.ToString(), 
+                        new CaDETLinkedType() { FullType = ((ILocalSymbol)_semanticModel.GetDeclaredSymbol(variable)).Type.ToString() }));
+                }
+            }
+            return methodVariables;
         }
 
         internal void DetermineAccessedCodeItems(List<CaDETClass> allProjectClasses)
@@ -109,33 +124,16 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             foreach (var parameter in parameters)
             {
                 var symbol = _semanticModel.GetDeclaredSymbol(parameter);
-                memberParams.Add(new CaDETParameter { Name = symbol.Name, Type = symbol.ToDisplayString() });
+                memberParams.Add(new CaDETParameter { Name = symbol.Name, Type = new CaDETLinkedType() {FullType = symbol.ToDisplayString()} });
             }
 
             return memberParams;
         }
 
-        private CaDETClass GetMethodReturnType()
+        private CaDETLinkedType GetMethodReturnType()
         {
-            if (_cSharpMember.GetType() != typeof(MethodDeclarationSyntax)) return null;
-            return new CaDETClass() {Name = _cSharpMember.DescendantNodes().OfType<TypeSyntax>().First().ToString()};
-        }
-        private List<string> GetMethodVariableNames()
-        {
-            var variables = _cSharpMember.DescendantNodes().OfType<VariableDeclaratorSyntax>().ToList();
-            return variables.Select(v => v.Identifier.ToString()).ToList();
-        }
-
-        private List<CaDETClass> GetMethodVariableTypes()
-        {
-            if (_cSharpMember.GetType() != typeof(MethodDeclarationSyntax)) return null;
-            List<CaDETClass> variableTypes = new List<CaDETClass>();
-            var variables = _cSharpMember.DescendantNodes().OfType<VariableDeclarationSyntax>().ToList();
-            foreach (var v in variables)
-            {
-                variableTypes.Add(new CaDETClass() { Name = v.Type.ToString() });
-            }
-            return variableTypes.GroupBy(t => t.Name).Select(t => t.First()).ToList();
+            if (_cSharpMember.GetType() == typeof(ConstructorDeclarationSyntax)) return null;
+            return new CaDETLinkedType() { FullType = _semanticModel.GetTypeInfo(_cSharpMember.DescendantNodes().OfType<TypeSyntax>().First()).Type.ToString() };
         }
 
         private ISet<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)

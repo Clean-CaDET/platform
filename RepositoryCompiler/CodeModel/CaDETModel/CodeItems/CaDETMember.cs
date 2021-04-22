@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
@@ -15,9 +16,8 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public ISet<CaDETMember> InvokedMethods { get; internal set; }
         public ISet<CaDETMember> AccessedAccessors { get; internal set; }
         public ISet<CaDETField> AccessedFields { get; internal set; }
-        public CaDETClass ReturnType { get; internal set; }
-        public List<string> VariableNames { get; internal set; }
-        public List<CaDETClass> VariableTypes { get; internal set; }
+        public CaDETLinkedType ReturnType;
+        public List<CaDETVariable> Variables { get; internal set; }
 
         public string Signature()
         {
@@ -29,7 +29,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
                 signatureBuilder.Append("(");
                 for (var i = 0; i < Params.Count; i++)
                 {
-                    signatureBuilder.Append(Params[i].Type);
+                    signatureBuilder.Append(Params[i].Type.FullType);
                     if (i < Params.Count - 1) signatureBuilder.Append(", ");
                 }
                 signatureBuilder.Append(")");
@@ -90,6 +90,17 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public override string ToString()
         {
             return Signature();
+        }
+
+        public List<CaDETClass> GetLinkedReturnTypes()
+        {
+            if (ReturnType == null) return new List<CaDETClass>();
+            return ReturnType.LinkedTypes;
+        }
+
+        public List<CaDETClass> GetLinkedParameterTypes()
+        {
+            return Params.SelectMany(p => p.Type.LinkedTypes).ToList();
         }
     }
 }
