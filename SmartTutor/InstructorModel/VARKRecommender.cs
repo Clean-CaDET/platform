@@ -1,24 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
-using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Content;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.InstructorModel
 {
-    public class KnowledgeBasedRecommender : IInstructor
+    public class VARKRecommender : IInstructor
     {
-        private readonly ILectureRepository _lectureRepository;
         private readonly ILearningObjectRepository _learningObjectRepository;
 
-        public KnowledgeBasedRecommender(ILectureRepository lectureRepository,
-            ILearningObjectRepository learningObjectRepository)
+        public VARKRecommender(ILearningObjectRepository learningObjectRepository)
         {
-            _lectureRepository = lectureRepository;
             _learningObjectRepository = learningObjectRepository;
         }
 

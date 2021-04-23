@@ -1,15 +1,12 @@
-using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.InstructorModel;
-using SmartTutor.ProgressModel;
-using SmartTutor.ProgressModel.Repository;
-using SmartTutor.ProgressModel.Submissions;
+using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel.Content;
+using SmartTutor.ProgressModel.Content.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.Questions;
-using SmartTutor.LearnerModel.Learners.Repository;
 
 namespace SmartTutor.ContentModel
 {
@@ -82,54 +79,5 @@ namespace SmartTutor.ContentModel
 
             return nodeProgress;
         }
-
-        public List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission)
-        {
-            //TODO: Discuss what is a submission and what is an evaluation and ensure we are using the appropriate terminology for our UL.
-            var answers = _learningObjectRepository.GetQuestionAnswers(submission.QuestionId);
-            //TODO: Some of the logic below should be moved to the LearningSession/NodeProgress aggregate
-            //TODO: Probably need a QuestionEvaluation here.
-            var evaluations = new List<AnswerEvaluation>();
-            foreach (var answer in answers)
-            {
-                var answerWasMarked = submission.SubmittedAnswerIds.Contains(answer.Id);
-                evaluations.Add(new AnswerEvaluation
-                {
-                    FullAnswer = answer,
-                    SubmissionWasCorrect = answer.IsCorrect ? answerWasMarked : !answerWasMarked
-                });
-            }
-
-            submission.IsCorrect = evaluations.Select(a => a.SubmissionWasCorrect).All(c => c);
-            _progressRepository.SaveQuestionSubmission(submission);
-
-            return evaluations;
-        }
-
-        public List<ArrangeTaskContainerEvaluation> EvaluateArrangeTask(ArrangeTaskSubmission submission)
-        {
-            var containers = _learningObjectRepository.GetArrangeTaskContainers(submission.ArrangeTaskId);
-            //TODO: Some of the logic below should be moved to the LearningSession/NodeProgress aggregate
-            var evaluations = new List<ArrangeTaskContainerEvaluation>();
-            foreach (var container in containers)
-            {
-                var submittedContainer = submission.Containers.Find(c => c.ContainerId == container.Id);
-                //TODO: If null throw exception since it is an invalid submission and see what the controller should return following best practices.
-                if (submittedContainer == null) return null;
-
-                evaluations.Add(new ArrangeTaskContainerEvaluation
-                {
-                    FullAnswer = container,
-                    SubmissionWasCorrect = container.IsCorrectSubmission(submittedContainer.ElementIds)
-                });
-            }
-
-            submission.IsCorrect = evaluations.Select(e => e.SubmissionWasCorrect).All(c => c);
-            _progressRepository.SaveArrangeTaskSubmission(submission);
-
-            return evaluations;
-        }
-
-
     }
 }

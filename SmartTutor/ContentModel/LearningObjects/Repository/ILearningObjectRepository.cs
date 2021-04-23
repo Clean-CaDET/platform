@@ -10,8 +10,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         List<LearningObject> GetLearningObjectsForSummary(int summaryId);
         List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries);
         Challenge GetChallenge(int challengeId);
-        List<QuestionAnswer> GetQuestionAnswers(int questionId);
-        List<ArrangeTaskContainer> GetArrangeTaskContainers(int arrangeTaskId);
+        Question GetQuestion(int questionId);
+        ArrangeTask GetArrangeTask(int arrangeTaskId);
         Image GetImageForSummary(int summaryId);
         LearningObject GetInteractiveLOForSummary(int summaryId);
         Text GetTextForSummary(int summaryId);

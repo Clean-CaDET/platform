@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace SmartTutor.ProgressModel
+namespace SmartTutor.ProgressModel.Content
 {
     public class NodeProgress
     {

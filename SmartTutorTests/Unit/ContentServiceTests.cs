@@ -5,10 +5,10 @@ using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel;
-using SmartTutor.ProgressModel.Repository;
-using System.Collections.Generic;
 using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel.Content;
+using SmartTutor.ProgressModel.Content.Repository;
+using System.Collections.Generic;
 using Xunit;
 
 namespace SmartTutorTests.Unit

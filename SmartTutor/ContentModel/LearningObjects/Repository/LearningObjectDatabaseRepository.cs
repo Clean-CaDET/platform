@@ -51,15 +51,17 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 .FirstOrDefault();
         }
 
-        public List<QuestionAnswer> GetQuestionAnswers(int questionId)
+        public Question GetQuestion(int questionId)
         {
-            return _dbContext.QuestionAnswers.Where(a => a.QuestionId == questionId).ToList();
+            return _dbContext.Questions.Where(q => q.Id == questionId)
+                .Include(q => q.PossibleAnswers).FirstOrDefault();
         }
 
-        public List<ArrangeTaskContainer> GetArrangeTaskContainers(int arrangeTaskId)
+        public ArrangeTask GetArrangeTask(int arrangeTaskId)
         {
-            return _dbContext.ArrangeTaskContainers.Where(c => c.ArrangeTaskId == arrangeTaskId)
-                .Include(c => c.Elements).ToList();
+            return _dbContext.ArrangeTasks.Where(t => t.Id == arrangeTaskId)
+                .Include(t => t.Containers)
+                .ThenInclude(c => c.Elements).FirstOrDefault();
         }
 
         public Image GetImageForSummary(int summaryId)

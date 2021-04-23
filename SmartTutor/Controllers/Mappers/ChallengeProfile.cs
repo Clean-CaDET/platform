@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.Controllers.DTOs.Challenge;
+using SmartTutor.ProgressModel.Submissions;
 
 namespace SmartTutor.Controllers.Mappers
 {
@@ -11,6 +12,7 @@ namespace SmartTutor.Controllers.Mappers
             CreateMap<ChallengeEvaluation, ChallengeEvaluationDTO>()
                 .ForMember(dest => dest.ApplicableHints, opt => opt.MapFrom(src => src.ApplicableHints.GetHints()));
             CreateMap<ChallengeHint, ChallengeHintDTO>();
+            CreateMap<ChallengeSubmissionDTO, ChallengeSubmission>();
         }
     }
 }

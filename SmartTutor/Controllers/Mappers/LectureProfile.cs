@@ -5,7 +5,7 @@ using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.Controllers.DTOs.Lecture;
-using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Content;
 using SmartTutor.ProgressModel.Submissions;
 using System.Linq;
 

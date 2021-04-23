@@ -8,7 +8,7 @@ using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.Nam
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Content;
 using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Submissions;
 

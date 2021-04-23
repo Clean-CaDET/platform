@@ -7,7 +7,7 @@ using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Content;
 using System.Collections.Generic;
 using Xunit;
 
@@ -19,7 +19,7 @@ namespace SmartTutorTests.Unit
 
         public RecommenderTests()
         {
-            _instructor = new KnowledgeBasedRecommender(null, CreateMockRepository());
+            _instructor = new VARKRecommender(CreateMockRepository());
         }
 
         private static ILearningObjectRepository CreateMockRepository()

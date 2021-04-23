@@ -13,9 +13,10 @@ using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Learners.Repository;
 using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Content.Repository;
 using SmartTutor.ProgressModel.Feedback.Repository;
-using SmartTutor.ProgressModel.Repository;
 using System;
+using SmartTutor.ProgressModel.Submissions.Repository;
 
 namespace SmartTutor
 {
@@ -41,16 +42,19 @@ namespace SmartTutor
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
 
             services.AddScoped<IContentService, ContentService>();
-            services.AddScoped<ISubmissionService, SubmissionService>();
-            services.AddScoped<ILearnerService, LearnerService>();
-            services.AddScoped<IFeedbackService, FeedbackService>();
-
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
+
+            services.AddScoped<ISubmissionService, SubmissionService>();
+            services.AddScoped<ISubmissionRepository, SubmissionDatabaseRepository>();
             services.AddScoped<IProgressRepository, ProgressDatabaseRepository>();
+            services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
+            
+            services.AddScoped<ILearnerService, LearnerService>();
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
-            services.AddScoped<IInstructor, KnowledgeBasedRecommender>();
+            
+            services.AddScoped<IInstructor, VARKRecommender>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

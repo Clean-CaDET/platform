@@ -6,7 +6,7 @@ using SmartTutor.ProgressModel.Feedback;
 
 namespace SmartTutor.Controllers
 {
-    [Route("api/feedbacks/")]
+    [Route("api/feedback/")]
     [ApiController]
     public class FeedbackController : ControllerBase
     {

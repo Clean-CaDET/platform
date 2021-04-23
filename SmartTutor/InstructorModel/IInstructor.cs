@@ -1,6 +1,6 @@
 ﻿using SmartTutor.ContentModel.Lectures;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Content;
 
 namespace SmartTutor.InstructorModel
 {

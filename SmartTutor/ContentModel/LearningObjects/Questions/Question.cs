@@ -8,5 +8,21 @@ namespace SmartTutor.ContentModel.LearningObjects.Questions
     {
         public string Text { get; set; }
         public List<QuestionAnswer> PossibleAnswers { get; set; }
+
+        public List<AnswerEvaluation> EvaluateAnswers(List<int> submittedAnswerIds)
+        {
+            var evaluations = new List<AnswerEvaluation>();
+            foreach (var answer in PossibleAnswers)
+            {
+                var answerWasMarked = submittedAnswerIds.Contains(answer.Id);
+                evaluations.Add(new AnswerEvaluation
+                {
+                    FullAnswer = answer,
+                    SubmissionWasCorrect = answer.IsCorrect ? answerWasMarked : !answerWasMarked
+                });
+            }
+
+            return evaluations;
+        }
     }
 }

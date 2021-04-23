@@ -4,34 +4,33 @@ using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.Controllers.DTOs.Challenge;
 using SmartTutor.Controllers.DTOs.Lecture;
 using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Submissions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SmartTutor.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChallengeController : ControllerBase
+    public class SubmissionController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ISubmissionService _submissionService;
 
-        public ChallengeController(IMapper mapper, ISubmissionService service)
+        public SubmissionController(IMapper mapper, ISubmissionService service)
         {
             _mapper = mapper;
             _submissionService = service;
         }
 
-        [HttpPost("evaluate-submission")]
+        [HttpPost("challenge")]
         public ActionResult<ChallengeEvaluationDTO> EvaluateChallengeSubmission([FromBody] ChallengeSubmissionDTO challengeSubmission)
         {
-            ChallengeEvaluation challengeEvaluation = null;
+            ChallengeEvaluation challengeEvaluation;
             try
             {
-                challengeEvaluation =
-                    _submissionService.EvaluateChallenge(challengeSubmission.SourceCode,
-                        challengeSubmission.ChallengeId,
-                        challengeSubmission.LearnerId);
+                challengeEvaluation = _submissionService.EvaluateChallenge(_mapper.Map<ChallengeSubmission>(challengeSubmission));
             }
             catch (InvalidOperationException e)
             {
@@ -56,6 +55,24 @@ namespace SmartTutor.Controllers
                     }
                 });
             }));
+        }
+
+        [HttpPost("question")]
+        public ActionResult<List<AnswerEvaluationDTO>> SubmitQuestionAnswers(int nodeId, [FromBody] QuestionSubmissionDTO submission)
+        {
+            //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
+            var evaluation = _submissionService.EvaluateAnswers(_mapper.Map<QuestionSubmission>(submission));
+            if (evaluation == null) return NotFound();
+            return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
+        }
+
+        [HttpPost("{nodeId}/content/arrange-task")]
+        public ActionResult<List<ArrangeTaskContainerEvaluationDTO>> SubmitArrangeTask(int nodeId, [FromBody] ArrangeTaskSubmissionDTO submission)
+        {
+            //TODO: NodeId will be useful for ProgressModel, we should see if this is KNid or KNProgressId
+            var evaluation = _submissionService.EvaluateArrangeTask(_mapper.Map<ArrangeTaskSubmission>(submission));
+            if (evaluation == null) return NotFound();
+            return Ok(_mapper.Map<List<ArrangeTaskContainerEvaluationDTO>>(evaluation));
         }
     }
 }

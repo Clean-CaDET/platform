@@ -1,30 +1,31 @@
 ﻿using Moq;
 using Shouldly;
-using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ProgressModel.Repository;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Content.Repository;
 using SmartTutor.ProgressModel.Submissions;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ProgressModel.Submissions.Repository;
 using Xunit;
 
 namespace SmartTutorTests.Unit
 {
     public class NodeContentTests
     {
-        private readonly ContentService _service;
+        private readonly ISubmissionService _service;
         public NodeContentTests()
         {
-            _service = new ContentService(null, null, CreateMockRepository(), new Mock<IProgressRepository>().Object, null);
+            _service = new SubmissionService(CreateMockRepository(), new Mock<ISubmissionRepository>().Object);
         }
 
         private static ILearningObjectRepository CreateMockRepository()
         {
             Mock<ILearningObjectRepository> learningObjectRepo = new Mock<ILearningObjectRepository>();
-            learningObjectRepo.Setup(repo => repo.GetQuestionAnswers(19))
-                .Returns(new List<QuestionAnswer>
+            learningObjectRepo.Setup(repo => repo.GetQuestion(19))
+                .Returns(new Question { Id=19, PossibleAnswers = new List<QuestionAnswer>
                 {
                     new QuestionAnswer
                     {
@@ -42,9 +43,9 @@ namespace SmartTutorTests.Unit
                     {
                         Id = 13, Text = "Fourth.", IsCorrect = false, Feedback = "This statement is false.", QuestionId = 19
                     }
-                });
-            learningObjectRepo.Setup(repo => repo.GetArrangeTaskContainers(32))
-                .Returns(new List<ArrangeTaskContainer>
+                }});
+            learningObjectRepo.Setup(repo => repo.GetArrangeTask(32))
+                .Returns(new ArrangeTask {Containers = new List<ArrangeTaskContainer>
                 {
                     new ArrangeTaskContainer { Id = 1, Elements = new List<ArrangeTaskElement>
                     {
@@ -66,7 +67,7 @@ namespace SmartTutorTests.Unit
                     {
                         new ArrangeTaskElement {Id = 5}
                     }}
-                });
+                }});
             return learningObjectRepo.Object;
         }
 

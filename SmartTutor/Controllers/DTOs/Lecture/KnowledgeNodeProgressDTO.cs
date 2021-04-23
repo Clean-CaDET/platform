@@ -1,4 +1,4 @@
-﻿using SmartTutor.ProgressModel;
+﻿using SmartTutor.ProgressModel.Content;
 using System.Collections.Generic;
 
 namespace SmartTutor.Controllers.DTOs.Lecture
