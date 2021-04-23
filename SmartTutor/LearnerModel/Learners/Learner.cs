@@ -1,4 +1,4 @@
-﻿using SmartTutor.ProgressModel.Content;
+﻿using SmartTutor.ProgressModel.Progress;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

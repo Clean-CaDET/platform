@@ -6,9 +6,11 @@ using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.InstructorModel;
+using SmartTutor.InstructorModel.Instructors;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel.Content;
+using SmartTutor.ProgressModel.Progress;
 using System.Collections.Generic;
+using SmartTutor.LearnerModel.Learners.Repository;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -19,10 +21,10 @@ namespace SmartTutorTests.Unit
 
         public RecommenderTests()
         {
-            _instructor = new VARKRecommender(CreateMockRepository());
+            _instructor = CreateInstructor();
         }
 
-        private static ILearningObjectRepository CreateMockRepository()
+        private static IInstructor CreateInstructor()
         {
             Mock<ILearningObjectRepository> learningObjectRepo = new Mock<ILearningObjectRepository>();
             learningObjectRepo.Setup(repo => repo.GetVideoForSummary(1))
@@ -41,15 +43,24 @@ namespace SmartTutorTests.Unit
                 .Returns(Text2);
             learningObjectRepo.Setup(repo => repo.GetLearningObjectForSummary(3))
                 .Returns(Text3);
-            return learningObjectRepo.Object;
+
+            Mock<ILearnerRepository> learnerRepo = new Mock<ILearnerRepository>();
+            learnerRepo.Setup(repo => repo.GetById(1)).Returns(new Learner
+                {Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4});
+            learnerRepo.Setup(repo => repo.GetById(2)).Returns(new Learner
+                { Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1 });
+            learnerRepo.Setup(repo => repo.GetById(3)).Returns(new Learner
+                { Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1 });
+
+            return new VARKRecommender(learningObjectRepo.Object, learnerRepo.Object);
         }
 
         [Theory]
         [MemberData(nameof(LearnerTestData))]
-        public void Builds_node_progress(Learner learner, KnowledgeNode node,
+        public void Builds_node_progress(int learnerId, KnowledgeNode node,
             NodeProgress expectedNodeProgress)
         {
-            var result = _instructor.BuildNodeProgressForLearner(learner, node);
+            var result = _instructor.BuildNodeForLearner(learnerId, node);
             result.LearningObjects.ShouldBe(expectedNodeProgress.LearningObjects);
         }
 
@@ -58,44 +69,37 @@ namespace SmartTutorTests.Unit
             {
                 new object[]
                 {
-                    Learner1,
+                    1,
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Learner = Learner1, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        LearnerId = 1, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Text1, Text2, Text3}
                     }
                 },
                 new object[]
                 {
-                    Learner2,
+                    2,
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Learner = Learner2, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        LearnerId = 2, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Video1, Image2, Text3}
                     }
                 },
                 new object[]
                 {
-                    Learner3,
+                    3,
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Learner = Learner3, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        LearnerId = 3, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Question1, ArrangeTask2, Text3}
                     }
                 }
             };
         //TODO: Rework.
-        private static readonly Learner Learner1 = new Learner
-        { Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4 };
-
-        private static readonly Learner Learner2 = new Learner
-        { Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1 };
-
-        private static readonly Learner Learner3 = new Learner
-        { Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1 };
+        
 
         private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode
         {

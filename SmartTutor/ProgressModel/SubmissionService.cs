@@ -1,12 +1,9 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using RepositoryCompiler.Controllers;
-using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+﻿using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,13 +22,10 @@ namespace SmartTutor.ProgressModel
 
         public ChallengeEvaluation EvaluateChallenge(ChallengeSubmission submission)
         {
-            List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(submission.SourceCode);
-            if (solutionAttempt == null || solutionAttempt.Count == 0) throw new InvalidOperationException("Invalid submission.");
-
             Challenge challenge = _learningObjectRepository.GetChallenge(submission.ChallengeId);
             if (challenge == null) return null;
 
-            var evaluation = challenge.CheckChallengeFulfillment(solutionAttempt);
+            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode);
 
             submission.IsCorrect = evaluation.ChallengeCompleted;
             _submissionRepository.SaveChallengeSubmission(submission);
@@ -43,14 +37,6 @@ namespace SmartTutor.ProgressModel
             evaluation.SolutionLO = _learningObjectRepository.GetLearningObjectForSummary(challenge.Solution.Id);
             
             return evaluation;
-        }
-
-        private List<CaDETClass> GetClassesFromSubmittedChallenge(string[] sourceCode)
-        {
-            //TODO: Work with CaDETProject and consider introducing a list of compilation errors there.
-            //TODO: Adhere to DIP for CodeModelFactory/CodeRepoService (extract interface and add DI in startup)
-            //TODO: Move to Challenge
-            return new CodeRepositoryService().BuildClassesModel(sourceCode);
         }
 
         public List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission)

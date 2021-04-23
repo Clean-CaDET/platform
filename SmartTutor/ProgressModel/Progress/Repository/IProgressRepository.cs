@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.ProgressModel.Content.Repository
+﻿namespace SmartTutor.ProgressModel.Progress.Repository
 {
     public interface IProgressRepository
     {

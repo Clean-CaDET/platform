@@ -2,27 +2,31 @@ using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel.Content;
+using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel.Progress;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SmartTutor.InstructorModel
+namespace SmartTutor.InstructorModel.Instructors
 {
     public class VARKRecommender : IInstructor
     {
         private readonly ILearningObjectRepository _learningObjectRepository;
+        private readonly ILearnerRepository _learnerRepository;
 
-        public VARKRecommender(ILearningObjectRepository learningObjectRepository)
+        public VARKRecommender(ILearningObjectRepository learningObjectRepository, ILearnerRepository learnerRepository)
         {
             _learningObjectRepository = learningObjectRepository;
+            _learnerRepository = learnerRepository;
         }
 
-        public NodeProgress BuildNodeProgressForLearner(Learner learner, KnowledgeNode knowledgeNode)
+        public NodeProgress BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode)
         {
-            var learningObjects = new List<LearningObject>();
+            var learner = _learnerRepository.GetById(learnerId);
             var sortedPreferences = learner.LearningPreferenceScore().OrderByDescending(key => key.Value).ToList();
 
+            var learningObjects = new List<LearningObject>();
             foreach (var summary in knowledgeNode.LearningObjectSummaries)
             {
                 var learningObject = sortedPreferences
@@ -33,7 +37,7 @@ namespace SmartTutor.InstructorModel
 
             return new NodeProgress
             {
-                Learner = learner,
+                LearnerId = learnerId,
                 Node = knowledgeNode,
                 Status = NodeStatus.Started,
                 LearningObjects = learningObjects
@@ -55,6 +59,17 @@ namespace SmartTutor.InstructorModel
         private LearningObject GetDefaultLearningObject(int summaryId)
         {
             return _learningObjectRepository.GetLearningObjectForSummary(summaryId);
+        }
+
+        public NodeProgress BuildSimpleNode(KnowledgeNode knowledgeNode)
+        {
+            var learningObjects = _learningObjectRepository.GetFirstLearningObjectsForSummaries(
+                knowledgeNode.LearningObjectSummaries.Select(s => s.Id).ToList());
+            return new NodeProgress
+            {
+                LearningObjects = learningObjects,
+                Node = knowledgeNode
+            };
         }
     }
 }

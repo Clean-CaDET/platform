@@ -4,11 +4,10 @@ using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ProgressModel;
-using SmartTutor.ProgressModel.Content.Repository;
 using SmartTutor.ProgressModel.Submissions;
+using SmartTutor.ProgressModel.Submissions.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ProgressModel.Submissions.Repository;
 using Xunit;
 
 namespace SmartTutorTests.Unit

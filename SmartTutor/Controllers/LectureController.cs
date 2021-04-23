@@ -26,14 +26,5 @@ namespace SmartTutor.Controllers
             var lectures = _contentService.GetLectures();
             return lectures.Select(l => _mapper.Map<LectureDTO>(l)).ToList();
         }
-
-        [HttpGet("{lectureId}")]
-        public ActionResult<List<KnowledgeNodeProgressDTO>> GetLectureNodes(int lectureId)
-        {
-            //TODO: Extract and send trainee ID.
-            var nodes = _contentService.GetKnowledgeNodes(lectureId, null);
-            if (nodes == null) return NotFound();
-            return Ok(_mapper.Map<List<KnowledgeNodeProgressDTO>>(nodes));
-        }
     }
 }

@@ -1,7 +1,7 @@
 using SmartTutor.Database;
 using System.Linq;
 
-namespace SmartTutor.ProgressModel.Content.Repository
+namespace SmartTutor.ProgressModel.Progress.Repository
 {
     public class ProgressDatabaseRepository : IProgressRepository
     {
@@ -20,7 +20,7 @@ namespace SmartTutor.ProgressModel.Content.Repository
         public NodeProgress GetNodeProgressForLearner(int learnerId, int nodeId)
         {
             return _dbContext.NodeProgresses.FirstOrDefault(nodeProgress =>
-                nodeProgress.Learner.Id == learnerId && nodeProgress.Node.Id == nodeId);
+                nodeProgress.LearnerId == learnerId && nodeProgress.Node.Id == nodeId);
         }
     }
 }

@@ -34,8 +34,7 @@ namespace SmartTutorTests.Unit
                 }
             }};
 
-            var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
-            var challengeEvaluation = challenge.CheckChallengeFulfillment(caDETClasses);
+            var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);

@@ -1,27 +1,37 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SmartTutor.ContentModel;
 using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.ProgressModel;
+using System.Collections.Generic;
 
 namespace SmartTutor.Controllers
 {
     [Route("api/nodes/")]
     [ApiController]
-    public class NodeContentController : ControllerBase
+    public class ProgressController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IContentService _contentService;
+        private readonly IProgressService _progressService;
 
-        public NodeContentController(IMapper mapper, IContentService contentService)
+        public ProgressController(IMapper mapper, IProgressService progressService)
         {
             _mapper = mapper;
-            _contentService = contentService;
+            _progressService = progressService;
         }
 
-        [HttpGet("{nodeId}/content")]
+        [HttpGet("{lectureId}")]
+        public ActionResult<List<KnowledgeNodeProgressDTO>> GetLectureNodes(int lectureId)
+        {
+            //TODO: Extract and send trainee ID.
+            var nodes = _progressService.GetKnowledgeNodes(lectureId, null);
+            if (nodes == null) return NotFound();
+            return Ok(_mapper.Map<List<KnowledgeNodeProgressDTO>>(nodes));
+        }
+
+        [HttpGet("content/{nodeId}")]
         public ActionResult<KnowledgeNodeProgressDTO> GetNodeContent(int nodeId)
         {
-            var nodes = _contentService.GetNodeContent(nodeId, null);
+            var nodes = _progressService.GetNodeContent(nodeId, null);
             if (nodes == null) return NotFound();
             return Ok(_mapper.Map<KnowledgeNodeProgressDTO>(nodes));
         }
