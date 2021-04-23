@@ -12,6 +12,7 @@ using SmartTutor.Database;
 using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Repository;
 using System;
@@ -40,7 +41,7 @@ namespace SmartTutor
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
 
             services.AddScoped<IContentService, ContentService>();
-            services.AddScoped<IChallengeService, ChallengeService>();
+            services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<ILearnerService, LearnerService>();
             services.AddScoped<IFeedbackService, FeedbackService>();
 

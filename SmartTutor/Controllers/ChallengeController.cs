@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.Controllers.DTOs.Challenge;
 using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.ProgressModel;
 using System;
 using System.Linq;
 
@@ -14,12 +14,12 @@ namespace SmartTutor.Controllers
     public class ChallengeController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IChallengeService _challengeService;
+        private readonly ISubmissionService _submissionService;
 
-        public ChallengeController(IMapper mapper, IChallengeService service)
+        public ChallengeController(IMapper mapper, ISubmissionService service)
         {
             _mapper = mapper;
-            _challengeService = service;
+            _submissionService = service;
         }
 
         [HttpPost("evaluate-submission")]
@@ -29,7 +29,7 @@ namespace SmartTutor.Controllers
             try
             {
                 challengeEvaluation =
-                    _challengeService.EvaluateSubmission(challengeSubmission.SourceCode,
+                    _submissionService.EvaluateChallenge(challengeSubmission.SourceCode,
                         challengeSubmission.ChallengeId,
                         challengeSubmission.LearnerId);
             }

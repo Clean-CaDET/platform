@@ -1,26 +1,26 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+﻿using System;
+using System.Collections.Generic;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.Controllers;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ProgressModel.Repository;
 using SmartTutor.ProgressModel.Submissions;
-using System;
-using System.Collections.Generic;
 
-namespace SmartTutor.ContentModel
+namespace SmartTutor.ProgressModel
 {
-    public class ChallengeService : IChallengeService
+    public class SubmissionService : ISubmissionService
     {
         private readonly ILearningObjectRepository _learningObjectRepository;
         private readonly IProgressRepository _progressRepository;
 
-        public ChallengeService(ILearningObjectRepository learningObjectRepository, IProgressRepository progressRepository)
+        public SubmissionService(ILearningObjectRepository learningObjectRepository, IProgressRepository progressRepository)
         {
             _learningObjectRepository = learningObjectRepository;
             _progressRepository = progressRepository;
         }
 
-        public ChallengeEvaluation EvaluateSubmission(string[] sourceCode, int challengeId, string traineeId)
+        public ChallengeEvaluation EvaluateChallenge(string[] sourceCode, int challengeId, string traineeId)
         {
             List<CaDETClass> solutionAttempt = GetClassesFromSubmittedChallenge(sourceCode);
             if (solutionAttempt == null || solutionAttempt.Count == 0) throw new InvalidOperationException("Invalid submission.");

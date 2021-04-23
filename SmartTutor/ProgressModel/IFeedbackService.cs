@@ -1,6 +1,6 @@
 using SmartTutor.ProgressModel.Feedback;
 
-namespace SmartTutor.ContentModel
+namespace SmartTutor.ProgressModel
 {
     public interface IFeedbackService
     {
