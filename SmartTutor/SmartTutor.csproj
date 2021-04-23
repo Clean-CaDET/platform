@@ -20,4 +20,11 @@
   <ItemGroup>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ContentWithTargetPath Include="C:\MasterTestSuite\**\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
 </Project>

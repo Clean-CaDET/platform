@@ -198,7 +198,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (12, 10);
 INSERT INTO public."Challenges"(
 	"Id", "Description", "Url", "SolutionIdForeignKey", "TestSuiteLocation")
-	VALUES (12, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Naming/01. Noise Words" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 11, 'C:\MasterTestSuite\Challenge12TestSuite');
+	VALUES (12, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Naming/01. Noise Words" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 11, 'bin\Debug\netcoreapp3.1\Challenge12TestSuite');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (2, 12);
@@ -241,7 +241,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (7, 7);
 INSERT INTO public."Challenges"(
 	"Id", "Description", "Url", "SolutionIdForeignKey", "TestSuiteLocation")
-	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "Naming/02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository', 8, 'C:\MasterTestSuite\Challenge7TestSuite');
+	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "Naming/02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository', 8, 'bin\Debug\netcoreapp3.1\Challenge7TestSuite');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (1, 7);
@@ -542,7 +542,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (41, 41);
 INSERT INTO public."Challenges"(
 	"Id", "Url", "Description", "SolutionIdForeignKey", "TestSuiteLocation")
-	VALUES (41, 'https://github.com/Clean-CaDET/challenge-repository', 'Da imamo kratke metode ne treba da bude naš konačan cilj, već posledica praćenja dobrih praksi. Ipak, funkcija koja prevazilazi nekoliko desetina linija je dobar kandidat za refaktorisanje. U sklopu direktorijuma "Methods/01. Small Methods" ekstrahuj logički povezan kod tako da završiš sa kolekcijom sitnijih metoda čije ime jasno označava njihovu svrhu.', 42, 'C:\MasterTestSuite\Challenge41TestSuite');
+	VALUES (41, 'https://github.com/Clean-CaDET/challenge-repository', 'Da imamo kratke metode ne treba da bude naš konačan cilj, već posledica praćenja dobrih praksi. Ipak, funkcija koja prevazilazi nekoliko desetina linija je dobar kandidat za refaktorisanje. U sklopu direktorijuma "Methods/01. Small Methods" ekstrahuj logički povezan kod tako da završiš sa kolekcijom sitnijih metoda čije ime jasno označava njihovu svrhu.', 42, 'bin\Debug\netcoreapp3.1\Challenge41TestSuite');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (3, 41);
@@ -570,7 +570,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (44, 44);
 INSERT INTO public."Challenges"(
 	"Id", "Url", "Description", "SolutionIdForeignKey", "TestSuiteLocation")
-	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Složene funkcije su one koje zahtevaju visok mentalni napor da se razume sva logika i tokovi kontrole. Mnogi aspekti koda doprinose otežanom razumevanju - čudna imena, dugački izrazi, duboko ugnježdavanje. U sklopu direktorijuma "Methods/02. Simple Methods" refaktoriši funkcije tako da ih pojednostaviš i smanjiš dupliranje koda.', 46, 'C:\MasterTestSuite\Challenge44TestSuite');
+	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Složene funkcije su one koje zahtevaju visok mentalni napor da se razume sva logika i tokovi kontrole. Mnogi aspekti koda doprinose otežanom razumevanju - čudna imena, dugački izrazi, duboko ugnježdavanje. U sklopu direktorijuma "Methods/02. Simple Methods" refaktoriši funkcije tako da ih pojednostaviš i smanjiš dupliranje koda.', 46, 'bin\Debug\netcoreapp3.1\Challenge44TestSuite');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (4, 44);
@@ -616,7 +616,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (49, 49);
 INSERT INTO public."Challenges"(
 	"Id", "Url", "Description", "SolutionIdForeignKey", "TestSuiteLocation")
-	VALUES (49, 'https://github.com/Clean-CaDET/challenge-repository', 'Redukcija broja parametra pozitivno utiče na razumevanje samog zaglavlja funkcije i informacije šta ona radi. Pored toga, redukcijom liste parametra često smanjujemo broj zadataka koje funkcija radi. U sklopu direktorijuma "Methods/03. Parameter Lists" primeni strategije za redukciju parametra i refaktoriši funkcije.', 50, 'C:\MasterTestSuite\Challenge49TestSuite');
+	VALUES (49, 'https://github.com/Clean-CaDET/challenge-repository', 'Redukcija broja parametra pozitivno utiče na razumevanje samog zaglavlja funkcije i informacije šta ona radi. Pored toga, redukcijom liste parametra često smanjujemo broj zadataka koje funkcija radi. U sklopu direktorijuma "Methods/03. Parameter Lists" primeni strategije za redukciju parametra i refaktoriši funkcije.', 50, 'bin\Debug\netcoreapp3.1\Challenge49TestSuite');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (5, 49);
