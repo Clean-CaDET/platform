@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using SmartTutor.ContentModel.LearningObjects;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.Controllers.DTOs.Lecture;
 using SmartTutor.ProgressModel;

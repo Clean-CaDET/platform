@@ -1,6 +1,6 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using RepositoryCompiler.Controllers;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ProgressModel.Repository;
 using SmartTutor.ProgressModel.Submissions;
@@ -12,12 +12,12 @@ namespace SmartTutor.ContentModel
     public class ChallengeService : IChallengeService
     {
         private readonly ILearningObjectRepository _learningObjectRepository;
-        private readonly ILearnerRepository _learnerRepository;
+        private readonly IProgressRepository _progressRepository;
 
-        public ChallengeService(ILearningObjectRepository learningObjectRepository, ILearnerRepository learnerRepository)
+        public ChallengeService(ILearningObjectRepository learningObjectRepository, IProgressRepository progressRepository)
         {
             _learningObjectRepository = learningObjectRepository;
-            _learnerRepository = learnerRepository;
+            _progressRepository = progressRepository;
         }
 
         public ChallengeEvaluation EvaluateSubmission(string[] sourceCode, int challengeId, string traineeId)
@@ -30,7 +30,7 @@ namespace SmartTutor.ContentModel
 
             var evaluation = challenge.CheckChallengeFulfillment(solutionAttempt);
             //TODO: Refactor - this is a dirty fix for the purposes of the test.
-            _learnerRepository.SaveChallengeSubmission(new ChallengeSubmission
+            _progressRepository.SaveChallengeSubmission(new ChallengeSubmission
             {
                 ChallengeId = challengeId,
                 SubmittedCode = sourceCode,

@@ -8,6 +8,7 @@ using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Repository;
 using System.Collections.Generic;
+using SmartTutor.LearnerModel.Learners.Repository;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -29,8 +30,10 @@ namespace SmartTutorTests.Unit
             var progress1 = new NodeProgress {Id = 1};
             var progress2 = new NodeProgress {Id = 10};
 
+            Mock<IProgressRepository> progressRepo = new Mock<IProgressRepository>();
+            progressRepo.Setup(repo => repo.GetNodeProgressForLearner(1, 1)).Returns(progress1);
+
             Mock<ILearnerRepository> learnerRepo = new Mock<ILearnerRepository>();
-            learnerRepo.Setup(repo => repo.GetNodeProgressForLearner(1, 1)).Returns(progress1);
             learnerRepo.Setup(repo => repo.GetById(1)).Returns(learner);
 
             Mock<ILectureRepository> lectureRepo = new Mock<ILectureRepository>();
@@ -41,7 +44,7 @@ namespace SmartTutorTests.Unit
             instructor.Setup(r => r.BuildNodeProgressForLearner(learner, kn2))
                 .Returns(progress2);
 
-            return new ContentService(instructor.Object, lectureRepo.Object, null, learnerRepo.Object);
+            return new ContentService(instructor.Object, lectureRepo.Object, null, progressRepo.Object, learnerRepo.Object);
         }
 
         [Theory]

@@ -11,9 +11,10 @@ using SmartTutor.Controllers.Mappers;
 using SmartTutor.Database;
 using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel;
+using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Repository;
 using System;
-using SmartTutor.ProgressModel.Feedback.Repository;
 
 namespace SmartTutor
 {
@@ -45,8 +46,9 @@ namespace SmartTutor
 
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
-            services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
+            services.AddScoped<IProgressRepository, ProgressDatabaseRepository>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
+            services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
             services.AddScoped<IInstructor, KnowledgeBasedRecommender>();
         }
 

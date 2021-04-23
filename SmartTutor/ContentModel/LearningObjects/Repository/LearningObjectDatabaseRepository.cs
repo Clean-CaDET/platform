@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
+using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {

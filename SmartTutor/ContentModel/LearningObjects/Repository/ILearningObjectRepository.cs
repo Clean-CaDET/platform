@@ -1,4 +1,6 @@
-﻿using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+﻿using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Questions;
 using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository

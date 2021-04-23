@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker
+namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker
 {
     [Table("BasicMetricCheckers")]
     public class BasicMetricChecker : ChallengeFulfillmentStrategy

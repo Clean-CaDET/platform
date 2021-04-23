@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker
+namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker
 {
     [Table("BasicNameCheckers")]
     public class BasicNameChecker : ChallengeFulfillmentStrategy

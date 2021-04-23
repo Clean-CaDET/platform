@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
 
-namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
+namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
     public class ChallengeEvaluation
     {

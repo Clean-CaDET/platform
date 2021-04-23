@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartTutor.ContentModel.LearningObjects
+namespace SmartTutor.ContentModel.LearningObjects.Questions
 {
     public class QuestionAnswer
     {

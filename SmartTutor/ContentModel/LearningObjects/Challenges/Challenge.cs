@@ -1,11 +1,11 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
+using SmartTutor.ContentModel.Lectures;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using SmartTutor.ContentModel.Lectures;
 
-namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel
+namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
     [Table("Challenges")]
     public class Challenge : LearningObject

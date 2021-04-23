@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.Controllers.DTOs.Challenge;
 
 namespace SmartTutor.Controllers.Mappers

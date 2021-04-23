@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
+namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
     public class ChallengeHint
     {

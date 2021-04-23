@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.Controllers.DTOs.Challenge;
 using SmartTutor.Controllers.DTOs.Lecture;
 using System;

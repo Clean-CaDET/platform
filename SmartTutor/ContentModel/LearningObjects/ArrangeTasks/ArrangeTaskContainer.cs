@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace SmartTutor.ContentModel.LearningObjects
+namespace SmartTutor.ContentModel.LearningObjects.ArrangeTasks
 {
     public class ArrangeTaskContainer
     {

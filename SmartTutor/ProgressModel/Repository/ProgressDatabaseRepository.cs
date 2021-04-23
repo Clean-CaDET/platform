@@ -7,19 +7,15 @@ using System.Linq;
 
 namespace SmartTutor.ProgressModel.Repository
 {
-    public class LearnerDatabaseRepository : ILearnerRepository
+    public class ProgressDatabaseRepository : IProgressRepository
     {
         private readonly SmartTutorContext _dbContext;
 
-        public LearnerDatabaseRepository(SmartTutorContext dbContext)
+        public ProgressDatabaseRepository(SmartTutorContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public List<NodeProgress> GetActivatedNodes(int learnerId)
-        {
-            throw new System.NotImplementedException();
-        }
         public void SaveNodeProgress(NodeProgress nodeProgress)
         {
             _dbContext.NodeProgresses.Add(nodeProgress);
@@ -46,25 +42,6 @@ namespace SmartTutor.ProgressModel.Repository
         public void SaveArrangeTaskSubmission(ArrangeTaskSubmission submission)
         {
             _dbContext.ArrangeTaskSubmissions.Add(submission);
-            _dbContext.SaveChanges();
-        }
-
-        public Learner GetById(int learnerId)
-        {
-            return _dbContext.Learners.Find(learnerId);
-        }
-        public Learner GetByIndex(string index)
-        {
-            return _dbContext.Learners.AsNoTracking().FirstOrDefault(trainee => trainee.StudentIndex.Equals(index));
-        }
-        public void Save(Learner learner)
-        {
-            _dbContext.Learners.Add(learner);
-            _dbContext.SaveChanges();
-        }
-        public void Update(Learner learner)
-        {
-            _dbContext.Learners.Update(learner);
             _dbContext.SaveChanges();
         }
     }

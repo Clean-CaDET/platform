@@ -1,6 +1,6 @@
 using SmartTutor.LearnerModel.Exceptions;
 using SmartTutor.LearnerModel.Learners;
-using SmartTutor.ProgressModel.Repository;
+using SmartTutor.LearnerModel.Learners.Repository;
 
 namespace SmartTutor.LearnerModel
 {

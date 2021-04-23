@@ -1,12 +1,14 @@
 using Moq;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
-using SmartTutor.ProgressModel;
-using System.Collections.Generic;
 using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel.Learners;
+using SmartTutor.ProgressModel;
+using System.Collections.Generic;
 using Xunit;
 
 namespace SmartTutorTests.Unit

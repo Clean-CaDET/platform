@@ -1,12 +1,13 @@
 ﻿using Moq;
 using Shouldly;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using System.Collections.Generic;
-using System.Linq;
 using SmartTutor.ProgressModel.Repository;
 using SmartTutor.ProgressModel.Submissions;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -16,7 +17,7 @@ namespace SmartTutorTests.Unit
         private readonly ContentService _service;
         public NodeContentTests()
         {
-            _service = new ContentService(null, null, CreateMockRepository(), new Mock<ILearnerRepository>().Object);
+            _service = new ContentService(null, null, CreateMockRepository(), new Mock<IProgressRepository>().Object, null);
         }
 
         private static ILearningObjectRepository CreateMockRepository()

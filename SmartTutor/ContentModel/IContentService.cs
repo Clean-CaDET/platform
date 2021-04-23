@@ -1,4 +1,6 @@
-﻿using SmartTutor.ContentModel.Lectures;
+﻿using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Questions;
+using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Submissions;
 using System.Collections.Generic;

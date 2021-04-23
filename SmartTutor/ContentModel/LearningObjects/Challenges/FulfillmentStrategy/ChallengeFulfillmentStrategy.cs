@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy
+namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
 {
     public abstract class ChallengeFulfillmentStrategy
     {

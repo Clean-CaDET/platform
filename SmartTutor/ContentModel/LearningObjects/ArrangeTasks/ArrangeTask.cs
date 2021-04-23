@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartTutor.ContentModel.LearningObjects
+namespace SmartTutor.ContentModel.LearningObjects.ArrangeTasks
 {
     [Table("ArrangeTasks")]
     public class ArrangeTask : LearningObject

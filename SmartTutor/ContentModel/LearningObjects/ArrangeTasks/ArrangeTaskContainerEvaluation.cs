@@ -1,6 +1,4 @@
-﻿using SmartTutor.ContentModel.LearningObjects;
-
-namespace SmartTutor.ProgressModel.Submissions
+﻿namespace SmartTutor.ContentModel.LearningObjects.ArrangeTasks
 {
     public class ArrangeTaskContainerEvaluation
     {
