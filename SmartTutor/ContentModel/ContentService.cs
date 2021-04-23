@@ -1,7 +1,7 @@
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
-using SmartTutor.InstructionalModel;
+using SmartTutor.InstructorModel;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Repository;
 using SmartTutor.ProgressModel.Submissions;
@@ -53,8 +53,8 @@ namespace SmartTutor.ContentModel
 
             if (traineeId != null)
             {
-                var nodeProgress = _learnerRepository.GetNodeProgressForTrainee((int) traineeId, knowledgeNodeId);
-                return nodeProgress ?? CreateNodeForTrainee(knowledgeNode, (int) traineeId);
+                var nodeProgress = _learnerRepository.GetNodeProgressForLearner((int) traineeId, knowledgeNodeId);
+                return nodeProgress ?? CreateNodeForLearner(knowledgeNode, (int) traineeId);
             }
 
             var learningObjects = _learningObjectRepository.GetFirstLearningObjectsForSummaries(
@@ -67,10 +67,10 @@ namespace SmartTutor.ContentModel
             };
         }
 
-        private NodeProgress CreateNodeForTrainee(KnowledgeNode node, int traineeId)
+        private NodeProgress CreateNodeForLearner(KnowledgeNode node, int learnerId)
         {
-            var trainee = _learnerRepository.GetTraineeById(traineeId);
-            var nodeProgress = _instructor.BuildNodeProgressForTrainee(trainee, node);
+            var learner = _learnerRepository.GetById(learnerId);
+            var nodeProgress = _instructor.BuildNodeProgressForLearner(learner, node);
             _learnerRepository.SaveNodeProgress(nodeProgress);
 
             //TODO: Create learning session

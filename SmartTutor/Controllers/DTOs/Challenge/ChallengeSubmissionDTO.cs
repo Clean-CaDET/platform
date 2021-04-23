@@ -4,6 +4,6 @@
     {
         public string[] SourceCode { get; set; }
         public int ChallengeId { get; set; }
-        public string TraineeId { get; set; }
+        public string LearnerId { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace SmartTutor.ProgressModel.Repository
             _dbContext = dbContext;
         }
 
-        public List<NodeProgress> GetActivatedNodes(int traineeId)
+        public List<NodeProgress> GetActivatedNodes(int learnerId)
         {
             throw new System.NotImplementedException();
         }
@@ -25,10 +25,10 @@ namespace SmartTutor.ProgressModel.Repository
             _dbContext.NodeProgresses.Add(nodeProgress);
             _dbContext.SaveChanges();
         }
-        public NodeProgress GetNodeProgressForTrainee(int traineeId, int nodeId)
+        public NodeProgress GetNodeProgressForLearner(int learnerId, int nodeId)
         {
             return _dbContext.NodeProgresses.FirstOrDefault(nodeProgress =>
-                nodeProgress.Learner.Id == traineeId && nodeProgress.Node.Id == nodeId);
+                nodeProgress.Learner.Id == learnerId && nodeProgress.Node.Id == nodeId);
         }
 
         public void SaveChallengeSubmission(ChallengeSubmission submission)
@@ -49,22 +49,22 @@ namespace SmartTutor.ProgressModel.Repository
             _dbContext.SaveChanges();
         }
 
-        public Learner GetTraineeById(int traineeId)
+        public Learner GetById(int learnerId)
         {
-            return _dbContext.Trainees.Find(traineeId);
+            return _dbContext.Learners.Find(learnerId);
         }
-        public Learner GetLearnerByIndex(string index)
+        public Learner GetByIndex(string index)
         {
-            return _dbContext.Trainees.AsNoTracking().FirstOrDefault(trainee => trainee.StudentIndex.Equals(index));
+            return _dbContext.Learners.AsNoTracking().FirstOrDefault(trainee => trainee.StudentIndex.Equals(index));
         }
-        public void SaveTrainee(Learner learner)
+        public void Save(Learner learner)
         {
-            _dbContext.Trainees.Add(learner);
+            _dbContext.Learners.Add(learner);
             _dbContext.SaveChanges();
         }
-        public void UpdateTrainee(Learner learner)
+        public void Update(Learner learner)
         {
-            _dbContext.Trainees.Update(learner);
+            _dbContext.Learners.Update(learner);
             _dbContext.SaveChanges();
         }
     }

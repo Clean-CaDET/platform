@@ -1,6 +1,6 @@
 using AutoMapper;
-using SmartTutor.ContentModel.Feedback;
 using SmartTutor.Controllers.DTOs.Feedback;
+using SmartTutor.ProgressModel.Feedback;
 
 namespace SmartTutor.Controllers.Mappers
 {

@@ -6,14 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
+using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.Controllers.Mappers;
 using SmartTutor.Database;
-using SmartTutor.InstructionalModel;
+using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel;
-using System;
-using SmartTutor.ContentModel.Feedback.Repository;
-using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.ProgressModel.Repository;
+using System;
+using SmartTutor.ProgressModel.Feedback.Repository;
 
 namespace SmartTutor
 {

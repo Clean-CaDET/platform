@@ -34,7 +34,7 @@ namespace SmartTutor.ContentModel
             {
                 ChallengeId = challengeId,
                 SubmittedCode = sourceCode,
-                TraineeId = traineeId,
+                LearnerId = traineeId,
                 IsCorrect = evaluation.ChallengeCompleted
             });
 

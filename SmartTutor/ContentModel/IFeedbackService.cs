@@ -1,4 +1,4 @@
-using SmartTutor.ContentModel.Feedback;
+using SmartTutor.ProgressModel.Feedback;
 
 namespace SmartTutor.ContentModel
 {

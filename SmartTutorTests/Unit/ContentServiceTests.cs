@@ -3,11 +3,11 @@ using Shouldly;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
-using SmartTutor.InstructionalModel;
+using SmartTutor.InstructorModel;
+using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Repository;
 using System.Collections.Generic;
-using SmartTutor.LearnerModel.Learners;
 using Xunit;
 
 namespace SmartTutorTests.Unit
@@ -30,29 +30,29 @@ namespace SmartTutorTests.Unit
             var progress2 = new NodeProgress {Id = 10};
 
             Mock<ILearnerRepository> learnerRepo = new Mock<ILearnerRepository>();
-            learnerRepo.Setup(repo => repo.GetNodeProgressForTrainee(1, 1)).Returns(progress1);
-            learnerRepo.Setup(repo => repo.GetTraineeById(1)).Returns(learner);
+            learnerRepo.Setup(repo => repo.GetNodeProgressForLearner(1, 1)).Returns(progress1);
+            learnerRepo.Setup(repo => repo.GetById(1)).Returns(learner);
 
             Mock<ILectureRepository> lectureRepo = new Mock<ILectureRepository>();
             lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(1)).Returns(kn1);
             lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(2)).Returns(kn2);
             
             Mock<IInstructor> instructor = new Mock<IInstructor>();
-            instructor.Setup(r => r.BuildNodeProgressForTrainee(learner, kn2))
+            instructor.Setup(r => r.BuildNodeProgressForLearner(learner, kn2))
                 .Returns(progress2);
 
             return new ContentService(instructor.Object, lectureRepo.Object, null, learnerRepo.Object);
         }
 
         [Theory]
-        [MemberData(nameof(TraineeTestData))]
+        [MemberData(nameof(LearnerTestData))]
         public void Creates_node_content(int nodeId, int traineeId, int nodeProgressId)
         {
             var result = _contentService.GetNodeContent(nodeId, traineeId);
             result.Id.ShouldBe(nodeProgressId);
         }
 
-        public static IEnumerable<object[]> TraineeTestData =>
+        public static IEnumerable<object[]> LearnerTestData =>
             new List<object[]>
             {
                 new object[]

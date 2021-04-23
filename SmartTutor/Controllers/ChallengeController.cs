@@ -31,7 +31,7 @@ namespace SmartTutor.Controllers
                 challengeEvaluation =
                     _challengeService.EvaluateSubmission(challengeSubmission.SourceCode,
                         challengeSubmission.ChallengeId,
-                        challengeSubmission.TraineeId);
+                        challengeSubmission.LearnerId);
             }
             catch (InvalidOperationException e)
             {

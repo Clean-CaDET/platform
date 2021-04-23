@@ -1,34 +1,34 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SmartTutor.Controllers.DTOs.Trainee;
+using SmartTutor.Controllers.DTOs.Learner;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Exceptions;
 using SmartTutor.LearnerModel.Learners;
 
 namespace SmartTutor.Controllers
 {
-    [Route("api/trainees/")]
+    [Route("api/learners/")]
     [ApiController]
-    public class TraineeController : ControllerBase
+    public class LearnerController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ILearnerService _learnerService;
 
-        public TraineeController(IMapper mapper, ILearnerService learnerService)
+        public LearnerController(IMapper mapper, ILearnerService learnerService)
         {
             _mapper = mapper;
             _learnerService = learnerService;
         }
 
         [HttpPost("register")]
-        public ActionResult<LearnerDTO> RegisterTrainee([FromBody] LearnerDTO learner)
+        public ActionResult<LearnerDTO> Register([FromBody] LearnerDTO learner)
         {
             var registeredTrainee = _learnerService.Register(_mapper.Map<Learner>(learner));
             return Ok(_mapper.Map<LearnerDTO>(registeredTrainee));
         }
 
         [HttpPost("login")]
-        public ActionResult<LearnerDTO> LoginTrainee([FromBody] LoginDTO login)
+        public ActionResult<LearnerDTO> Login([FromBody] LoginDTO login)
         {
             try
             {

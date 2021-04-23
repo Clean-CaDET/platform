@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SmartTutor.Database;
 
-namespace SmartTutor.ContentModel.Feedback.Repository
+namespace SmartTutor.ProgressModel.Feedback.Repository
 {
     public class FeedbackDatabaseRepository : IFeedbackRepository
     {
@@ -28,7 +28,7 @@ namespace SmartTutor.ContentModel.Feedback.Repository
         public LearningObjectFeedback GetFeedback(int learningObjectId, int traineeId)
         {
             return _dbContext.LearningObjectFeedbacks.AsNoTracking().FirstOrDefault(feedback =>
-                feedback.LearningObjectId == learningObjectId && feedback.TraineeId == traineeId);
+                feedback.LearningObjectId == learningObjectId && feedback.LearnerId == traineeId);
         }
     }
 }

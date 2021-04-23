@@ -1,5 +1,5 @@
 using AutoMapper;
-using SmartTutor.Controllers.DTOs.Trainee;
+using SmartTutor.Controllers.DTOs.Learner;
 using SmartTutor.LearnerModel.Learners;
 
 namespace SmartTutor.Controllers.Mappers

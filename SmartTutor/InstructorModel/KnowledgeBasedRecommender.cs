@@ -1,14 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace SmartTutor.InstructionalModel
+namespace SmartTutor.InstructorModel
 {
     public class KnowledgeBasedRecommender : IInstructor
     {
@@ -22,7 +22,7 @@ namespace SmartTutor.InstructionalModel
             _learningObjectRepository = learningObjectRepository;
         }
 
-        public NodeProgress BuildNodeProgressForTrainee(Learner learner, KnowledgeNode knowledgeNode)
+        public NodeProgress BuildNodeProgressForLearner(Learner learner, KnowledgeNode knowledgeNode)
         {
             var learningObjects = new List<LearningObject>();
             var sortedPreferences = learner.LearningPreferenceScore().OrderByDescending(key => key.Value).ToList();

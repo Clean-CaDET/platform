@@ -3,9 +3,9 @@ using Shouldly;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
-using SmartTutor.InstructionalModel;
 using SmartTutor.ProgressModel;
 using System.Collections.Generic;
+using SmartTutor.InstructorModel;
 using SmartTutor.LearnerModel.Learners;
 using Xunit;
 
@@ -43,56 +43,56 @@ namespace SmartTutorTests.Unit
         }
 
         [Theory]
-        [MemberData(nameof(TraineeTestData))]
-        public void Builds_node_progress_for_trainee(Learner learner, KnowledgeNode node,
+        [MemberData(nameof(LearnerTestData))]
+        public void Builds_node_progress(Learner learner, KnowledgeNode node,
             NodeProgress expectedNodeProgress)
         {
-            var result = _instructor.BuildNodeProgressForTrainee(learner, node);
+            var result = _instructor.BuildNodeProgressForLearner(learner, node);
             result.LearningObjects.ShouldBe(expectedNodeProgress.LearningObjects);
         }
 
-        public static IEnumerable<object[]> TraineeTestData =>
+        public static IEnumerable<object[]> LearnerTestData =>
             new List<object[]>
             {
                 new object[]
                 {
-                    Trainee1,
+                    Learner1,
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Learner = Trainee1, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        Learner = Learner1, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Text1, Text2, Text3}
                     }
                 },
                 new object[]
                 {
-                    Trainee2,
+                    Learner2,
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Learner = Trainee2, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        Learner = Learner2, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Video1, Image2, Text3}
                     }
                 },
                 new object[]
                 {
-                    Trainee3,
+                    Learner3,
                     KnowledgeNode,
                     new NodeProgress
                     {
-                        Learner = Trainee3, Node = KnowledgeNode, Status = NodeStatus.Started,
+                        Learner = Learner3, Node = KnowledgeNode, Status = NodeStatus.Started,
                         LearningObjects = new List<LearningObject> {Question1, ArrangeTask2, Text3}
                     }
                 }
             };
-
-        private static readonly Learner Trainee1 = new Learner
+        //TODO: Rework.
+        private static readonly Learner Learner1 = new Learner
         { Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4 };
 
-        private static readonly Learner Trainee2 = new Learner
+        private static readonly Learner Learner2 = new Learner
         { Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1 };
 
-        private static readonly Learner Trainee3 = new Learner
+        private static readonly Learner Learner3 = new Learner
         { Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1 };
 
         private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode

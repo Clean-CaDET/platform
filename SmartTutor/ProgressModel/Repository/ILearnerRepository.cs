@@ -9,16 +9,16 @@ namespace SmartTutor.ProgressModel.Repository
         /// <summary>
         /// Returns Nodes that have been completed or at least started.
         /// </summary>
-        List<NodeProgress> GetActivatedNodes(int traineeId);
+        List<NodeProgress> GetActivatedNodes(int learnerId);
         void SaveNodeProgress(NodeProgress nodeProgress);
-        NodeProgress GetNodeProgressForTrainee(int traineeId, int nodeId);
+        NodeProgress GetNodeProgressForLearner(int learnerId, int nodeId);
         void SaveChallengeSubmission(ChallengeSubmission challengeSubmission);
         void SaveQuestionSubmission(QuestionSubmission submission);
         void SaveArrangeTaskSubmission(ArrangeTaskSubmission submission);
 
-        Learner GetTraineeById(int traineeId);
-        Learner GetLearnerByIndex(string index);
-        void SaveTrainee(Learner learner);
-        void UpdateTrainee(Learner learner);
+        Learner GetById(int learnerId);
+        Learner GetByIndex(string index);
+        void Save(Learner learner);
+        void Update(Learner learner);
     }
 }

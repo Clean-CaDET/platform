@@ -2,10 +2,10 @@
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel;
 
-namespace SmartTutor.InstructionalModel
+namespace SmartTutor.InstructorModel
 {
     public interface IInstructor
     {
-        NodeProgress BuildNodeProgressForTrainee(Learner learner, KnowledgeNode knowledgeNode);
+        NodeProgress BuildNodeProgressForLearner(Learner learner, KnowledgeNode knowledgeNode);
     }
 }

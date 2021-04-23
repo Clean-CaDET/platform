@@ -8,7 +8,7 @@ namespace SmartTutor.ProgressModel.Submissions
         [Key] public int Id { get; set; }
         public List<int> SubmittedAnswerIds { get; set; }
         public int QuestionId { get; set; }
-        public int TraineeId { get; set; }
+        public int LearnerId { get; set; }
         public bool IsCorrect { get; set; }
     }
 }

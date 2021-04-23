@@ -1,4 +1,4 @@
-namespace SmartTutor.Controllers.DTOs.Trainee
+namespace SmartTutor.Controllers.DTOs.Learner
 {
     public class LoginDTO
     {

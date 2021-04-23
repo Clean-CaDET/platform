@@ -7,7 +7,7 @@ namespace SmartTutor.ProgressModel.Submissions
     {
         [Key] public int Id { get; set; }
         public int ArrangeTaskId { get; set; }
-        public int TraineeId { get; set; }
+        public int LearnerId { get; set; }
         public bool IsCorrect { get; set; }
         public List<ArrangeTaskContainerSubmission> Containers { get; set; }
     }

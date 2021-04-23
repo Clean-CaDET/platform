@@ -1,6 +1,6 @@
-using SmartTutor.ContentModel.Feedback;
+using SmartTutor.ProgressModel.Feedback;
+using SmartTutor.ProgressModel.Feedback.Repository;
 using System;
-using SmartTutor.ContentModel.Feedback.Repository;
 
 namespace SmartTutor.ContentModel
 {
@@ -16,7 +16,7 @@ namespace SmartTutor.ContentModel
         public void SubmitFeedback(LearningObjectFeedback feedback)
         {
             feedback.TimeStamp = DateTime.Now;
-            var loadedFeedback = _feedbackRepository.GetFeedback(feedback.LearningObjectId, feedback.TraineeId);
+            var loadedFeedback = _feedbackRepository.GetFeedback(feedback.LearningObjectId, feedback.LearnerId);
             if (loadedFeedback == null) _feedbackRepository.SaveFeedback(feedback);
             else _feedbackRepository.UpdateFeedback(feedback);
         }

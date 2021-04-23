@@ -1,4 +1,4 @@
-namespace SmartTutor.ContentModel.Feedback.Repository
+namespace SmartTutor.ProgressModel.Feedback.Repository
 {
     public interface IFeedbackRepository
     {
