@@ -61,7 +61,7 @@ namespace SmartTutorTests.Unit
             NodeProgress expectedNodeProgress)
         {
             var result = _instructor.BuildNodeForLearner(learnerId, node);
-            result.LearningObjects.ShouldBe(expectedNodeProgress.LearningObjects);
+            result.ShouldBe(expectedNodeProgress.LearningObjects);
         }
 
         public static IEnumerable<object[]> LearnerTestData =>

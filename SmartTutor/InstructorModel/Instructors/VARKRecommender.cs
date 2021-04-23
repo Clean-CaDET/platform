@@ -3,7 +3,6 @@ using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.LearnerModel.Learners.Repository;
-using SmartTutor.ProgressModel.Progress;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace SmartTutor.InstructorModel.Instructors
             _learnerRepository = learnerRepository;
         }
 
-        public NodeProgress BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode)
+        public List<LearningObject> BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode)
         {
             var learner = _learnerRepository.GetById(learnerId);
             var sortedPreferences = learner.LearningPreferenceScore().OrderByDescending(key => key.Value).ToList();
@@ -35,13 +34,7 @@ namespace SmartTutor.InstructorModel.Instructors
                 learningObjects.Add(learningObject);
             }
 
-            return new NodeProgress
-            {
-                LearnerId = learnerId,
-                Node = knowledgeNode,
-                Status = NodeStatus.Started,
-                LearningObjects = learningObjects
-            };
+            return learningObjects;
         }
 
         private LearningObject GetLearningObjectForPreference(LearningPreference learningPreference, int summaryId)
@@ -61,15 +54,10 @@ namespace SmartTutor.InstructorModel.Instructors
             return _learningObjectRepository.GetLearningObjectForSummary(summaryId);
         }
 
-        public NodeProgress BuildSimpleNode(KnowledgeNode knowledgeNode)
+        public List<LearningObject> BuildSimpleNode(KnowledgeNode knowledgeNode)
         {
-            var learningObjects = _learningObjectRepository.GetFirstLearningObjectsForSummaries(
+            return _learningObjectRepository.GetFirstLearningObjectsForSummaries(
                 knowledgeNode.LearningObjectSummaries.Select(s => s.Id).ToList());
-            return new NodeProgress
-            {
-                LearningObjects = learningObjects,
-                Node = knowledgeNode
-            };
         }
     }
 }

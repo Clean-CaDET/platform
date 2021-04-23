@@ -25,11 +25,9 @@ namespace SmartTutorTests.Unit
 
         private static IProgressService CreateService()
         {
-            var learner = new Learner {Id = 1};
             var kn1 = new KnowledgeNode {Id = 1};
             var kn2 = new KnowledgeNode {Id = 2};
             var progress1 = new NodeProgress {Id = 1};
-            var progress2 = new NodeProgress {Id = 10};
 
             Mock<IProgressRepository> progressRepo = new Mock<IProgressRepository>();
             progressRepo.Setup(repo => repo.GetNodeProgressForLearner(1, 1)).Returns(progress1);
@@ -38,11 +36,7 @@ namespace SmartTutorTests.Unit
             lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(1)).Returns(kn1);
             lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(2)).Returns(kn2);
             
-            Mock<IInstructor> instructor = new Mock<IInstructor>();
-            instructor.Setup(r => r.BuildNodeForLearner(1, kn2))
-                .Returns(progress2);
-
-            return new ProgressService(instructor.Object, lectureRepo.Object, progressRepo.Object);
+            return new ProgressService(new Mock<IInstructor>().Object, lectureRepo.Object, progressRepo.Object);
         }
 
         [Theory]
@@ -66,7 +60,7 @@ namespace SmartTutorTests.Unit
                 {
                     2,
                     1,
-                    10
+                    0
                 }
             };
     }

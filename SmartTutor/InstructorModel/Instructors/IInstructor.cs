@@ -1,11 +1,12 @@
-﻿using SmartTutor.ContentModel.Lectures;
-using SmartTutor.ProgressModel.Progress;
+﻿using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.Lectures;
+using System.Collections.Generic;
 
 namespace SmartTutor.InstructorModel.Instructors
 {
     public interface IInstructor
     {
-        NodeProgress BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode);
-        NodeProgress BuildSimpleNode(KnowledgeNode knowledgeNode);
+        List<LearningObject> BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode);
+        List<LearningObject> BuildSimpleNode(KnowledgeNode knowledgeNode);
     }
 }
