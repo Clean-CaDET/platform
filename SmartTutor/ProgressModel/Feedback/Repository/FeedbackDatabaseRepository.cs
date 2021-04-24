@@ -22,10 +22,10 @@ namespace SmartTutor.ProgressModel.Feedback.Repository
             _dbContext.SaveChanges();
         }
 
-        public LearningObjectFeedback Get(int learningObjectId, int traineeId)
+        public LearningObjectFeedback Get(int learningObjectId, int learnerId)
         {
             return _dbContext.LearningObjectFeedbacks.AsNoTracking().FirstOrDefault(feedback =>
-                feedback.LearningObjectId == learningObjectId && feedback.LearnerId == traineeId);
+                feedback.LearningObjectId == learningObjectId && feedback.LearnerId == learnerId);
         }
     }
 }

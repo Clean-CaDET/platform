@@ -23,8 +23,8 @@ namespace SmartTutor.Controllers
         [HttpPost("register")]
         public ActionResult<LearnerDTO> Register([FromBody] LearnerDTO learner)
         {
-            var registeredTrainee = _learnerService.Register(_mapper.Map<Learner>(learner));
-            return Ok(_mapper.Map<LearnerDTO>(registeredTrainee));
+            var registeredLearner = _learnerService.Register(_mapper.Map<Learner>(learner));
+            return Ok(_mapper.Map<LearnerDTO>(registeredLearner));
         }
 
         [HttpPost("login")]
@@ -32,8 +32,8 @@ namespace SmartTutor.Controllers
         {
             try
             {
-                var loggedInTrainee = _learnerService.Login(login.StudentIndex);
-                return Ok(_mapper.Map<LearnerDTO>(loggedInTrainee));
+                var learner = _learnerService.Login(login.StudentIndex);
+                return Ok(_mapper.Map<LearnerDTO>(learner));
             }
             catch (LearnerWithStudentIndexNotFound e)
             {

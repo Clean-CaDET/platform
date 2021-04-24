@@ -41,9 +41,9 @@ namespace SmartTutorTests.Unit
 
         [Theory]
         [MemberData(nameof(LearnerTestData))]
-        public void Creates_node_content(int nodeId, int traineeId, int nodeProgressId)
+        public void Creates_node_content(int nodeId, int learnerId, int nodeProgressId)
         {
-            var result = _progressService.GetNodeContent(nodeId, traineeId);
+            var result = _progressService.GetNodeContent(nodeId, learnerId);
             result.Id.ShouldBe(nodeProgressId);
         }
 

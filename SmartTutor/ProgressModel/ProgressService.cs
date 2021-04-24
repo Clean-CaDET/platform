@@ -22,10 +22,10 @@ namespace SmartTutor.ProgressModel
             _lectureRepository = lectureRepository;
         }
 
-        public List<NodeProgress> GetKnowledgeNodes(int lectureId, int? traineeId)
+        public List<NodeProgress> GetKnowledgeNodes(int lectureId, int? learnerId)
         {
             var nodes = _lectureRepository.GetKnowledgeNodes(lectureId);
-            if (traineeId == null) return ShowSampleNodes(nodes);
+            if (learnerId == null) return ShowSampleNodes(nodes);
             //TODO: Check if prerequisites fulfilled.
             return null;
         }

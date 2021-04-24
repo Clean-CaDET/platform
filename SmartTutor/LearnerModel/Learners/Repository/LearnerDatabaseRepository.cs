@@ -19,7 +19,7 @@ namespace SmartTutor.LearnerModel.Learners.Repository
         }
         public Learner GetByIndex(string index)
         {
-            return _dbContext.Learners.AsNoTracking().FirstOrDefault(trainee => trainee.StudentIndex.Equals(index));
+            return _dbContext.Learners.AsNoTracking().FirstOrDefault(learner => learner.StudentIndex.Equals(index));
         }
         public void Save(Learner learner)
         {

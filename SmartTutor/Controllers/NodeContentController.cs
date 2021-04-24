@@ -22,7 +22,7 @@ namespace SmartTutor.Controllers
         [HttpGet("{lectureId}")]
         public ActionResult<List<KnowledgeNodeProgressDTO>> GetLectureNodes(int lectureId)
         {
-            //TODO: Extract and send trainee ID.
+            //TODO: Extract and send learner ID.
             var nodes = _progressService.GetKnowledgeNodes(lectureId, null);
             if (nodes == null) return NotFound();
             return Ok(_mapper.Map<List<KnowledgeNodeProgressDTO>>(nodes));

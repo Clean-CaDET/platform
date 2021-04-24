@@ -30,7 +30,7 @@ namespace SmartTutor.ProgressModel
             submission.IsCorrect = evaluation.ChallengeCompleted;
             _submissionRepository.SaveChallengeSubmission(submission);
 
-            //TODO: Tie in with Instructor and handle traineeId to get suitable LO for LO summaries.
+            //TODO: Tie in with Instructor and handle learnerId to get suitable LO for LO summaries.
             evaluation.ApplicableLOs =
                 _learningObjectRepository.GetFirstLearningObjectsForSummaries(
                     evaluation.ApplicableHints.GetDistinctLearningObjectSummaries());
