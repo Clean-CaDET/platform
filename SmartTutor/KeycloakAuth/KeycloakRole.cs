@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SmartTutor.KeycloakAuth
 {
-    public class AllowedKeycloakRole : IAuthorizationRequirement
+    public class KeycloakRole : IAuthorizationRequirement
     {
-        public AllowedKeycloakRole(string role)
+        public KeycloakRole(string role)
         {
             AllowedRole = role;
         }

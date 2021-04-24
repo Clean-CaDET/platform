@@ -63,6 +63,22 @@ namespace SmartTutor
             
             services.AddScoped<IInstructor, VARKRecommender>();
 
+            AuthenticationConfig(services);
+            AuthorizationConfig(services);
+        }
+
+        private static void AuthorizationConfig(IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("testPolicy", policy =>
+                    policy.Requirements.Add(new KeycloakRole("Administrator")));
+            });
+            services.AddSingleton<IAuthorizationHandler, KeycloakRoleHandler>();
+        }
+
+        private void AuthenticationConfig(IServiceCollection services)
+        {
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -90,13 +106,6 @@ namespace SmartTutor
                     }
                 };
             });
-            
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("testPolicy", policy =>
-                    policy.Requirements.Add(new AllowedKeycloakRole("Administrator")));
-            });
-            services.AddSingleton<IAuthorizationHandler, AllowedKeycloakRoleHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

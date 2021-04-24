@@ -5,9 +5,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace SmartTutor.KeycloakAuth
 {
-    public class AllowedKeycloakRoleHandler : AuthorizationHandler<AllowedKeycloakRole>
+    public class KeycloakRoleHandler : AuthorizationHandler<KeycloakRole>
     {
-        public AllowedKeycloakRoleHandler(IWebHostEnvironment env)
+        public KeycloakRoleHandler(IWebHostEnvironment env)
         {
             Environment = env;
         }
@@ -15,7 +15,7 @@ namespace SmartTutor.KeycloakAuth
         private IWebHostEnvironment Environment { get; }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-            AllowedKeycloakRole requirement)
+            KeycloakRole requirement)
         {
             if (Environment.IsDevelopment() || context.User.IsInRole(requirement.AllowedRole))
             {
