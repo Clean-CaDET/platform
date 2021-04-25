@@ -7,13 +7,13 @@ using OfficeOpenXml;
 
 namespace DataSetExplorer.DataSetSerializer
 {
-    public class ExcelExporter
+    public class DataSetWithAnnotationsExporter
     {
-        private readonly string _templatePath = "../../../DataSetSerializer/Template/Dataset Annotation Template.xlsx";
+        private readonly string _templatePath = "../../../DataSetSerializer/Template/Dataset_Annotation_Template.xlsx";
         private readonly string _exportPath;
         //TODO: ColumnHeuristicsModel should be repurposed as some kind of HeuristicCatalog and put into the domain layer
         private readonly ColumnHeuristicsModel _requiredSmells;
-        public ExcelExporter(string exportPath, ColumnHeuristicsModel smells)
+        public DataSetWithAnnotationsExporter(string exportPath, ColumnHeuristicsModel smells)
         {
             _exportPath = exportPath;
             _requiredSmells = smells;

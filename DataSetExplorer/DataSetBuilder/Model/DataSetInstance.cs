@@ -55,9 +55,34 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         internal string GetSortedAnnotatorIds()
         {
-            var list = Annotations.Select(annotation => annotation.AnnotatorId).ToList();
+            var list = Annotations.Select(annotation => annotation.Annotator.Id).ToList();
             list.Sort();
             return string.Join(",", list);
+        }
+
+        public int GetFinalAnnotation()
+        {
+            var majorityVote = GetMajorityAnnotation();
+            if (majorityVote != null) return (int)majorityVote;
+            return GetAnnotationFromMostExperiencedAnnotator();
+        }
+
+        private int? GetMajorityAnnotation()
+        {
+            var annotationsGroupedBySeverity = Annotations.GroupBy(a => a.Severity);
+            var severityCounts = annotationsGroupedBySeverity.Select(group => group.Count());
+            if (severityCounts.Any(count => count != severityCounts.First()))
+            {
+                return annotationsGroupedBySeverity
+                    .OrderByDescending(a => a.Count())
+                    .First().Key;
+            }
+            return null;
+        }
+
+        private int GetAnnotationFromMostExperiencedAnnotator()
+        {
+            return Annotations.OrderBy(a => a.Annotator.Ranking).First().Severity;
         }
 
         public override int GetHashCode()
