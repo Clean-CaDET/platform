@@ -19,4 +19,23 @@
   <ItemGroup>
     <ProjectReference Include="..\RepositoryCompiler\RepositoryCompiler.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20210425094729_migration1.cs" />
+    <Compile Remove="Migrations\20210425094729_migration1.Designer.cs" />
+    <Compile Remove="Migrations\SmartTutorContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Migrations\**" />
+  </ItemGroup>
 </Project>
