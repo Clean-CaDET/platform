@@ -281,11 +281,34 @@ namespace RepositoryCompilerTests.Unit
             var otherDoctor = otherClasses.Find(c => c.Name.Equals("Doctor"));
             var otherDateRange = otherClasses.Find(c => c.Name.Equals("DateRange"));
 
-            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldContain(doctor);
-            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldNotContain(otherDoctor);
-            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldContain(dateRange);
-            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldNotContain(otherDateRange);
-            doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ShouldNotContain(doctorService);
+            var variables = doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes());
+
+            variables.ShouldContain(doctor);
+            variables.ShouldNotContain(otherDoctor);
+            variables.ShouldContain(dateRange);
+            variables.ShouldNotContain(otherDateRange);
+            variables.ShouldNotContain(doctorService);
+        }
+
+        [Fact]
+        public void Checks_property_linked_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+
+            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> otherClasses = factory.CreateClassModel(_testDataFactory.GetClassesFromDifferentNamespace());
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var otherDateRange = otherClasses.Find(c => c.Name.Equals("DateRange"));
+
+            var testPropertyType = doctor.Members.Find(m => m.Name.Equals("TestProp")).GetLinkedReturnTypes();
+            var holidayDatesType = doctor.Members.Find(m => m.Name.Equals("HolidayDates")).GetLinkedReturnTypes();
+
+            testPropertyType.ShouldContain(dateRange);
+            testPropertyType.ShouldNotContain(otherDateRange);
+            holidayDatesType.ShouldContain(dateRange);
+            holidayDatesType.ShouldNotContain(otherDateRange);
         }
     }
 }

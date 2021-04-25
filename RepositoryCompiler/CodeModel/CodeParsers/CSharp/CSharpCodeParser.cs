@@ -103,12 +103,12 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
                 if (!(node is FieldDeclarationSyntax fieldDeclaration)) continue;
                 
                 fields.AddRange(fieldDeclaration.Declaration.Variables.Select(
-                    variable => new CaDETField
+                    field => new CaDETField
                     {
-                        Name = variable.Identifier.Text,
+                        Name = field.Identifier.Text,
                         Parent = parent,
                         Modifiers = GetModifiers(node),
-                        Type = new CaDETLinkedType() { FullType = ((IFieldSymbol)model.GetDeclaredSymbol(variable)).Type.ToString() }
+                        Type = new CaDETLinkedType() { FullType = ((IFieldSymbol)model.GetDeclaredSymbol(field)).Type.ToString() }
                     }));
             }
             
