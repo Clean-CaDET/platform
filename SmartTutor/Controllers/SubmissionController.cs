@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace SmartTutor.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/submissions/")]
     [ApiController]
     public class SubmissionController : ControllerBase
     {
