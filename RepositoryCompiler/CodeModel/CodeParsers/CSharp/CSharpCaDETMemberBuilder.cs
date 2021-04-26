@@ -40,10 +40,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private List<CaDETVariable> GetMethodVariables()
         {
-            if (_cSharpMember is PropertyDeclarationSyntax) return null;
-            var variableDeclarations = _cSharpMember.DescendantNodes().OfType<VariableDeclarationSyntax>();
-            
             List<CaDETVariable> methodVariables = new List<CaDETVariable>();
+            if (_cSharpMember is PropertyDeclarationSyntax) return methodVariables;
+            var variableDeclarations = _cSharpMember.DescendantNodes().OfType<VariableDeclarationSyntax>();
+
             foreach (var variableDeclaration in variableDeclarations)
             {
                 foreach (var variable in variableDeclaration.Variables)

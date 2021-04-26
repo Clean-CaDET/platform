@@ -51,7 +51,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStra
         private List<string> GetMemberNames(CaDETMember member)
         {
             var memberNames = new List<string> { member.Name };
-            memberNames.AddRange(member.VariableNames);
+            memberNames.AddRange(member.Variables.Select(v => v.Name));
             memberNames.AddRange(member.Params.Select(p => p.Name));
             return memberNames;
         }
