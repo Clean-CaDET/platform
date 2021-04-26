@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class NodeContentTests
     {

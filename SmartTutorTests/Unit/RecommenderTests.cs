@@ -5,15 +5,14 @@ using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
-using SmartTutor.InstructorModel;
 using SmartTutor.InstructorModel.Instructors;
 using SmartTutor.LearnerModel.Learners;
+using SmartTutor.LearnerModel.Learners.Repository;
 using SmartTutor.ProgressModel.Progress;
 using System.Collections.Generic;
-using SmartTutor.LearnerModel.Learners.Repository;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class RecommenderTests
     {

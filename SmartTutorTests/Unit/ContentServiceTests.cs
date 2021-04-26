@@ -1,18 +1,15 @@
 using Moq;
 using Shouldly;
-using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.InstructorModel.Instructors;
-using SmartTutor.LearnerModel.Learners;
-using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Progress;
 using SmartTutor.ProgressModel.Progress.Repository;
 using System.Collections.Generic;
-using SmartTutor.ProgressModel;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class ProgressServiceTests
     {

@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTutor", "SmartTutor\Sm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmellDetectorTests", "SmellDetectorTests\SmellDetectorTests.csproj", "{2D6FE9CC-C4CF-4926-9DFD-AA006A407F66}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTutorTests", "SmartTutorTests\SmartTutorTests.csproj", "{AA91C49E-7FFA-48B5-9EF2-DE7746D5A483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTutor.Tests", "SmartTutorTests\SmartTutor.Tests.csproj", "{AA91C49E-7FFA-48B5-9EF2-DE7746D5A483}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorer", "DataSetExplorer\DataSetExplorer.csproj", "{5064A050-8C9B-4AAC-8F5C-09BEDCFCF4C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSetExplorerTests", "DataSetExplorerTests\DataSetExplorerTests.csproj", "{E6AA4545-2AB6-42E0-B560-612F64667366}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSetExplorerTests", "DataSetExplorerTests\DataSetExplorerTests.csproj", "{E6AA4545-2AB6-42E0-B560-612F64667366}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

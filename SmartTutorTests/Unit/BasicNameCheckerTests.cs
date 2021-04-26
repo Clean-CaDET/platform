@@ -1,14 +1,13 @@
-﻿using RepositoryCompiler.Controllers;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
 using SmartTutorTests.DataFactories;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class BasicNameCheckerTests
     {
