@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace SmartTutor.KeycloakAuth
+namespace SmartTutor.Controllers.KeycloakAuth
 {
     public class KeycloakRoleHandler : AuthorizationHandler<KeycloakRole>
     {

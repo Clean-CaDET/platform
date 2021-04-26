@@ -20,7 +20,7 @@ using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
 using SmartTutor.ProgressModel.Submissions.Repository;
-using SmartTutor.KeycloakAuth;
+using SmartTutor.Controllers.KeycloakAuth;
 
 namespace SmartTutor
 {

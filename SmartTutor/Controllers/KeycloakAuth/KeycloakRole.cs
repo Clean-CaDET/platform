@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
-namespace SmartTutor.KeycloakAuth
+namespace SmartTutor.Controllers.KeycloakAuth
 {
     public class KeycloakRole : IAuthorizationRequirement
     {
