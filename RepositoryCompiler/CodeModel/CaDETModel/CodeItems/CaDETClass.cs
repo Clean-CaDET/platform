@@ -27,6 +27,24 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public List<CaDETField> Fields { get; internal set; }
         public Dictionary<CaDETMetric, double> Metrics { get; internal set; }
 
+        public List<CaDETClass> GetFieldLinkedTypes()
+        {
+            return Fields.SelectMany(f => f.GetLinkedTypes()).ToList();
+        }
+
+        public List<CaDETClass> GetMethodLinkedReturnTypes()
+        {
+            return Members.Where(m => !(m.Type is CaDETMemberType.Constructor))
+                .SelectMany(m => m.GetLinkedReturnTypes()).ToList();
+        }
+
+        public List<CaDETClass> GetMethodLinkedVariableTypes()
+        {
+            return Members.Where(m=> !(m.Type is CaDETMemberType.Property))
+                .SelectMany(m => m.Variables)
+                .SelectMany(v => v.GetLinkedTypes()).ToList();
+        }
+
         public CaDETMember FindMember(string name)
         {
             return Members.Find(method => method.Name.Equals(name));
