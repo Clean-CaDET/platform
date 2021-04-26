@@ -6,7 +6,7 @@ namespace SmartTutor.Controllers.DTOs.Feedback
     {
         public int Id { get; set; }
         [Range(1, 5)] public int Rating { get; set; }
-        public int TraineeId { get; set; }
+        public int LearnerId { get; set; }
         public int LearningObjectId { get; set; }
     }
 }

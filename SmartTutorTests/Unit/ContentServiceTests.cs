@@ -1,58 +1,50 @@
-using System.Collections.Generic;
 using Moq;
 using Shouldly;
-using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.LectureModel.Repository;
-using SmartTutor.ContentModel.ProgressModel;
-using SmartTutor.ContentModel.ProgressModel.Repository;
-using SmartTutor.Recommenders;
+using SmartTutor.ContentModel.Lectures;
+using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.InstructorModel.Instructors;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Progress;
+using SmartTutor.ProgressModel.Progress.Repository;
+using System.Collections.Generic;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
-    public class ContentServiceTests
+    public class ProgressServiceTests
     {
-        private readonly IContentService _contentService;
+        private readonly IProgressService _progressService;
 
-        public ContentServiceTests()
+        public ProgressServiceTests()
         {
-            _contentService = new ContentService(CreateMockRecommender(), CreateMockLectureRepository(), null,
-                CreateMockTraineeRepository());
+            _progressService = CreateService();
         }
 
-        private static ITraineeRepository CreateMockTraineeRepository()
+        private static IProgressService CreateService()
         {
-            Mock<ITraineeRepository> traineeRepo = new Mock<ITraineeRepository>();
-            traineeRepo.Setup(repo => repo.GetNodeProgressForTrainee(1, 1)).Returns(new NodeProgress {Id = 1});
-            traineeRepo.Setup(repo => repo.GetTraineeById(1)).Returns(Trainee);
-            return traineeRepo.Object;
-        }
+            var kn1 = new KnowledgeNode {Id = 1};
+            var kn2 = new KnowledgeNode {Id = 2};
+            var progress1 = new NodeProgress {Id = 1};
 
-        private static ILectureRepository CreateMockLectureRepository()
-        {
+            Mock<IProgressRepository> progressRepo = new Mock<IProgressRepository>();
+            progressRepo.Setup(repo => repo.GetNodeProgressForLearner(1, 1)).Returns(progress1);
+
             Mock<ILectureRepository> lectureRepo = new Mock<ILectureRepository>();
-            lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(2)).Returns(KnowledgeNode);
-            return lectureRepo.Object;
-        }
-
-        private static IRecommender CreateMockRecommender()
-        {
-            Mock<IRecommender> recommender = new Mock<IRecommender>();
-            recommender.Setup(r => r.BuildNodeProgressForTrainee(Trainee, KnowledgeNode))
-                .Returns(new NodeProgress {Id = 10});
-            return recommender.Object;
+            lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(1)).Returns(kn1);
+            lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(2)).Returns(kn2);
+            
+            return new ProgressService(new Mock<IInstructor>().Object, lectureRepo.Object, progressRepo.Object);
         }
 
         [Theory]
-        [MemberData(nameof(TraineeTestData))]
-        public void Creates_node_content(int nodeId, int traineeId, int nodeProgressId)
+        [MemberData(nameof(LearnerTestData))]
+        public void Creates_node_content(int nodeId, int learnerId, int nodeProgressId)
         {
-            var result = _contentService.GetNodeContent(nodeId, traineeId);
+            var result = _progressService.GetNodeContent(nodeId, learnerId);
             result.Id.ShouldBe(nodeProgressId);
         }
 
-        public static IEnumerable<object[]> TraineeTestData =>
+        public static IEnumerable<object[]> LearnerTestData =>
             new List<object[]>
             {
                 new object[]
@@ -65,11 +57,8 @@ namespace SmartTutorTests.Unit
                 {
                     2,
                     1,
-                    10
+                    0
                 }
             };
-
-        private static readonly Trainee Trainee = new Trainee {Id = 1};
-        private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode {Id = 2};
     }
 }

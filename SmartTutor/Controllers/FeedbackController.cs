@@ -1,12 +1,12 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.FeedbackModel;
 using SmartTutor.Controllers.DTOs.Feedback;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Feedback;
 
 namespace SmartTutor.Controllers
 {
-    [Route("api/feedbacks/")]
+    [Route("api/feedback/")]
     [ApiController]
     public class FeedbackController : ControllerBase
     {

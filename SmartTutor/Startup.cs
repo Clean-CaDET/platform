@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,13 +5,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
-using SmartTutor.ContentModel.FeedbackModel.Repository;
 using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.ContentModel.LectureModel.Repository;
-using SmartTutor.ContentModel.ProgressModel.Repository;
+using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.Controllers.Mappers;
 using SmartTutor.Database;
-using SmartTutor.Recommenders;
+using SmartTutor.InstructorModel.Instructors;
+using SmartTutor.LearnerModel;
+using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel;
+using SmartTutor.ProgressModel.Feedback.Repository;
+using SmartTutor.ProgressModel.Progress.Repository;
+using SmartTutor.ProgressModel.Submissions.Repository;
+using System;
 
 namespace SmartTutor
 {
@@ -38,15 +42,20 @@ namespace SmartTutor
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
 
             services.AddScoped<IContentService, ContentService>();
-            services.AddScoped<IChallengeService, ChallengeService>();
-            services.AddScoped<ITraineeService, TraineeService>();
-            services.AddScoped<IFeedbackService, FeedbackService>();
-
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
-            services.AddScoped<ITraineeRepository, TraineeDatabaseRepository>();
+
+            services.AddScoped<IProgressService, ProgressService>();
+            services.AddScoped<IProgressRepository, ProgressDatabaseRepository>();
+            services.AddScoped<ISubmissionService, SubmissionService>();
+            services.AddScoped<ISubmissionRepository, SubmissionDatabaseRepository>();
+            services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
-            services.AddScoped<IRecommender, KnowledgeBasedRecommender>();
+            
+            services.AddScoped<ILearnerService, LearnerService>();
+            services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
+            
+            services.AddScoped<IInstructor, VARKRecommender>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
