@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.Controllers.DTOs.Progress;
 using SmartTutor.ProgressModel;
 using System.Collections.Generic;
 

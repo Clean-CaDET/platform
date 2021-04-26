@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using SmartTutor.Controllers.DTOs.Lecture;
+﻿using SmartTutor.Controllers.DTOs.Content;
+using System.Collections.Generic;
 
-namespace SmartTutor.Controllers.DTOs.Challenge
+namespace SmartTutor.Controllers.DTOs.SubmissionEvaluation
 {
     public class ChallengeEvaluationDTO
     {

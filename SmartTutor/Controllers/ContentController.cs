@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
-using SmartTutor.Controllers.DTOs.Lecture;
+using SmartTutor.Controllers.DTOs.Content;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,12 +9,12 @@ namespace SmartTutor.Controllers
 {
     [Route("api/lectures/")]
     [ApiController]
-    public class LectureController : ControllerBase
+    public class ContentController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IContentService _contentService;
 
-        public LectureController(IMapper mapper, IContentService contentService)
+        public ContentController(IMapper mapper, IContentService contentService)
         {
             _mapper = mapper;
             _contentService = contentService;

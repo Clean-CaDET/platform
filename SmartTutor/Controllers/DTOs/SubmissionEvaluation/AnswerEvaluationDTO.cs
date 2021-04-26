@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.Controllers.DTOs.Lecture
+﻿namespace SmartTutor.Controllers.DTOs.SubmissionEvaluation
 {
     public class AnswerEvaluationDTO
     {

@@ -1,7 +1,8 @@
-﻿using SmartTutor.ProgressModel.Progress;
+﻿using SmartTutor.Controllers.DTOs.Content;
+using SmartTutor.ProgressModel.Progress;
 using System.Collections.Generic;
 
-namespace SmartTutor.Controllers.DTOs.Lecture
+namespace SmartTutor.Controllers.DTOs.Progress
 {
     public class KnowledgeNodeProgressDTO
     {

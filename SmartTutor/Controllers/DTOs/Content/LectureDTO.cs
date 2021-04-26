@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SmartTutor.Controllers.DTOs.Lecture
+namespace SmartTutor.Controllers.DTOs.Content
 {
     public class LectureDTO
     {

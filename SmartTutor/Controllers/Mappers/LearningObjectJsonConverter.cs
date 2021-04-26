@@ -1,4 +1,4 @@
-﻿using SmartTutor.Controllers.DTOs.Lecture;
+﻿using SmartTutor.Controllers.DTOs.Content;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;

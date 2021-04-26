@@ -1,15 +1,16 @@
-using AutoMapper;
-using SmartTutor.Controllers.DTOs.Learner;
-using SmartTutor.LearnerModel.Learners;
+﻿using AutoMapper;
+using SmartTutor.Controllers.DTOs.Progress;
+using SmartTutor.ProgressModel.Progress;
 
 namespace SmartTutor.Controllers.Mappers
 {
-    public class ProgressProfile : Profile
+    public class ProgressProfile: Profile
     {
         public ProgressProfile()
         {
-            CreateMap<LearnerDTO, Learner>();
-            CreateMap<Learner, LearnerDTO>();
+            CreateMap<NodeProgress, KnowledgeNodeProgressDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Node.Id))
+                .ForMember(dest => dest.LearningObjective, opt => opt.MapFrom(src => src.Node.LearningObjective));
         }
     }
 }

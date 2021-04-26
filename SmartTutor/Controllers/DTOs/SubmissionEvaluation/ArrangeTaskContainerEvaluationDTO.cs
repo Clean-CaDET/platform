@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using SmartTutor.Controllers.DTOs.Content;
+using System.Collections.Generic;
 
-namespace SmartTutor.Controllers.DTOs.Lecture
+namespace SmartTutor.Controllers.DTOs.SubmissionEvaluation
 {
     public class ArrangeTaskContainerEvaluationDTO
     {

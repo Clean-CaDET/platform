@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.Controllers.DTOs.Challenge
+﻿namespace SmartTutor.Controllers.DTOs.SubmissionEvaluation
 {
     public class ChallengeSubmissionDTO
     {
