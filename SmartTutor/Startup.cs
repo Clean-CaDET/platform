@@ -1,5 +1,9 @@
+using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,18 +20,20 @@ using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
 using SmartTutor.ProgressModel.Submissions.Repository;
-using System;
+using SmartTutor.Controllers.KeycloakAuth;
 
 namespace SmartTutor
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Env { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -56,6 +62,50 @@ namespace SmartTutor
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
             
             services.AddScoped<IInstructor, VARKRecommender>();
+
+            AuthenticationConfig(services);
+            AuthorizationConfig(services);
+        }
+
+        private static void AuthorizationConfig(IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("testPolicy", policy =>
+                    policy.Requirements.Add(new KeycloakRole("Administrator")));
+            });
+            services.AddSingleton<IAuthorizationHandler, KeycloakRoleHandler>();
+        }
+
+        private void AuthenticationConfig(IServiceCollection services)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
+            {
+                o.Authority = Configuration["Jwt:Authority"];
+                o.Audience = Configuration["Jwt:Audience"];
+                o.RequireHttpsMetadata = false;
+                o.SaveToken = true;
+                o.Events = new JwtBearerEvents
+
+                {
+                    OnAuthenticationFailed = c =>
+                    {
+                        c.NoResult();
+                        c.Response.StatusCode = 500;
+                        c.Response.ContentType = "text/plain";
+
+                        if (Env.IsDevelopment())
+                        {
+                            return c.Response.WriteAsync(c.Exception.ToString());
+                        }
+                        return c.Response.WriteAsync("An error occured processing your authentication.");
+                    }
+                };
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -72,6 +122,8 @@ namespace SmartTutor
                 .AllowCredentials()); // allow credentials
 
             app.UseHttpsRedirection();
+            
+            app.UseAuthentication();
 
             app.UseRouting();
 
