@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
@@ -17,7 +16,7 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public ISet<CaDETMember> AccessedAccessors { get; internal set; }
         public ISet<CaDETField> AccessedFields { get; internal set; }
         public CaDETLinkedType ReturnType;
-        public List<CaDETVariable> Variables { get; internal set; }
+        public List<CaDETVariable> Variables { get; internal set; } = new List<CaDETVariable>();
 
         public string Signature()
         {
@@ -96,11 +95,6 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         {
             if (ReturnType == null) return new List<CaDETClass>();
             return ReturnType.LinkedTypes;
-        }
-
-        public List<CaDETClass> GetLinkedParameterTypes()
-        {
-            return Params.SelectMany(p => p.Type.LinkedTypes).ToList();
         }
     }
 }
