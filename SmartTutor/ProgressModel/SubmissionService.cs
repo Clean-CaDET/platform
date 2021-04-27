@@ -27,7 +27,7 @@ namespace SmartTutor.ProgressModel
 
             var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode);
 
-            submission.IsCorrect = evaluation.ChallengeCompleted;
+            if(evaluation.ChallengeCompleted) submission.MarkCorrect();
             _submissionRepository.SaveChallengeSubmission(submission);
 
             //TODO: Tie in with Instructor and handle learnerId to get suitable LO for LO summaries.
@@ -44,7 +44,7 @@ namespace SmartTutor.ProgressModel
             var question = _learningObjectRepository.GetQuestion(submission.QuestionId);
             var evaluations = question.EvaluateAnswers(submission.SubmittedAnswerIds);
 
-            submission.IsCorrect = evaluations.Select(a => a.SubmissionWasCorrect).All(c => c);
+            if(evaluations.Select(a => a.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
             _submissionRepository.SaveQuestionSubmission(submission);
 
             return evaluations;
@@ -55,7 +55,7 @@ namespace SmartTutor.ProgressModel
             var arrangeTask = _learningObjectRepository.GetArrangeTask(submission.ArrangeTaskId);
             var evaluations = arrangeTask.EvaluateSubmission(submission.Containers);
 
-            submission.IsCorrect = evaluations.Select(e => e.SubmissionWasCorrect).All(c => c);
+            if(evaluations.Select(e => e.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
             _submissionRepository.SaveArrangeTaskSubmission(submission);
 
             return evaluations;

@@ -67,31 +67,19 @@ namespace SmartTutor.Tests.Unit
                 {
                     1,
                     KnowledgeNode,
-                    new NodeProgress
-                    {
-                        LearnerId = 1, Node = KnowledgeNode, Status = NodeStatus.Started,
-                        LearningObjects = new List<LearningObject> {Text1, Text2, Text3}
-                    }
+                    new NodeProgress(0, 1, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Text1, Text2, Text3})
                 },
                 new object[]
                 {
                     2,
                     KnowledgeNode,
-                    new NodeProgress
-                    {
-                        LearnerId = 2, Node = KnowledgeNode, Status = NodeStatus.Started,
-                        LearningObjects = new List<LearningObject> {Video1, Image2, Text3}
-                    }
+                    new NodeProgress(0, 2, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Video1, Image2, Text3})
                 },
                 new object[]
                 {
                     3,
                     KnowledgeNode,
-                    new NodeProgress
-                    {
-                        LearnerId = 3, Node = KnowledgeNode, Status = NodeStatus.Started,
-                        LearningObjects = new List<LearningObject> {Question1, ArrangeTask2, Text3}
-                    }
+                    new NodeProgress(0, 3, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Question1, ArrangeTask2, Text3})
                 }
             };
         //TODO: Rework.
