@@ -13,22 +13,19 @@ namespace SmartTutor.LearnerModel
             _learnerRepository = learnerRepository;
         }
 
-        public Learner Register(Learner learner)
+        public Learner Register(Learner newLearner)
         {
-            var existingLearner = _learnerRepository.GetByIndex(learner.StudentIndex);
-            if (existingLearner != null)
+            var learner = _learnerRepository.GetByIndex(newLearner.StudentIndex);
+            if (learner == null)
             {
-                learner.Id = existingLearner.Id;
-                if (learner.AuralScore == 0) learner.AuralScore = existingLearner.AuralScore;
-                if (learner.KinaestheticScore == 0) learner.KinaestheticScore = existingLearner.KinaestheticScore;
-                if (learner.VisualScore == 0) learner.VisualScore = existingLearner.VisualScore;
-                if (learner.ReadWriteScore == 0) learner.ReadWriteScore = existingLearner.ReadWriteScore;
-                _learnerRepository.Update(learner);
-                return learner;
+                learner = newLearner;
+            }
+            else
+            {
+                learner.UpdateVARK(newLearner.VARKScore());
             }
 
-            _learnerRepository.Save(learner);
-            return learner;
+            return _learnerRepository.SaveOrUpdate(learner);
         }
 
         public Learner Login(string studentIndex)

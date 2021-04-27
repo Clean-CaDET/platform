@@ -15,8 +15,17 @@ namespace SmartTutor.ProgressModel
 
         public void SubmitFeedback(LearningObjectFeedback feedback)
         {
-            feedback.TimeStamp = DateTime.Now;
-            _feedbackRepository.SaveOrUpdate(feedback);
+            var loadedFeedback = _feedbackRepository.Get(feedback.LearningObjectId, feedback.LearnerId);
+            if (loadedFeedback == null)
+            {
+                loadedFeedback = feedback;
+            }
+            else
+            {
+                loadedFeedback.UpdateRating(feedback.Rating);
+            }
+
+            _feedbackRepository.SaveOrUpdate(loadedFeedback);
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
-using SmartTutor.Controllers.DTOs.Content;
 using SmartTutor.Controllers.DTOs.SubmissionEvaluation;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Submissions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SmartTutor.Controllers
 {

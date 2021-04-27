@@ -23,7 +23,7 @@ namespace SmartTutor.InstructorModel.Instructors
         public List<LearningObject> BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode)
         {
             var learner = _learnerRepository.GetById(learnerId);
-            var sortedPreferences = learner.LearningPreferenceScore().OrderByDescending(key => key.Value).ToList();
+            var sortedPreferences = learner.VARKScore().OrderByDescending(key => key.Value).ToList();
 
             var learningObjects = new List<LearningObject>();
             foreach (var summary in knowledgeNode.LearningObjectSummaries)

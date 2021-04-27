@@ -44,12 +44,9 @@ namespace SmartTutor.Tests.Unit
                 .Returns(Text3);
 
             Mock<ILearnerRepository> learnerRepo = new Mock<ILearnerRepository>();
-            learnerRepo.Setup(repo => repo.GetById(1)).Returns(new Learner
-                {Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4});
-            learnerRepo.Setup(repo => repo.GetById(2)).Returns(new Learner
-                { Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1 });
-            learnerRepo.Setup(repo => repo.GetById(3)).Returns(new Learner
-                { Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1 });
+            learnerRepo.Setup(repo => repo.GetById(1)).Returns(new Learner(1,1,2,4,3));
+            learnerRepo.Setup(repo => repo.GetById(2)).Returns(new Learner(2,3,4,1,2));
+            learnerRepo.Setup(repo => repo.GetById(3)).Returns(new Learner(3,2,3,1,4));
 
             return new VARKRecommender(learningObjectRepo.Object, learnerRepo.Object);
         }

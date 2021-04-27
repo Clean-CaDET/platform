@@ -4,7 +4,6 @@
     {
         Learner GetById(int learnerId);
         Learner GetByIndex(string index);
-        void Save(Learner learner);
-        void Update(Learner learner);
+        Learner SaveOrUpdate(Learner learner);
     }
 }
