@@ -1,7 +1,14 @@
-﻿using DataSetExplorer.DataSetBuilder;
+﻿using System;
+using DataSetExplorer.DataSetBuilder;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
 using DataSetExplorer.DataSetSerializer.ViewModel;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using RepositoryCompiler.CodeModel;
+using RepositoryCompiler.CodeModel.CaDETModel;
+using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace DataSetExplorer
 {
@@ -27,8 +34,83 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         static void Main(string[] args)
         {
             //MakeExcelFromProjectUseCase();
-            FindInstancesRequiringAdditionalAnnotationUseCase();
+            //FindInstancesRequiringAdditionalAnnotationUseCase();
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
+            ExportAnnotatedDataSet();
+        }
+        
+        private static void ExportAnnotatedDataSet()
+        {
+            ListDictionary projects = new ListDictionary(); // local repository path, annotations folder path
+            projects.Add("D:/ccadet/annotations/repos/BurningKnight", "D:/ccadet/annotations/annotated/BurningKnight");
+            projects.Add("D:/ccadet/annotations/repos/Core2D", "D:/ccadet/annotations/annotated/Core2d");
+            projects.Add("D:/ccadet/annotations/repos/jellyfin", "D:/ccadet/annotations/annotated/Jellyfin");
+            projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
+            projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
+            projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
+
+            var dataForExport = PrepareDataForExport(projects);
+            var groupedBySmells = dataForExport.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
+
+            var exporter = new DataSetWithMetricsExporter("D:/ccadet/annotations/annotated/Output/");
+            var enumerator = groupedBySmells.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var codeSmellGroup = enumerator.Current;
+                exporter.Export(codeSmellGroup.ToList(), "DataSet_" + codeSmellGroup.Key);
+            }
+        }
+
+        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> PrepareDataForExport(ListDictionary projects)
+        {
+            List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataForExport =
+                new List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>();
+
+            foreach (var key in projects.Keys)
+            {
+                CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+                CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
+
+                var annotatedInstances = LoadDataSet(projects[key].ToString()).GetAllInstances();
+                LoadAnnotators(ref annotatedInstances);
+                var instanceMetrics = GetMetricsForExport(annotatedInstances, project);
+                dataForExport.AddRange(JoinAnnotationsAndMetrics(annotatedInstances, instanceMetrics));
+            }
+            return dataForExport;
+        }
+
+        private static void LoadAnnotators(ref List<DataSetInstance> annotatedInstances)
+        {
+            List<Annotator> annotators = new List<Annotator>()
+            {
+                new Annotator(1, 6, 1),
+                new Annotator(2, 2, 2),
+                new Annotator(3, 2, 3)
+            };
+            
+            foreach (var annotation in annotatedInstances.SelectMany(i => i.Annotations))
+            {
+                    annotation.Annotator = annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
+            }
+        }
+
+        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> JoinAnnotationsAndMetrics(List<DataSetInstance> dataSetInstances,
+            Dictionary<string, Dictionary<CaDETMetric, double>> datasetInstancesMetrics)
+        {
+            return dataSetInstances.Select(i => 
+                new Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>(i, datasetInstancesMetrics[i.CodeSnippetId]))
+                .ToList();
+        }
+
+        private static Dictionary<string, Dictionary<CaDETMetric, double>> GetMetricsForExport(List<DataSetInstance> annotatedInstances, CaDETProject project)
+        {
+            Dictionary<string, Dictionary<CaDETMetric, double>> allMetrics =
+                new Dictionary<string, Dictionary<CaDETMetric, double>>();
+            foreach (var instance in annotatedInstances)
+            {
+                allMetrics[instance.CodeSnippetId] = project.GetMetricsForCodeSnippet(instance.CodeSnippetId);
+            }
+            return allMetrics;
         }
 
         private static void FindInstancesWithAllDisagreeingAnnotationsUseCase()
@@ -58,7 +140,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             var dataSet = CreateDataSetFromRepository(
                 "https://github.com/MonoGame/MonoGame/tree/4802d00db04dc7aa5fe07cd2d908f9a4b090a4fd",
                 "C:/sdataset-p2/MonoGame");
-            var exporter = new ExcelExporter("C:/DSOutput/", new ColumnHeuristicsModel());
+            var exporter = new DataSetWithAnnotationsExporter("C:/DSOutput/", new ColumnHeuristicsModel());
             exporter.Export(dataSet, "MonoGame");
         }
 
@@ -66,7 +148,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         {
             var builder = new CaDETToDataSetBuilder(projectAndCommitUrl, projectPath);
             return builder.IncludeMembersWith(10).IncludeClassesWith(3, 5).RandomizeClassSelection().RandomizeMemberSelection()
-                .SetProjectExtractionPercentile(10).Build();
+              .SetProjectExtractionPercentile(10).Build();
         }
     }
 }

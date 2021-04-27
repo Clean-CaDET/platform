@@ -34,7 +34,7 @@ namespace DataSetExplorer.DataSetSerializer
             {
                 dataSet.AddInstances(ExtractInstances(excelWorksheet));
             }
-
+            
             return dataSet;
         }
 
@@ -98,8 +98,7 @@ namespace DataSetExplorer.DataSetSerializer
                 var annotatorId = int.Parse(sheet.Cells["C2"].Text);
                 var codeSmell = sheet.Cells["B2"].Text;
                 var heuristics = GetHeuristics(sheet, row);
-
-                return new DataSetAnnotation(codeSmell, smellSeverity, annotatorId, heuristics);
+                return new DataSetAnnotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics);
             }
             catch (InvalidOperationException e)
             {
