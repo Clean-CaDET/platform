@@ -31,7 +31,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public override bool Equals(object other)
         {
             return other is DataSetAnnotation annotation
-                   && Annotator.Id.Equals(annotation.Annotator.Id)
+                   && Annotator.Equals(annotation.Annotator)
                    && InstanceSmell.Value.Equals(annotation.InstanceSmell.Value);
         }
 

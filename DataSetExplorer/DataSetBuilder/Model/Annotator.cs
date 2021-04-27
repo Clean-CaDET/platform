@@ -1,4 +1,6 @@
-﻿namespace DataSetExplorer.DataSetBuilder.Model
+﻿using System;
+
+namespace DataSetExplorer.DataSetBuilder.Model
 {
     public class Annotator
     {
@@ -16,6 +18,24 @@
             Id = id;
             YearsOfExperience = yearsOfExperience;
             Ranking = ranking;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Annotator);
+        }
+
+        public bool Equals(Annotator other)
+        {
+            return other != null &&
+                   Id == other.Id &&
+                   YearsOfExperience == other.YearsOfExperience &&
+                   Ranking == other.Ranking;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, YearsOfExperience, Ranking);
         }
     }
 }

@@ -28,7 +28,12 @@ namespace DataSetExplorerTests.Unit
             functions.Count(c => c.Annotations.Count == 2).ShouldBe(10);
             functions.Count(c => c.Annotations.Count == 3).ShouldBe(296);
 
-            var annotators = ImportAnnotators();
+            var annotators = new List<Annotator>()
+            {
+                new Annotator(1, 6, 1),
+                new Annotator(2, 2, 2),
+                new Annotator(3, 2, 3)
+            };
             JoinInstancesAndAnnotators(ref classes, annotators);
 
             var allClassAnnotations = classes.SelectMany(c => c.Annotations);
@@ -43,23 +48,6 @@ namespace DataSetExplorerTests.Unit
             {
                 annotation.Annotator = annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
             }
-        }
-
-        private List<Annotator> ImportAnnotators()
-        {
-            var annotators = new List<Annotator>();
-            using (var reader = new StreamReader("../../../DataFactories/AnnotatorsData/annotators.csv"))
-            {
-                reader.ReadLine();
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var values = line.Split(';');
-
-                    annotators.Add(new Annotator(Int16.Parse(values[0]), Int16.Parse(values[1]), Int16.Parse(values[2])));
-                }
-            }
-            return annotators;
         }
 
         [Fact]
