@@ -14,7 +14,21 @@ namespace SmartTutor.Controllers.Mappers
         public SubmissionProfile()
         {
             CreateMap<ChallengeEvaluation, ChallengeEvaluationDTO>()
-                .ForMember(dest => dest.ApplicableHints, opt => opt.MapFrom(src => src.ApplicableHints.GetHints()));
+                .ForMember(dest => dest.ApplicableHints, opt => opt.MapFrom(src => src.ApplicableHints.GetHints()))
+                .AfterMap((src, dest, context) =>
+                {
+                    var hintDirectory = src.ApplicableHints.GetDirectory();
+                    var directoryKeys = src.ApplicableHints.GetHints();
+                    foreach (var hintDto in dest.ApplicableHints)
+                    {
+                        var relatedHint = directoryKeys.First(h => h.Id == hintDto.Id);
+                        hintDto.ApplicableToCodeSnippets = hintDirectory[relatedHint];
+                        if (relatedHint.LearningObjectSummaryId == null) continue;
+                        var relatedLO = src.ApplicableLOs
+                            .First(lo => lo.LearningObjectSummaryId == relatedHint.LearningObjectSummaryId);
+                        hintDto.LearningObject = context.Mapper.Map<LearningObjectDTO>(relatedLO);
+                    }
+                });
             CreateMap<ChallengeHint, ChallengeHintDTO>();
             CreateMap<ChallengeSubmissionDTO, ChallengeSubmission>();
 

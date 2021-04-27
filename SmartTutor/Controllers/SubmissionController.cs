@@ -38,23 +38,7 @@ namespace SmartTutor.Controllers
             }
             
             if (challengeEvaluation == null) return NotFound();
-            return Ok(_mapper.Map<ChallengeEvaluation, ChallengeEvaluationDTO>(challengeEvaluation, opt =>
-            {
-                opt.AfterMap((src, dest) =>
-                {
-                    var hintDirectory = src.ApplicableHints.GetDirectory();
-                    var directoryKeys = src.ApplicableHints.GetHints();
-                    foreach (var hintDto in dest.ApplicableHints)
-                    {
-                        var relatedHint = directoryKeys.First(h => h.Id == hintDto.Id);
-                        hintDto.ApplicableToCodeSnippets = hintDirectory[relatedHint];
-                        if (relatedHint.LearningObjectSummaryId == null) continue;
-                        var relatedLO = src.ApplicableLOs
-                            .First(lo => lo.LearningObjectSummaryId == relatedHint.LearningObjectSummaryId);
-                        hintDto.LearningObject = _mapper.Map<LearningObjectDTO>(relatedLO);
-                    }
-                });
-            }));
+            return Ok(_mapper.Map<ChallengeEvaluationDTO>(challengeEvaluation));
         }
 
         [HttpPost("question")]
