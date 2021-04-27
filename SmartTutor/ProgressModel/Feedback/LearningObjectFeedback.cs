@@ -10,5 +10,11 @@ namespace SmartTutor.ProgressModel.Feedback
         public int LearnerId { get; set; }
         public int LearningObjectId { get; set; }
         public DateTime TimeStamp { get; set; }
+
+        public void UpdateRating(int feedbackRating)
+        {
+            Rating = feedbackRating;
+            TimeStamp = DateTime.Now;
+        }
     }
 }

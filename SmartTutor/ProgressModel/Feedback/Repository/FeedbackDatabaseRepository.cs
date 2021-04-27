@@ -16,15 +16,22 @@ namespace SmartTutor.ProgressModel.Feedback.Repository
         public void SaveOrUpdate(LearningObjectFeedback feedback)
         {
             var loadedFeedback = Get(feedback.LearningObjectId, feedback.LearnerId);
-            if (loadedFeedback == null) _dbContext.LearningObjectFeedbacks.Add(feedback);
-            else _dbContext.LearningObjectFeedbacks.Update(feedback);
+            if (loadedFeedback == null)
+            {
+                _dbContext.LearningObjectFeedback.Attach(feedback);
+            }
+            else
+            {
+                loadedFeedback.UpdateRating(feedback.Rating);
+                _dbContext.LearningObjectFeedback.Update(loadedFeedback);
+            }
 
             _dbContext.SaveChanges();
         }
 
         public LearningObjectFeedback Get(int learningObjectId, int learnerId)
         {
-            return _dbContext.LearningObjectFeedbacks.AsNoTracking().FirstOrDefault(feedback =>
+            return _dbContext.LearningObjectFeedback.FirstOrDefault(feedback =>
                 feedback.LearningObjectId == learningObjectId && feedback.LearnerId == learnerId);
         }
     }

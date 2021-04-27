@@ -44,7 +44,7 @@ namespace SmartTutor.Database
         public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<ArrangeTaskSubmission> ArrangeTaskSubmissions { get; set; }
         public DbSet<ArrangeTaskContainerSubmission> ArrangeTaskContainerSubmissions { get; set; }
-        public DbSet<LearningObjectFeedback> LearningObjectFeedbacks { get; set; }
+        public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
 
         public SmartTutorContext(DbContextOptions<SmartTutorContext> options) : base(options)
         {
@@ -53,6 +53,13 @@ namespace SmartTutor.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigureBasicMetricChecker(modelBuilder);
+
+            modelBuilder.Entity<Challenge>()
+                .Property<int>("SolutionIdForeignKey");
+            modelBuilder.Entity<Challenge>()
+                .HasOne(b => b.Solution)
+                .WithMany()
+                .HasForeignKey("SolutionIdForeignKey");
         }
 
         private static void ConfigureBasicMetricChecker(ModelBuilder modelBuilder)
@@ -74,14 +81,6 @@ namespace SmartTutor.Database
                 .HasMany(b => b.MethodMetricRules)
                 .WithOne()
                 .HasForeignKey("MethodMetricCheckerForeignKey");
-            
-
-            modelBuilder.Entity<Challenge>()
-                .Property<int>("SolutionIdForeignKey");
-            modelBuilder.Entity<Challenge>()
-                .HasOne(b => b.Solution)
-                .WithMany()
-                .HasForeignKey("SolutionIdForeignKey");
         }
     }
 }
