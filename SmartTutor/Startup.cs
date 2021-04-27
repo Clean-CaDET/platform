@@ -83,26 +83,26 @@ namespace SmartTutor
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
+            }).AddJwtBearer(options =>
             {
-                o.Authority = Configuration["Jwt:Authority"];
-                o.Audience = Configuration["Jwt:Audience"];
-                o.RequireHttpsMetadata = false;
-                o.SaveToken = true;
-                o.Events = new JwtBearerEvents
+                options.Authority = Configuration["Jwt:Authority"];
+                options.Audience = Configuration["Jwt:Audience"];
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.Events = new JwtBearerEvents
 
                 {
-                    OnAuthenticationFailed = c =>
+                    OnAuthenticationFailed = failedContext =>
                     {
-                        c.NoResult();
-                        c.Response.StatusCode = 500;
-                        c.Response.ContentType = "text/plain";
+                        failedContext.NoResult();
+                        failedContext.Response.StatusCode = 500;
+                        failedContext.Response.ContentType = "text/plain";
 
                         if (Env.IsDevelopment())
                         {
-                            return c.Response.WriteAsync(c.Exception.ToString());
+                            return failedContext.Response.WriteAsync(failedContext.Exception.ToString());
                         }
-                        return c.Response.WriteAsync("An error occured processing your authentication.");
+                        return failedContext.Response.WriteAsync("An error occured processing your authentication.");
                     }
                 };
             });

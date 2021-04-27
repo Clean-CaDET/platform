@@ -19,7 +19,7 @@ namespace SmartTutor.Controllers
             _feedbackService = feedbackService;
         }
 
-        [HttpPost("submit")]
+        [HttpPost]
         public ActionResult SubmitFeedback([FromBody] LearningObjectFeedbackDTO feedback)
         {
             _feedbackService.SubmitFeedback(_mapper.Map<LearningObjectFeedback>(feedback));
