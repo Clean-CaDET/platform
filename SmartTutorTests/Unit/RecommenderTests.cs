@@ -83,17 +83,12 @@ namespace SmartTutor.Tests.Unit
                 }
             };
         //TODO: Rework.
-        
 
-        private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode
+
+        private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode(1, new List<LearningObjectSummary>
         {
-            Id = 1,
-            LearningObjectSummaries = new List<LearningObjectSummary>
-            {
-                new LearningObjectSummary {Id = 1}, new LearningObjectSummary {Id = 2},
-                new LearningObjectSummary {Id = 3}
-            }
-        };
+            new LearningObjectSummary(1, ""), new LearningObjectSummary(2, ""), new LearningObjectSummary(3, "")
+        });
 
         private static readonly Text Text1 = new Text { Id = 1, LearningObjectSummaryId = 1 };
         private static readonly Text Text2 = new Text { Id = 2, LearningObjectSummaryId = 2 };

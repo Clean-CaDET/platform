@@ -42,8 +42,8 @@ INSERT INTO public."Lectures"(
 	
 --== Naming ==- FK Node	
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (1, 'Navedi osnovne vodilje za definisanje značajnih imena.', 0, NULL, 1);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (1, 'Navedi osnovne vodilje za definisanje značajnih imena.', 0, 1);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -122,8 +122,8 @@ INSERT INTO public."QuestionAnswers"(
 	
 --== Naming =- PK Node 1
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (2, 'Primeni heuristiku odbacivanja beznačajnih reči radi formiranje boljih imena u kodu.', 1, NULL, 1);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (2, 'Primeni heuristiku odbacivanja beznačajnih reči radi formiranje boljih imena u kodu.', 1, 1);
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (5, 'Algorithm', 2);
@@ -200,8 +200,8 @@ INSERT INTO public."Videos"(
 
 --== Naming ==- PK Node 2
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (3, 'Primeni osnovne tehnike refaktorisanja za formiranje boljih imena u kodu.', 1, NULL, 1);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (3, 'Primeni osnovne tehnike refaktorisanja za formiranje boljih imena u kodu.', 1, 1);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -252,8 +252,8 @@ INSERT INTO public."Videos"(
 
 --== Naming ==- CK Node	
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (4, 'Razumi uticaj jasnih i misterioznih imena u kodu na rad programera.', 2, NULL, 1);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (4, 'Razumi uticaj jasnih i misterioznih imena u kodu na rad programera.', 2, 1);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -346,8 +346,8 @@ INSERT INTO public."QuestionAnswers"(
 	
 --== Methods ==- FK Node	
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (10, 'Analiziraj ideju da je funkcija fokusirana na jedan zadatak.', 0, NULL, 2);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (10, 'Analiziraj ideju da je funkcija fokusirana na jedan zadatak.', 0, 2);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
@@ -453,8 +453,8 @@ INSERT INTO public."Images"(
 
 --== Methods ==- PK Node 1
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (11, 'Primeni extract method refaktorisanje za formiranje kraćih funkcija.', 1, NULL, 2);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (11, 'Primeni extract method refaktorisanje za formiranje kraćih funkcija.', 1, 2);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
@@ -470,8 +470,8 @@ INSERT INTO public."LearningObjectSummaries"(
 
 --== Methods ==- PK Node 2	
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (12, 'Primeni extract method refaktorisanje za formiranje jednostavnijih funkcija.', 1, NULL, 2);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (12, 'Primeni extract method refaktorisanje za formiranje jednostavnijih funkcija.', 1, 2);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -488,8 +488,8 @@ INSERT INTO public."LearningObjectSummaries"(
 	
 --== Methods ==- PK Node 3	
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId")
-	VALUES (13, 'Primeni strategije za redukciju broja parametra za formiranje čistijih funkcija.', 1, NULL, 2);
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (13, 'Primeni strategije za redukciju broja parametra za formiranje čistijih funkcija.', 1, 2);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -647,8 +647,8 @@ INSERT INTO public."MetricRangeRules"(
 	
 --== Methods ==- CK Node
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "KnowledgeNodeId", "LectureId") -- TODO: KN many to many prerequisites (after experiment)
-	VALUES (14, 'Razumi posledice održavanja koda koji se sastoji od funkcija gde je svaka fokusirana na manji broj zadataka (idealno jedan).', 2, NULL, 2);
+	"Id", "LearningObjective", "Type", "LectureId") -- TODO: KN many to many prerequisites (after experiment)
+	VALUES (14, 'Razumi posledice održavanja koda koji se sastoji od funkcija gde je svaka fokusirana na manji broj zadataka (idealno jedan).', 2, 2);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")

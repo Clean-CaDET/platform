@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SmartTutor.ContentModel.Lectures
+﻿namespace SmartTutor.ContentModel.Lectures
 {
     public class LearningObjectSummary
     {
-        [Key] public int Id { get; set; }
-        public string Description { get; set; }
+        public int Id { get; private set; }
+        public string Description { get; private set; }
+
+        public LearningObjectSummary(int id, string description)
+        {
+            Id = id;
+            Description = description;
+        }
     }
 }

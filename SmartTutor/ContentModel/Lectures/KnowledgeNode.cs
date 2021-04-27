@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SmartTutor.ContentModel.Lectures
 {
     public class KnowledgeNode
     {
-        [Key] public int Id { get; set; }
-        public string LearningObjective { get; set; }
-        public KnowledgeNodeType Type { get; set; }
-        public List<KnowledgeNode> PrerequisiteNodes { get; set; }
-        public List<LearningObjectSummary> LearningObjectSummaries { get; set; }
+        public int Id { get; private set; }
+        public string LearningObjective { get; private set; }
+        public KnowledgeNodeType Type { get; private set; }
+        public List<LearningObjectSummary> LearningObjectSummaries { get; private set; }
 
-        public bool HasNoPrerequisites()
+        protected KnowledgeNode() {}
+        public KnowledgeNode(int id, List<LearningObjectSummary> summaries): this()
         {
-            return PrerequisiteNodes == null || PrerequisiteNodes.Count == 0;
+            Id = id;
+            LearningObjectSummaries = summaries;
         }
     }
 
