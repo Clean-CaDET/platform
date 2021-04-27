@@ -1,13 +1,13 @@
-﻿using RepositoryCompiler.Controllers;
-using Shouldly;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutorTests.DataFactories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.Controllers;
+using Shouldly;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
+using SmartTutorTests.DataFactories;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class BasicMetricsCheckerTests
     {

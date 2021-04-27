@@ -84,6 +84,11 @@
         /// </summary>
         RFC,
 
+        /// <summary>
+        /// CBO: Number of dependencies
+        /// </summary>
+        CBO,
+
         #endregion
 
         #region MemberMetrics

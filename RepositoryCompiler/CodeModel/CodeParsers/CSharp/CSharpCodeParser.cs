@@ -5,6 +5,7 @@ using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using RepositoryCompiler.CodeModel.CodeParsers.CSharp.Exceptions;
 
 
@@ -88,24 +89,26 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             };
             parsedClass.Modifiers = GetModifiers(node);
             parsedClass.Parent = new CaDETClass { Name = symbol.BaseType.ToString() };
-            parsedClass.Fields = ParseFields(node.Members, parsedClass);
+            parsedClass.Fields = ParseFields(node.Members, parsedClass, semanticModel);
             parsedClass.Members = ParseMethods(node.Members, parsedClass, semanticModel);
-
             return parsedClass;
         }
 
-        private List<CaDETField> ParseFields(IEnumerable<MemberDeclarationSyntax> nodeMembers, CaDETClass parent)
+        private List<CaDETField> ParseFields(IEnumerable<MemberDeclarationSyntax> nodeMembers, CaDETClass parent, SemanticModel model)
         {
             List<CaDETField> fields = new List<CaDETField>();
+
             foreach (var node in nodeMembers)
             {
                 if (!(node is FieldDeclarationSyntax fieldDeclaration)) continue;
+                
                 fields.AddRange(fieldDeclaration.Declaration.Variables.Select(
                     field => new CaDETField
                     {
                         Name = field.Identifier.Text,
                         Parent = parent,
-                        Modifiers = GetModifiers(node)
+                        Modifiers = GetModifiers(node),
+                        Type = new CaDETLinkedType() { FullType = ((IFieldSymbol)model.GetDeclaredSymbol(field)).Type.ToString() }
                     }));
             }
             
@@ -182,6 +185,8 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
             {
                 c.Parent = LinkParent(classes, c.Parent);
                 c.OuterClass = LinkOuterClass(classes, c.ContainerName);
+                c.Fields = LinkFields(classes, c.Fields);
+                c.Members = LinkMembers(classes, c.Members);
                 foreach (var memberBuilder in _memberBuilders[c])
                 {
                     memberBuilder.DetermineAccessedCodeItems(classes);
@@ -198,6 +203,92 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private CaDETClass LinkOuterClass(List<CaDETClass> classes, string containerName)
         {
             return classes.FirstOrDefault(c => c.FullName.Equals(containerName));
+        }
+
+        private List<CaDETField> LinkFields(List<CaDETClass> classes, List<CaDETField> fields)
+        {
+            List<CaDETField> linkedFields = new List<CaDETField>();
+            foreach (var f in fields)
+            {
+                f.Type.LinkedTypes = GetTypes(classes, f.Type);
+                linkedFields.Add(f);
+            }
+            
+            return linkedFields;
+        }
+
+        private List<CaDETMember> LinkMembers(List<CaDETClass> classes, List<CaDETMember> members)
+        {
+            List<CaDETMember> linkedMembers = new List<CaDETMember>();
+            foreach (var m in members)
+            {
+                if (!(m.Type is CaDETMemberType.Property))
+                {
+                    m.Variables = LinkMethodVariables(classes, m);
+                }
+
+                if (!(m.Type is CaDETMemberType.Constructor))
+                {
+                    m.ReturnType.LinkedTypes = GetTypes(classes, m.ReturnType);
+                }
+
+                linkedMembers.Add(m);
+            }
+            return linkedMembers;
+        }
+
+        private List<CaDETVariable> LinkMethodVariables(List<CaDETClass> classes, CaDETMember member)
+        {
+            List<CaDETVariable> linkedVariables = new List<CaDETVariable>();
+            foreach (var variable in member.Variables)
+            {
+                var variableTypes = GetTypes(classes, variable.Type);
+                if (variableTypes != null) variable.Type.LinkedTypes = variableTypes;
+                linkedVariables.Add(variable);
+            }
+            return linkedVariables;
+        }
+
+        private List<CaDETClass> GetTypes(List<CaDETClass> classes, CaDETLinkedType type)
+        {
+            List<CaDETClass> types = new List<CaDETClass>();
+            types.Add(CheckForSingleOrArrayType(classes, type.FullType));
+            types.AddRange(GetCollectionTypes(classes, type.FullType));
+            return types.Where(t => t != null).ToList();
+        }
+
+        private CaDETClass CheckForSingleOrArrayType(List<CaDETClass> classes, string fullType)
+        {
+            var foundType = classes.FirstOrDefault(c => c.FullName.Equals(fullType));
+            if (foundType != null) return foundType;
+
+            foundType = GetArrayType(classes, fullType);
+            return foundType;
+        }
+        
+        private List<CaDETClass> GetCollectionTypes(List<CaDETClass> classes, string type)
+        {
+            List<CaDETClass> collectionTypes = new List<CaDETClass>();
+            var match = Regex.Match(type, "<.+>");
+            if (!match.Success) return collectionTypes;
+            
+            var typeParameterSection = match.Value.Substring(1, match.Value.Length - 2);
+            collectionTypes.AddRange(GetCollectionTypes(classes, typeParameterSection));
+            var typeParameters = typeParameterSection.Split(",").Select(t => t.Trim()).ToList();
+            foreach (var t in typeParameters)
+            {
+                collectionTypes.Add(CheckForSingleOrArrayType(classes, t));
+            }
+
+            return collectionTypes.Where(ct => ct != null).Distinct().ToList();
+        }
+
+        private CaDETClass GetArrayType(List<CaDETClass> classes, string type)
+        {
+            if (!Regex.IsMatch(type, "\\[.*\\]")) return null;
+            
+            var typeName = type.Split("[")[0];
+            return classes.FirstOrDefault(c => c.FullName.Equals(typeName));
         }
 
         private List<CaDETClass> CalculateMetrics(List<CaDETClass> linkedClasses)

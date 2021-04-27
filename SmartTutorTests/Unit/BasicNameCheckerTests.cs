@@ -1,14 +1,13 @@
-﻿using RepositoryCompiler.Controllers;
-using Shouldly;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutorTests.DataFactories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
+using Shouldly;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
+using SmartTutorTests.DataFactories;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class BasicNameCheckerTests
     {
@@ -34,8 +33,7 @@ namespace SmartTutorTests.Unit
                 }
             }};
 
-            var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
-            var challengeEvaluation = challenge.CheckChallengeFulfillment(caDETClasses);
+            var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);

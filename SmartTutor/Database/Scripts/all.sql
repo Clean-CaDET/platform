@@ -588,7 +588,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (48, 48);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (48, 'https://i.ibb.co/tpCkJp0/params-strategy-rs.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
+	VALUES (48, 'https://i.ibb.co/kDfx5DJ/a-RS-Methods-Params-Startegy.png', 'Kroz navedene strategije vidimo kako je broj parametra metode u interakciji sa klasama i može biti signal da li neku klasu treba uvesti ili izmeniti.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -687,7 +687,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (61, 61);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (61, 'https://i.ibb.co/Y8SM4qV/RS-Methods-LINQ.png', 'Razmisli na koji način nam IsActive funkcija apstrahuje logiku, a na koji način je enkapsulira.');
+	VALUES (61, 'https://i.ibb.co/ydsGxjM/a-RS-Methods-LINQ.png', 'Razmisli na koji način nam IsActive funkcija apstrahuje logiku, a na koji način je enkapsulira.');
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")

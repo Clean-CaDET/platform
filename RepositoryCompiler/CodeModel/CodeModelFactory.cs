@@ -13,7 +13,7 @@ namespace RepositoryCompiler.CodeModel
     {
         private readonly LanguageEnum _language;
 
-        public CodeModelFactory(LanguageEnum language)
+        public CodeModelFactory(LanguageEnum language = LanguageEnum.CSharp)
         {
             _language = language;
         }

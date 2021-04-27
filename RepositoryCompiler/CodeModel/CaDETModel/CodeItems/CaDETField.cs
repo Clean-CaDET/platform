@@ -7,6 +7,8 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public string Name { get; internal set; }
         public List<CaDETModifier> Modifiers { get; internal set; }
         public CaDETClass Parent { get; internal set; }
+        
+        public CaDETLinkedType Type;
 
         public override bool Equals(object other)
         {
@@ -22,6 +24,11 @@ namespace RepositoryCompiler.CodeModel.CaDETModel.CodeItems
         public override string ToString()
         {
             return Parent.FullName + "." + Name;
+        }
+
+        public List<CaDETClass> GetLinkedTypes()
+        {
+            return Type.LinkedTypes;
         }
     }
 }

@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
+using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -49,15 +51,17 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 .FirstOrDefault();
         }
 
-        public List<QuestionAnswer> GetQuestionAnswers(int questionId)
+        public Question GetQuestion(int questionId)
         {
-            return _dbContext.QuestionAnswers.Where(a => a.QuestionId == questionId).ToList();
+            return _dbContext.Questions.Where(q => q.Id == questionId)
+                .Include(q => q.PossibleAnswers).FirstOrDefault();
         }
 
-        public List<ArrangeTaskContainer> GetArrangeTaskContainers(int arrangeTaskId)
+        public ArrangeTask GetArrangeTask(int arrangeTaskId)
         {
-            return _dbContext.ArrangeTaskContainers.Where(c => c.ArrangeTaskId == arrangeTaskId)
-                .Include(c => c.Elements).ToList();
+            return _dbContext.ArrangeTasks.Where(t => t.Id == arrangeTaskId)
+                .Include(t => t.Containers)
+                .ThenInclude(c => c.Elements).FirstOrDefault();
         }
 
         public Image GetImageForSummary(int summaryId)
