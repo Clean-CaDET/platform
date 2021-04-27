@@ -39,10 +39,10 @@ namespace SmellDetector.Detectors.RuleEngines
             _dynamicRules = new List<Rule>();
         }
 
-        private void createDynamicRules(List<CaDETClassDTO> caDetClassDtoList)
+        private void DefineTopXMetricRules(List<CaDETClassDTO> caDetClassDtoList)
         {
-            int indexOfSignificativeMetricValue = calculateIndexBasedOnPercentage(caDetClassDtoList, 20);
-            double atfdThreshold = calculateDynamicThreshold(caDetClassDtoList, CaDETMetric.ATFD, indexOfSignificativeMetricValue);
+            int indexOfSignificativeMetricValue = CalculateIndexBasedOnPercentage(caDetClassDtoList, 20);
+            double atfdThreshold = FindTopXMetricValuesInProject(caDetClassDtoList, CaDETMetric.ATFD, indexOfSignificativeMetricValue);
 
             Rule rule1 = new Rule("10.1016/j.jss.2006.10.018",
                                 new AndCriteria(new AndCriteria(new MetricCriteria(CaDETMetric.ATFD, OperationEnum.GREATER_OR_EQUALS, atfdThreshold),
@@ -51,7 +51,7 @@ namespace SmellDetector.Detectors.RuleEngines
                                                                 new MetricCriteria(CaDETMetric.TCC, OperationEnum.LESS_THAN, 0.33))),
                                 SmellType.GOD_CLASS);
 
-            double wmcThreshold = calculateDynamicThreshold(caDetClassDtoList, CaDETMetric.WMC, 10);
+            double wmcThreshold = FindTopXMetricValuesInProject(caDetClassDtoList, CaDETMetric.WMC, 10);
 
             Rule rule2 = new Rule("10.1109/TOOLS.2001.941671",
                                 new OrCriteria(new OrCriteria(new MetricCriteria(CaDETMetric.ATFD, OperationEnum.GREATER_THAN, 3),
@@ -63,21 +63,21 @@ namespace SmellDetector.Detectors.RuleEngines
 
         }
 
-        private double calculateDynamicThreshold(List<CaDETClassDTO> caDetClassDtoList, CaDETMetric metric, int indexOfMetricValue)
+        private double FindTopXMetricValuesInProject(List<CaDETClassDTO> caDetClassDtoList, CaDETMetric metric, int indexOfMetricValue)
         {
             List<double> metricValues = caDetClassDtoList.Select(c => c.CodeSnippetMetrics[metric]).ToList();
             metricValues.Sort();
             return metricValues[indexOfMetricValue];
         }
 
-        private int calculateIndexBasedOnPercentage(List<CaDETClassDTO> caDetClassDtoList, int percentage)
+        private int CalculateIndexBasedOnPercentage(List<CaDETClassDTO> caDetClassDtoList, int percentage)
         {
             return caDetClassDtoList.Count * percentage / 100;
         }
 
         public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDtoList)
         {
-            //createDynamicRules(caDetClassDtoList);
+            DefineTopXMetricRules(caDetClassDtoList);
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
             foreach(CaDETClassDTO caDETClassDTO in caDetClassDtoList)
