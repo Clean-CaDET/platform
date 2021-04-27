@@ -70,14 +70,20 @@ namespace DataSetExplorer.DataSetBuilder.Model
         private int? GetMajorityAnnotation()
         {
             var annotationsGroupedBySeverity = Annotations.GroupBy(a => a.Severity);
-            var severityCounts = annotationsGroupedBySeverity.Select(group => group.Count());
-            if (severityCounts.Any(count => count != severityCounts.First()))
+            if (HasMajoritySeverityVote(annotationsGroupedBySeverity))
             {
                 return annotationsGroupedBySeverity
                     .OrderByDescending(a => a.Count())
                     .First().Key;
             }
             return null;
+        }
+
+        private bool HasMajoritySeverityVote(
+            IEnumerable<IGrouping<int, DataSetAnnotation>> annotationsGroupedBySeverity)
+        {
+            var severityCounts = annotationsGroupedBySeverity.Select(group => group.Count());
+            return severityCounts.Any(count => count != severityCounts.First());
         }
 
         private int GetAnnotationFromMostExperiencedAnnotator()

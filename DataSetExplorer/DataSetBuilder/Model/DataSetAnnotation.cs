@@ -8,7 +8,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public CodeSmell InstanceSmell { get; }
         public int Severity { get; }
         public List<SmellHeuristic> ApplicableHeuristics { get; }
-        public Annotator Annotator { get; }
+        public Annotator Annotator { get; set; }
 
         public DataSetAnnotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
         {

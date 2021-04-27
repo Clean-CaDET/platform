@@ -27,33 +27,15 @@ namespace DataSetExplorer.DataSetSerializer
         /// <returns>A dataset constructed from one or more excel documents.</returns>
         public DataSet Import(string dataSetName)
         {
-            var annotators = ImportAnnotators();
             var dataSet = new DataSet(dataSetName);
 
             var sheets = GetWorksheets(GetExcelDocuments());
             foreach (var excelWorksheet in sheets)
             {
-                dataSet.AddInstances(ExtractInstances(excelWorksheet, annotators));
+                dataSet.AddInstances(ExtractInstances(excelWorksheet));
             }
             
             return dataSet;
-        }
-
-        private List<Annotator> ImportAnnotators()
-        {
-            var annotators = new List<Annotator>();
-            using (var reader = new StreamReader("../../../DataSetSerializer/AnnotatorData/annotator_data.csv"))
-            {
-                reader.ReadLine();
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var values = line.Split(';');
-                    
-                    annotators.Add(new Annotator(Int16.Parse(values[0]), Int16.Parse(values[1]), Int16.Parse(values[2])));
-                }
-            }
-            return annotators;
         }
 
         private IEnumerable<ExcelPackage> GetExcelDocuments()
@@ -74,14 +56,14 @@ namespace DataSetExplorer.DataSetSerializer
             return sheets;
         }
 
-        private static List<DataSetInstance> ExtractInstances(ExcelWorksheet sheet, List<Annotator> annotators)
+        private static List<DataSetInstance> ExtractInstances(ExcelWorksheet sheet)
         {
             var instances = new List<DataSetInstance>();
             for (var row = StartingInstanceRow; row <= sheet.Dimension.End.Row; row++)
             {
                 if (IsEndOfSheet(sheet, row)) break;
                 var instance = GetBasicInstance(sheet, row);
-                instance.AddAnnotation(GetAnnotation(sheet, row, annotators));
+                instance.AddAnnotation(GetAnnotation(sheet, row));
                 instances.Add(instance);
             }
 
@@ -108,7 +90,7 @@ namespace DataSetExplorer.DataSetSerializer
             return SnippetType.Class;
         }
 
-        private static DataSetAnnotation GetAnnotation(ExcelWorksheet sheet, int row, List<Annotator> annotators)
+        private static DataSetAnnotation GetAnnotation(ExcelWorksheet sheet, int row)
         {
             try
             {
@@ -116,7 +98,7 @@ namespace DataSetExplorer.DataSetSerializer
                 var annotatorId = int.Parse(sheet.Cells["C2"].Text);
                 var codeSmell = sheet.Cells["B2"].Text;
                 var heuristics = GetHeuristics(sheet, row);
-                return new DataSetAnnotation(codeSmell, smellSeverity, annotators.Find(a => a.Id.Equals(annotatorId)), heuristics);
+                return new DataSetAnnotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics);
             }
             catch (InvalidOperationException e)
             {

@@ -51,11 +51,11 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
 
             var dataForExport = PrepareDataForExport(projects);
             var groupedBySmells = dataForExport.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
-            
+
+            var exporter = new DataSetWithMetricsExporter("D:/ccadet/annotations/annotated/Output/");
             var enumerator = groupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                var exporter = new DataSetWithMetricsExporter("D:/ccadet/annotations/annotated/Output/");
                 var codeSmellGroup = enumerator.Current;
                 exporter.Export(codeSmellGroup.ToList(), "DataSet_" + codeSmellGroup.Key);
             }
@@ -72,10 +72,26 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
 
                 var annotatedInstances = LoadDataSet(projects[key].ToString()).GetAllInstances();
+                LoadAnnotators(ref annotatedInstances);
                 var instanceMetrics = GetMetricsForExport(annotatedInstances, project);
                 dataForExport.AddRange(JoinAnnotationsAndMetrics(annotatedInstances, instanceMetrics));
             }
             return dataForExport;
+        }
+
+        private static void LoadAnnotators(ref List<DataSetInstance> annotatedInstances)
+        {
+            List<Annotator> annotators = new List<Annotator>()
+            {
+                new Annotator(1, 6, 1),
+                new Annotator(2, 2, 2),
+                new Annotator(3, 2, 3)
+            };
+            
+            foreach (var annotation in annotatedInstances.SelectMany(i => i.Annotations))
+            {
+                    annotation.Annotator = annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
+            }
         }
 
         private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> JoinAnnotationsAndMetrics(List<DataSetInstance> dataSetInstances,
