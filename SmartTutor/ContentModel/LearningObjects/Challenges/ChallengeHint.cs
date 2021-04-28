@@ -1,12 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SmartTutor.ContentModel.LearningObjects.Challenges
+﻿namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
     public class ChallengeHint
     {
-        [Key] public int Id { get; set; }
-        public string Content { get; set; }
-        public int? LearningObjectSummaryId { get; set; }
+        public int Id { get; private set; }
+        public string Content { get; private set; }
+        public int? LearningObjectSummaryId { get; private set; }
+
+        private ChallengeHint() {}
+        public ChallengeHint(int id): this()
+        {
+            Id = id;
+        }
 
         public override int GetHashCode()
         {

@@ -90,13 +90,13 @@ namespace SmartTutor.Tests.Unit
             new LearningObjectSummary(1, ""), new LearningObjectSummary(2, ""), new LearningObjectSummary(3, "")
         });
 
-        private static readonly Text Text1 = new Text { Id = 1, LearningObjectSummaryId = 1 };
-        private static readonly Text Text2 = new Text { Id = 2, LearningObjectSummaryId = 2 };
-        private static readonly Text Text3 = new Text { Id = 3, LearningObjectSummaryId = 3 };
-        private static readonly Video Video1 = new Video { Id = 4, LearningObjectSummaryId = 1 };
-        private static readonly Image Image1 = new Image { Id = 5, LearningObjectSummaryId = 1 };
-        private static readonly Image Image2 = new Image { Id = 6, LearningObjectSummaryId = 2 };
-        private static readonly Question Question1 = new Question { Id = 7, LearningObjectSummaryId = 1 };
-        private static readonly ArrangeTask ArrangeTask2 = new ArrangeTask { Id = 8, LearningObjectSummaryId = 1 };
+        private static readonly Text Text1 = new Text(1, 1, "");
+        private static readonly Text Text2 = new Text(2, 2, "");
+        private static readonly Text Text3 = new Text(3, 3, "");
+        private static readonly Video Video1 = new Video(4, 1, "");
+        private static readonly Image Image1 = new Image(5, 1, "", "");
+        private static readonly Image Image2 = new Image(6, 2, "", "");
+        private static readonly Question Question1 = new Question(7, 1, "", null);
+        private static readonly ArrangeTask ArrangeTask2 = new ArrangeTask(8, 3, "", null);
     }
 }

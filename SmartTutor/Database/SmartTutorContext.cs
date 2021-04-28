@@ -16,9 +16,11 @@ namespace SmartTutor.Database
 {
     public class SmartTutorContext : DbContext
     {
+        #region Courses
         public DbSet<Lecture> Lectures { get; set; }
         public DbSet<KnowledgeNode> KnowledgeNodes { get; set; }
         public DbSet<LearningObjectSummary> LearningObjectSummaries { get; set; }
+        #endregion
 
         #region Learning Objects
         public DbSet<LearningObject> LearningObjects { get; set; }
@@ -38,13 +40,15 @@ namespace SmartTutor.Database
         public DbSet<ChallengeHint> ChallengeHints { get; set; }
         #endregion
 
-        public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
+        #region Progress Model
         public DbSet<NodeProgress> NodeProgresses { get; set; }
-        public DbSet<Learner> Learners { get; set; }
-        public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<ArrangeTaskSubmission> ArrangeTaskSubmissions { get; set; }
         public DbSet<ArrangeTaskContainerSubmission> ArrangeTaskContainerSubmissions { get; set; }
+        public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
+        public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
+        #endregion
+        public DbSet<Learner> Learners { get; set; }
 
         public SmartTutorContext(DbContextOptions<SmartTutorContext> options) : base(options)
         {
@@ -53,6 +57,16 @@ namespace SmartTutor.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigureBasicMetricChecker(modelBuilder);
+
+            modelBuilder.Entity<Text>().ToTable("Texts");
+            modelBuilder.Entity<Image>().ToTable("Images");
+            modelBuilder.Entity<Video>().ToTable("Videos");
+            modelBuilder.Entity<Question>().ToTable("Questions");
+            modelBuilder.Entity<ArrangeTask>().ToTable("ArrangeTasks");
+            modelBuilder.Entity<Challenge>().ToTable("Challenges");
+
+            modelBuilder.Entity<BasicNameChecker>().ToTable("BasicNameCheckers");
+            modelBuilder.Entity<BasicMetricChecker>().ToTable("BasicMetricCheckers");
 
             modelBuilder.Entity<Challenge>()
                 .Property<int>("SolutionIdForeignKey");

@@ -16,22 +16,12 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints, bool expectedCompletion)
         {
-            var challenge = new Challenge { FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
+            //TODO: Readonly lists
+            var challenge = new Challenge(1, 1, "", "", null, new List<ChallengeFulfillmentStrategy>
             {
-                new BasicNameChecker
-                {
-                    Id = 1,
-                    RequiredWords = new List<string> { "Payment", "PaymentService", "compensation" },
-                    Hint = new ChallengeHint { Id = 11 }
-                },
-
-                new BasicNameChecker
-                {
-                    Id = 2,
-                    BannedWords = new List<string> { "Class", "List", "Method" },
-                    Hint = new ChallengeHint { Id = 21 }
-                }
-            }};
+                new BasicNameChecker(null, new List<string> { "Payment", "PaymentService", "compensation" }, new ChallengeHint(11)),
+                new BasicNameChecker(new List<string> { "Class", "List", "Method" }, null, new ChallengeHint(21))
+            });
 
             var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
@@ -50,8 +40,8 @@ namespace SmartTutor.Tests.Unit
                     ChallengeTestData.GetTwoPassingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint {Id = 11},
-                        new ChallengeHint {Id = 21}
+                        new ChallengeHint(11),
+                        new ChallengeHint(21)
                     },
                     true
                 },
@@ -60,8 +50,8 @@ namespace SmartTutor.Tests.Unit
                     ChallengeTestData.GetTwoViolatingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint {Id = 11},
-                        new ChallengeHint {Id = 21}
+                        new ChallengeHint(11),
+                        new ChallengeHint(21)
                     },
                     false
                 }

@@ -12,8 +12,7 @@ namespace SmartTutor.ProgressModel.Progress
         public List<LearningObject> LearningObjects { get; private set; }
         public NodeStatus Status { get; private set; }
 
-        protected NodeProgress() {}
-
+        private NodeProgress() {}
         public NodeProgress(int id, int learnerId, KnowledgeNode node, NodeStatus status, List<LearningObject> learningObjects): this()
         {
             Id = id;

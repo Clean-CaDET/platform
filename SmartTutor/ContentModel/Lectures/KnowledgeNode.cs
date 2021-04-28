@@ -9,7 +9,7 @@ namespace SmartTutor.ContentModel.Lectures
         public KnowledgeNodeType Type { get; private set; }
         public List<LearningObjectSummary> LearningObjectSummaries { get; private set; }
 
-        protected KnowledgeNode() {}
+        private KnowledgeNode() {}
         public KnowledgeNode(int id, List<LearningObjectSummary> summaries): this()
         {
             Id = id;

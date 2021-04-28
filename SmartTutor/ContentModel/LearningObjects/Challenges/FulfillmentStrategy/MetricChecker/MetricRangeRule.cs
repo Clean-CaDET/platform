@@ -1,17 +1,26 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker
 {
     public class MetricRangeRule
     {
-        [Key] public int Id { get; set; }
-        public string MetricName { get; set; }
-        public double FromValue { get; set; }
-        public double ToValue { get; set; }
-        public ChallengeHint Hint { get; set; }
+        public int Id { get; private set; }
+        public string MetricName { get; private set; }
+        public double FromValue { get; private set; }
+        public double ToValue { get; private set; }
+        public ChallengeHint Hint { get; private set; }
+
+        private MetricRangeRule() {}
+        public MetricRangeRule(int id, string metricName, int fromValue, int toValue, ChallengeHint hint): this()
+        {
+            Id = id;
+            MetricName = metricName;
+            FromValue = fromValue;
+            ToValue = toValue;
+            Hint = hint;
+        }
 
         internal ChallengeHint Evaluate(Dictionary<CaDETMetric, double> metrics)
         {
