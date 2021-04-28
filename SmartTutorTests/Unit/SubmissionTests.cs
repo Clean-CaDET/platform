@@ -12,10 +12,10 @@ using Xunit;
 
 namespace SmartTutor.Tests.Unit
 {
-    public class NodeContentTests
+    public class SubmissionTests
     {
         private readonly ISubmissionService _service;
-        public NodeContentTests()
+        public SubmissionTests()
         {
             _service = new SubmissionService(CreateMockRepository(), new Mock<ISubmissionRepository>().Object);
         }

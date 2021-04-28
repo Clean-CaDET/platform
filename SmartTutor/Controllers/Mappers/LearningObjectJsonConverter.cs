@@ -7,7 +7,7 @@ namespace SmartTutor.Controllers.Mappers
 {
     //Based on https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-core-3-1#support-polymorphic-deserialization
     //TODO: Research a better solution and refactor this.
-    internal class LearningObjectJsonConverter : JsonConverter<LearningObjectDTO>
+    public class LearningObjectJsonConverter : JsonConverter<LearningObjectDTO>
     {
         public override bool CanConvert(Type typeToConvert) =>
             typeof(LearningObjectDTO).IsAssignableFrom(typeToConvert);

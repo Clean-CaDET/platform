@@ -14,11 +14,11 @@ using Xunit;
 
 namespace SmartTutor.Tests.Unit
 {
-    public class RecommenderTests
+    public class InstructorTests
     {
         private readonly IInstructor _instructor;
 
-        public RecommenderTests()
+        public InstructorTests()
         {
             _instructor = CreateInstructor();
         }
@@ -53,7 +53,7 @@ namespace SmartTutor.Tests.Unit
 
         [Theory]
         [MemberData(nameof(LearnerTestData))]
-        public void Builds_node_progress(int learnerId, KnowledgeNode node,
+        public void Builds_personalized_node(int learnerId, KnowledgeNode node,
             NodeProgress expectedNodeProgress)
         {
             var result = _instructor.BuildNodeForLearner(learnerId, node);

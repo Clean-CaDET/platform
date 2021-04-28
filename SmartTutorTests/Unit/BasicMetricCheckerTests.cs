@@ -56,7 +56,8 @@ namespace SmartTutor.Tests.Unit
                     new List<ChallengeHint>
                     {
                         new ChallengeHint(6),
-                        new ChallengeHint(337002)
+                        new ChallengeHint(337002),
+                        new ChallengeHint(337001)
                     }
                 }
             };

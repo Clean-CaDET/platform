@@ -23,7 +23,7 @@ namespace SmartTutor.Controllers
         }
 
         [HttpPost("challenge")]
-        public ActionResult<ChallengeEvaluationDTO> EvaluateChallengeSubmission([FromBody] ChallengeSubmissionDTO challengeSubmission)
+        public ActionResult<ChallengeEvaluationDTO> SubmitChallenge([FromBody] ChallengeSubmissionDTO challengeSubmission)
         {
             ChallengeEvaluation challengeEvaluation;
             try

@@ -1,4 +1,5 @@
-﻿using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+﻿using System;
+using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
@@ -54,6 +55,7 @@ namespace SmartTutor.ProgressModel
         {
             var arrangeTask = _learningObjectRepository.GetArrangeTask(submission.ArrangeTaskId);
             var evaluations = arrangeTask.EvaluateSubmission(submission.Containers);
+            if(evaluations == null) throw new InvalidOperationException("Invalid submission of arrange task.");
 
             if(evaluations.Select(e => e.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
             _submissionRepository.SaveArrangeTaskSubmission(submission);
