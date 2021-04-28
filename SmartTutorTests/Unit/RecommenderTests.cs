@@ -44,12 +44,9 @@ namespace SmartTutor.Tests.Unit
                 .Returns(Text3);
 
             Mock<ILearnerRepository> learnerRepo = new Mock<ILearnerRepository>();
-            learnerRepo.Setup(repo => repo.GetById(1)).Returns(new Learner
-                {Id = 1, AuralScore = 1, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 4});
-            learnerRepo.Setup(repo => repo.GetById(2)).Returns(new Learner
-                { Id = 2, AuralScore = 4, KinaestheticScore = 2, VisualScore = 3, ReadWriteScore = 1 });
-            learnerRepo.Setup(repo => repo.GetById(3)).Returns(new Learner
-                { Id = 3, AuralScore = 3, KinaestheticScore = 4, VisualScore = 2, ReadWriteScore = 1 });
+            learnerRepo.Setup(repo => repo.GetById(1)).Returns(new Learner(1,1,2,4,3));
+            learnerRepo.Setup(repo => repo.GetById(2)).Returns(new Learner(2,3,4,1,2));
+            learnerRepo.Setup(repo => repo.GetById(3)).Returns(new Learner(3,2,3,1,4));
 
             return new VARKRecommender(learningObjectRepo.Object, learnerRepo.Object);
         }
@@ -70,53 +67,36 @@ namespace SmartTutor.Tests.Unit
                 {
                     1,
                     KnowledgeNode,
-                    new NodeProgress
-                    {
-                        LearnerId = 1, Node = KnowledgeNode, Status = NodeStatus.Started,
-                        LearningObjects = new List<LearningObject> {Text1, Text2, Text3}
-                    }
+                    new NodeProgress(0, 1, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Text1, Text2, Text3})
                 },
                 new object[]
                 {
                     2,
                     KnowledgeNode,
-                    new NodeProgress
-                    {
-                        LearnerId = 2, Node = KnowledgeNode, Status = NodeStatus.Started,
-                        LearningObjects = new List<LearningObject> {Video1, Image2, Text3}
-                    }
+                    new NodeProgress(0, 2, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Video1, Image2, Text3})
                 },
                 new object[]
                 {
                     3,
                     KnowledgeNode,
-                    new NodeProgress
-                    {
-                        LearnerId = 3, Node = KnowledgeNode, Status = NodeStatus.Started,
-                        LearningObjects = new List<LearningObject> {Question1, ArrangeTask2, Text3}
-                    }
+                    new NodeProgress(0, 3, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Question1, ArrangeTask2, Text3})
                 }
             };
         //TODO: Rework.
-        
 
-        private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode
+
+        private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode(1, new List<LearningObjectSummary>
         {
-            Id = 1,
-            LearningObjectSummaries = new List<LearningObjectSummary>
-            {
-                new LearningObjectSummary {Id = 1}, new LearningObjectSummary {Id = 2},
-                new LearningObjectSummary {Id = 3}
-            }
-        };
+            new LearningObjectSummary(1, ""), new LearningObjectSummary(2, ""), new LearningObjectSummary(3, "")
+        });
 
-        private static readonly Text Text1 = new Text { Id = 1, LearningObjectSummaryId = 1 };
-        private static readonly Text Text2 = new Text { Id = 2, LearningObjectSummaryId = 2 };
-        private static readonly Text Text3 = new Text { Id = 3, LearningObjectSummaryId = 3 };
-        private static readonly Video Video1 = new Video { Id = 4, LearningObjectSummaryId = 1 };
-        private static readonly Image Image1 = new Image { Id = 5, LearningObjectSummaryId = 1 };
-        private static readonly Image Image2 = new Image { Id = 6, LearningObjectSummaryId = 2 };
-        private static readonly Question Question1 = new Question { Id = 7, LearningObjectSummaryId = 1 };
-        private static readonly ArrangeTask ArrangeTask2 = new ArrangeTask { Id = 8, LearningObjectSummaryId = 1 };
+        private static readonly Text Text1 = new Text(1, 1, "");
+        private static readonly Text Text2 = new Text(2, 2, "");
+        private static readonly Text Text3 = new Text(3, 3, "");
+        private static readonly Video Video1 = new Video(4, 1, "");
+        private static readonly Image Image1 = new Image(5, 1, "", "");
+        private static readonly Image Image2 = new Image(6, 2, "", "");
+        private static readonly Question Question1 = new Question(7, 1, "", null);
+        private static readonly ArrangeTask ArrangeTask2 = new ArrangeTask(8, 3, "", null);
     }
 }

@@ -1,12 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SmartTutor.ProgressModel.Submissions
 {
     public class ArrangeTaskContainerSubmission
     {
-        [Key] public int Id { get; set; }
-        public int ContainerId { get; set; }
-        public List<int> ElementIds { get; set; }
+        public int Id { get; private set; }
+        public int ContainerId { get; private set; }
+        public List<int> ElementIds { get; private set; }
+
+        private ArrangeTaskContainerSubmission() {}
+        public ArrangeTaskContainerSubmission(int id, int containerId, List<int> elementIds): this()
+        {
+            Id = id;
+            ContainerId = containerId;
+            ElementIds = elementIds;
+        }
     }
 }

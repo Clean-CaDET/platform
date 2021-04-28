@@ -4,24 +4,31 @@ using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.Lectures;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
-    [Table("Challenges")]
     public class Challenge : LearningObject
     {
-        public string Url { get; internal set; }
-        public string Description { get; internal set; }
-        public LearningObjectSummary Solution { get; internal set; }
-        public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; set; }
+        public string Url { get; private set; }
+        public string Description { get; private set; }
+        public LearningObjectSummary Solution { get; private set; }
+        public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; private set; }
+
+        private Challenge() {}
+        public Challenge(int id, int learningObjectSummaryId, string url, string description, LearningObjectSummary solution, List<ChallengeFulfillmentStrategy> fulfillmentStrategies) : base(id, learningObjectSummaryId)
+        {
+            Url = url;
+            Description = description;
+            Solution = solution;
+            FulfillmentStrategies = fulfillmentStrategies;
+        }
 
         public ChallengeEvaluation CheckChallengeFulfillment(string[] solutionAttempt)
         {
             List<CaDETClass> solution = BuildCaDETModel(solutionAttempt);
 
-            var evaluation = new ChallengeEvaluation { ChallengeId = Id };
+            var evaluation = new ChallengeEvaluation(Id);
             foreach (var strategy in FulfillmentStrategies)
             {
                 var result = strategy.EvaluateSubmission(solution);

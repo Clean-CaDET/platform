@@ -1,20 +1,26 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker
 {
-    [Table("BasicNameCheckers")]
     public class BasicNameChecker : ChallengeFulfillmentStrategy
     {
         //TODO: Delegate to several rule types as our understanding grows - e.g., NameLengthRule, RequiredWordRule. For now we are going with the simplest solution.
         //TODO: Currently this checker should either define (some subset of) banned OR required words and make a related hint.
-        public List<string> BannedWords { get; set; }
-        public List<string> RequiredWords { get; set; }
-        public ChallengeHint Hint { get; set; }
+        public List<string> BannedWords { get; private set; }
+        public List<string> RequiredWords { get; private set; }
+        public ChallengeHint Hint { get; private set; }
+
+        private BasicNameChecker() {}
+        public BasicNameChecker(List<string> bannedWords, List<string> requiredWords, ChallengeHint hint): this()
+        {
+            BannedWords = bannedWords;
+            RequiredWords = requiredWords;
+            Hint = hint;
+        }
 
         public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
         {

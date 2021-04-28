@@ -1,12 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SmartTutor.ContentModel.LearningObjects.ArrangeTasks
+﻿namespace SmartTutor.ContentModel.LearningObjects.ArrangeTasks
 {
     public class ArrangeTaskElement
     {
-        [Key] public int Id { get; set; }
-        public int ArrangeTaskContainerId { get; set; }
-        public string Text { get; set; }
+        public int Id { get; private set; }
+        public int ArrangeTaskContainerId { get; private set; }
+        public string Text { get; private set; }
+
+        public ArrangeTaskElement(int id, int arrangeTaskContainerId, string text)
+        {
+            Id = id;
+            ArrangeTaskContainerId = arrangeTaskContainerId;
+            Text = text;
+        }
 
         public override int GetHashCode()
         {

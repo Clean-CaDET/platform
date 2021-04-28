@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace SmartTutor.ContentModel.LearningObjects
+﻿namespace SmartTutor.ContentModel.LearningObjects
 {
-    [Table("Texts")]
     public class Text : LearningObject
     {
-        public string Content { get; set; }
+        public string Content { get; private set; }
+
+        public Text(int id, int learningObjectSummaryId, string content) : base(id, learningObjectSummaryId)
+        {
+            Content = content;
+        }
     }
 }

@@ -2,7 +2,13 @@
 {
     public class AnswerEvaluation
     {
-        public QuestionAnswer FullAnswer { get; set; }
-        public bool SubmissionWasCorrect { get; set; }
+        public QuestionAnswer FullAnswer { get; }
+        public bool SubmissionWasCorrect { get; }
+
+        public AnswerEvaluation(QuestionAnswer answer, bool isCorrect)
+        {
+            FullAnswer = answer;
+            SubmissionWasCorrect = isCorrect;
+        }
     }
 }

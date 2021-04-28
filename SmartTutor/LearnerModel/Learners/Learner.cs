@@ -1,22 +1,28 @@
-﻿using SmartTutor.ProgressModel.Progress;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace SmartTutor.LearnerModel.Learners
 {
     public class Learner
     {
-        [Key] public int Id { get; set; }
-        public string StudentIndex { get; set; }
-        public List<NodeProgress> Progress { get; set; }
+        public int Id { get; private set; }
+        public string StudentIndex { get; private set; }
 
         // TODO: Entity framework cannot map dictionaries, requires refactoring
-        public int VisualScore { get; set; }
-        public int AuralScore { get; set; }
-        public int ReadWriteScore { get; set; }
-        public int KinaestheticScore { get; set; }
+        public int VisualScore { get; private set; }
+        public int AuralScore { get; private set; }
+        public int ReadWriteScore { get; private set; }
+        public int KinaestheticScore { get; private set; }
 
-        public Dictionary<LearningPreference, int> LearningPreferenceScore()
+        public Learner(int id, int visualScore, int auralScore, int readWriteScore, int kinaestheticScore)
+        {
+            Id = id;
+            VisualScore = visualScore;
+            AuralScore = auralScore;
+            ReadWriteScore = readWriteScore;
+            KinaestheticScore = kinaestheticScore;
+        }
+
+        public Dictionary<LearningPreference, int> VARKScore()
         {
             return new Dictionary<LearningPreference, int>
             {
@@ -25,6 +31,14 @@ namespace SmartTutor.LearnerModel.Learners
                 {LearningPreference.Visual, VisualScore},
                 {LearningPreference.ReadWrite, ReadWriteScore}
             };
+        }
+
+        public void UpdateVARK(Dictionary<LearningPreference, int> varkScore)
+        {
+            if (varkScore[LearningPreference.Aural] != 0) AuralScore = varkScore[LearningPreference.Aural];
+            if (varkScore[LearningPreference.Visual] != 0) VisualScore = varkScore[LearningPreference.Visual];
+            if (varkScore[LearningPreference.ReadWrite] != 0) ReadWriteScore = varkScore[LearningPreference.ReadWrite];
+            if (varkScore[LearningPreference.Kinaesthetic] != 0) KinaestheticScore = varkScore[LearningPreference.Kinaesthetic];
         }
     }
 }

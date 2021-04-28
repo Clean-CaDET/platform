@@ -1,13 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SmartTutor.ContentModel.LearningObjects.Questions
+﻿namespace SmartTutor.ContentModel.LearningObjects.Questions
 {
     public class QuestionAnswer
     {
-        [Key] public int Id { get; set; }
-        public int QuestionId { get; set; }
-        public string Text { get; set; }
-        public bool IsCorrect { get; set; }
-        public string Feedback { get; set; }
+        public int Id { get; private set; }
+        public int QuestionId { get; private set; }
+        public string Text { get; private set; }
+        public bool IsCorrect { get; private set; }
+        public string Feedback { get; private set; }
+
+        public QuestionAnswer(int id, int questionId, string text, bool isCorrect, string feedback)
+        {
+            Id = id;
+            QuestionId = questionId;
+            Text = text;
+            IsCorrect = isCorrect;
+            Feedback = feedback;
+        }
     }
 }

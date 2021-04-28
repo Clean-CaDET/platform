@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartTutor.Database;
+﻿using SmartTutor.Database;
 using System.Linq;
 
 namespace SmartTutor.LearnerModel.Learners.Repository
@@ -19,17 +18,14 @@ namespace SmartTutor.LearnerModel.Learners.Repository
         }
         public Learner GetByIndex(string index)
         {
-            return _dbContext.Learners.AsNoTracking().FirstOrDefault(learner => learner.StudentIndex.Equals(index));
+            return _dbContext.Learners.FirstOrDefault(learner => learner.StudentIndex.Equals(index));
         }
-        public void Save(Learner learner)
+
+        public Learner SaveOrUpdate(Learner learner)
         {
-            _dbContext.Learners.Add(learner);
+            _dbContext.Learners.Attach(learner);
             _dbContext.SaveChanges();
-        }
-        public void Update(Learner learner)
-        {
-            _dbContext.Learners.Update(learner);
-            _dbContext.SaveChanges();
+            return learner;
         }
     }
 }

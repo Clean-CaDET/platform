@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using SmartTutor.Database;
 using System.Linq;
 
@@ -15,16 +14,13 @@ namespace SmartTutor.ProgressModel.Feedback.Repository
 
         public void SaveOrUpdate(LearningObjectFeedback feedback)
         {
-            var loadedFeedback = Get(feedback.LearningObjectId, feedback.LearnerId);
-            if (loadedFeedback == null) _dbContext.LearningObjectFeedbacks.Add(feedback);
-            else _dbContext.LearningObjectFeedbacks.Update(feedback);
-
+            _dbContext.LearningObjectFeedback.Attach(feedback);
             _dbContext.SaveChanges();
         }
 
         public LearningObjectFeedback Get(int learningObjectId, int learnerId)
         {
-            return _dbContext.LearningObjectFeedbacks.AsNoTracking().FirstOrDefault(feedback =>
+            return _dbContext.LearningObjectFeedback.FirstOrDefault(feedback =>
                 feedback.LearningObjectId == learningObjectId && feedback.LearnerId == learnerId);
         }
     }

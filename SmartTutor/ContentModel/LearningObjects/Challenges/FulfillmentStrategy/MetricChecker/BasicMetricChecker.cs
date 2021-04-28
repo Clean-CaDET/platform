@@ -1,15 +1,20 @@
 ﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker
 {
-    [Table("BasicMetricCheckers")]
     public class BasicMetricChecker : ChallengeFulfillmentStrategy
     {
-        public List<MetricRangeRule> ClassMetricRules { get; set; }
-        public List<MetricRangeRule> MethodMetricRules { get; set; }
+        public List<MetricRangeRule> ClassMetricRules { get; private set; }
+        public List<MetricRangeRule> MethodMetricRules { get; private set; }
+
+        private BasicMetricChecker() {}
+        public BasicMetricChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules) : this()
+        {
+            ClassMetricRules = classMetricRules;
+            MethodMetricRules = methodMetricRules;
+        }
 
         public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
         {
@@ -25,7 +30,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
             challengeHints.AddRange(MethodMetricRules.Select(m => m.Hint));
             return challengeHints;
         }
-
 
         private HintDirectory GetApplicableHintsForIncompleteClasses(List<CaDETClass> solutionAttempt)
         {

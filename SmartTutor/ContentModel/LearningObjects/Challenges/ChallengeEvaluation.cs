@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
     public class ChallengeEvaluation
     {
-        [Key] public int Id { get; set; }
-        public int ChallengeId { get; set; }
-        public bool ChallengeCompleted { get; set; }
+        public int ChallengeId { get; private set; }
+        public bool ChallengeCompleted { get; internal set; }
         public HintDirectory ApplicableHints { get; }
-        public List<LearningObject> ApplicableLOs { get; set; }
-        public LearningObject SolutionLO { get; set; }
+        public List<LearningObject> ApplicableLOs { get; internal set; }
+        public LearningObject SolutionLO { get; internal set; }
 
-        public ChallengeEvaluation()
+        public ChallengeEvaluation(int challengeId)
         {
+            ChallengeId = challengeId;
             ApplicableHints = new HintDirectory();
             ApplicableLOs = new List<LearningObject>();
         }
