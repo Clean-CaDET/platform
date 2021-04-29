@@ -132,8 +132,10 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private CaDETLinkedType GetMethodReturnType()
         {
-            if (_cSharpMember.GetType() == typeof(ConstructorDeclarationSyntax)) return null;
-            return new CaDETLinkedType() { FullType = _semanticModel.GetTypeInfo(_cSharpMember.DescendantNodes().OfType<TypeSyntax>().First()).Type.ToString() };
+            if (_cSharpMember is ConstructorDeclarationSyntax) return null;
+            var type = _semanticModel.GetTypeInfo(_cSharpMember.DescendantNodes().OfType<TypeSyntax>().First()).Type;
+            if (type == null) return null;
+            return new CaDETLinkedType() { FullType = type.ToString() };
         }
 
         private ISet<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)

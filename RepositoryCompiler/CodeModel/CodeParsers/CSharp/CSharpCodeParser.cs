@@ -229,6 +229,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
                 if (!(m.Type is CaDETMemberType.Constructor))
                 {
+                    m.ReturnType ??= new CaDETLinkedType();
                     m.ReturnType.LinkedTypes = GetTypes(classes, m.ReturnType);
                 }
 
@@ -252,16 +253,19 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private List<CaDETClass> GetTypes(List<CaDETClass> classes, CaDETLinkedType type)
         {
             List<CaDETClass> types = new List<CaDETClass>();
-            types.Add(CheckForSingleOrArrayType(classes, type.FullType));
-            types.AddRange(GetCollectionTypes(classes, type.FullType));
+            if (type != null)
+            {
+                types.Add(CheckForSingleOrArrayType(classes, type.FullType));
+                types.AddRange(GetCollectionTypes(classes, type.FullType));
+            }
             return types.Where(t => t != null).ToList();
         }
 
         private CaDETClass CheckForSingleOrArrayType(List<CaDETClass> classes, string fullType)
         {
+            if (fullType == null) return null;
             var foundType = classes.FirstOrDefault(c => c.FullName.Equals(fullType));
             if (foundType != null) return foundType;
-
             foundType = GetArrayType(classes, fullType);
             return foundType;
         }
@@ -269,6 +273,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
         private List<CaDETClass> GetCollectionTypes(List<CaDETClass> classes, string type)
         {
             List<CaDETClass> collectionTypes = new List<CaDETClass>();
+            if (type == null) return collectionTypes;
             var match = Regex.Match(type, "<.+>");
             if (!match.Success) return collectionTypes;
             
@@ -285,6 +290,7 @@ namespace RepositoryCompiler.CodeModel.CodeParsers.CSharp
 
         private CaDETClass GetArrayType(List<CaDETClass> classes, string type)
         {
+            if (type == null) return null;
             if (!Regex.IsMatch(type, "\\[.*\\]")) return null;
             
             var typeName = type.Split("[")[0];
