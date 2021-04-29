@@ -36,10 +36,11 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             //MakeExcelFromProjectUseCase();
             //FindInstancesRequiringAdditionalAnnotationUseCase();
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
-            ExportAnnotatedDataSet();
+            //ExportAnnotatedDataSet();
+            SanityCheckForSingleAnnotator(1);
         }
-        
-        private static void ExportAnnotatedDataSet()
+
+        private static ListDictionary GetAnnotatedProjects()
         {
             ListDictionary projects = new ListDictionary(); // local repository path, annotations folder path
             projects.Add("D:/ccadet/annotations/repos/BurningKnight", "D:/ccadet/annotations/annotated/BurningKnight");
@@ -48,8 +49,37 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
             projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
             projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
+            return projects;
+        }
 
-            var dataForExport = PrepareDataForExport(projects);
+        private static void SanityCheckForSingleAnnotator(int annotatorId)
+        {
+            var annotationsAndMetrics = PrepareDataForExport(annotatorId);
+            var groupedBySmells = annotationsAndMetrics.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
+            
+            var exporter = new SingleAnnotatorSanityCheckExporter("D:/ccadet/annotations/sanity_check/Output/");
+            var manovaTest = new ManovaTest.ManovaTest();
+
+            var enumerator = groupedBySmells.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var codeSmellGroup = enumerator.Current;
+                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
+                
+                exporter.Export(codeSmellGroup.ToList(), 
+                    "SanityCheck_"+ codeSmell + "_Annotator_", 
+                    annotatorId);
+
+                manovaTest.SetupTestArguments(
+                    "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Annotator_" + annotatorId + ".xlsx",
+                    codeSmellGroup.First().Item2.Keys.ToList());
+                manovaTest.RunTest();
+            }
+        }
+
+        private static void ExportAnnotatedDataSet()
+        {
+            var dataForExport = PrepareDataForExport(annotatorId: null);
             var groupedBySmells = dataForExport.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
 
             var exporter = new DataSetWithMetricsExporter("D:/ccadet/annotations/annotated/Output/");
@@ -61,18 +91,19 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             }
         }
 
-        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> PrepareDataForExport(ListDictionary projects)
+        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> PrepareDataForExport(int? annotatorId)
         {
-            List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataForExport =
-                new List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>();
+            var dataForExport = new List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>();
 
+            var projects = GetAnnotatedProjects();
             foreach (var key in projects.Keys)
             {
-                CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+                CodeModelFactory factory = new CodeModelFactory();
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
 
                 var annotatedInstances = LoadDataSet(projects[key].ToString()).GetAllInstances();
                 LoadAnnotators(ref annotatedInstances);
+                if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
                 var instanceMetrics = GetMetricsForExport(annotatedInstances, project);
                 dataForExport.AddRange(JoinAnnotationsAndMetrics(annotatedInstances, instanceMetrics));
             }

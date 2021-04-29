@@ -91,6 +91,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
             return Annotations.OrderBy(a => a.Annotator.Ranking).First().Severity;
         }
 
+        public bool IsAnnotatedBy(int annotatorId)
+        {
+            if (Annotations.Count(a => a.Annotator.Id == annotatorId) == 0) return false;
+            return true;
+        }
+
         public override int GetHashCode()
         {
             return CodeSnippetId.GetHashCode();
