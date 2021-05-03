@@ -5,6 +5,7 @@ using SmartTutor.ContentModel.Lectures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeModel.CaDETModel;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
@@ -26,12 +27,12 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
 
         public ChallengeEvaluation CheckChallengeFulfillment(string[] solutionAttempt)
         {
-            List<CaDETClass> solution = BuildCaDETModel(solutionAttempt);
+            CaDETProject solution = BuildCaDETModel(solutionAttempt);
 
             var evaluation = new ChallengeEvaluation(Id);
             foreach (var strategy in FulfillmentStrategies)
             {
-                var result = strategy.EvaluateSubmission(solution);
+                var result = strategy.EvaluateSubmission(solution.Classes);
                 evaluation.ApplicableHints.MergeHints(result);
             }
 
@@ -43,12 +44,12 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
             return evaluation;
         }
 
-        private List<CaDETClass> BuildCaDETModel(string[] sourceCode)
+        private CaDETProject BuildCaDETModel(string[] sourceCode)
         {
             //TODO: Work with CaDETProject and consider introducing a list of compilation errors there.
             //TODO: Adhere to DIP for CodeModelFactory/CodeRepoService (extract interface and add DI in startup)
-            var solutionAttempt = new CodeModelFactory().CreateClassModel(sourceCode);
-            if (solutionAttempt == null || solutionAttempt.Count == 0) throw new InvalidOperationException("Invalid submission.");
+            var solutionAttempt = new CodeModelFactory().CreateProject(sourceCode);
+            if (solutionAttempt.Classes == null || solutionAttempt.Classes.Count == 0) throw new InvalidOperationException("Invalid submission.");
             return solutionAttempt;
         }
 

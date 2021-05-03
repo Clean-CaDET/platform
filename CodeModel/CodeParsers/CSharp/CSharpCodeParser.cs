@@ -1,4 +1,5 @@
-﻿using CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel.CaDETModel;
+using CodeModel.CaDETModel.CodeItems;
 using CodeModel.CodeParsers.CSharp.Exceptions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -23,21 +24,28 @@ namespace CodeModel.CodeParsers.CSharp
             _memberBuilders = new Dictionary<CaDETClass, List<CSharpCaDETMemberBuilder>>();
         }
 
-        public List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode)
+        public CaDETProject Parse(IEnumerable<string> sourceCode)
         {
-            LoadSyntaxTrees(sourceCode);
+            var syntaxErrors = LoadSyntaxTrees(sourceCode);
             var parsedClasses = ParseClasses();
             ValidateUniqueFullNameForNonPartial(parsedClasses);
             parsedClasses = ConnectCaDETGraph(parsedClasses);
-            return CalculateMetrics(parsedClasses);
+            return new CaDETProject(LanguageEnum.CSharp, CalculateMetrics(parsedClasses), syntaxErrors);
         }
 
-        private void LoadSyntaxTrees(IEnumerable<string> sourceCode)
+        private List<string> LoadSyntaxTrees(IEnumerable<string> sourceCode)
         {
+            var syntaxErrors = new List<string>();
             foreach (var code in sourceCode)
             {
-                _compilation = _compilation.AddSyntaxTrees(CSharpSyntaxTree.ParseText(code));
+                var syntaxTree = CSharpSyntaxTree.ParseText(code);
+                _compilation = _compilation.AddSyntaxTrees(syntaxTree);
+
+                var diagnostics = syntaxTree.GetDiagnostics().ToList();
+                syntaxErrors.AddRange(diagnostics.Select(diagnostic => diagnostic.ToString()));
             }
+
+            return syntaxErrors;
         }
         private List<CaDETClass> ParseClasses()
         {

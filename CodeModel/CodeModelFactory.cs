@@ -18,21 +18,16 @@ namespace CodeModel
             _language = language;
         }
 
-        public List<CaDETClass> CreateClassModel(IEnumerable<string> multipleClassSourceCode)
+        public CaDETProject CreateProject(IEnumerable<string> multipleClassSourceCode)
         {
             ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
-            return codeParser.GetParsedClasses(multipleClassSourceCode);
-        }
-
-        public CaDETClass CreateClassModel(string classSourceCode)
-        {
-            return CreateClassModel(new List<string> { classSourceCode }).First();
+            return codeParser.Parse(multipleClassSourceCode);
         }
 
         public CaDETProject CreateProject(string sourceCodeLocation)
         {
             var allFiles = GetCodeFiles(sourceCodeLocation);
-            return new CaDETProject(LanguageEnum.CSharp, CreateClassModel(allFiles.Select(File.ReadAllText)));
+            return CreateProject(allFiles.Select(File.ReadAllText));
         }
 
         private string[] GetCodeFiles(string sourceCodeLocation)

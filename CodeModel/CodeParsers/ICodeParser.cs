@@ -1,10 +1,10 @@
-﻿using CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel.CaDETModel;
 using System.Collections.Generic;
 
 namespace CodeModel.CodeParsers
 {
     public interface ICodeParser
     {
-        List<CaDETClass> GetParsedClasses(IEnumerable<string> sourceCode);
+        CaDETProject Parse(IEnumerable<string> sourceCode);
     }
 }

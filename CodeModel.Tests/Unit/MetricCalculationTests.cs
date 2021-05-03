@@ -16,7 +16,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetDoctorClassText());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetDoctorClassText()).Classes;
 
             var doctorClass = classes.First();
             doctorClass.Metrics[CaDETMetric.CLOC].ShouldBe(22);
@@ -29,7 +29,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetGitAdapterClassText()).Classes;
 
             var gitClass = classes.First();
             gitClass.Metrics[CaDETMetric.WMC].ShouldBe(17);
@@ -41,7 +41,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetATFDMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetATFDMultipleClassTexts()).Classes;
 
             var class1 = classes.Find(c => c.Name.Equals("Class1"));
             var class3 = classes.Find(c => c.Name.Equals("Class3"));
@@ -61,7 +61,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCohesionClasses());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -74,7 +74,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetTCCMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetTCCMultipleClassTexts()).Classes;
 
             var class6 = classes.Find(c => c.Name.Equals("Class6"));
             var class7 = classes.Find(c => c.Name.Equals("Class7"));
@@ -90,7 +90,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.Metrics[CaDETMetric.CNOR].ShouldBe(3);
@@ -101,7 +101,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.Metrics[CaDETMetric.CNOL].ShouldBe(7);
@@ -112,7 +112,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.Metrics[CaDETMetric.CNOC].ShouldBe(7);
@@ -123,7 +123,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.Metrics[CaDETMetric.CNOA].ShouldBe(2);
@@ -134,7 +134,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.Metrics[CaDETMetric.NOPM].ShouldBe(3);
@@ -145,7 +145,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.Metrics[CaDETMetric.NOPF].ShouldBe(2);
@@ -156,7 +156,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.Metrics[CaDETMetric.CMNB].ShouldBe(4);
@@ -167,7 +167,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetMultipleClassTexts()).Classes;
 
             var dataRange = classes.Find(c => c.Name.Equals("DateRange"));
             var doctor = classes.Find(c => c.Name.Equals("Doctor"));
@@ -183,7 +183,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetMultipleClassTexts());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetMultipleClassTexts()).Classes;
 
             var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
             var service = classes.Find(c => c.Name.Equals("DoctorService"));
@@ -197,7 +197,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetGitAdapterClassText()).Classes;
 
             var gitClass = classes.First();
 
@@ -210,7 +210,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetEffectiveLinesOfCodeTest());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetEffectiveLinesOfCodeTest()).Classes;
 
             var doctor = classes.First();
             doctor.FindMember("Doctor").Metrics[CaDETMetric.MELOC].ShouldBe(1);
@@ -222,7 +222,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetGitAdapterClassText()).Classes;
 
             var gitClass = classes.First();
             gitClass.FindMember("CheckForNewCommits").Metrics[CaDETMetric.NOP].ShouldBe(0);
@@ -236,7 +236,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetGitAdapterClassText());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetGitAdapterClassText()).Classes;
 
             var gitClass = classes.First();
             gitClass.FindMember("CheckForNewCommits").Metrics[CaDETMetric.NOLV].ShouldBe(2);
@@ -248,7 +248,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOTC].ShouldBe(0);
@@ -262,7 +262,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOL].ShouldBe(0);
@@ -276,7 +276,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOR].ShouldBe(0);
@@ -289,7 +289,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOC].ShouldBe(0);
@@ -302,7 +302,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MNOA].ShouldBe(2);
@@ -314,7 +314,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NONL].ShouldBe(4);
@@ -327,7 +327,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOSL].ShouldBe(1);
@@ -340,7 +340,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOMO].ShouldBe(2);
@@ -353,7 +353,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOPE].ShouldBe(0);
@@ -365,7 +365,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOLE].ShouldBe(0);
@@ -377,7 +377,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var firstClass = classes.First();
             firstClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.MMNB].ShouldBe(0);
@@ -391,7 +391,7 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateClassModel(_testDataFactory.GetCodeBlocksClass());
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCodeBlocksClass()).Classes;
 
             var gitClass = classes.First();
             gitClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOUW].ShouldBe(5);
