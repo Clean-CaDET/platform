@@ -9,13 +9,15 @@ namespace CodeModel.CaDETModel
         private readonly LanguageEnum _language;
 
         public List<CaDETClass> Classes { get; }
+        public List<string> SyntaxErrors { get; }
 
         public Dictionary<string, CodeLocationLink> CodeLinks { get; set; }
         
-        public CaDETProject(LanguageEnum language, List<CaDETClass> classes)
+        public CaDETProject(LanguageEnum language, List<CaDETClass> classes, List<string> syntaxErrors)
         {
             _language = language;
             Classes = classes;
+            SyntaxErrors = syntaxErrors;
         }
 
         public Dictionary<CaDETMetric, double> GetMetricsForCodeSnippet(string snippetId)

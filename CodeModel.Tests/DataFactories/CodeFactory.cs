@@ -991,5 +991,44 @@ namespace RepositoryCompilerTests.DataFactories
                 }",
             };
         }
+
+        public IEnumerable<string> GetInvalidSyntaxClasses()
+        {
+            return new[]
+            {
+                @"
+                namespace DoctorApp.Model {
+                public class Doctor
+                {
+                  private Signature Signature;
+                  private DateTime startWorking;
+                  private DateTime endWorking;
+                }}",
+                @"
+                using System.Collections.Generic;
+                namespace DoctorApp.Model.Data
+                {
+                    public class DateRange
+                    {
+                        public int NumOfDays;
+                        public DateTime From { get; set; }
+                        public DateTime To { get; set; }
+                        private Dictionary<Doctor, List<Dictionary<string, Dictionary<int, DoctorService[]>>>> testDictionary;
+
+                        public DateRange(DateTime from, DateTime to)
+                        /{
+                            From = from;
+                            To = to;
+                            if(To.Equals(From)) return;
+                        }
+                        public bool OverlapsWith(DateRange timeSpan)
+                        {
+                            return !(From > timeSpan.To || To < timeSpan.From);
+                        }
+                    }
+                }"
+
+            };
+        }
     }
 }

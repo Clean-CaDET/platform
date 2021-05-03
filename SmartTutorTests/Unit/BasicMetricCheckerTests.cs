@@ -33,8 +33,8 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
         {
-            var caDETClasses = new CodeModelFactory().CreateClassModel(submissionAttempt);
-            var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(caDETClasses);
+            var project = new CodeModelFactory().CreateProject(submissionAttempt);
+            var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(project.Classes);
             var actualHints = challengeEvaluation.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);
