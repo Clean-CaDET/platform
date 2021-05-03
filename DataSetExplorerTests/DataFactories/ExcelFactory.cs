@@ -1,4 +1,4 @@
-﻿namespace DataSetExplorerTests.DataFactories
+﻿namespace DataSetExplorer.Tests.DataFactories
 {
     class ExcelFactory
     {

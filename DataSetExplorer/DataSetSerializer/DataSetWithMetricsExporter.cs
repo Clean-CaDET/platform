@@ -1,10 +1,10 @@
-﻿using System;
+﻿using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSetBuilder.Model;
+using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DataSetExplorer.DataSetBuilder.Model;
-using OfficeOpenXml;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace DataSetExplorer.DataSetSerializer
 {

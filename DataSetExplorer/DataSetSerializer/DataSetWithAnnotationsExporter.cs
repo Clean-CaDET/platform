@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DataSetExplorer.DataSetBuilder.Model;
+﻿using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer.ViewModel;
 using OfficeOpenXml;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DataSetExplorer.DataSetSerializer
 {

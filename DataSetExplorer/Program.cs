@@ -1,14 +1,14 @@
-﻿using System;
-using DataSetExplorer.DataSetBuilder;
+﻿using DataSetExplorer.DataSetBuilder;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
 using DataSetExplorer.DataSetSerializer.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using RepositoryCompiler.CodeModel;
-using RepositoryCompiler.CodeModel.CaDETModel;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+using CodeModel;
+using CodeModel.CaDETModel;
+using CodeModel.CaDETModel.CodeItems;
 
 namespace DataSetExplorer
 {
