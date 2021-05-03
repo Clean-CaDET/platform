@@ -279,7 +279,7 @@ namespace CodeModel.Tests.Unit
             var otherDoctor = otherClasses.Find(c => c.Name.Equals("Doctor"));
             var otherDateRange = otherClasses.Find(c => c.Name.Equals("DateRange"));
 
-            var variables = doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes());
+            var variables = doctor.FindMember("TestFunction").Variables.SelectMany(v => v.GetLinkedTypes()).ToList();
 
             variables.ShouldContain(doctor);
             variables.ShouldNotContain(otherDoctor);

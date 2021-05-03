@@ -28,9 +28,9 @@ namespace ExamplesApp.Method
       		PrintPaymentDetails();
     	}
 	    private void PrintPaymentDetails(int cost) {
-      		System.out.println(""Hello."");
-            System.out.println(""Your payment is created."");
-            System.out.println(""Cost is: "" + Cost);
+      		Console.WriteLine(""Hello."");
+            Console.WriteLine(""Your payment is created."");
+            Console.WriteLine(""Cost is: "" + Cost);
         }
     }
 }"
@@ -62,29 +62,29 @@ namespace ExamplesApp.Method
 		    payment.Cost = price + cOOmpensation;
             payment.IsExtra = payment.Cost > 50000 ? true : false;
 
-      		System.out.println(""Hello."");
-            System.out.println(""Your payment is created."");
-            System.out.println(""Cost is: "" + payment.Cost);
+      		Console.WriteLine(""Hello."");
+            Console.WriteLine(""Your payment is created."");
+            Console.WriteLine(""Cost is: "" + payment.Cost);
       		PrintPaymentDetails();
 
-            System.out.println(""Hello."");
-            System.out.println(""Your payment is created."");
-            System.out.println(""Cost is: "" + payment.Cost);
+            Console.WriteLine(""Hello."");
+            Console.WriteLine(""Your payment is created."");
+            Console.WriteLine(""Cost is: "" + payment.Cost);
       		PrintPaymentDetails();
 
-            System.out.println(""Hello."");
-            System.out.println(""Your payment is created."");
-            System.out.println(""Cost is: "" + payment.Cost);
+            Console.WriteLine(""Hello."");
+            Console.WriteLine(""Your payment is created."");
+            Console.WriteLine(""Cost is: "" + payment.Cost);
       		PrintPaymentDetails();
-            System.out.println(""Hello."");
-            System.out.println(""Your payment is created."");
-            System.out.println(""Cost is: "" + payment.Cost);
+            Console.WriteLine(""Hello."");
+            Console.WriteLine(""Your payment is created."");
+            Console.WriteLine(""Cost is: "" + payment.Cost);
       		PrintPaymentDetails();
     	}
 	    private void PrintPaymentDetails() {
-      		System.out.println(""Hello."");
-            System.out.println(""Your payment is created."");
-            System.out.println(""Cost is: "" + cost);
+      		Console.WriteLine(""Hello."");
+            Console.WriteLine(""Your payment is created."");
+            Console.WriteLine(""Cost is: "" + payment.Cost);
         }
     }
 }"
