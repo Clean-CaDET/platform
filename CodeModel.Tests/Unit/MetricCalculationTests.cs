@@ -1,5 +1,5 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
-using RepositoryCompilerTests.DataFactories;
+using CodeModel.Tests.DataFactories;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
