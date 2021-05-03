@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RepositoryCompiler.CodeModel;
-using RepositoryCompiler.Controllers;
+﻿using CodeModel;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
 using SmartTutorTests.DataFactories;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit
