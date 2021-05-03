@@ -1,5 +1,5 @@
-﻿using RepositoryCompiler.CodeModel;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel;
+using CodeModel.CaDETModel.CodeItems;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.Lectures;
 using System;

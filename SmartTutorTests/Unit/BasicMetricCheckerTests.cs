@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RepositoryCompiler.CodeModel;
 using RepositoryCompiler.Controllers;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
@@ -33,7 +34,7 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
         {
-            var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
+            var caDETClasses = new CodeModelFactory().CreateClassModel(submissionAttempt);
             var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(caDETClasses);
             var actualHints = challengeEvaluation.GetHints();
 
