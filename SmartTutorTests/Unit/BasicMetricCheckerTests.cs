@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RepositoryCompiler.Controllers;
+﻿using CodeModel;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
 using SmartTutorTests.DataFactories;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit
@@ -33,7 +33,7 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
         {
-            var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
+            var caDETClasses = new CodeModelFactory().CreateClassModel(submissionAttempt);
             var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(caDETClasses);
             var actualHints = challengeEvaluation.GetHints();
 

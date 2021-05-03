@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DataSetExplorer.DataSetBuilder.Model;
+using System.Collections.Generic;
 using System.Linq;
-using DataSetExplorer.DataSetBuilder.Model;
 
 namespace DataSetExplorer.DataSetSerializer.ViewModel
 {

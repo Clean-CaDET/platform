@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
-using DataSetExplorerTests.DataFactories;
+using DataSetExplorer.Tests.DataFactories;
 using Shouldly;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
-namespace DataSetExplorerTests.Unit
+namespace DataSetExplorer.Tests.Unit
 {
     public class ImporterTests
     {
