@@ -2,7 +2,8 @@ using Microsoft.Extensions.Options;
 using SmartTutor.LearnerModel.Exceptions;
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.LearnerModel.Learners.Repository;
-using SmartTutor.LearnerModel.Learners.Workspaces;
+using SmartTutor.LearnerModel.Workspaces;
+using SmartTutor.LearnerModel.Workspaces.Repository;
 using System;
 using System.IO;
 
@@ -11,11 +12,14 @@ namespace SmartTutor.LearnerModel
     public class LearnerService : ILearnerService
     {
         private readonly ILearnerRepository _learnerRepository;
+        private readonly IWorkspaceRepository _workspaceRepository;
         private readonly WorkspaceOptions _workspaceOptions;
 
-        public LearnerService(ILearnerRepository learnerRepository, IOptions<WorkspaceOptions> workspaceOptions)
+        public LearnerService(ILearnerRepository learnerRepository, IWorkspaceRepository workspaceRepository,
+            IOptions<WorkspaceOptions> workspaceOptions)
         {
             _learnerRepository = learnerRepository;
+            _workspaceRepository = workspaceRepository;
             _workspaceOptions = workspaceOptions.Value;
         }
 
@@ -49,14 +53,14 @@ namespace SmartTutor.LearnerModel
 
             Directory.CreateDirectory(learnerWorkspacePath);
 
-            //_learnerRepository.Save(new Workspace(learner.Id, learnerWorkspacePath, DateTime.Now));
+            _workspaceRepository.Save(new Workspace(learner.Id, learnerWorkspacePath, DateTime.Now));
 
             AddFilesInLearnerWorkspace(learnerWorkspacePath);
         }
 
         private void AddFilesInLearnerWorkspace(string learnerWorkspacePath)
         {
-            foreach (DirectoryInfo directoryInfo in new DirectoryInfo(_workspaceOptions.BasePath + "MasterTestSuite/").GetDirectories())
+            foreach (DirectoryInfo directoryInfo in new DirectoryInfo(_workspaceOptions.BasePath + "MasterWorkspace/").GetDirectories())
             {
                 string directoryPath = learnerWorkspacePath + "/" + directoryInfo.Name;
                 if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);

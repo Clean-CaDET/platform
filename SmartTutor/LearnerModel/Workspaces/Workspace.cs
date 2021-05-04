@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace SmartTutor.LearnerModel.Learners.Workspaces
+namespace SmartTutor.LearnerModel.Workspaces
 {
-    [Keyless]
     public class Workspace
     {
+        [Key]
         public int LearnerId { get; private set; }
+
         public string Path { get; private set; }
+
         public DateTime CreatedOn { get; private set; }
 
         public Workspace(int learnerId, string path, DateTime createdOn)

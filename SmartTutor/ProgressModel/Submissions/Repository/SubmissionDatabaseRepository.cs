@@ -28,10 +28,5 @@ namespace SmartTutor.ProgressModel.Submissions.Repository
             _dbContext.ArrangeTaskSubmissions.Add(submission);
             _dbContext.SaveChanges();
         }
-
-        public string GetWorkspacePath(int learnerId)
-        {
-            return "../../../../SmellDetectorTests"; //TODO: Workspace as a value object containing creation date and path (based on basePath from configuration)
-        }
     }
 }

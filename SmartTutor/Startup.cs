@@ -16,7 +16,8 @@ using SmartTutor.Database;
 using SmartTutor.InstructorModel.Instructors;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Learners.Repository;
-using SmartTutor.LearnerModel.Learners.Workspaces;
+using SmartTutor.LearnerModel.Workspaces;
+using SmartTutor.LearnerModel.Workspaces.Repository;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
@@ -63,6 +64,7 @@ namespace SmartTutor
 
             services.AddScoped<ILearnerService, LearnerService>();
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
+            services.AddScoped<IWorkspaceRepository, WorkspaceDatabaseRepository>();
 
             services.AddScoped<IInstructor, VARKRecommender>();
 
