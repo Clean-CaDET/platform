@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
-namespace SmartTutor.ContentModel.Exceptions
+namespace SmartTutor.ProgressModel.Exceptions
 {
     [Serializable]
     internal class InvalidStateException : Exception

@@ -1,11 +1,10 @@
 ﻿using CodeModel;
-using CodeModel.CaDETModel.CodeItems;
+using CodeModel.CaDETModel;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.Lectures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeModel.CaDETModel;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges
 {
@@ -15,8 +14,9 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
         public string Description { get; private set; }
         public LearningObjectSummary Solution { get; private set; }
         public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; private set; }
+        public string TestSuiteLocation { get; private set; }
 
-        private Challenge() {}
+        private Challenge() { }
         public Challenge(int id, int learningObjectSummaryId, string url, string description, LearningObjectSummary solution, List<ChallengeFulfillmentStrategy> fulfillmentStrategies) : base(id, learningObjectSummaryId)
         {
             Url = url;

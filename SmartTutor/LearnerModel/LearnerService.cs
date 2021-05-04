@@ -1,6 +1,8 @@
 using SmartTutor.LearnerModel.Exceptions;
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.LearnerModel.Learners.Repository;
+using System.IO;
+using static System.Environment;
 
 namespace SmartTutor.LearnerModel
 {
@@ -15,6 +17,7 @@ namespace SmartTutor.LearnerModel
 
         public Learner Register(Learner newLearner)
         {
+            CreateDirectoryForLearner(newLearner.Id);
             var learner = _learnerRepository.GetByIndex(newLearner.StudentIndex);
             if (learner == null)
             {
@@ -33,6 +36,13 @@ namespace SmartTutor.LearnerModel
             var learner = _learnerRepository.GetByIndex(studentIndex);
             if (learner == null) throw new LearnerWithStudentIndexNotFound(studentIndex);
             return learner;
+        }
+
+        private void CreateDirectoryForLearner(int learnerId)
+        {
+            string traineeDirectory = GetFolderPath(SpecialFolder.Desktop) + @"\" + learnerId;
+            if (!Directory.Exists(traineeDirectory))
+                Directory.CreateDirectory(traineeDirectory);
         }
     }
 }
