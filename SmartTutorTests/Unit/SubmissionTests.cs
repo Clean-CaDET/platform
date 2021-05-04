@@ -3,6 +3,7 @@ using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
+using SmartTutor.LearnerModel.Workspaces.Repository;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
@@ -17,7 +18,7 @@ namespace SmartTutor.Tests.Unit
         private readonly ISubmissionService _service;
         public SubmissionTests()
         {
-            _service = new SubmissionService(CreateMockRepository(), new Mock<ISubmissionRepository>().Object);
+            _service = new SubmissionService(CreateMockRepository(), new Mock<ISubmissionRepository>().Object, new Mock<IWorkspaceRepository>().Object);
         }
 
         private static ILearningObjectRepository CreateMockRepository()
