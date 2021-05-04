@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -11,16 +10,18 @@ using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.Controllers.KeycloakAuth;
 using SmartTutor.Controllers.Mappers;
 using SmartTutor.Database;
 using SmartTutor.InstructorModel.Instructors;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.LearnerModel.Learners.Workspaces;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
 using SmartTutor.ProgressModel.Submissions.Repository;
-using SmartTutor.Controllers.KeycloakAuth;
+using System;
 
 namespace SmartTutor
 {
@@ -37,6 +38,8 @@ namespace SmartTutor
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<WorkspaceOptions>(Configuration.GetSection(WorkspaceOptions.Workspace));
+
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers().AddJsonOptions(options =>
@@ -57,10 +60,10 @@ namespace SmartTutor
             services.AddScoped<ISubmissionRepository, SubmissionDatabaseRepository>();
             services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
-            
+
             services.AddScoped<ILearnerService, LearnerService>();
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
-            
+
             services.AddScoped<IInstructor, VARKRecommender>();
 
             AuthenticationConfig(services);
@@ -122,7 +125,7 @@ namespace SmartTutor
                 .AllowCredentials()); // allow credentials
 
             app.UseHttpsRedirection();
-            
+
             app.UseAuthentication();
 
             app.UseRouting();

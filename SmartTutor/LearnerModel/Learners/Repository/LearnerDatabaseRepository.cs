@@ -1,9 +1,10 @@
 ﻿using SmartTutor.Database;
+using SmartTutor.LearnerModel.Learners.Workspaces;
 using System.Linq;
 
 namespace SmartTutor.LearnerModel.Learners.Repository
 {
-    public class LearnerDatabaseRepository: ILearnerRepository
+    public class LearnerDatabaseRepository : ILearnerRepository
     {
         private readonly SmartTutorContext _dbContext;
 
@@ -26,6 +27,12 @@ namespace SmartTutor.LearnerModel.Learners.Repository
             _dbContext.Learners.Attach(learner);
             _dbContext.SaveChanges();
             return learner;
+        }
+
+        public void Save(Workspace workspace)
+        {
+            _dbContext.Workspaces.Attach(workspace);
+            _dbContext.SaveChanges();
         }
     }
 }

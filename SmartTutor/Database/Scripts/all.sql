@@ -6,6 +6,7 @@ DELETE FROM public."NodeProgresses";
 DELETE FROM public."LearningObjectFeedback";
 
 DELETE FROM public."Learners";
+DELETE FROM public."Workspaces";
 
 DELETE FROM public."Texts";
 DELETE FROM public."Images";

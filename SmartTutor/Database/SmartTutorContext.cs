@@ -8,6 +8,7 @@ using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.Nam
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.LearnerModel.Learners;
+using SmartTutor.LearnerModel.Learners.Workspaces;
 using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Progress;
 using SmartTutor.ProgressModel.Submissions;
@@ -49,6 +50,7 @@ namespace SmartTutor.Database
         public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
         #endregion
         public DbSet<Learner> Learners { get; set; }
+        public DbSet<Workspace> Workspaces { get; set; }
 
         public SmartTutorContext(DbContextOptions<SmartTutorContext> options) : base(options)
         {
@@ -74,6 +76,8 @@ namespace SmartTutor.Database
                 .HasOne(b => b.Solution)
                 .WithMany()
                 .HasForeignKey("SolutionIdForeignKey");
+
+            modelBuilder.Entity<Workspace>().ToTable("Workspaces");
         }
 
         private static void ConfigureBasicMetricChecker(ModelBuilder modelBuilder)
