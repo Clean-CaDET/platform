@@ -31,7 +31,7 @@ namespace SmartTutor.ProgressModel.Submissions.Repository
 
         public string GetWorkspacePath(int learnerId)
         {
-            return "../../../../SmellDetectorTests"; //TODO: Workspace as a value object containing creation date and path (based on basePath from configuration)
+            return "../../../../../challenge-tests"; //TODO: Workspace as a value object containing creation date and path (based on basePath from configuration)
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using SmartTutor.Controllers;
@@ -6,11 +7,10 @@ using SmartTutor.Controllers.DTOs.Content;
 using SmartTutor.Controllers.DTOs.SubmissionEvaluation;
 using SmartTutor.Database;
 using SmartTutor.ProgressModel;
+using SmartTutor.Tests.DataFactories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using SmartTutorTests.DataFactories;
 using Xunit;
 
 namespace SmartTutor.Tests.Integration

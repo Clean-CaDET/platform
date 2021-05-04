@@ -13,15 +13,13 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
     {
         public string Url { get; private set; }
         public string Description { get; private set; }
+        public string TestSuiteLocation { get; private set; }
         public LearningObjectSummary Solution { get; private set; }
         public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; private set; }
 
         private Challenge() {}
-        public Challenge(int id, int learningObjectSummaryId, string url, string description, LearningObjectSummary solution, List<ChallengeFulfillmentStrategy> fulfillmentStrategies) : base(id, learningObjectSummaryId)
+        public Challenge(int id, int learningObjectSummaryId, List<ChallengeFulfillmentStrategy> fulfillmentStrategies) : base(id, learningObjectSummaryId)
         {
-            Url = url;
-            Description = description;
-            Solution = solution;
             FulfillmentStrategies = fulfillmentStrategies;
         }
 
@@ -34,7 +32,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
 
             if (tester == null) return StrategyEvaluation(solution);
             
-            var functionalEvaluation = tester.IsFunctionallyCorrect(solutionAttempt);
+            var functionalEvaluation = tester.IsFunctionallyCorrect(solutionAttempt, TestSuiteLocation);
             return functionalEvaluation ?? StrategyEvaluation(solution);
         }
 

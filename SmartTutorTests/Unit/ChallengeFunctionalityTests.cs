@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Shouldly;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit
@@ -7,29 +7,13 @@ namespace SmartTutor.Tests.Unit
     public class ChallengeFunctionalityTests
     {
         [Fact]
-        public void RunUnitTests()
+        public void Returns_null_when_tests_pass()
         {
-            
-            try
-            {
-                // create the ProcessStartInfo using "cmd" as the program to be run,
-                // and "/c " as the parameters.
-                // Incidentally, /c tells cmd that we want it to execute the command that follows,
-                // and then exit.
-                var procStartInfo = new ProcessStartInfo("dotnet", "test \"../../../../SmellDetectorTests\"")
-                {
-                    RedirectStandardOutput = true, UseShellExecute = false, CreateNoWindow = true
-                };
+            IFunctionalityTester tester = new WorkspaceFunctionalityTester("../../../../");
 
-                var proc = new Process {StartInfo = procStartInfo};
-                proc.Start();
-                
-                string result = proc.StandardOutput.ReadToEnd();
-            }
-            catch (Exception objException)
-            {
-                // Log the exception
-            }
+            var evaluation = tester.IsFunctionallyCorrect(null, "SmellDetectorTests");
+
+            evaluation.ShouldBeNull();
         }
     }
 }

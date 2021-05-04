@@ -1,4 +1,4 @@
-﻿namespace SmartTutorTests.DataFactories
+﻿namespace SmartTutor.Tests.DataFactories
 {
     internal class ChallengeTestData
     {
@@ -6,7 +6,7 @@
         {
             return new[] {
 @"using System;
-namespace ExamplesApp.Method
+namespace Methods.Small
 {
    class Payment
    {
@@ -15,7 +15,7 @@ namespace ExamplesApp.Method
    }
 }",
 @"using System;
-namespace ExamplesApp.Method
+namespace Methods.Small
 {
     class PaymentService{
 	    /// <summary>
@@ -25,12 +25,12 @@ namespace ExamplesApp.Method
 		    Payment payment = new Payment();
 		    payment.Cost = price + compensation;
             payment.IsExtra = payment.Cost > 50000 ? true : false;
-      		PrintPaymentDetails();
+      		PrintPaymentDetails(payment.Cost, compensation);
     	}
-	    private void PrintPaymentDetails(int cost) {
+	    private void PrintPaymentDetails(int cost, int compensation) {
       		Console.WriteLine(""Hello."");
             Console.WriteLine(""Your payment is created."");
-            Console.WriteLine(""Cost is: "" + Cost);
+            Console.WriteLine(""Cost is: "" + cost);
         }
     }
 }"
@@ -42,7 +42,7 @@ namespace ExamplesApp.Method
             return new[]
             {
 @"using System;
-namespace ExamplesApp.Method
+namespace Methods.Small
 {
    class PaymentClass
    {
@@ -51,40 +51,40 @@ namespace ExamplesApp.Method
    }
 }",
 @"using System;
-namespace ExamplesApp.Method
+namespace Methods.Small
 {
     class PaymentService{
 	    /// <summary>
         /// 1) Extract createPayment method.
         /// </summary>
     	private void CreatePayment(int pricee, int cOOmpensation) {
-		    Payment payment = new Payment();
-		    payment.Cost = price + cOOmpensation;
+		    PaymentClass payment = new PaymentClass();
+		    payment.Cost = pricee + cOOmpensation;
             payment.IsExtra = payment.Cost > 50000 ? true : false;
 
       		Console.WriteLine(""Hello."");
             Console.WriteLine(""Your payment is created."");
             Console.WriteLine(""Cost is: "" + payment.Cost);
-      		PrintPaymentDetails();
+      		PrintPaymentDetails(pricee);
 
             Console.WriteLine(""Hello."");
             Console.WriteLine(""Your payment is created."");
             Console.WriteLine(""Cost is: "" + payment.Cost);
-      		PrintPaymentDetails();
+      		PrintPaymentDetails(pricee);
 
             Console.WriteLine(""Hello."");
             Console.WriteLine(""Your payment is created."");
             Console.WriteLine(""Cost is: "" + payment.Cost);
-      		PrintPaymentDetails();
+      		PrintPaymentDetails(pricee);
             Console.WriteLine(""Hello."");
             Console.WriteLine(""Your payment is created."");
             Console.WriteLine(""Cost is: "" + payment.Cost);
-      		PrintPaymentDetails();
+      		PrintPaymentDetails(pricee);
     	}
-	    private void PrintPaymentDetails() {
+	    private void PrintPaymentDetails(int price) {
       		Console.WriteLine(""Hello."");
             Console.WriteLine(""Your payment is created."");
-            Console.WriteLine(""Cost is: "" + payment.Cost);
+            Console.WriteLine(""Cost is: "" + price);
         }
     }
 }"

@@ -2,6 +2,6 @@
 {
     public interface IFunctionalityTester
     {
-        public ChallengeEvaluation IsFunctionallyCorrect(string[] sourceCode);
+        public ChallengeEvaluation IsFunctionallyCorrect(string[] sourceCode, string testSuitePath);
     }
 }
