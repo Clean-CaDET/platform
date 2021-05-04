@@ -23,7 +23,7 @@ namespace SmartTutor.Tests.Unit
                 new BasicNameChecker(new List<string> { "Class", "List", "Method" }, null, new ChallengeHint(21))
             });
 
-            var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt);
+            var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt, null);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);

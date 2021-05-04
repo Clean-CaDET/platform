@@ -7,6 +7,7 @@ using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester;
 
 namespace SmartTutor.ProgressModel
 {
@@ -26,7 +27,8 @@ namespace SmartTutor.ProgressModel
             Challenge challenge = _learningObjectRepository.GetChallenge(submission.ChallengeId);
             if (challenge == null) return null;
 
-            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode);
+            string workspacePath = _submissionRepository.GetWorkspacePath(submission.LearnerId);
+            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode, new FileFunctionalityTester(workspacePath));
 
             if(evaluation.ChallengeCompleted) submission.MarkCorrect();
             _submissionRepository.SaveChallengeSubmission(submission);

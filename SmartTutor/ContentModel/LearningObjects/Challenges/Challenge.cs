@@ -1,6 +1,7 @@
 ﻿using CodeModel;
 using CodeModel.CaDETModel;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester;
 using SmartTutor.ContentModel.Lectures;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,17 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
             FulfillmentStrategies = fulfillmentStrategies;
         }
 
-        public ChallengeEvaluation CheckChallengeFulfillment(string[] solutionAttempt)
+        public ChallengeEvaluation CheckChallengeFulfillment(string[] solutionAttempt, IFunctionalityTester tester)
         {
             CaDETProject solution = BuildCaDETModel(solutionAttempt);
             
             var errorEvaluation = CheckSyntaxErrors(solution.SyntaxErrors);
-            return errorEvaluation ?? StrategyEvaluation(solution);
+            if (errorEvaluation != null) return errorEvaluation;
+
+            if (tester == null) return StrategyEvaluation(solution);
+            
+            var functionalEvaluation = tester.IsFunctionallyCorrect(solutionAttempt);
+            return functionalEvaluation ?? StrategyEvaluation(solution);
         }
 
         private ChallengeEvaluation CheckSyntaxErrors(IReadOnlyCollection<string> syntaxErrors)
