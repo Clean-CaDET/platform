@@ -33,14 +33,14 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
 
         private List<CaDETClass> GetAllClassesFromSnippets(List<CaDETClass> solutionAttempt)
         {
-            List<CaDETClass> classesFromSnippets = new List<CaDETClass>();
-            classesFromSnippets.AddRange(GetClassesFromSnippets(solutionAttempt));
+            List<CaDETClass> classesFromSnippets = new();
+            classesFromSnippets.AddRange(GetRegularClassesFromSnippets(solutionAttempt));
             classesFromSnippets.AddRange(GetMethodOnlyClassesFromSnippets(solutionAttempt));
             classesFromSnippets.AddRange(GetConstructorOnlyClassesFromSnippets(solutionAttempt));
             return classesFromSnippets;
         }
 
-        private List<CaDETClass> GetClassesFromSnippets(List<CaDETClass> solutionAttempt)
+        private List<CaDETClass> GetRegularClassesFromSnippets(List<CaDETClass> solutionAttempt)
         {
             return solutionAttempt.SelectMany(c => SnippetApplicableStrategies.Keys.Where(codeSnippetId => c.FullName.Equals(codeSnippetId)).Select(codeSnippetId => c)).ToList();
         }
@@ -59,7 +59,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
 
         private List<CaDETClass> GetMemberOnlyClassesFromSnippets(List<CaDETMember> members)
         {
-            List<CaDETClass> result = new List<CaDETClass>();
+            List<CaDETClass> result = new();
             foreach (var member in members.SelectMany(member => SnippetApplicableStrategies.Keys.Select(codeSnippetId => member)))
             {
                 result.Add(new CaDETClass { Members = new List<CaDETMember> { member } });
