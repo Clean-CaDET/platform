@@ -10,8 +10,8 @@ namespace SmartTutor.ContentModel.LearningObjects.ArrangeTasks
         public string Title { get; private set; }
         public List<ArrangeTaskElement> Elements { get; private set; }
 
-        private ArrangeTaskContainer() {}
-        public ArrangeTaskContainer(int id, int arrangeTaskId, string title, List<ArrangeTaskElement> elements): this()
+        private ArrangeTaskContainer() { }
+        public ArrangeTaskContainer(int id, int arrangeTaskId, string title, List<ArrangeTaskElement> elements) : this()
         {
             Id = id;
             ArrangeTaskId = arrangeTaskId;

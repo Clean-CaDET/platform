@@ -9,7 +9,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
         public List<MetricRangeRule> ClassMetricRules { get; private set; }
         public List<MetricRangeRule> MethodMetricRules { get; private set; }
 
-        private BasicMetricChecker() {}
+        private BasicMetricChecker() { }
         public BasicMetricChecker(List<MetricRangeRule> classMetricRules, List<MetricRangeRule> methodMetricRules) : this()
         {
             ClassMetricRules = classMetricRules;

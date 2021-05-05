@@ -8,8 +8,8 @@ namespace SmartTutor.ProgressModel.Submissions
         public int ContainerId { get; private set; }
         public List<int> ElementIds { get; private set; }
 
-        private ArrangeTaskContainerSubmission() {}
-        public ArrangeTaskContainerSubmission(int id, int containerId, List<int> elementIds): this()
+        private ArrangeTaskContainerSubmission() { }
+        public ArrangeTaskContainerSubmission(int id, int containerId, List<int> elementIds) : this()
         {
             Id = id;
             ContainerId = containerId;

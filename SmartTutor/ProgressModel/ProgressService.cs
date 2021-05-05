@@ -47,7 +47,7 @@ namespace SmartTutor.ProgressModel
                     0, 0, knowledgeNode, NodeStatus.Unlocked, _instructor.GatherDefaultLearningObjects(knowledgeNode.LearningObjectSummaries));
             }
 
-            return BuildNodeForLearner(knowledgeNode, (int) learnerId);
+            return BuildNodeForLearner(knowledgeNode, (int)learnerId);
         }
 
         private NodeProgress BuildNodeForLearner(KnowledgeNode node, int learnerId)

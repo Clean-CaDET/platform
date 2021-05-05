@@ -12,8 +12,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
         public double ToValue { get; private set; }
         public ChallengeHint Hint { get; private set; }
 
-        private MetricRangeRule() {}
-        public MetricRangeRule(int id, string metricName, int fromValue, int toValue, ChallengeHint hint): this()
+        private MetricRangeRule() { }
+        public MetricRangeRule(int id, string metricName, int fromValue, int toValue, ChallengeHint hint) : this()
         {
             Id = id;
             MetricName = metricName;

@@ -14,8 +14,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
         public List<string> RequiredWords { get; private set; }
         public ChallengeHint Hint { get; private set; }
 
-        private BasicNameChecker() {}
-        public BasicNameChecker(List<string> bannedWords, List<string> requiredWords, ChallengeHint hint): this()
+        private BasicNameChecker() { }
+        public BasicNameChecker(List<string> bannedWords, List<string> requiredWords, ChallengeHint hint) : this()
         {
             BannedWords = bannedWords;
             RequiredWords = requiredWords;
@@ -97,7 +97,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
         private HintDirectory EvaluateRequiredWords(Dictionary<string, List<string>> namesUsedInCodeSnippet)
         {
             if (RequiredWords == null || RequiredWords.Count == 0) return null;
-            
+
             var allNames = namesUsedInCodeSnippet.Values.SelectMany(n => n);
             var allWords = allNames.SelectMany(GetWordsFromName).ToList();
             if (RequiredWords.All(req => allWords.Contains(req, StringComparer.OrdinalIgnoreCase))) return null;

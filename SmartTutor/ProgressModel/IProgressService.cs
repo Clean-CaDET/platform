@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using SmartTutor.ProgressModel.Progress;
+﻿using SmartTutor.ProgressModel.Progress;
+using System.Collections.Generic;
 
 namespace SmartTutor.ProgressModel
 {

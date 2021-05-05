@@ -6,13 +6,13 @@
         public string Content { get; private set; }
         public int? LearningObjectSummaryId { get; private set; }
 
-        private ChallengeHint() {}
-        public ChallengeHint(int id): this()
+        private ChallengeHint() { }
+        public ChallengeHint(int id) : this()
         {
             Id = id;
         }
 
-        public ChallengeHint(int id, string content): this(id)
+        public ChallengeHint(int id, string content) : this(id)
         {
             Content = content;
         }

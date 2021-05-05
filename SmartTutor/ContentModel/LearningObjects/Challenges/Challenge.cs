@@ -17,7 +17,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
         public LearningObjectSummary Solution { get; private set; }
         public List<ChallengeFulfillmentStrategy> FulfillmentStrategies { get; private set; }
 
-        private Challenge() {}
+        private Challenge() { }
         public Challenge(int id, int learningObjectSummaryId, List<ChallengeFulfillmentStrategy> fulfillmentStrategies) : base(id, learningObjectSummaryId)
         {
             FulfillmentStrategies = fulfillmentStrategies;
@@ -26,12 +26,12 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
         public ChallengeEvaluation CheckChallengeFulfillment(string[] solutionAttempt, IFunctionalityTester tester)
         {
             CaDETProject solution = BuildCaDETModel(solutionAttempt);
-            
+
             var errorEvaluation = CheckSyntaxErrors(solution.SyntaxErrors);
             if (errorEvaluation != null) return errorEvaluation;
 
             if (tester == null) return StrategyEvaluation(solution);
-            
+
             var functionalEvaluation = tester.IsFunctionallyCorrect(solutionAttempt, TestSuiteLocation);
             return functionalEvaluation ?? StrategyEvaluation(solution);
         }

@@ -8,7 +8,7 @@ namespace SmartTutor.ContentModel.LearningObjects.ArrangeTasks
         public string Text { get; private set; }
         public List<ArrangeTaskContainer> Containers { get; private set; }
 
-        private ArrangeTask() {}
+        private ArrangeTask() { }
         public ArrangeTask(int id, int learningObjectSummaryId, string text, List<ArrangeTaskContainer> containers) : base(id, learningObjectSummaryId)
         {
             Text = text;

@@ -4,7 +4,7 @@ using SmartTutor.ProgressModel.Progress;
 
 namespace SmartTutor.Controllers.Progress.Mappers
 {
-    public class ProgressProfile: Profile
+    public class ProgressProfile : Profile
     {
         public ProgressProfile()
         {

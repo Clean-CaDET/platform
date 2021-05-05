@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
 {
-    public class WorkspaceFunctionalityTester: IFunctionalityTester
+    public class WorkspaceFunctionalityTester : IFunctionalityTester
     {
         private readonly string _workspacePath;
 
@@ -48,7 +48,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
                 CreateNoWindow = true
             };
 
-            var process = new Process {StartInfo = procStartInfo};
+            var process = new Process { StartInfo = procStartInfo };
             process.Start();
             return process.StandardOutput.ReadToEnd();
         }
@@ -75,7 +75,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
             {
                 var line = message[i];
                 if (!line.StartsWith("  Failed")) continue;
-                
+
                 sb.Append(line).AppendLine();
             }
 
@@ -88,7 +88,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
             var lastHeaderLine = 2;
 
             var sb = new StringBuilder("The following compilation errors occurred:\n\r");
-            for(var i = lastHeaderLine; i < message.Length; i++)
+            for (var i = lastHeaderLine; i < message.Length; i++)
             {
                 var line = message[i];
                 try

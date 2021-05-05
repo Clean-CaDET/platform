@@ -7,8 +7,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Questions
         public string Text { get; private set; }
         public List<QuestionAnswer> PossibleAnswers { get; private set; }
 
-        private Question() {}
-        public Question(int id, int summaryId, string text, List<QuestionAnswer> possibleAnswers): base(id, summaryId)
+        private Question() { }
+        public Question(int id, int summaryId, string text, List<QuestionAnswer> possibleAnswers) : base(id, summaryId)
         {
             Text = text;
             PossibleAnswers = possibleAnswers;
