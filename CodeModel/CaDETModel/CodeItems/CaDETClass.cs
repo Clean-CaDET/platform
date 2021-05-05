@@ -23,7 +23,7 @@ namespace CodeModel.CaDETModel.CodeItems
         public CaDETClass OuterClass { get; internal set; }
         public bool IsInnerClass => OuterClass != null;
         public List<CaDETModifier> Modifiers { get; internal set; }
-        public List<CaDETMember> Members { get; internal set; }
+        public List<CaDETMember> Members { get; set; }
         public List<CaDETField> Fields { get; internal set; }
         public Dictionary<CaDETMetric, double> Metrics { get; set; }
 
