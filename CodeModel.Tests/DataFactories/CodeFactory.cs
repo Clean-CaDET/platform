@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RepositoryCompilerTests.DataFactories
+namespace CodeModel.Tests.DataFactories
 {
     public class CodeFactory
     {
@@ -992,19 +992,24 @@ namespace RepositoryCompilerTests.DataFactories
             };
         }
 
-        public IEnumerable<string> GetInvalidSyntaxClasses()
+        public static IEnumerable<object[]> GetInvalidSyntaxClasses() => new List<object[]>
         {
-            return new[]
+            new object[]
             {
-                @"
-                namespace DoctorApp.Model {
-                public class Doctor
-                {
-                  private Signature Signature;
-                  private DateTime startWorking;
-                  private DateTime endWorking;
-                }}",
-                @"
+                new [] {@"
+                    using System;
+                    namespace DoctorApp.Model {
+                    public class Doctor
+                    {
+                      private string Signature;
+                      private DateTime startWorking;
+                      private DateTime endWorking;
+                    }}"},
+                0
+            },
+            new object[]
+            {
+                new [] {@"
                 using System.Collections.Generic;
                 namespace DoctorApp.Model.Data
                 {
@@ -1026,9 +1031,9 @@ namespace RepositoryCompilerTests.DataFactories
                             return !(From > timeSpan.To || To < timeSpan.From);
                         }
                     }
-                }"
-
-            };
-        }
+                }"},
+                15
+            }
+        };
     }
 }

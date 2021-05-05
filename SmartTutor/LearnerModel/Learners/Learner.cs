@@ -8,10 +8,12 @@ namespace SmartTutor.LearnerModel.Learners
         public string StudentIndex { get; private set; }
 
         // TODO: Entity framework cannot map dictionaries, requires refactoring
+        // TODO: This model along with all other behavioral models should be extracted into a separate class.
         public int VisualScore { get; private set; }
         public int AuralScore { get; private set; }
         public int ReadWriteScore { get; private set; }
         public int KinaestheticScore { get; private set; }
+        public Workspace Workspace { get; set; }
 
         public Learner(int id, int visualScore, int auralScore, int readWriteScore, int kinaestheticScore)
         {
@@ -39,6 +41,11 @@ namespace SmartTutor.LearnerModel.Learners
             if (varkScore[LearningPreference.Visual] != 0) VisualScore = varkScore[LearningPreference.Visual];
             if (varkScore[LearningPreference.ReadWrite] != 0) ReadWriteScore = varkScore[LearningPreference.ReadWrite];
             if (varkScore[LearningPreference.Kinaesthetic] != 0) KinaestheticScore = varkScore[LearningPreference.Kinaesthetic];
+        }
+
+        public void SetWorkspace(string workspacePath)
+        {
+            Workspace = new Workspace(workspacePath);
         }
     }
 }

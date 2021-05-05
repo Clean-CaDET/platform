@@ -1,4 +1,5 @@
 using SmartTutor.Database;
+using System.Linq;
 
 namespace SmartTutor.ProgressModel.Submissions.Repository
 {
@@ -27,6 +28,11 @@ namespace SmartTutor.ProgressModel.Submissions.Repository
         {
             _dbContext.ArrangeTaskSubmissions.Add(submission);
             _dbContext.SaveChanges();
+        }
+
+        public string GetWorkspacePath(int learnerId)
+        {
+            return _dbContext.Learners.First(l => l.Id == learnerId).Workspace.Path;
         }
     }
 }
