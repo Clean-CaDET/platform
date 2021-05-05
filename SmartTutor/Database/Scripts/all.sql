@@ -205,7 +205,7 @@ INSERT INTO public."ChallengeHints"(
 	VALUES (6, 'Izbegavaj generične reči koje se mogu koristiti da opišu bilo kakav kod (npr. Manager, Data), kao i one koje ponavljaju informacije koje već stoje u imenu tipa (npr. List, Num).', 9);
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "BannedWords", "HintId")
-	VALUES (2, '{{"Data","Info","Str","Set","The"}}', 6);
+	VALUES (2, '{"Data","Info","Str","Set","The"}', 6);
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -248,7 +248,7 @@ INSERT INTO public."ChallengeHints"(
 	VALUES (7, 'Razmisli kako da integrišeš domenski značajne reči poput "Enroll", "newCourse", "Maximum" i "Active" u imena koja koristiš u svom kodu.', 6);
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "RequiredWords", "HintId")
-	VALUES (1, '{{"Enroll","newCourse","Maximum","Active"}}', 7);
+	VALUES (1, '{"Enroll","newCourse","Maximum","Active"}', 7);
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -406,19 +406,19 @@ INSERT INTO public."ArrangeTasks"(
 	"Id", "Text")
 	VALUES (32, 'Prateći kod predstavlja primer čiste funkcije.
 
-    public List<Doctor> GetSuitableDoctors(Operation operation){{
+    public List<Doctor> GetSuitableDoctors(Operation operation){
     	List<Doctor> doctors = doctorRepository.FindAll();
     
     	List<Doctor> suitableDoctors = new ArrayList<>();
-    	foreach(Doctor doctor in doctors){{
+    	foreach(Doctor doctor in doctors){
     		if(IsCapable(doctor, operation.GetRequiredCapabilities())
-    		    && IsAvailable(doctor, operation.GetTimeSlot())){{
+    		    && IsAvailable(doctor, operation.GetTimeSlot())){
     			suitableDoctors.Add(doctor);
-    		}}
-    	}}
+    		}
+    	}
     
     	return suitableDoctors;
-    }}
+    }
 
 Rasporedi zahteve za izmenu softvera tako da su vezani za funkcije koje bismo verovatno menjali da bismo ih ispoštovali.');
 INSERT INTO public."ArrangeTaskContainers"(
