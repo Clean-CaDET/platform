@@ -7,7 +7,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
     public class WorkspaceFunctionalityTester: IFunctionalityTester
     {
         private readonly string _workspacePath;
-        private readonly char _separator = Path.DirectorySeparatorChar;
 
         public WorkspaceFunctionalityTester(string workspacePath)
         {
@@ -26,7 +25,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
 
         private string GetFullPath(string testSuitePath)
         {
-            var fullPath = _workspacePath + _separator + testSuitePath + _separator;
+            var fullPath = Path.Combine(_workspacePath, testSuitePath);
             if (!Directory.Exists(fullPath)) throw new InvalidOperationException("Learner workspace is not setup.");
             return fullPath;
         }
@@ -35,7 +34,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
         {
             for (var i = 0; i < sourceCode.Length; i++)
             {
-                File.WriteAllText(fullPath + i + ".cs", sourceCode[i]);
+                File.WriteAllText(Path.Combine(fullPath, i + ".cs"), sourceCode[i]);
             }
         }
 

@@ -1,4 +1,5 @@
 using SmartTutor.Database;
+using System.Linq;
 
 namespace SmartTutor.ProgressModel.Submissions.Repository
 {
@@ -31,7 +32,7 @@ namespace SmartTutor.ProgressModel.Submissions.Repository
 
         public string GetWorkspacePath(int learnerId)
         {
-            return "../../../../../challenge-tests"; //TODO: Workspace as a value object containing creation date and path (based on basePath from configuration)
+            return _dbContext.Learners.First(l => l.Id == learnerId).Workspace.Path;
         }
     }
 }

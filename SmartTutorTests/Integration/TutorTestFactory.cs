@@ -54,7 +54,7 @@ namespace SmartTutor.Tests.Integration
         private string CreateConnectionStringForTest()
         {
             var server = "localhost";
-            var port = "54321";
+            var port = "5432";
             var database = "smart-tutor-test";
             var user = "postgres";
             var password = "super";

@@ -27,17 +27,14 @@ DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
 
 INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (1, 'SU-1-2021', 1, 2, 3, 4);
+	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
+	VALUES (1, 'SU-1-2021', 1, 2, 3, 4, 'C:/Smart-Tutor/1/Workspace');
 INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (2, 'SU-2-2021', 4, 3, 2, 1);
+	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
+	VALUES (2, 'SU-2-2021', 4, 3, 2, 1, 'C:/Smart-Tutor/2/Workspace');
 INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (3, 'SU-3-2021', 1, 4, 3, 2);
-INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (4, 'SU-3-2021', 1, 2, 4, 3);
+	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
+	VALUES (3, 'SU-3-2021', 1, 4, 3, 2, 'C:/Smart-Tutor/3/Workspace');
 
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description")
