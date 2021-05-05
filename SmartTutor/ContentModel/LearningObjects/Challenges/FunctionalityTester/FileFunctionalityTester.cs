@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
 {
@@ -54,12 +55,55 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester
 
         private static ChallengeEvaluation BuildEvaluation(string result)
         {
-            //TODO: Handle no test results situation.
             if (result.Contains("Failed:     0")) return null;
-            
+
+            result = result.Contains("Failed") ? ProcessFailedTest(result) : ProcessCompilationError(result);
+
             var evaluation = new ChallengeEvaluation(0);
-            evaluation.ApplicableHints.AddHint("TEST RESULTS", new ChallengeHint(0, result));
+            evaluation.ApplicableHints.AddHint("FUNCTIONAL TEST RESULTS", new ChallengeHint(0, result));
             return evaluation;
+        }
+
+        private static string ProcessFailedTest(string result)
+        {
+            var message = result.Split("\n");
+            var lastHeaderLine = 8;
+
+            //TODO: Remove to support localization.
+            var sb = new StringBuilder("Some functional tests failed. Try to determine which functionality was broken from the test name or use git checkout to restart your challenge. The following tests failed:\n");
+            for (var i = lastHeaderLine; i < message.Length; i++)
+            {
+                var line = message[i];
+                if (!line.StartsWith("  Failed")) continue;
+                
+                sb.Append(line).AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
+        private static string ProcessCompilationError(string result)
+        {
+            var message = result.Split("\n");
+            var lastHeaderLine = 2;
+
+            var sb = new StringBuilder("The following compilation errors occurred:\n\r");
+            for(var i = lastHeaderLine; i < message.Length; i++)
+            {
+                var line = message[i];
+                try
+                {
+                    var removedTestClassSuffix = line.Split("[")[0];
+                    var removedTestClassPrefixAndSuffix = removedTestClassSuffix.Split(".cs")[1];
+                    sb.Append(removedTestClassPrefixAndSuffix).Append("\n\r");
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    //Skip line.
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
