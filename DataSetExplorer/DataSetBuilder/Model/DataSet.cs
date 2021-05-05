@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
@@ -46,6 +45,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
         {
             return _instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+        }
+
+        public List<DataSetInstance> GetAllInstances()
+        {
+            return _instances.ToList();
         }
     }
 }

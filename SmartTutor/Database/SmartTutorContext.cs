@@ -1,20 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartTutor.ContentModel.FeedbackModel;
 using SmartTutor.ContentModel.LearningObjects;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
-using SmartTutor.ContentModel.LectureModel;
-using SmartTutor.ContentModel.ProgressModel;
+using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
+using SmartTutor.ContentModel.LearningObjects.Questions;
+using SmartTutor.ContentModel.Lectures;
+using SmartTutor.LearnerModel.Learners;
+using SmartTutor.ProgressModel.Feedback;
+using SmartTutor.ProgressModel.Progress;
+using SmartTutor.ProgressModel.Submissions;
 
 namespace SmartTutor.Database
 {
     public class SmartTutorContext : DbContext
     {
+        #region Courses
         public DbSet<Lecture> Lectures { get; set; }
         public DbSet<KnowledgeNode> KnowledgeNodes { get; set; }
         public DbSet<LearningObjectSummary> LearningObjectSummaries { get; set; }
+        #endregion
 
         #region Learning Objects
         public DbSet<LearningObject> LearningObjects { get; set; }
@@ -34,13 +40,15 @@ namespace SmartTutor.Database
         public DbSet<ChallengeHint> ChallengeHints { get; set; }
         #endregion
 
-        public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
+        #region Progress Model
         public DbSet<NodeProgress> NodeProgresses { get; set; }
-        public DbSet<Trainee> Trainees { get; set; }
-        public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<ArrangeTaskSubmission> ArrangeTaskSubmissions { get; set; }
         public DbSet<ArrangeTaskContainerSubmission> ArrangeTaskContainerSubmissions { get; set; }
-        public DbSet<LearningObjectFeedback> LearningObjectFeedbacks { get; set; }
+        public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
+        public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
+        public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
+        #endregion
+        public DbSet<Learner> Learners { get; set; }
 
         public SmartTutorContext(DbContextOptions<SmartTutorContext> options) : base(options)
         {
@@ -49,6 +57,27 @@ namespace SmartTutor.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigureBasicMetricChecker(modelBuilder);
+
+            modelBuilder.Entity<Text>().ToTable("Texts");
+            modelBuilder.Entity<Image>().ToTable("Images");
+            modelBuilder.Entity<Video>().ToTable("Videos");
+            modelBuilder.Entity<Question>().ToTable("Questions");
+            modelBuilder.Entity<ArrangeTask>().ToTable("ArrangeTasks");
+            modelBuilder.Entity<Challenge>().ToTable("Challenges");
+
+            modelBuilder.Entity<BasicNameChecker>().ToTable("BasicNameCheckers");
+            modelBuilder.Entity<BasicMetricChecker>().ToTable("BasicMetricCheckers");
+
+            modelBuilder.Entity<Challenge>()
+                .Property<int>("SolutionIdForeignKey");
+            modelBuilder.Entity<Challenge>()
+                .HasOne(b => b.Solution)
+                .WithMany()
+                .HasForeignKey("SolutionIdForeignKey");
+
+            modelBuilder.Entity<Learner>()
+                .OwnsOne(l => l.Workspace)
+                .Property(w => w.Path).HasColumnName("WorkspacePath");
         }
 
         private static void ConfigureBasicMetricChecker(ModelBuilder modelBuilder)
@@ -70,14 +99,6 @@ namespace SmartTutor.Database
                 .HasMany(b => b.MethodMetricRules)
                 .WithOne()
                 .HasForeignKey("MethodMetricCheckerForeignKey");
-            
-
-            modelBuilder.Entity<Challenge>()
-                .Property<int>("SolutionIdForeignKey");
-            modelBuilder.Entity<Challenge>()
-                .HasOne(b => b.Solution)
-                .WithMany()
-                .HasForeignKey("SolutionIdForeignKey");
         }
     }
 }

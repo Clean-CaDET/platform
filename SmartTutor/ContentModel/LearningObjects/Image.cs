@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace SmartTutor.ContentModel.LearningObjects
+﻿namespace SmartTutor.ContentModel.LearningObjects
 {
-    [Table("Images")]
     public class Image : LearningObject
     {
-        public string Url { get; set; }
-        public string Caption { get; set; }
+        public string Url { get; private set; }
+        public string Caption { get; private set; }
+
+        public Image(int id, int learningObjectSummaryId, string url, string caption) : base(id, learningObjectSummaryId)
+        {
+            Url = url;
+            Caption = caption;
+        }
     }
 }

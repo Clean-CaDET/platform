@@ -1,13 +1,13 @@
-﻿using RepositoryCompiler.Controllers;
+﻿using CodeModel;
 using Shouldly;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.MetricChecker;
-using SmartTutorTests.DataFactories;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
+using SmartTutor.Tests.DataFactories;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class BasicMetricsCheckerTests
     {
@@ -15,51 +15,26 @@ namespace SmartTutorTests.Unit
 
         public BasicMetricsCheckerTests()
         {
-            _basicMetricChecker = new BasicMetricChecker
-            {
-                ClassMetricRules = new List<MetricRangeRule>
+            _basicMetricChecker = new BasicMetricChecker(
+                new List<MetricRangeRule>
                 {
-                    new MetricRangeRule
-                    {
-                        Id = 33701,
-                        MetricName = "CLOC",
-                        FromValue = 3,
-                        ToValue = 30,
-                        Hint = new ChallengeHint
-                        {
-                            Id = 337001,
-                            Content = "Cohesion",
-                            LearningObjectSummaryId = 331
-                        }
-                    },
-                    new MetricRangeRule { Id = 33702, MetricName = "NMD", FromValue = 0, ToValue = 2, Hint = new ChallengeHint { Id = 5 } }
+                    new MetricRangeRule(33701,"CLOC",3,30,new ChallengeHint(337001)),
+                    new MetricRangeRule (33702, "NMD", 0, 2, new ChallengeHint(5))
                 },
-                MethodMetricRules = new List<MetricRangeRule>
+                new List<MetricRangeRule>
                 {
-                    new MetricRangeRule
-                    {
-                        Id = 33703,
-                        MetricName = "MELOC",
-                        FromValue = 2,
-                        ToValue = 5,
-                        Hint = new ChallengeHint
-                        {
-                            Id = 337002,
-                            Content = "Cohesion",
-                            LearningObjectSummaryId = 336
-                        }
-                    },
-                    new MetricRangeRule { Id = 33704, MetricName = "NOP", FromValue = 1, ToValue = 4, Hint = new ChallengeHint { Id = 6 } }
+                    new MetricRangeRule(33703, "MELOC", 2, 5, new ChallengeHint(337002)),
+                    new MetricRangeRule(33704, "NOP", 2, 4, new ChallengeHint(6))
                 }
-            };
+            );
         }
 
         [Theory]
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
         {
-            var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
-            var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(caDETClasses);
+            var project = new CodeModelFactory().CreateProject(submissionAttempt);
+            var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(project.Classes);
             var actualHints = challengeEvaluation.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);
@@ -80,8 +55,9 @@ namespace SmartTutorTests.Unit
                     ChallengeTestData.GetTwoViolatingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint {Id = 6},
-                        new ChallengeHint {Id = 337002}
+                        new ChallengeHint(6),
+                        new ChallengeHint(337002),
+                        new ChallengeHint(337001)
                     }
                 }
             };

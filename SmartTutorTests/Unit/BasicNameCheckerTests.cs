@@ -1,14 +1,13 @@
-﻿using RepositoryCompiler.Controllers;
-using Shouldly;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy;
-using SmartTutorTests.DataFactories;
+﻿using Shouldly;
+using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
+using SmartTutor.Tests.DataFactories;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel;
-using SmartTutor.ContentModel.LearningObjects.ChallengeModel.FulfillmentStrategy.NameChecker;
 using Xunit;
 
-namespace SmartTutorTests.Unit
+namespace SmartTutor.Tests.Unit
 {
     public class BasicNameCheckerTests
     {
@@ -17,25 +16,14 @@ namespace SmartTutorTests.Unit
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints, bool expectedCompletion)
         {
-            var challenge = new Challenge { FulfillmentStrategies = new List<ChallengeFulfillmentStrategy>
+            //TODO: Readonly lists
+            var challenge = new Challenge(1, 1, new List<ChallengeFulfillmentStrategy>
             {
-                new BasicNameChecker
-                {
-                    Id = 1,
-                    RequiredWords = new List<string> { "Payment", "PaymentService", "compensation" },
-                    Hint = new ChallengeHint { Id = 11 }
-                },
+                new BasicNameChecker(null, new List<string> { "Payment", "PaymentService", "compensation" }, new ChallengeHint(11)),
+                new BasicNameChecker(new List<string> { "Class", "List", "Method" }, null, new ChallengeHint(21))
+            });
 
-                new BasicNameChecker
-                {
-                    Id = 2,
-                    BannedWords = new List<string> { "Class", "List", "Method" },
-                    Hint = new ChallengeHint { Id = 21 }
-                }
-            }};
-
-            var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
-            var challengeEvaluation = challenge.CheckChallengeFulfillment(caDETClasses);
+            var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt, null);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);
@@ -52,8 +40,8 @@ namespace SmartTutorTests.Unit
                     ChallengeTestData.GetTwoPassingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint {Id = 11},
-                        new ChallengeHint {Id = 21}
+                        new ChallengeHint(11),
+                        new ChallengeHint(21)
                     },
                     true
                 },
@@ -62,8 +50,8 @@ namespace SmartTutorTests.Unit
                     ChallengeTestData.GetTwoViolatingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint {Id = 11},
-                        new ChallengeHint {Id = 21}
+                        new ChallengeHint(11),
+                        new ChallengeHint(21)
                     },
                     false
                 }
