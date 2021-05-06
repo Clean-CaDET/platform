@@ -18,6 +18,7 @@ DELETE FROM public."MetricRangeRules";
 DELETE FROM public."BasicMetricCheckers";
 DELETE FROM public."BasicNameCheckers";
 DELETE FROM public."ChallengeHints";
+DELETE FROM public."ProjectAnalyzers";
 DELETE FROM public."ChallengeFulfillmentStrategies";
 DELETE FROM public."Challenges";
 DELETE FROM public."QuestionAnswers";

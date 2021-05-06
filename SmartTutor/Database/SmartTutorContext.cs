@@ -5,6 +5,7 @@ using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.ProjectChecker;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.LearnerModel.Learners;
@@ -12,6 +13,9 @@ using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Progress;
 using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.QualityAnalysis;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartTutor.Database
 {
@@ -36,6 +40,7 @@ namespace SmartTutor.Database
         public DbSet<ArrangeTaskElement> ArrangeTaskElements { get; set; }
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<ChallengeFulfillmentStrategy> ChallengeFulfillmentStrategies { get; set; }
+        public DbSet<ProjectAnalyzer> ProjectAnalyzers { get; set; }
         public DbSet<BasicMetricChecker> BasicMetricCheckers { get; set; }
         public DbSet<BasicNameChecker> BasicNameCheckers { get; set; }
         public DbSet<MetricRangeRule> MetricRangeRules { get; set; }
@@ -59,6 +64,9 @@ namespace SmartTutor.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            ConfigureBasicMetricChecker(modelBuilder);
+            ConfigureProjectChecker(modelBuilder);
+
             modelBuilder.Entity<Text>().ToTable("Texts");
             modelBuilder.Entity<Image>().ToTable("Images");
             modelBuilder.Entity<Video>().ToTable("Videos");
@@ -82,6 +90,7 @@ namespace SmartTutor.Database
 
             modelBuilder.Entity<BasicNameChecker>().ToTable("BasicNameCheckers");
             modelBuilder.Entity<BasicMetricChecker>().ToTable("BasicMetricCheckers");
+            modelBuilder.Entity<ProjectAnalyzer>().ToTable("ProjectAnalyzers");
 
             modelBuilder.Entity<Challenge>()
                 .Property<int>("SolutionIdForeignKey");
@@ -90,7 +99,9 @@ namespace SmartTutor.Database
                 .WithMany()
                 .HasForeignKey("SolutionIdForeignKey");
 
-            ConfigureBasicMetricChecker(modelBuilder);
+            modelBuilder.Entity<Learner>()
+                .OwnsOne(l => l.Workspace)
+                .Property(w => w.Path).HasColumnName("WorkspacePath");
         }
 
         private static void ConfigureBasicMetricChecker(ModelBuilder modelBuilder)
@@ -112,6 +123,23 @@ namespace SmartTutor.Database
                 .HasMany(b => b.MethodMetricRules)
                 .WithOne()
                 .HasForeignKey("MethodMetricCheckerForeignKey");
+        }
+
+        private static void ConfigureProjectChecker(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChallengeFulfillmentStrategy>()
+               .Property<string?>("SnippetApplicableCheckerForeignKey").IsRequired(false);
+
+
+            modelBuilder.Entity<ProjectAnalyzer>()
+                .Property(pa => pa.SnippetApplicableStrategies)
+                .IsRequired()
+                .HasConversion<string[]>(
+                    sas => ((IEnumerable)sas).Cast<object>().Select(x => x.ToString()).ToArray(),
+                    sas => sas == null
+                        ? new Dictionary<string, List<ChallengeFulfillmentStrategy>>()
+                        : JsonConvert.DeserializeObject<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(sas.ToString())
+            );
         }
     }
 }
