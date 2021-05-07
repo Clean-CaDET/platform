@@ -16,7 +16,7 @@ using SmartTutor.Database;
 using SmartTutor.InstructorModel.Instructors;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Learners.Repository;
-using SmartTutor.LearnerModel.Options;
+using SmartTutor.LearnerModel.Workspaces;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
@@ -38,8 +38,6 @@ namespace SmartTutor
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<WorkspaceOptions>(Configuration.GetSection(WorkspaceOptions.ConfigKey));
-
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers().AddJsonOptions(options =>
@@ -62,6 +60,8 @@ namespace SmartTutor
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
 
             services.AddScoped<ILearnerService, LearnerService>();
+            services.Configure<WorkspaceOptions>(Configuration.GetSection(WorkspaceOptions.ConfigKey));
+            services.AddScoped<IWorkspaceCreator, NoWorkspaceCreator>();
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
 
             services.AddScoped<IInstructor, VARKRecommender>();

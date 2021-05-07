@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.LearnerModel.Learners
+﻿namespace SmartTutor.LearnerModel.Workspaces
 {
     public class Workspace
     {

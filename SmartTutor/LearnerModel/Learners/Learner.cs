@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SmartTutor.LearnerModel.Workspaces;
+using System.Collections.Generic;
 
 namespace SmartTutor.LearnerModel.Learners
 {
@@ -41,11 +42,6 @@ namespace SmartTutor.LearnerModel.Learners
             if (varkScore[LearningPreference.Visual] != 0) VisualScore = varkScore[LearningPreference.Visual];
             if (varkScore[LearningPreference.ReadWrite] != 0) ReadWriteScore = varkScore[LearningPreference.ReadWrite];
             if (varkScore[LearningPreference.Kinaesthetic] != 0) KinaestheticScore = varkScore[LearningPreference.Kinaesthetic];
-        }
-
-        public void SetWorkspace(string workspacePath)
-        {
-            Workspace = new Workspace(workspacePath);
         }
     }
 }

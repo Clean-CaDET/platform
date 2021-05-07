@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.LearnerModel.Options
+﻿namespace SmartTutor.LearnerModel.Workspaces
 {
     public class WorkspaceOptions
     {

@@ -1,21 +1,19 @@
-using Microsoft.Extensions.Options;
 using SmartTutor.LearnerModel.Exceptions;
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.LearnerModel.Learners.Repository;
-using SmartTutor.LearnerModel.Options;
-using System.IO;
+using SmartTutor.LearnerModel.Workspaces;
 
 namespace SmartTutor.LearnerModel
 {
     public class LearnerService : ILearnerService
     {
         private readonly ILearnerRepository _learnerRepository;
-        private readonly WorkspaceOptions _workspaceOptions;
+        private readonly IWorkspaceCreator _workspaceCreator;
 
-        public LearnerService(ILearnerRepository learnerRepository, IOptions<WorkspaceOptions> workspaceOptions)
+        public LearnerService(ILearnerRepository learnerRepository, IWorkspaceCreator workspaceCreator)
         {
             _learnerRepository = learnerRepository;
-            _workspaceOptions = workspaceOptions.Value;
+            _workspaceCreator = workspaceCreator;
         }
 
         public Learner Register(Learner newLearner)
@@ -48,43 +46,13 @@ namespace SmartTutor.LearnerModel
             return learner;
         }
 
-        //TODO: Examine if the Learner model should be a focused module, similar to the Instructor, that only has the learning behavior aspects (i.e., this logic is related to progress in that case)
         private void CreateWorkspace(Learner learner)
         {
-            var learnerWorkspacePath = Path.Combine(_workspaceOptions.BasePath, learner.Id.ToString(), "Workspace");
-            if (Directory.Exists(learnerWorkspacePath)) return;
+            var workspace = _workspaceCreator.Create(learner.Id);
+            if (workspace == null) return;
 
-            DirectoryCopy(Path.Combine(_workspaceOptions.BasePath, "MasterWorkspace"), learnerWorkspacePath);
-
-            learner.SetWorkspace(learnerWorkspacePath);
+            learner.Workspace = workspace;
             _learnerRepository.SaveOrUpdate(learner);
-        }
-
-        private static void DirectoryCopy(string sourceDirName, string destDirName)
-        {
-            var sourceDirectory = new DirectoryInfo(sourceDirName);
-            if (!sourceDirectory.Exists)
-            {
-                throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDirName);
-            }
-
-            Directory.CreateDirectory(destDirName);
-
-            foreach (var subDirectory in sourceDirectory.GetDirectories())
-            {
-                if(subDirectory.Name.StartsWith(".")) continue;
-
-                var destDirectory = Path.Combine(destDirName, subDirectory.Name);
-                Directory.CreateDirectory(destDirectory);
-
-                foreach (var file in subDirectory.GetFiles())
-                {
-                    var filePath = Path.Combine(destDirectory, file.Name);
-                    File.Copy(file.FullName, filePath);
-                }
-
-                DirectoryCopy(subDirectory.FullName, destDirectory);
-            }
         }
     }
 }

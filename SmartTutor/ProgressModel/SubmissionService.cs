@@ -27,8 +27,8 @@ namespace SmartTutor.ProgressModel
             Challenge challenge = _learningObjectRepository.GetChallenge(submission.ChallengeId);
             if (challenge == null) return null;
 
-            var workspacePath = _submissionRepository.GetWorkspacePath(submission.LearnerId);
-            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode, new WorkspaceFunctionalityTester(workspacePath));
+            //var tester = new WorkspaceFunctionalityTester(_submissionRepository.GetWorkspacePath(submission.LearnerId));
+            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode, null);
 
             if (evaluation.ChallengeCompleted) submission.MarkCorrect();
             _submissionRepository.SaveChallengeSubmission(submission);
