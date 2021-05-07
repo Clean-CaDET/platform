@@ -8,7 +8,6 @@ using Xunit;
 using Shouldly;
 using System.Collections.Generic;
 using CodeModel.CaDETModel.CodeItems;
-
 namespace SmellDetectorTests.Unit
 {
     public class SmellDetectorServiceTest

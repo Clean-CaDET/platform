@@ -104,6 +104,7 @@ namespace SmellDetector.Detectors.RuleEngines
                                 SmellType.GOD_CLASS);
             _dynamicRules.Add(rule1);
             _dynamicRules.Add(rule2);
+
         }
 
         private double FindTopXMetricValuesInProject(List<CaDETClassDTO> caDetClassDtoList, CaDETMetric metric, int indexOfMetricValue)
@@ -121,6 +122,7 @@ namespace SmellDetector.Detectors.RuleEngines
         public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDtoList)
         {
             //DefineTopXMetricRules(caDetClassDtoList);
+
             PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
 
             foreach(CaDETClassDTO caDETClassDTO in caDetClassDtoList)
