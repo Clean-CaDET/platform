@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CodeModel.CaDETModel.CodeItems;
 
 namespace SmellDetector.Detectors.RuleEngines
 {
@@ -13,7 +14,7 @@ namespace SmellDetector.Detectors.RuleEngines
             _secondCriteria = secondCriteria;
         }
 
-        public bool MeetCriteria(Dictionary<String, double> metrics)
+        public bool MeetCriteria(Dictionary<CaDETMetric, double> metrics)
         {
             return _firstCriteria.MeetCriteria(metrics) && _secondCriteria.MeetCriteria(metrics);
         }

@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using CodeModel.CaDETModel.CodeItems;
 using SmellDetector.Controllers;
 
 namespace SmellDetector.Detectors.RuleEngines
 {
     public class MetricCriteria : Criteria
     {
-        private readonly String _metric;
         private readonly OperationEnum _operation;
         private readonly double _threshold;
-        public MetricCriteria(String metric, OperationEnum operation, double threshold)
+        private readonly CaDETMetric _metric;
+        public MetricCriteria(CaDETMetric metric, OperationEnum operation, double threshold)
         {
             _metric = metric;
             _operation = operation;
             _threshold = threshold;
         }
 
-        public bool MeetCriteria(Dictionary<String, double> metrics)
+        public bool MeetCriteria(Dictionary<CaDETMetric, double> metrics)
         {
             if (!metrics.ContainsKey(_metric))
             {
