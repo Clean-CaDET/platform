@@ -20,6 +20,7 @@ namespace SmartTutor.Database
         public DbSet<Lecture> Lectures { get; set; }
         public DbSet<KnowledgeNode> KnowledgeNodes { get; set; }
         public DbSet<LearningObjectSummary> LearningObjectSummaries { get; set; }
+        public DbSet<Course> Courses { get; set; }
         #endregion
 
         #region Learning Objects

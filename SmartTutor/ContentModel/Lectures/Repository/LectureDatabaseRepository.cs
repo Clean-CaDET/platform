@@ -29,5 +29,22 @@ namespace SmartTutor.ContentModel.Lectures.Repository
         {
             return _dbContext.KnowledgeNodes.Where(n => n.Id == id).Include(n => n.LearningObjectSummaries).FirstOrDefault();
         }
+
+        public Course GetCourse(int id)
+        {
+            return _dbContext.Courses.FirstOrDefault(c => c.Id == id);
+        }
+
+        public List<KnowledgeNode> GetKnowledgeNodesBySummary(int id)
+        {
+            var learningObjectSummary = _dbContext.LearningObjectSummaries.Where(los => los.Id == id)
+                .Include(los => los.KnowledgeNodes).FirstOrDefault();
+            return learningObjectSummary?.KnowledgeNodes;
+        }
+
+        public Lecture GetLecture(int id)
+        {
+            return _dbContext.Lectures.FirstOrDefault(l => l.Id == id);
+        }
     }
 }

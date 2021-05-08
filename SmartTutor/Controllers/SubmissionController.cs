@@ -6,6 +6,7 @@ using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Submissions;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace SmartTutor.Controllers
 {
@@ -23,32 +24,49 @@ namespace SmartTutor.Controllers
         }
 
         [HttpPost("challenge")]
-        public ActionResult<ChallengeEvaluationDTO> SubmitChallenge([FromBody] ChallengeSubmissionDTO challengeSubmission)
+        public ActionResult<ChallengeEvaluationDTO> SubmitChallenge(
+            [FromBody] ChallengeSubmissionDTO challengeSubmission)
         {
             ChallengeEvaluation challengeEvaluation;
             try
             {
-                challengeEvaluation = _submissionService.EvaluateChallenge(_mapper.Map<ChallengeSubmission>(challengeSubmission));
+                challengeEvaluation =
+                    _submissionService.EvaluateChallenge(_mapper.Map<ChallengeSubmission>(challengeSubmission),
+                        challengeSubmission.LearnerId);
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
             }
             catch (InvalidOperationException e)
             {
                 return BadRequest(e.Message);
             }
-            
+
             if (challengeEvaluation == null) return NotFound();
             return Ok(_mapper.Map<ChallengeEvaluationDTO>(challengeEvaluation));
         }
 
         [HttpPost("question")]
-        public ActionResult<List<AnswerEvaluationDTO>> SubmitQuestionAnswers([FromBody] QuestionSubmissionDTO submission)
+        public ActionResult<List<AnswerEvaluationDTO>> SubmitQuestionAnswers(
+            [FromBody] QuestionSubmissionDTO submission)
         {
-            var evaluation = _submissionService.EvaluateAnswers(_mapper.Map<QuestionSubmission>(submission));
-            if (evaluation == null) return NotFound();
-            return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
+            try
+            {
+                var evaluation = _submissionService.EvaluateAnswers(_mapper.Map<QuestionSubmission>(submission),
+                    submission.LearnerId);
+                if (evaluation == null) return NotFound();
+                return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("arrange-task")]
-        public ActionResult<List<ArrangeTaskContainerEvaluationDTO>> SubmitArrangeTask([FromBody] ArrangeTaskSubmissionDTO submission)
+        public ActionResult<List<ArrangeTaskContainerEvaluationDTO>> SubmitArrangeTask(
+            [FromBody] ArrangeTaskSubmissionDTO submission)
         {
             var evaluation = _submissionService.EvaluateArrangeTask(_mapper.Map<ArrangeTaskSubmission>(submission));
             if (evaluation == null) return NotFound();

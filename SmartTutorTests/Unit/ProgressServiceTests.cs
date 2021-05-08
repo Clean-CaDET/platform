@@ -22,8 +22,8 @@ namespace SmartTutor.Tests.Unit
 
         private static IProgressService CreateService()
         {
-            var kn1 = new KnowledgeNode(1, null);
-            var kn2 = new KnowledgeNode(2, null);
+            var kn1 = new KnowledgeNode(1, null, 1);
+            var kn2 = new KnowledgeNode(2, null, 1);
             var progress1 = new NodeProgress(1, 0, null, NodeStatus.Unlocked, null);
 
             Mock<IProgressRepository> progressRepo = new Mock<IProgressRepository>();

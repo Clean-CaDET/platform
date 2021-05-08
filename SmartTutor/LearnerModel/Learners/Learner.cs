@@ -12,6 +12,7 @@ namespace SmartTutor.LearnerModel.Learners
         public int AuralScore { get; private set; }
         public int ReadWriteScore { get; private set; }
         public int KinaestheticScore { get; private set; }
+        public List<CourseEnrollment> CourseEnrollments{ get; private set; }
 
         public Learner(int id, int visualScore, int auralScore, int readWriteScore, int kinaestheticScore)
         {
@@ -20,6 +21,7 @@ namespace SmartTutor.LearnerModel.Learners
             AuralScore = auralScore;
             ReadWriteScore = readWriteScore;
             KinaestheticScore = kinaestheticScore;
+            CourseEnrollments = new List<CourseEnrollment>();
         }
 
         public Dictionary<LearningPreference, int> VARKScore()

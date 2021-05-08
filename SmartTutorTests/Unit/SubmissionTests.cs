@@ -8,6 +8,8 @@ using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.LearnerModel.Learners.Repository;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit
@@ -17,7 +19,8 @@ namespace SmartTutor.Tests.Unit
         private readonly ISubmissionService _service;
         public SubmissionTests()
         {
-            _service = new SubmissionService(CreateMockRepository(), new Mock<ISubmissionRepository>().Object);
+            _service = new SubmissionService(CreateMockRepository(), new Mock<ISubmissionRepository>().Object,new Mock<ILearnerRepository>().Object,
+                new Mock<ILectureRepository>().Object);
         }
 
         private static ILearningObjectRepository CreateMockRepository()
@@ -62,7 +65,7 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(AnswersTestData))]
         public void Evaluates_answer_submission(QuestionSubmission submission, List<bool> expectedCorrectness)
         {
-            var results = _service.EvaluateAnswers(submission);
+            var results = _service.EvaluateAnswers(submission, 1);
 
             var correctness = results.Select(a => a.SubmissionWasCorrect);
             correctness.ShouldBe(expectedCorrectness);

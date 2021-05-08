@@ -88,7 +88,7 @@ namespace SmartTutor.Tests.Unit
         private static readonly KnowledgeNode KnowledgeNode = new KnowledgeNode(1, new List<LearningObjectSummary>
         {
             new LearningObjectSummary(1, ""), new LearningObjectSummary(2, ""), new LearningObjectSummary(3, "")
-        });
+        }, 1);
 
         private static readonly Text Text1 = new Text(1, 1, "");
         private static readonly Text Text2 = new Text(2, 2, "");
