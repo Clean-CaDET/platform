@@ -4,21 +4,21 @@ using System.Linq;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.ProjectChecker
 {
-    public class ProjectAnalyzer : ChallengeFulfillmentStrategy
+    public class ProjectChecker : ChallengeFulfillmentStrategy
     {
-        public Dictionary<string, List<ChallengeFulfillmentStrategy>> SnippetApplicableStrategies { get; private set; }
+        public Dictionary<string, List<ChallengeFulfillmentStrategy>> StrategiesApplicableToSnippet { get; private set; }
 
-        private ProjectAnalyzer() { }
+        private ProjectChecker() { }
 
-        public ProjectAnalyzer(Dictionary<string, List<ChallengeFulfillmentStrategy>> snippetApplicableStrategies) : this()
+        public ProjectChecker(Dictionary<string, List<ChallengeFulfillmentStrategy>> strategiesApplicableToSnippet) : this()
         {
-            SnippetApplicableStrategies = snippetApplicableStrategies;
+            StrategiesApplicableToSnippet = strategiesApplicableToSnippet;
         }
 
         public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
         {
             var challengeHints = new HintDirectory();
-            foreach (var strategy in SnippetApplicableStrategies.SelectMany(sas => sas.Value))
+            foreach (var strategy in StrategiesApplicableToSnippet.SelectMany(sas => sas.Value))
             {
                 var result = strategy.EvaluateSubmission(GetAllClassesFromSnippets(solutionAttempt));
                 challengeHints.MergeHints(result);
@@ -28,7 +28,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
 
         public override List<ChallengeHint> GetAllHints()
         {
-            return SnippetApplicableStrategies.SelectMany(sas => sas.Value).SelectMany(cfs => cfs.GetAllHints().Where(h => h != null)).ToList();
+            return StrategiesApplicableToSnippet.SelectMany(sas => sas.Value).SelectMany(cfs => cfs.GetAllHints()).ToList();
         }
 
         private List<CaDETClass> GetAllClassesFromSnippets(List<CaDETClass> solutionAttempt)
@@ -42,7 +42,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
 
         private List<CaDETClass> GetRegularClassesFromSnippets(List<CaDETClass> solutionAttempt)
         {
-            return solutionAttempt.SelectMany(c => SnippetApplicableStrategies.Keys.Where(codeSnippetId => c.FullName.Equals(codeSnippetId)).Select(codeSnippetId => c)).ToList();
+            return solutionAttempt.SelectMany(c => StrategiesApplicableToSnippet.Keys.Where(codeSnippetId => c.FullName.Equals(codeSnippetId)).Select(codeSnippetId => c)).ToList();
         }
 
         private List<CaDETClass> GetMethodOnlyClassesFromSnippets(List<CaDETClass> solutionAttempt)
@@ -60,7 +60,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
         private List<CaDETClass> GetMemberOnlyClassesFromSnippets(List<CaDETMember> members)
         {
             List<CaDETClass> result = new();
-            foreach (var member in members.SelectMany(member => SnippetApplicableStrategies.Keys.Select(codeSnippetId => member)))
+            foreach (var member in members.SelectMany(member => StrategiesApplicableToSnippet.Keys.Select(codeSnippetId => member)))
             {
                 result.Add(new CaDETClass { Members = new List<CaDETMember> { member } });
             }

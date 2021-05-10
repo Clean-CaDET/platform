@@ -40,7 +40,7 @@ namespace SmartTutor.Database
         public DbSet<ArrangeTaskElement> ArrangeTaskElements { get; set; }
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<ChallengeFulfillmentStrategy> ChallengeFulfillmentStrategies { get; set; }
-        public DbSet<ProjectAnalyzer> ProjectAnalyzers { get; set; }
+        public DbSet<ProjectChecker> ProjectCheckers { get; set; }
         public DbSet<BasicMetricChecker> BasicMetricCheckers { get; set; }
         public DbSet<BasicNameChecker> BasicNameCheckers { get; set; }
         public DbSet<MetricRangeRule> MetricRangeRules { get; set; }
@@ -90,7 +90,7 @@ namespace SmartTutor.Database
 
             modelBuilder.Entity<BasicNameChecker>().ToTable("BasicNameCheckers");
             modelBuilder.Entity<BasicMetricChecker>().ToTable("BasicMetricCheckers");
-            modelBuilder.Entity<ProjectAnalyzer>().ToTable("ProjectAnalyzers");
+            modelBuilder.Entity<ProjectChecker>().ToTable("ProjectCheckers");
 
             modelBuilder.Entity<Challenge>()
                 .Property<int>("SolutionIdForeignKey");
@@ -128,17 +128,16 @@ namespace SmartTutor.Database
         private static void ConfigureProjectChecker(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ChallengeFulfillmentStrategy>()
-               .Property<string?>("SnippetApplicableCheckerForeignKey").IsRequired(false);
+               .Property<string?>("StrategiesApplicableToSnippetCheckerForeignKey").IsRequired(false);
 
-
-            modelBuilder.Entity<ProjectAnalyzer>()
-                .Property(pa => pa.SnippetApplicableStrategies)
+            modelBuilder.Entity<ProjectChecker>()
+                .Property(pc => pc.StrategiesApplicableToSnippet)
                 .IsRequired()
                 .HasConversion<string[]>(
-                    sas => ((IEnumerable)sas).Cast<object>().Select(x => x.ToString()).ToArray(),
-                    sas => sas == null
+                    sats => ((IEnumerable)sats).Cast<object>().Select(x => x.ToString()).ToArray(),
+                    sats => sats == null
                         ? new Dictionary<string, List<ChallengeFulfillmentStrategy>>()
-                        : JsonConvert.DeserializeObject<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(sas.ToString())
+                        : JsonConvert.DeserializeObject<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(sats.ToString())
             );
         }
     }
