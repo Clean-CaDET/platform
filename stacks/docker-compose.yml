@@ -56,7 +56,22 @@ services:
         delay: 5s
       restart_policy:
         condition: on-failure
-
+        
+  keycloak:
+    image: jboss/keycloak
+    networks:
+      - database
+    environment:
+      DB_VENDOR: ${KEYCLOAK_DATABASE_VENDOR}
+      DB_ADDR: ${KEYCLOAK_DATABASE_ADDR}
+      DB_DATABASE: ${KEYCLOAK_DATABASE_SCHEMA}
+      DB_USER: ${KEYCLOAK_DATABASE_USER}
+      DB_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+        
+    ports:
+      - 8085:8080
 
 volumes:
   database-data:
