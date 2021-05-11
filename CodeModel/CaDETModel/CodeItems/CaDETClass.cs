@@ -6,7 +6,7 @@ namespace CodeModel.CaDETModel.CodeItems
 {
     public class CaDETClass
     {
-        public string Name { get; internal set; }
+        public string Name { get; set; }
         public string FullName { get; set; }
 
         public string ContainerName
@@ -24,7 +24,7 @@ namespace CodeModel.CaDETModel.CodeItems
         public bool IsInnerClass => OuterClass != null;
         public List<CaDETModifier> Modifiers { get; internal set; }
         public List<CaDETMember> Members { get; set; }
-        public List<CaDETField> Fields { get; internal set; }
+        public List<CaDETField> Fields { get; set; }
         public Dictionary<CaDETMetric, double> Metrics { get; set; }
 
         public List<CaDETClass> GetFieldLinkedTypes()
