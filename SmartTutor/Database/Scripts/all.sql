@@ -873,7 +873,7 @@ INSERT INTO public."Images"(
 --== Cohesion ==- PK Node 1
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (16, 'Primeni formulu za računanje strukturalne kohezije klase i skup refaktorisanja za njeno unapređenje.', 0, 3);
+	VALUES (16, 'Primeni formulu za računanje strukturalne kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -891,13 +891,13 @@ INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (113, 'Structural Cohesion Exceptions', 16); -- TODO: Another LO that is based on text (or image)
 	
-INSERT INTO public."LearningObjectSummaries"(
+/*INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (114, 'Challenge Structural Cohesion', 16);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
-	VALUES (115, 'Challenge Structural Cohesion Solution', 16);
+	VALUES (115, 'Challenge Structural Cohesion Solution', 16); TODO*/
 	
 -- Cohesion - PK Node 1
 INSERT INTO public."LearningObjects"(
@@ -969,9 +969,9 @@ INSERT INTO public."ArrangeTaskElements"(
 INSERT INTO public."ArrangeTaskElements"(
 	"Id", "ArrangeTaskContainerId", "Text")
 	VALUES (114, 112, 'LoadInventory');
-INSERT INTO public."ProductCache"(
+INSERT INTO public."ArrangeTaskContainers"(
 	"Id", "ArrangeTaskId", "Title")
-	VALUES (113, 110, '21-30');
+	VALUES (113, 110, 'ProductCache');
 INSERT INTO public."ArrangeTaskElements"(
 	"Id", "ArrangeTaskContainerId", "Text")
 	VALUES (115, 113, '_availableProducts');
@@ -1095,35 +1095,44 @@ INSERT INTO public."QuestionAnswers"(
 --== Cohesion ==- PK Node 2
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (17, 'Primeni formulu za računanje semantičke kohezije klase i skup refaktorisanja za njeno unapređenje.', 0, 3);
+	VALUES (17, 'Primeni formulu za računanje semantičke kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
-	VALUES (120, 'Semantic Cohesion Advanced Example', 17); -- Video.
+	VALUES (120, 'Semantic Cohesion Advanced Example', 17);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
-	VALUES (121, 'Semantic Cohesion Formula', 17);
+	VALUES (121, 'Semantic Cohesion Formula', 17); -- TODO: Zadatak (npr. ArrangeTask za odgovornosti).
+	
+/*INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (122, 'Challenge Semantic Cohesion', 17);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
-	VALUES (122, 'Semantic Cohesion Calculation', 17); -- Opis slike kao bullet list i pitanje.
-	
-INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description", "KnowledgeNodeId")
-	VALUES (123, 'Challenge Semantic Cohesion', 17);
-	
-INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description", "KnowledgeNodeId")
-	VALUES (124, 'Challenge Semantic Cohesion Solution', 17);
+	VALUES (123, 'Challenge Semantic Cohesion Solution', 17);TODO*/
 	
 -- Cohesion - PK Node 2
-
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (120, 120);
+INSERT INTO public."Videos"(
+	"Id", "Url")
+	VALUES (120, 'https://www.youtube.com/watch?v=qE-Gmu_YuQE'); -- TODO: RS
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (121, 121);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (121, 'https://i.ibb.co/HzzCFVC/RS-semantic-cohesion.png', 'Nepreciznost ove formule potiče od labave definicije "odgovornosti" i semantičkog značenja koji dodeljujemo nekom parčetu koda. Problem je dodatno otežan što se prati izvršavanje date odgovornosti na nivou čitavog sistema, a ne samo posmatranog modula.');
+	--TODO PK1 and PK2 challenges
 
 --== Cohesion ==- CK Node
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (18, 'Razumi značaj kohezivnih modula za održivi razvoj softvera.', 0, 3);
+	VALUES (18, 'Razumi značaj kohezivnih modula za održivi razvoj softvera.', 2, 3);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -1139,8 +1148,41 @@ INSERT INTO public."LearningObjectSummaries"(
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
-	VALUES (133, 'Cohesion Practical Implications', 18); -- Story
+	VALUES (133, 'Cohesion Recap', 18);
+
+
+-- Cohesion -- CK Node
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (130, 130);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (130, 'Programski kod je mehanizam putem kog komuniciramo sa računarom. U složenom softveru, istovremeno vodimo više razgovora. Dogovaramo se kako da bezbedno transportujemo podatke, kako da keširamo odgovore na zahteve, šta čini validan unos i koji su koraci odabrane poslovne kalkulacije.
 	
-INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description", "KnowledgeNodeId")
-	VALUES (134, 'Cohesion Recap', 18);
+Polazeći od ove analogije, možemo da posmatramo sistem izgrađen od nisko-kohezivnih modula kao glasnu žurku gde se mnoge glasne konverzacije vode. U takvom ambijentu je teško fokusirati se na jedan razgovor i često čujemo pogrešne reši (ili ne čujemo pa klimamo glavom kao da je sve jasno).
+	
+Naspram toga, sistem izgrađen od visoko-kohezivnih modula je poput kvalitetnog foruma za onlajn diskusiju. Svaki segment foruma je fokusiran na jednu temu, tako da je lako ispratiti o čemu se priča. Kada je neophodno pronaći podatak o nekoj temi, lako je izdvojiti relevantni deo foruma.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (131, 131);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (131, 'https://i.ibb.co/6wH5NrY/RS-dung.png', 'Lepljivi moduli su "utility" i "misc" paketi, kao i "Manager" i "Service" klase. Zbog svog generičnog imena, lako je opravdati bilo koji dodatak u ovakav modul - što postavlja pitanje da li se neko parče logike nalazi na smislenom mestu ili u kontejneru koji zovemo "ostalo"?');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (132, 132);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (132, 'Kroz ovu lekciju smo se u značajnoj meri fokusirali na koheziju klase i veza između njenih elemenata. Možemo ukratko sagledati jednostavnije i složenije module i kako se kohezija odnosi na njih.
+	
+- Funkcije kao najjednostavniji autonomni modul ima visoku koheziju ako njene instrukcije kolektivno izvršavaju jedan zadatak. Funkcija sa niskom kohezijom često poseduje "regione" instrukcija (odvojene komentarom ili praznim redom), gde se svaki region bavi posebnim zadatkom. U goroj varijanti, ovi regioni su isprepletani i teško je odrediti koje sve zadatke vrši funkcija. Kod funkcija je semantička kohezija značajnija metrika jer je teško definisati strukturalnu metriku za veze između instrukcija.
+- Visoko-kohezivni paketi podrazumevaju kolekciju klasa koje rade zajedno kako bi ostvarili neki cilj višeg nivoa apstrakcije. Ovakav paket izvršava značajan deo poslovne ili aplikativne logike uz minimalnu podršku drugih paketa. Pored semantičke kohezije, moguće je uposliti strukturalne metrike koje određuju spregnutost između klasa (engl. *Coupling between objects*; *CBO*). Dobro formiran paket će imati dosta više sprega između objekata koji su deo tog paketa nego između unutrašnjih i spoljašnjih objekata. Ovakve pakete je jednostavno promovisati u zasebne aplikacije ili mikroservise ukoliko postoji potreba za time.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (133, 133);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (133, 'TODO');
