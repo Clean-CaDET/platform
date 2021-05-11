@@ -806,3 +806,341 @@ INSERT INTO public."QuestionAnswers"(
 INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
 	VALUES (26, 'Kada pišemo čiste funkcije, naši klijenti mogu da čitaju i razumeju naš kod.', false, 'Izjava nije tačna. Čiste funkcije koje opisuju poslovnu logiku treba da budu razumljive našim klijentima. Međutim, ne treba zaboraviti značajan deo logike koja će omogućiti obradu HTTP zahteva, interakciju sa bazom, kriptografiju i ostale tehničke detalje koji su poznati inženjnerima softvera, ali ne i ljudima za koje se pravi softver.', 66);
+
+
+--== Cohesion ==- FK Node	
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (15, 'Definiši razliku između strukturalne i semantičke kohezije.', 0, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (100, 'Semantic Cohesion Definition', 15);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (101, 'Semantic Cohesion Example', 15);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (102, 'Structural Cohesion Definition', 15);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (103, 'Structural Cohesion Example', 15);
+	
+
+-- Cohesion - FK Node
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (100, 100);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (100, 'Kohezija modula definiše koliko njegovi elementi formiraju značajnu i atomičnu celinu. 
+
+Elementi *visoko-kohezivnog modula* smisleno "pripadaju zajedno" i zajedno ostvaruju jasno definisan zadatak. Za ovakve module kažemo da imaju jednu odgovornost. Tako instrukcije koje čine visoko-kohezivnu funkciju zajedno izvršavaju jedan zadatak, dok klasa sadrži metode koje su usko povezane i zajedno izvršavaju jednu odgovornost. Takve module je lakše imenovati jer ime definiše tu odgovornost, odnosno zadatak koji modul vrši.
+
+*Nisko-kohezivni moduli* rade više stvari i čine skup slabo povezanih elemenata. Klasa koja se bavi obradom HTTP zahteva, radom sa datotekama i poslovnom logikom sadrži više značajnih celina u sebi, odgovara na više odgovornosti i kao celina ima nisku koheziju.
+
+Tip kohezije koji smo opisali do sada nazivamo **semantička kohezija**. Pod semantikom smatramo značenje koje pridodajemo određenom segmentu koda - nešto što definišemo kroz njegovo ime i zadatke, odgovornosti ili ciljeve koje dati kod treba da ispuni. Pošto je semantika zasnovana na jeziku kojim se služimo i zavisi od domena za koji pravimo softver, semantičku koheziju je izazovno odrediti.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (101, 101);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (101, 'https://i.ibb.co/56Fzt6L/RS-semantic-example.png', 'Leva klasa izvršava par odgovornosti - više nego što njeno ime ističe.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (102, 102);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (102, 'Kohezija modula se može definisati kao strukturalna metrika. Primeri jednostavnih strukturalnih metrika su broj linija koda klase (engl. *lines of code*; *LOC*) i broj metoda klase (engl. *number of methods defined*; *NMD*).
+
+Kohezija ili nedostatak kohezije (engl. *Lack of cohesion of methods*; *LCOM*) je složenija strukturalna metrika koja određuje stepen "umreženosti" elemenata modula. Ovo podrazumeva brojanje veza između elemenata, gde bi primer veze kod klase bio pristup atributa od strane metode.
+
+Visoko-kohezivne klase imaju gustu mrežu veza, gde će većina metoda koristiti većinu atributa. Nisko-kohezivne klase imaju retku mrežu, gde će većina metoda pristupati manjem podskupu atributa.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (103, 103);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (103, 'https://i.ibb.co/QQ7XDK5/structural-cohesion-example.png', 'Koja klasa ima gušću mrežu? Kako bismo refaktorisali klasu sa niskom kohezijom?');
+	
+
+--== Cohesion ==- PK Node 1
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (16, 'Primeni formulu za računanje strukturalne kohezije klase i skup refaktorisanja za njeno unapređenje.', 0, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (110, 'Structural Cohesion Advanced Example', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (111, 'Structural Cohesion Formula', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (112, 'Structural Cohesion Calculation', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (113, 'Structural Cohesion Exceptions', 16); -- TODO: Another LO that is based on text (or image)
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (114, 'Challenge Structural Cohesion', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (115, 'Challenge Structural Cohesion Solution', 16);
+	
+-- Cohesion - PK Node 1
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (110, 110);
+INSERT INTO public."ArrangeTasks"(
+	"Id", "Text")
+	VALUES (110, 'Ispitaj sledeću klasu:
+	
+    class StoreApplication
+    {
+        private string _fileLocation;
+        private string _lineSeparator;
+        private List<Product> _availableProducts;
+    
+        //Constructor omitted for brevity.
+        public void RefreshInventory()
+        {
+            File.Create(_fileLocation);
+        }
+
+        public void LoadInventory()
+        {
+            string[] lines = File.ReadAllLines(_fileLocation);
+            foreach (string line in lines)
+            {
+                string[] productElements = line.Split(_lineSeparator);
+                _availableProducts.Add(new Product(productElements));
+            }
+        }
+
+        public Product GetProduct(string name)
+        {
+            foreach (var product in _availableProducts)
+            {
+                if (product.Name.Equals(name)) return product;
+            }
+            return null;
+        }
+
+        public List<Product> GetProductsCheaperThan(double price)
+        {
+            List<Product> retVal = new List<Product>();
+            foreach (var product in _availableProducts)
+            {
+                if (product.Price < price) retVal.Add(product);
+            }
+
+            return retVal;
+        }
+    }
+
+Ako posmatramo strukturalnu koheziju klase kao broj veza (pristupa polja od strane metode) u klasi, rasporedi navedena polja i atribute u sledeće klase da proizvedeš što kohezivnije klase.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (111, 110, 'StoreApplication');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (112, 110, 'ProductStorage');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (111, 112, '_fileLocation');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (112, 112, '_lineSeparator');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (113, 112, 'RefreshInventory');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (114, 112, 'LoadInventory');
+INSERT INTO public."ProductCache"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (113, 110, '21-30');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (115, 113, '_availableProducts');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (116, 113, 'GetProduct');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (117, 113, 'GetProductsCheaperThan');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (111, 111);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (111, 'https://i.ibb.co/w6T0Mg5/RS-structural-formula.png', 'Izračunaj vrednost strukturalne kohezije za prethodni primer (pre i posle refaktorisanja).');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (112, 112);
+INSERT INTO public."Questions"(
+	"Id", "Text")
+	VALUES (112, 'Primeni prethodnu formulu da izračunaš strukturalnu koheziju za sledeću klasu:
+	
+	class StudentEnrollments
+    {
+        private List<Course> _activeCourses;
+        private List<Course> _completedCourses;
+
+        //Constructor omitted for brevity.
+        public int GetActiveCoursesESPB()
+        {
+            int totalEspb = 0;
+            foreach (Course course in _activeCourses)
+            {
+                totalEspb += course.ESPB;
+            }
+            return totalEspb;
+        }
+
+        public void EnrollInCourse(Course newCourse)
+        {
+            if (GetActiveCoursesESPB() + newCourse.ESPB > EnrollmentConstants.MAX_ALLOWED_ACTIVE_ESPB)
+                throw new InsufficientESPBRemainingException();
+
+            foreach (Course prerequisite in newCourse.PrerequisiteCourses)
+            {
+                if(_completedCourses.Contains(prerequisite)) continue;
+                throw new PrerequisiteCourseNotCompletedException();
+            }
+
+            _activeCourses.Add(newCourse);
+        }
+    }
+	');
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (110, 'Kohezija je 0.', false, '', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (111, 'Kohezija je 0.25.', false, '', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (112, 'Kohezija je 0.5.', false, '', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (113, 'Kohezija je 0.75.', true, 'Ovaj odgovor je ispravan. Klasa ima 2 metode i 2 polja. EnrollInCourse koristi oba polja, dok GetActiveCoursesESPB koristi samo jedno. Primenom formule dobijamo (2+1)/(2*2) = 0.75.', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (114, 'Kohezija je 1.', false, '', 112);
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (113, 113);
+INSERT INTO public."Questions"(
+	"Id", "Text")
+	VALUES (113, 'Primeni prethodnu formulu da izračunaš strukturalnu koheziju za sledeće klase:
+	
+	class Course
+    {
+        private string _name;
+		private int _espb;
+		
+		public string GetName()
+		{
+		    return _name;
+		}
+		
+		public int GetEspb()
+		{
+		    return _espb;
+		}
+    }
+	
+	class CourseValidator
+	{
+        public bool IsValid(Course c)
+		{
+		    if(c.GetName() == null || c.GetName().Equals("")) return false;
+			return c.GetEspb() > 0;
+		}
+	}
+	');
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (120, 'Kohezija Course klase je 0.5, a CourseValidator klase je 0.', false, '', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (121, 'Kohezija Course klase je 0, a CourseValidator klase nije moguće izračunati.', false, '', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (122, 'Kohezija Course klase je 0.5, a CourseValidator klase nije moguće izračunati.', true, 'Ova izjava je tačna. Kroz ovaj primer uočavamo okolnosti u kojima strukturalna kohezija ne daje značajan podatak. Ako je klasa funkcionalna klasa (sadrži samo metode bez polja) formula koju koristimo nije primenljiva jer posmatra vezu kao spoj polja i metode. Ako je klasa suštinski struktura podataka (ima samo polja uz getter i setter metode) kohezija je niska i mogli bismo je povećati podelom u klase koje imaju po 1 polje, što bi bilo besmisleno. Iz navedenog vidimo da je strukturalna kohezija korisna samo kada radimo sa "pravim objektima" - kolekcijom atributa i metoda koje koriste veći broj atributa da izvrše zadatak i kolektivno ispune neku odgovornost.', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (123, 'Kohezija Course i CourseValidator klase je 0.', false, '', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (124, 'Kohezija Course klase je 0.5, a CourseValidator klase je 1.', false, '', 113);
+
+
+--== Cohesion ==- PK Node 2
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (17, 'Primeni formulu za računanje semantičke kohezije klase i skup refaktorisanja za njeno unapređenje.', 0, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (120, 'Semantic Cohesion Advanced Example', 17); -- Video.
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (121, 'Semantic Cohesion Formula', 17);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (122, 'Semantic Cohesion Calculation', 17); -- Opis slike kao bullet list i pitanje.
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (123, 'Challenge Semantic Cohesion', 17);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (124, 'Challenge Semantic Cohesion Solution', 17);
+	
+-- Cohesion - PK Node 2
+
+
+--== Cohesion ==- CK Node
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (18, 'Razumi značaj kohezivnih modula za održivi razvoj softvera.', 0, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (130, 'Cohesion Analogy', 18);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (131, 'Cohesion Adhesion', 18);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (132, 'Cohesion Big Picture', 18); -- Paketi servisi.
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (133, 'Cohesion Practical Implications', 18); -- Story
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (134, 'Cohesion Recap', 18);
