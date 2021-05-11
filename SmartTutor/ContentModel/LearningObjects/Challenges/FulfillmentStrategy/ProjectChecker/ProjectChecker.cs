@@ -15,56 +15,37 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
             StrategiesApplicableToSnippet = strategiesApplicableToSnippet;
         }
 
-        public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
-        {
-            var challengeHints = new HintDirectory();
-            foreach (var strategy in StrategiesApplicableToSnippet.SelectMany(sas => sas.Value))
-            {
-                var result = strategy.EvaluateSubmission(GetAllClassesFromSnippets(solutionAttempt));
-                challengeHints.MergeHints(result);
-            }
-            return challengeHints;
-        }
-
         public override List<ChallengeHint> GetAllHints()
         {
             return StrategiesApplicableToSnippet.SelectMany(sas => sas.Value).SelectMany(cfs => cfs.GetAllHints()).ToList();
         }
 
-        private List<CaDETClass> GetAllClassesFromSnippets(List<CaDETClass> solutionAttempt)
+        public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
         {
-            List<CaDETClass> classesFromSnippets = new();
-            classesFromSnippets.AddRange(GetRegularClassesFromSnippets(solutionAttempt));
-            classesFromSnippets.AddRange(GetMethodOnlyClassesFromSnippets(solutionAttempt));
-            classesFromSnippets.AddRange(GetConstructorOnlyClassesFromSnippets(solutionAttempt));
-            return classesFromSnippets;
-        }
-
-        private List<CaDETClass> GetRegularClassesFromSnippets(List<CaDETClass> solutionAttempt)
-        {
-            return solutionAttempt.SelectMany(c => StrategiesApplicableToSnippet.Keys.Where(codeSnippetId => c.FullName.Equals(codeSnippetId)).Select(codeSnippetId => c)).ToList();
-        }
-
-        private List<CaDETClass> GetMethodOnlyClassesFromSnippets(List<CaDETClass> solutionAttempt)
-        {
-            var methods = solutionAttempt.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Method))).ToList();
-            return GetMemberOnlyClassesFromSnippets(methods);
-        }
-
-        private List<CaDETClass> GetConstructorOnlyClassesFromSnippets(List<CaDETClass> solutionAttempt)
-        {
-            var constructors = solutionAttempt.SelectMany(c => c.Members.Where(m => m.Type.Equals(CaDETMemberType.Constructor))).ToList();
-            return GetMemberOnlyClassesFromSnippets(constructors);
-        }
-
-        private List<CaDETClass> GetMemberOnlyClassesFromSnippets(List<CaDETMember> members)
-        {
-            List<CaDETClass> result = new();
-            foreach (var member in members.SelectMany(member => StrategiesApplicableToSnippet.Keys.Select(codeSnippetId => member)))
+            var challengeHints = new HintDirectory();
+            foreach (var codeSnippetId in StrategiesApplicableToSnippet.Keys)
             {
-                result.Add(new CaDETClass { Members = new List<CaDETMember> { member } });
+                var codeSnippet = FindCodeSnippet(codeSnippetId, solutionAttempt);
+                foreach (var strategy in StrategiesApplicableToSnippet[codeSnippetId])
+                {
+                    challengeHints.MergeHints(strategy.EvaluateSubmission(new List<CaDETClass>() { codeSnippet }));
+                }
             }
-            return result;
+            return challengeHints;
+        }
+
+        private CaDETClass FindCodeSnippet(string codeSnippetId, List<CaDETClass> solutionAttempt)
+        {
+            foreach (var caDETClass in solutionAttempt.Where(caDETClass => codeSnippetId.Equals(caDETClass.FullName)))
+                return caDETClass;
+
+            foreach (var member in solutionAttempt.SelectMany(caDETClass => caDETClass.Members.Where(
+                member => codeSnippetId.Equals(member.Signature()) && !member.Type.Equals(CaDETMemberType.Property))))
+            {
+                return new CaDETClass { Members = new List<CaDETMember> { member } };
+            }
+
+            throw new KeyNotFoundException("Code snippet id wasn't found.");
         }
     }
 }
