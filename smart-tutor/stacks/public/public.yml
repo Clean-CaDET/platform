@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  gateway:
+    image: cleancadet/gateway:${GATEWAY_VERSION-latest}
+    networks:
+      - public
+      - application
+    ports:
+      - "${GATEWAY_PUBLISHED_PORT-8080}:8080"
+    configs:
+      - source: nginx.conf
+        target: /etc/nginx/nginx.conf
+      - source: api_gateway.conf
+        target: /etc/nginx/api_gateway.conf
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+
+configs:
+  nginx.conf:
+    name: nginx.conf-${nginx_conf_DIGEST}
+    file: ./gateway/files/config/nginx.conf
+  api_gateway.conf:
+    name: api_gateway.conf-${api_gateway_conf_DIGEST}
+    file: ./gateway/files/config/api_gateway.conf
+
+networks:
+  public:
+    name: clean_cadet_public_${STAGE-dev}
+    driver: overlay
+    attachable: true
+  application:
+    name: clean_cadet_application_${STAGE-dev}
+    driver: overlay
+    external: true

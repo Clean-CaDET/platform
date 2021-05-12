@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:${POSTGRES_VERSION-13}
+    networks:
+      - persistence
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/database-password
+      POSTGRES_USER_FILE: /run/secrets/database-username
+      POSTGRES_DB_FILE: /run/secrets/database-schema
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    secrets:
+      - source: database-password
+        target: database-password
+      - source: database-username
+        target: database-username
+      - source: database-schema
+        target: database-schema
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  database-data:
+    name: clean_cadet_database_${STAGE:-dev}
+
+secrets:
+  database-password:
+    name: clean_cadet_database_password_${STAGE-dev}
+    external: true
+  database-username:
+    name: clean_cadet_database_username_${STAGE-dev}
+    external: true
+  database-schema:
+    name: clean_cadet_database_schema_${STAGE-dev}
+    external: true
+
+networks:
+  persistence:
+    name: clean_cadet_persistence_${STAGE-dev}
+    driver: overlay
+    attachable: true
