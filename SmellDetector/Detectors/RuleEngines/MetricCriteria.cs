@@ -1,7 +1,5 @@
-﻿using System;
+﻿using CodeModel.CaDETModel.CodeItems;
 using System.Collections.Generic;
-using CodeModel.CaDETModel.CodeItems;
-using SmellDetector.Controllers;
 
 namespace SmellDetector.Detectors.RuleEngines
 {

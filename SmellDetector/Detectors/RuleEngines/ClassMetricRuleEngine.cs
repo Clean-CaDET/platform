@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CodeModel.CaDETModel.CodeItems;
-using SmellDetector.Controllers;
+﻿using CodeModel.CaDETModel.CodeItems;
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmellDetector.Detectors.RuleEngines
 {
@@ -83,10 +81,10 @@ namespace SmellDetector.Detectors.RuleEngines
             _dynamicRules = new List<Rule>();
         }
 
-        private void DefineTopXMetricRules(List<CaDETClassDTO> caDetClassDtoList)
+        private void DefineTopXMetricRules(List<CaDETClass> classes)
         {
-            int indexOfSignificativeMetricValue = CalculateIndexBasedOnPercentage(caDetClassDtoList, 20);
-            double atfdThreshold = FindTopXMetricValuesInProject(caDetClassDtoList, CaDETMetric.ATFD, indexOfSignificativeMetricValue);
+            int indexOfSignificantMetricValue = CalculateIndexBasedOnPercentage(classes, 20);
+            double atfdThreshold = FindTopXMetricValuesInProject(classes, CaDETMetric.ATFD, indexOfSignificantMetricValue);
 
             Rule rule1 = new Rule("10.1016/j.jss.2006.10.018",
                                                 new AndCriteria(new AndCriteria(new MetricCriteria(CaDETMetric.ATFD, OperationEnum.GREATER_OR_EQUALS, atfdThreshold),
@@ -95,7 +93,7 @@ namespace SmellDetector.Detectors.RuleEngines
                                                                 new MetricCriteria(CaDETMetric.TCC, OperationEnum.LESS_THAN, 0.33))),
                                 SmellType.GOD_CLASS);
 
-            double wmcThreshold = FindTopXMetricValuesInProject(caDetClassDtoList, CaDETMetric.WMC, 10);
+            double wmcThreshold = FindTopXMetricValuesInProject(classes, CaDETMetric.WMC, 10);
 
             Rule rule2 = new Rule("10.1109/TOOLS.2001.941671",
                                 new OrCriteria(new OrCriteria(new MetricCriteria(CaDETMetric.ATFD, OperationEnum.GREATER_THAN, 3),
@@ -107,47 +105,39 @@ namespace SmellDetector.Detectors.RuleEngines
 
         }
 
-        private double FindTopXMetricValuesInProject(List<CaDETClassDTO> caDetClassDtoList, CaDETMetric metric, int indexOfMetricValue)
+        private double FindTopXMetricValuesInProject(List<CaDETClass> caDetClassDtoList, CaDETMetric metric, int indexOfMetricValue)
         {
-            List<double> metricValues = caDetClassDtoList.Select(c => c.CodeSnippetMetrics[metric]).ToList();
+            List<double> metricValues = caDetClassDtoList.Select(c => c.Metrics[metric]).ToList();
             metricValues.Sort();
             return metricValues[indexOfMetricValue];
         }
 
-        private int CalculateIndexBasedOnPercentage(List<CaDETClassDTO> caDetClassDtoList, int percentage)
+        private int CalculateIndexBasedOnPercentage(List<CaDETClass> caDetClassDtoList, int percentage)
         {
             return caDetClassDtoList.Count * percentage / 100;
         }
 
-        public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDtoList)
+        public PartialSmellDetectionReport FindIssues(List<CaDETClass> classes)
         {
             //DefineTopXMetricRules(caDetClassDtoList);
 
-            PartialSmellDetectionReport partialReport = new PartialSmellDetectionReport();
+            var partialReport = new PartialSmellDetectionReport();
 
-            foreach(CaDETClassDTO caDETClassDTO in caDetClassDtoList)
+            foreach(var cadetClass in classes)
             {
-                List<Issue> issues = ApplyRule(caDETClassDTO);
-                foreach (Issue issue in issues)
+                var issues = ApplyRule(cadetClass);
+                foreach (var issue in issues.Where(issue => issue != null))
                 {
-                    if (issue != null)
-                    {
-                        partialReport.AddIssue(issue.CodeSnippetId, issue);
-                    }
+                    partialReport.AddIssue(issue.CodeSnippetId, issue);
                 }
             }
             return partialReport;
         }
 
-        public PartialSmellDetectionReport FindIssues(CaDETClassDTO caDetClassDto)
+        private List<Issue> ApplyRule(CaDETClass c)
         {
-            throw new NotImplementedException();
-        }
-
-        private List<Issue> ApplyRule(CaDETClassDTO c)
-        {
-            List<Issue> issues = _rules.Select(r => r.Validate(c.FullName, c.CodeSnippetMetrics)).ToList();
-            issues.AddRange(_dynamicRules.Select(r => r.Validate(c.FullName, c.CodeSnippetMetrics)).ToList());
+            List<Issue> issues = _rules.Select(r => r.Validate(c.FullName, c.Metrics)).ToList();
+            issues.AddRange(_dynamicRules.Select(r => r.Validate(c.FullName, c.Metrics)).ToList());
             return issues;
         }
     }
