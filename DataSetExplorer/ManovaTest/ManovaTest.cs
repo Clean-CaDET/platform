@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CodeModel.CaDETModel.CodeItems;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
 
 namespace DataSetExplorer.ManovaTest
 {
@@ -22,25 +22,23 @@ namespace DataSetExplorer.ManovaTest
             {
                 _metrics += metric + " + ";
             }
-            _metrics = _metrics.Substring(0, _metrics.Length - 2);
+            _metrics = _metrics[0..^2];
             _independentVariable = independentVariable;
         }
 
         public void RunTest()
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = _pythonPath;
-            startInfo.Arguments = $"{_manovaScriptFile} {_annotatedInstancesFile} \"{_metrics}\" {_independentVariable}";
-            startInfo.UseShellExecute = false;
-            startInfo.RedirectStandardOutput = true;
-            using (Process process = Process.Start(startInfo))
+            ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                using (StreamReader reader = process.StandardOutput)
-                {
-                    string result = reader.ReadToEnd();
-                    Console.Write(result);
-                }
-            }
+                FileName = _pythonPath,
+                Arguments = $"{_manovaScriptFile} {_annotatedInstancesFile} \"{_metrics}\" {_independentVariable}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true
+            };
+            using Process process = Process.Start(startInfo);
+            using StreamReader reader = process.StandardOutput;
+            string result = reader.ReadToEnd();
+            Console.Write(result);
         }
     }
 }
