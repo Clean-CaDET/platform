@@ -74,6 +74,10 @@ namespace SmartTutor.Database
                 .HasOne(b => b.Solution)
                 .WithMany()
                 .HasForeignKey("SolutionIdForeignKey");
+
+            modelBuilder.Entity<Learner>()
+                .OwnsOne(l => l.Workspace)
+                .Property(w => w.Path).HasColumnName("WorkspacePath");
         }
 
         private static void ConfigureBasicMetricChecker(ModelBuilder modelBuilder)

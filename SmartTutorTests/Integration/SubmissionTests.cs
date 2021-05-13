@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using SmartTutor.Controllers;
@@ -6,11 +7,10 @@ using SmartTutor.Controllers.DTOs.Content;
 using SmartTutor.Controllers.DTOs.SubmissionEvaluation;
 using SmartTutor.Database;
 using SmartTutor.ProgressModel;
+using SmartTutor.Tests.DataFactories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using SmartTutorTests.DataFactories;
 using Xunit;
 
 namespace SmartTutor.Tests.Integration
@@ -137,7 +137,7 @@ namespace SmartTutor.Tests.Integration
         };
 
         [Fact]
-        public void Rejects_bad_submission()
+        public void Rejects_bad_arrange_task_submission()
         {
             using var scope = _factory.Services.CreateScope();
             var controller = new SubmissionController(_factory.Services.GetRequiredService<IMapper>(), scope.ServiceProvider.GetRequiredService<ISubmissionService>());
@@ -208,6 +208,46 @@ namespace SmartTutor.Tests.Integration
                 }
             }
         };
+
+        [Fact]
+        public void Rejects_bad_challenge_submission()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var controller = new SubmissionController(_factory.Services.GetRequiredService<IMapper>(), scope.ServiceProvider.GetRequiredService<ISubmissionService>());
+            var submission = new ChallengeSubmissionDTO
+            {
+                ChallengeId = 41,
+                LearnerId = 1
+            };
+
+            controller.SubmitChallenge(submission).Result.ShouldBeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public void Gets_syntax_error_hint()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var controller = new SubmissionController(_factory.Services.GetRequiredService<IMapper>(), scope.ServiceProvider.GetRequiredService<ISubmissionService>());
+            var submission = new ChallengeSubmissionDTO
+            {
+                ChallengeId = 41,
+                LearnerId = 1,
+                SourceCode = new []
+                {
+                    @"public class Test
+                    {
+                        private string name;
+                        public Test() { name = test }
+                    }"
+                }
+            };
+
+            var actualEvaluation = ((OkObjectResult)controller.SubmitChallenge(submission).Result).Value as ChallengeEvaluationDTO;
+
+            actualEvaluation.ApplicableHints.Count.ShouldBe(1);
+            var errors = actualEvaluation.ApplicableHints[0].Content;
+            errors.Split("\n").Length.ShouldBe(1);
+        }
 
     }
 }

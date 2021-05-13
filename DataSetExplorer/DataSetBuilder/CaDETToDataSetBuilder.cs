@@ -1,10 +1,10 @@
-﻿using RepositoryCompiler.CodeModel;
-using RepositoryCompiler.CodeModel.CaDETModel;
-using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel;
+using CodeModel.CaDETModel;
+using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSetBuilder.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DataSetExplorer.DataSetBuilder.Model;
 
 namespace DataSetExplorer.DataSetBuilder
 {

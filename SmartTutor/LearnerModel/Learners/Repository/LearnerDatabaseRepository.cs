@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SmartTutor.LearnerModel.Learners.Repository
 {
-    public class LearnerDatabaseRepository: ILearnerRepository
+    public class LearnerDatabaseRepository : ILearnerRepository
     {
         private readonly SmartTutorContext _dbContext;
 

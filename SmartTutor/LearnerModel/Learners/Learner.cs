@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SmartTutor.LearnerModel.Workspaces;
+using System.Collections.Generic;
 
 namespace SmartTutor.LearnerModel.Learners
 {
@@ -8,10 +9,12 @@ namespace SmartTutor.LearnerModel.Learners
         public string StudentIndex { get; private set; }
 
         // TODO: Entity framework cannot map dictionaries, requires refactoring
+        // TODO: This model along with all other behavioral models should be extracted into a separate class.
         public int VisualScore { get; private set; }
         public int AuralScore { get; private set; }
         public int ReadWriteScore { get; private set; }
         public int KinaestheticScore { get; private set; }
+        public Workspace Workspace { get; set; }
 
         public Learner(int id, int visualScore, int auralScore, int readWriteScore, int kinaestheticScore)
         {

@@ -1,10 +1,11 @@
-﻿using System;
-using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+﻿using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,9 +27,10 @@ namespace SmartTutor.ProgressModel
             Challenge challenge = _learningObjectRepository.GetChallenge(submission.ChallengeId);
             if (challenge == null) return null;
 
-            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode);
+            //var tester = new WorkspaceFunctionalityTester(_submissionRepository.GetWorkspacePath(submission.LearnerId));
+            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode, null);
 
-            if(evaluation.ChallengeCompleted) submission.MarkCorrect();
+            if (evaluation.ChallengeCompleted) submission.MarkCorrect();
             _submissionRepository.SaveChallengeSubmission(submission);
 
             //TODO: Tie in with Instructor and handle learnerId to get suitable LO for LO summaries.
@@ -36,7 +38,7 @@ namespace SmartTutor.ProgressModel
                 _learningObjectRepository.GetFirstLearningObjectsForSummaries(
                     evaluation.ApplicableHints.GetDistinctLearningObjectSummaries());
             evaluation.SolutionLO = _learningObjectRepository.GetLearningObjectForSummary(challenge.Solution.Id);
-            
+
             return evaluation;
         }
 
@@ -45,7 +47,7 @@ namespace SmartTutor.ProgressModel
             var question = _learningObjectRepository.GetQuestion(submission.QuestionId);
             var evaluations = question.EvaluateAnswers(submission.SubmittedAnswerIds);
 
-            if(evaluations.Select(a => a.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
+            if (evaluations.Select(a => a.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
             _submissionRepository.SaveQuestionSubmission(submission);
 
             return evaluations;
@@ -55,9 +57,9 @@ namespace SmartTutor.ProgressModel
         {
             var arrangeTask = _learningObjectRepository.GetArrangeTask(submission.ArrangeTaskId);
             var evaluations = arrangeTask.EvaluateSubmission(submission.Containers);
-            if(evaluations == null) throw new InvalidOperationException("Invalid submission of arrange task.");
+            if (evaluations == null) throw new InvalidOperationException("Invalid submission of arrange task.");
 
-            if(evaluations.Select(e => e.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
+            if (evaluations.Select(e => e.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
             _submissionRepository.SaveArrangeTaskSubmission(submission);
 
             return evaluations;

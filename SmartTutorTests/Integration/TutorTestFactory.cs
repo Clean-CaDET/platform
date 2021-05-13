@@ -7,7 +7,6 @@ using SmartTutor.Database;
 using System;
 using System.IO;
 using System.Linq;
-using SmartTutor.ProgressModel;
 
 namespace SmartTutor.Tests.Integration
 {
@@ -55,7 +54,7 @@ namespace SmartTutor.Tests.Integration
         private string CreateConnectionStringForTest()
         {
             var server = "localhost";
-            var port = "54321";
+            var port = "5432";
             var database = "smart-tutor-test";
             var user = "postgres";
             var password = "super";

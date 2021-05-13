@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RepositoryCompiler.Controllers;
+﻿using CodeModel;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
-using SmartTutorTests.DataFactories;
+using SmartTutor.Tests.DataFactories;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit
@@ -24,7 +24,7 @@ namespace SmartTutor.Tests.Unit
                 new List<MetricRangeRule>
                 {
                     new MetricRangeRule(33703, "MELOC", 2, 5, new ChallengeHint(337002)),
-                    new MetricRangeRule(33704, "NOP", 1, 4, new ChallengeHint(6))
+                    new MetricRangeRule(33704, "NOP", 2, 4, new ChallengeHint(6))
                 }
             );
         }
@@ -33,8 +33,8 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(ChallengeTest))]
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints)
         {
-            var caDETClasses = new CodeRepositoryService().BuildClassesModel(submissionAttempt);
-            var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(caDETClasses);
+            var project = new CodeModelFactory().CreateProject(submissionAttempt);
+            var challengeEvaluation = _basicMetricChecker.EvaluateSubmission(project.Classes);
             var actualHints = challengeEvaluation.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);

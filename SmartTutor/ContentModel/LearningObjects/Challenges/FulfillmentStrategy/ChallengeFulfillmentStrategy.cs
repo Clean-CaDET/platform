@@ -1,4 +1,4 @@
-﻿using RepositoryCompiler.CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel.CaDETModel.CodeItems;
 using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
