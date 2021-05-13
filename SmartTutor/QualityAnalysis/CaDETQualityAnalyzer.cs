@@ -1,18 +1,17 @@
 ﻿using SmellDetector.Detectors;
-using System;
 
 namespace SmartTutor.QualityAnalysis
 {
-    public class CodeQualityAnalyzerService: ICodeQualityAnalyzerService
+    public class CaDETQualityAnalyzer: ICodeQualityAnalyzer
     {
-        private IDetector _smellDetector;
-        public CodeQualityAnalyzerService(IDetector smellDetector)
+        private readonly IDetector _smellDetector;
+        public CaDETQualityAnalyzer(IDetector smellDetector)
         {
             _smellDetector = smellDetector;
         }
         public CodeQualityEvaluation EvaluateCode(CodeSubmission submittedCode)
         {
-            throw new NotImplementedException();
+            var issues = _smellDetector.FindIssues(submittedCode.);
         }
     }
 }

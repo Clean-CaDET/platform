@@ -1,6 +1,6 @@
 ﻿namespace SmartTutor.QualityAnalysis
 {
-    public interface ICodeQualityAnalyzerService
+    public interface ICodeQualityAnalyzer
     {
         public CodeQualityEvaluation EvaluateCode(CodeSubmission submittedCode);
     }
