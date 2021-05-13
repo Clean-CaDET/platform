@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CodeModel.CaDETModel.CodeItems;
 using SmellDetector.Controllers;
 using SmellDetector.SmellModel;
 
@@ -17,7 +18,7 @@ namespace SmellDetector.Detectors.RuleEngines
             _smellType = smellType;
         }
 
-        public Issue Validate(String codeSnippetId, Dictionary<String, double> metrics)
+        public Issue Validate(String codeSnippetId, Dictionary<CaDETMetric, double> metrics)
         {
             if (_criteria.MeetCriteria(metrics))
             {
