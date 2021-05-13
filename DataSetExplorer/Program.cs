@@ -37,7 +37,32 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             //FindInstancesRequiringAdditionalAnnotationUseCase();
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
             //ExportAnnotatedDataSet();
-            SanityCheckForSingleAnnotator(1);
+            //SanityCheckForSingleAnnotator(1);
+            SanityCheckBetweenAnnotatorsForSeverity(1);
+        }
+
+        private static void SanityCheckBetweenAnnotatorsForSeverity(int severity)
+        {
+            var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId: null);
+
+            var exporter = new BetweenAnnotatorsSanityCheckExporter("D:/ccadet/annotations/sanity_check/Output/");
+            var manovaTest = new ManovaTest.ManovaTest();
+
+            var enumerator = dataGroupedBySmells.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var codeSmellGroup = enumerator.Current;
+                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
+
+                exporter.Export(codeSmellGroup.ToList(),
+                    "SanityCheck_" + codeSmell + "_Severity_",
+                    severity);
+
+                manovaTest.SetupTestArguments(
+                    "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Severity_" + severity + ".xlsx",
+                    codeSmellGroup.First().Item2.Keys.ToList(), "Annotator");
+                manovaTest.RunTest();
+            }
         }
 
         private static ListDictionary GetAnnotatedProjects()
@@ -49,41 +74,41 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
             projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
             projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
+            projects.Add("D:/ccadet/annotations/repos/MonoGame", "D:/ccadet/annotations/annotated/MonoGame");
+            projects.Add("D:/ccadet/annotations/repos/Osu", "D:/ccadet/annotations/annotated/Osu");
             return projects;
         }
 
         private static void SanityCheckForSingleAnnotator(int annotatorId)
         {
-            var annotationsAndMetrics = PrepareDataForExport(annotatorId);
-            var groupedBySmells = annotationsAndMetrics.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
+            var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId);
             
             var exporter = new SingleAnnotatorSanityCheckExporter("D:/ccadet/annotations/sanity_check/Output/");
             var manovaTest = new ManovaTest.ManovaTest();
 
-            var enumerator = groupedBySmells.GetEnumerator();
+            var enumerator = dataGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var codeSmellGroup = enumerator.Current;
                 var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
                 
-                exporter.Export(codeSmellGroup.ToList(), 
-                    "SanityCheck_"+ codeSmell + "_Annotator_", 
+                exporter.Export(codeSmellGroup.ToList(),
+                    "SanityCheck_" + codeSmell + "_Annotator_", 
                     annotatorId);
 
                 manovaTest.SetupTestArguments(
                     "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Annotator_" + annotatorId + ".xlsx",
-                    codeSmellGroup.First().Item2.Keys.ToList());
+                    codeSmellGroup.First().Item2.Keys.ToList(), "Annotation");
                 manovaTest.RunTest();
             }
         }
 
         private static void ExportAnnotatedDataSet()
         {
-            var dataForExport = PrepareDataForExport(annotatorId: null);
-            var groupedBySmells = dataForExport.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
+            var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId: null);
 
             var exporter = new DataSetWithMetricsExporter("D:/ccadet/annotations/annotated/Output/");
-            var enumerator = groupedBySmells.GetEnumerator();
+            var enumerator = dataGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var codeSmellGroup = enumerator.Current;
@@ -91,9 +116,9 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             }
         }
 
-        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> PrepareDataForExport(int? annotatorId)
+        private static IEnumerable<IGrouping<string, Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>> GetAnnotationsAndMetricsGroupedBySmells(int? annotatorId)
         {
-            var dataForExport = new List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>();
+            var annotationsAndMetrics = new List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>();
 
             var projects = GetAnnotatedProjects();
             foreach (var key in projects.Keys)
@@ -105,9 +130,9 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 LoadAnnotators(ref annotatedInstances);
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
                 var instanceMetrics = GetMetricsForExport(annotatedInstances, project);
-                dataForExport.AddRange(JoinAnnotationsAndMetrics(annotatedInstances, instanceMetrics));
+                annotationsAndMetrics.AddRange(JoinAnnotationsAndMetrics(annotatedInstances, instanceMetrics));
             }
-            return dataForExport;
+            return annotationsAndMetrics.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
         }
 
         private static void LoadAnnotators(ref List<DataSetInstance> annotatedInstances)
