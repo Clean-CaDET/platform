@@ -1,6 +1,5 @@
-﻿using System;
+﻿using CodeModel.CaDETModel.CodeItems;
 using System.Collections.Generic;
-using CodeModel.CaDETModel.CodeItems;
 namespace SmellDetector.Detectors.RuleEngines
 {
     public interface Criteria

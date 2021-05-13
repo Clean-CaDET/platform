@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using SmellDetector.SmellModel;
+﻿using CodeModel.CaDETModel.CodeItems;
 using SmellDetector.SmellModel.Reports;
+using System.Collections.Generic;
 
 namespace SmellDetector.Detectors
 {
     public interface IDetector
     {
-        public PartialSmellDetectionReport FindIssues(List<CaDETClassDTO> caDetClassDto);
+        public PartialSmellDetectionReport FindIssues(List<CaDETClass> classes);
 
     }
 }

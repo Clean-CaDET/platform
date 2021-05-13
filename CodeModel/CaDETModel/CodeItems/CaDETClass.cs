@@ -7,7 +7,7 @@ namespace CodeModel.CaDETModel.CodeItems
     public class CaDETClass
     {
         public string Name { get; internal set; }
-        public string FullName { get; internal set; }
+        public string FullName { get; set; }
 
         public string ContainerName
         {
@@ -25,7 +25,7 @@ namespace CodeModel.CaDETModel.CodeItems
         public List<CaDETModifier> Modifiers { get; internal set; }
         public List<CaDETMember> Members { get; internal set; }
         public List<CaDETField> Fields { get; internal set; }
-        public Dictionary<CaDETMetric, double> Metrics { get; internal set; }
+        public Dictionary<CaDETMetric, double> Metrics { get; set; }
 
         public List<CaDETClass> GetFieldLinkedTypes()
         {
