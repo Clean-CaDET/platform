@@ -1,10 +1,10 @@
-using System.Collections.Generic;
+using CodeModel.CaDETModel.CodeItems;
 using SmellDetector.Detectors;
 using SmellDetector.Detectors.RuleEngines;
-using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
+using System.Collections.Generic;
 
-namespace SmellDetector.Services
+namespace SmellDetector
 {
     public class DetectionService
     {
@@ -23,7 +23,7 @@ namespace SmellDetector.Services
             };
         }
 
-        public SmellDetectionReport GenerateSmellDetectionReport(List<CaDETClassDTO> caDetClassDto)
+        public SmellDetectionReport GenerateSmellDetectionReport(List<CaDETClass> caDetClassDto)
         {
             SmellDetectionReport smellDetectionReport = new SmellDetectionReport();
 
