@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel.CaDETModel.CodeItems;
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SmellDetector.Detectors.RuleEngines
 {
     public class MethodMetricRuleEngine : IDetector
     {
-
         private readonly List<Rule> _rules;
         private readonly List<Rule> _dynamicRules;
 
