@@ -20,13 +20,13 @@ namespace SmartTutor.InstructorModel.Instructors
             _learnerRepository = learnerRepository;
         }
 
-        public List<LearningObject> BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode)
+        public List<LearningObject> BuildNodeForLearner(int learnerId, List<LearningObjectSummary> loSummaries)
         {
             var learner = _learnerRepository.GetById(learnerId);
             var sortedPreferences = learner.VARKScore().OrderByDescending(key => key.Value).ToList();
 
             var learningObjects = new List<LearningObject>();
-            foreach (var summary in knowledgeNode.LearningObjectSummaries)
+            foreach (var summary in loSummaries)
             {
                 var learningObject = sortedPreferences
                     .Select(preference => GetLearningObjectForPreference(preference.Key, summary.Id))
@@ -54,10 +54,10 @@ namespace SmartTutor.InstructorModel.Instructors
             return _learningObjectRepository.GetLearningObjectForSummary(summaryId);
         }
 
-        public List<LearningObject> BuildSimpleNode(KnowledgeNode knowledgeNode)
+        public List<LearningObject> BuildSimpleNode(List<LearningObjectSummary> loSummaries)
         {
             return _learningObjectRepository.GetFirstLearningObjectsForSummaries(
-                knowledgeNode.LearningObjectSummaries.Select(s => s.Id).ToList());
+                loSummaries.Select(s => s.Id).ToList());
         }
     }
 }

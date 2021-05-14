@@ -2,6 +2,6 @@
 {
     public interface ICodeQualityAnalyzer
     {
-        public CodeQualityEvaluation EvaluateCode(CodeSubmission submittedCode);
+        public CodeQualityEvaluation EvaluateCode(CodeSubmission submission);
     }
 }
