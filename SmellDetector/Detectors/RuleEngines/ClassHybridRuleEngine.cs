@@ -8,42 +8,36 @@ namespace SmellDetector.Detectors.RuleEngines
 {
     public class ClassHybridRuleEngine: IDetector
     {
-        Rule _rule;
-        int _relatedSmellsCount;
+        private readonly Rule _rule;
+        private readonly int _relatedSmellsCount;
+        private readonly MethodMetricRuleEngine _methodMetricRuleEngine;
 
         public ClassHybridRuleEngine()
         {
             _rule = new Rule("",
-                            new MetricCriteria(CodeModel.CaDETModel.CodeItems.CaDETMetric.CLOC, OperationEnum.GREATER_THAN, 300),
+                            new MetricCriteria(CaDETMetric.CLOC, OperationEnum.GREATER_THAN, 300),
                             SmellType.GOD_CLASS);
             _relatedSmellsCount = 5;
+            _methodMetricRuleEngine = new MethodMetricRuleEngine();
         }
 
-        public PartialSmellDetectionReport FindIssues(List<CaDETClass> caDetClassList)
+        public PartialSmellDetectionReport FindIssues(List<CaDETClass> classes)
         {
-            PartialSmellDetectionReport partialReport = new();
+            var partialReport = new PartialSmellDetectionReport();
 
-            foreach (CaDETClass caDETClass in caDetClassList)
+            foreach (var caDETClass in classes)
             {
-                Issue metricRuleIssue = ApplyRule(caDETClass);
-                if(metricRuleIssue != null)
+                var metricRuleIssue = ApplyRule(caDETClass);
+                if (metricRuleIssue == null) continue;
+
+                var methodIssuesReport = _methodMetricRuleEngine.FindIssues(new List<CaDETClass> { caDETClass });
+                if(ClassHasEnoughLongMethods(methodIssuesReport))
                 {
-                    PartialSmellDetectionReport methodIssuesReport = CreateMethodsIssuesReport(caDETClass);
-                    if(ClassHasEnoughLongMethods(methodIssuesReport))
-                    {
-                        partialReport.AddIssue(caDETClass.FullName,
-                                                new() { IssueType = SmellType.GOD_CLASS, CodeSnippetId = caDETClass.FullName });
-                    }
+                    partialReport.AddIssue(caDETClass.FullName,
+                        new Issue { IssueType = SmellType.GOD_CLASS, CodeSnippetId = caDETClass.FullName });
                 }
             }
             return partialReport;
-        }
-
-        private PartialSmellDetectionReport CreateMethodsIssuesReport(CaDETClass caDETClass)
-        {
-            MethodMetricRuleEngine methodMetricRuleEngine = new();
-            PartialSmellDetectionReport report = methodMetricRuleEngine.FindIssues(new List<CaDETClass> { caDETClass });
-            return report;
         }
 
         private bool ClassHasEnoughLongMethods(PartialSmellDetectionReport report)
@@ -51,14 +45,10 @@ namespace SmellDetector.Detectors.RuleEngines
             int longMethodCounter = 0;
             foreach (List<Issue> issues in report.CodeItemIssues.Values)
             {
-                longMethodCounter += issues.Select(issue => issue.IssueType == SmellType.LONG_METHOD).Count();
-                if (longMethodCounter >= _relatedSmellsCount)
-                {
-                    return true;
-                }
+                longMethodCounter += issues.Count(issue => issue.IssueType == SmellType.LONG_METHOD);
             }
 
-            return false;
+            return longMethodCounter >= _relatedSmellsCount;
         }
 
         private Issue ApplyRule(CaDETClass c)
