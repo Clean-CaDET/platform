@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SmartTutor.QualityAnalysis
+namespace SmartTutor.QualityAnalysis.Repository
 {
     public interface IAdviceRepository
     {

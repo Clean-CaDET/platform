@@ -1,10 +1,10 @@
-﻿using SmellDetector;
+﻿using SmartTutor.InstructorModel.Instructors;
+using SmartTutor.QualityAnalysis.Repository;
+using SmellDetector;
 using SmellDetector.SmellModel;
 using SmellDetector.SmellModel.Reports;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.LearningObjects.Repository;
-using SmartTutor.InstructorModel.Instructors;
 
 namespace SmartTutor.QualityAnalysis
 {
@@ -20,10 +20,10 @@ namespace SmartTutor.QualityAnalysis
             _instructor = instructor;
             _smellDetectorService = new SmellDetectorService();
         }
-        public CodeQualityEvaluation EvaluateCode(CodeSubmission submission)
+        public CodeEvaluation EvaluateCode(CodeSubmission submission)
         {
             var issueReport = _smellDetectorService.AnalyzeCodeQuality(submission.SourceCode);
-            if(issueReport.IssuesForCodeSnippet.Count == 0) return new CodeQualityEvaluation();
+            if(issueReport.IssuesForCodeSnippet.Count == 0) return new CodeEvaluation();
 
             var qualityEvaluation = GatherLOSummaries(issueReport);
             var instructorLOs =
@@ -33,9 +33,9 @@ namespace SmartTutor.QualityAnalysis
             return qualityEvaluation;
         }
 
-        private CodeQualityEvaluation GatherLOSummaries(SmellDetectionReport report)
+        private CodeEvaluation GatherLOSummaries(SmellDetectionReport report)
         {
-            var qualityEvaluation = new CodeQualityEvaluation();
+            var qualityEvaluation = new CodeEvaluation();
             foreach (var codeSnippetId in report.IssuesForCodeSnippet.Keys)
             {
                 qualityEvaluation.Put(codeSnippetId, GetSummaries(report.IssuesForCodeSnippet[codeSnippetId]));

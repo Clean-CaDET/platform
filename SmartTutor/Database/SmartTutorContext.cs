@@ -11,6 +11,7 @@ using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Progress;
 using SmartTutor.ProgressModel.Submissions;
+using SmartTutor.QualityAnalysis;
 
 namespace SmartTutor.Database
 {
@@ -49,6 +50,7 @@ namespace SmartTutor.Database
         public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
         #endregion
         public DbSet<Learner> Learners { get; set; }
+        public DbSet<IssueAdvice> Advice { get; set; }
 
         public SmartTutorContext(DbContextOptions<SmartTutorContext> options) : base(options)
         {
@@ -56,13 +58,25 @@ namespace SmartTutor.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ConfigureBasicMetricChecker(modelBuilder);
-
             modelBuilder.Entity<Text>().ToTable("Texts");
             modelBuilder.Entity<Image>().ToTable("Images");
             modelBuilder.Entity<Video>().ToTable("Videos");
             modelBuilder.Entity<Question>().ToTable("Questions");
             modelBuilder.Entity<ArrangeTask>().ToTable("ArrangeTasks");
+            
+            ConfigureChallenge(modelBuilder);
+
+            modelBuilder.Entity<Learner>()
+                .OwnsOne(l => l.Workspace)
+                .Property(w => w.Path).HasColumnName("WorkspacePath");
+
+            modelBuilder.Entity<IssueAdvice>()
+                .HasMany(a => a.Summaries)
+                .WithMany("Advice");
+        }
+
+        private static void ConfigureChallenge(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Challenge>().ToTable("Challenges");
 
             modelBuilder.Entity<BasicNameChecker>().ToTable("BasicNameCheckers");
@@ -75,9 +89,7 @@ namespace SmartTutor.Database
                 .WithMany()
                 .HasForeignKey("SolutionIdForeignKey");
 
-            modelBuilder.Entity<Learner>()
-                .OwnsOne(l => l.Workspace)
-                .Property(w => w.Path).HasColumnName("WorkspacePath");
+            ConfigureBasicMetricChecker(modelBuilder);
         }
 
         private static void ConfigureBasicMetricChecker(ModelBuilder modelBuilder)

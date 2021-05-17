@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using Shouldly;
-using SmartTutor.ContentModel.LearningObjects;
-using SmartTutor.ContentModel.Lectures;
 using SmartTutor.InstructorModel.Instructors;
 using SmartTutor.QualityAnalysis;
+using SmartTutor.QualityAnalysis.Repository;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit

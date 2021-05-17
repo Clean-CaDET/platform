@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace SmartTutor.QualityAnalysis
 {
-    public class CodeQualityEvaluation
+    public class CodeEvaluation
     {
         private readonly Dictionary<string, List<IssueAdvice>> _codeSnippetIssueAdvice;
         public ISet<LearningObject> LearningObjects { get; private set; }
 
-        public CodeQualityEvaluation()
+        public CodeEvaluation()
         {
             _codeSnippetIssueAdvice = new Dictionary<string, List<IssueAdvice>>();
             LearningObjects = new HashSet<LearningObject>();
@@ -33,7 +33,7 @@ namespace SmartTutor.QualityAnalysis
             return new Dictionary<string, List<IssueAdvice>>(_codeSnippetIssueAdvice);
         }
 
-        public void AddLearningObjects(List<LearningObject> instructorLOs)
+        public void AddLearningObjects(IEnumerable<LearningObject> instructorLOs)
         {
             LearningObjects.UnionWith(instructorLOs);
         }
