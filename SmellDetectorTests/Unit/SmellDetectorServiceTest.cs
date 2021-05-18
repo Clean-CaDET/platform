@@ -10,69 +10,22 @@ namespace SmellDetector.Tests.Unit
     {
         [Theory]
         [MemberData(nameof(Data))]
-        public void Generate_Smell_Detection_Report(List<CaDETClass> classes, int expectedIssues)
+        public void Smell_detector_sanity_check(string[] sourceCode, int expectedIssues)
         {
-            var detectionService = new DetectionService();
-            var report = detectionService.GenerateSmellDetectionReport(classes);
-            report.Report.Count().ShouldBe(expectedIssues);
+            var detectionService = new SmellDetectorService();
+            var report = detectionService.AnalyzeCodeQuality(sourceCode);
+            report.IssuesForCodeSnippet.Count().ShouldBe(expectedIssues);
         }
 
         public static IEnumerable<object[]> Data()
         {
-            List<object[]> retVal = new List<object[]>();
+            List<object[]> testData = new List<object[]>();
 
-            retVal.Add(new object[] {
-                new List<CaDETClass> {
-                    new CaDETClass
-                    {
-                        FullName = "Class1",
-                        Metrics = new Dictionary<CaDETMetric, double> { { CaDETMetric.ATFD, 6 },
-                            { CaDETMetric.WMC, 48 },
-                            { CaDETMetric.TCC, 0.32},
-                            { CaDETMetric.NMD, 0},
-                            { CaDETMetric.NAD, 0},
-                            { CaDETMetric.CLOC, 0},
-                            { CaDETMetric.NMD_NAD, 0}}
-                    },
-                    new CaDETClass
-                    {
-                        FullName = "Class2",
-                        Metrics = new Dictionary<CaDETMetric, double> { { CaDETMetric.ATFD, 0 },
-                            { CaDETMetric.WMC, 0 },
-                            { CaDETMetric.TCC, 0},
-                            { CaDETMetric.NMD, 14},
-                            { CaDETMetric.NAD, 16},
-                            { CaDETMetric.CLOC, 0},
-                            { CaDETMetric.NMD_NAD, 0}
-
-                        }
-                    },
-                    new CaDETClass
-                    {
-                        FullName = "Class3",
-                        Metrics = new Dictionary<CaDETMetric, double> { { CaDETMetric.ATFD, 0 },
-                            { CaDETMetric.WMC, 0 },
-                            { CaDETMetric.TCC, 0},
-                            { CaDETMetric.NMD, 0},
-                            { CaDETMetric.NAD, 0},
-                            { CaDETMetric.CLOC, 120},
-                            { CaDETMetric.NMD_NAD, 24} }
-                    },
-                    new CaDETClass
-                    {
-                        FullName = "Class4",
-                        Metrics = new Dictionary<CaDETMetric, double> { { CaDETMetric.ATFD, 0 },
-                            { CaDETMetric.WMC, 0 },
-                            { CaDETMetric.TCC, 0},
-                            { CaDETMetric.NMD, 0},
-                            { CaDETMetric.NAD, 0},
-                            { CaDETMetric.CLOC, 100},
-                            { CaDETMetric.NMD_NAD, 0} }
-                    }
-                },
-                3
+            testData.Add(new object[] {
+                new string[] { "" },
+                0
             });
-            return retVal;
+            return testData;
         }
     }
 }

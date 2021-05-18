@@ -21,6 +21,8 @@ using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
 using SmartTutor.ProgressModel.Submissions.Repository;
+using SmartTutor.QualityAnalysis;
+using SmartTutor.QualityAnalysis.Repository;
 using System;
 
 namespace SmartTutor
@@ -65,6 +67,9 @@ namespace SmartTutor
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
 
             services.AddScoped<IInstructor, VARKRecommender>();
+
+            services.AddScoped<ICodeQualityAnalyzer, CaDETQualityAnalyzer>();
+            services.AddScoped<IAdviceRepository, AdviceDatabaseRepository>();
 
             AuthenticationConfig(services);
             AuthorizationConfig(services);

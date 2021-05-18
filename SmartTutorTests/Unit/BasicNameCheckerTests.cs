@@ -2,7 +2,7 @@
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
-using SmartTutor.Tests.DataFactories;
+using SmartTutor.Tests.TestData;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;

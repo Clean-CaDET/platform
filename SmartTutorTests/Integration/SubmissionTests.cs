@@ -7,7 +7,7 @@ using SmartTutor.Controllers.DTOs.Content;
 using SmartTutor.Controllers.DTOs.SubmissionEvaluation;
 using SmartTutor.Database;
 using SmartTutor.ProgressModel;
-using SmartTutor.Tests.DataFactories;
+using SmartTutor.Tests.TestData;
 using System;
 using System.Collections.Generic;
 using System.Linq;

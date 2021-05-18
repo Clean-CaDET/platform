@@ -1,3 +1,6 @@
+DELETE FROM public."IssueAdviceLearningObjectSummary";
+DELETE FROM public."Advice";
+
 DELETE FROM public."ArrangeTaskContainerSubmissions";
 DELETE FROM public."ArrangeTaskSubmissions";
 DELETE FROM public."ChallengeSubmissions";
@@ -1186,3 +1189,45 @@ INSERT INTO public."LearningObjects"(
 INSERT INTO public."Texts"(
 	"Id", "Content")
 	VALUES (133, 'TODO');
+	
+
+
+--=== CODE QUALITY ADVICE
+INSERT INTO public."Advice"(
+	"Id", "IssueType")
+	VALUES (1, 'LONG_METHOD');
+INSERT INTO public."Advice"(
+	"Id", "IssueType")
+	VALUES (2, 'GOD_CLASS');
+	
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 30);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 33);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 40);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 43);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 45);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 60);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 62);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 63);
+	
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (2, 100);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (2, 102);
