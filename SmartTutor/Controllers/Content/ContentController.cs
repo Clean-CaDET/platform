@@ -24,7 +24,7 @@ namespace SmartTutor.Controllers.Content
         public ActionResult<List<LectureDTO>> GetLectures()
         {
             var lectures = _contentService.GetLectures();
-            return lectures.Select(l => _mapper.Map<LectureDTO>(l)).ToList();
+            return Ok(lectures.Select(l => _mapper.Map<LectureDTO>(l)).ToList());
         }
     }
 }
