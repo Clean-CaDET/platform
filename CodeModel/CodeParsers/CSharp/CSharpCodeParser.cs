@@ -169,8 +169,8 @@ namespace CodeModel.CodeParsers.CSharp
             var nonUniqueFullNameClasses = new List<CaDETClass>();
             for (int i = 0; i < parsedClasses.Count - 1; i++)
             {
-                if(parsedClasses[i].IsPartialClass()) continue;
-                for (int j = i+1; j < parsedClasses.Count; j++)
+                if (parsedClasses[i].IsPartialClass()) continue;
+                for (int j = i + 1; j < parsedClasses.Count; j++)
                 {
                     if (parsedClasses[i].FullName.Equals(parsedClasses[j].FullName))
                     {
@@ -236,7 +236,6 @@ namespace CodeModel.CodeParsers.CSharp
 
                 if (!(m.Type is CaDETMemberType.Constructor))
                 {
-                    m.ReturnType ??= new CaDETLinkedType();
                     m.ReturnType.LinkedTypes = GetTypes(classes, m.ReturnType);
                 }
 
@@ -260,7 +259,7 @@ namespace CodeModel.CodeParsers.CSharp
         private List<CaDETClass> GetTypes(List<CaDETClass> classes, CaDETLinkedType type)
         {
             List<CaDETClass> types = new List<CaDETClass>();
-            if (type != null)
+            if (type != null && type.FullType != null)
             {
                 types.Add(CheckForSingleOrArrayType(classes, type.FullType));
                 types.AddRange(GetCollectionTypes(classes, type.FullType));
@@ -270,7 +269,6 @@ namespace CodeModel.CodeParsers.CSharp
 
         private CaDETClass CheckForSingleOrArrayType(List<CaDETClass> classes, string fullType)
         {
-            if (fullType == null) return null;
             var foundType = classes.FirstOrDefault(c => c.FullName.Equals(fullType));
             if (foundType != null) return foundType;
             foundType = GetArrayType(classes, fullType);
@@ -280,7 +278,6 @@ namespace CodeModel.CodeParsers.CSharp
         private List<CaDETClass> GetCollectionTypes(List<CaDETClass> classes, string type)
         {
             List<CaDETClass> collectionTypes = new List<CaDETClass>();
-            if (type == null) return collectionTypes;
             var match = Regex.Match(type, "<.+>");
             if (!match.Success) return collectionTypes;
             
@@ -297,7 +294,6 @@ namespace CodeModel.CodeParsers.CSharp
 
         private CaDETClass GetArrayType(List<CaDETClass> classes, string type)
         {
-            if (type == null) return null;
             if (!Regex.IsMatch(type, "\\[.*\\]")) return null;
             
             var typeName = type.Split("[")[0];

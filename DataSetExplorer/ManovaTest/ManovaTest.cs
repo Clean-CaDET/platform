@@ -17,12 +17,7 @@ namespace DataSetExplorer.ManovaTest
         public void SetupTestArguments(string annotatedInstancesFile, List<CaDETMetric> metrics, string independentVariable)
         {
             _annotatedInstancesFile = annotatedInstancesFile;
-            _metrics = "";
-            foreach (var metric in metrics)
-            {
-                _metrics += metric + " + ";
-            }
-            _metrics = _metrics[0..^2];
+            _metrics = string.Join(" + ", metrics.ToArray());
             _independentVariable = independentVariable;
         }
 

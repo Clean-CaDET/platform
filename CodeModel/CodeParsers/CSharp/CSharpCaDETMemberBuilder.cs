@@ -133,7 +133,7 @@ namespace CodeModel.CodeParsers.CSharp
         {
             if (_cSharpMember is ConstructorDeclarationSyntax) return null;
             var type = _semanticModel.GetTypeInfo(_cSharpMember.DescendantNodes().OfType<TypeSyntax>().First()).Type;
-            if (type == null) return null;
+            if (type == null) return new CaDETLinkedType();
             return new CaDETLinkedType() { FullType = type.ToString() };
         }
 
