@@ -1,4 +1,4 @@
-[![Gitter](https://badges.gitter.im/Clean-CaDET/community.svg)](https://gitter.im/Clean-CaDET/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![CodeFactor](https://www.codefactor.io/repository/github/clean-cadet/platform/badge)](https://www.codefactor.io/repository/github/clean-cadet/platform) [![Gitter](https://badges.gitter.im/Clean-CaDET/community.svg)](https://gitter.im/Clean-CaDET/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Clean CaDET Overview
 The vision and idea behind Clean CaDET is described in this [overview video](https://www.youtube.com/watch?v=fBENFfjC49A).
