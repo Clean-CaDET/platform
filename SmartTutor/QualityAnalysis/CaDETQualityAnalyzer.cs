@@ -27,7 +27,7 @@ namespace SmartTutor.QualityAnalysis
 
             var qualityEvaluation = GatherLOSummaries(issueReport);
             var instructorLOs =
-                _instructor.BuildNodeForLearner(submission.LearnerId, qualityEvaluation.GetLearningObjectSummaries());
+                _instructor.GatherLearningObjectsForLearner(submission.LearnerId, qualityEvaluation.GetLearningObjectSummaries());
             qualityEvaluation.AddLearningObjects(instructorLOs);
 
             return qualityEvaluation;

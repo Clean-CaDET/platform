@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using SmartTutor.Controllers;
-using SmartTutor.Controllers.DTOs.QualityAnalysis;
+using SmartTutor.Controllers.Content.DTOs;
+using SmartTutor.Controllers.QualityAnalysis;
+using SmartTutor.Controllers.QualityAnalysis.DTOs;
 using SmartTutor.QualityAnalysis;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SmartTutor.Controllers.DTOs.Content;
 using Xunit;
 
 namespace SmartTutor.Tests.Integration

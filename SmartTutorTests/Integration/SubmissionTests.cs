@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using SmartTutor.Controllers;
-using SmartTutor.Controllers.DTOs.Content;
-using SmartTutor.Controllers.DTOs.SubmissionEvaluation;
+using SmartTutor.Controllers.Content.DTOs;
+using SmartTutor.Controllers.Progress;
+using SmartTutor.Controllers.Progress.DTOs.SubmissionEvaluation;
 using SmartTutor.Database;
 using SmartTutor.ProgressModel;
 using SmartTutor.Tests.TestData;
