@@ -45,7 +45,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         {
             var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId: null);
 
-            var exporter = new BetweenAnnotatorsSanityCheckExporter("D:/ccadet/annotations/sanity_check/Output/");
+            var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
             var manovaTest = new ManovaTest.ManovaTest();
 
             var enumerator = dataGroupedBySmells.GetEnumerator();
@@ -54,7 +54,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 var codeSmellGroup = enumerator.Current;
                 var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
 
-                exporter.Export(codeSmellGroup.ToList(),
+                exporter.ExportForMultipleAnnotators(codeSmellGroup.ToList(),
                     "SanityCheck_" + codeSmell + "_Severity_",
                     severity);
 
@@ -82,8 +82,8 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         private static void SanityCheckForSingleAnnotator(int annotatorId)
         {
             var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId);
-            
-            var exporter = new SingleAnnotatorSanityCheckExporter("D:/ccadet/annotations/sanity_check/Output/");
+
+            var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
             var manovaTest = new ManovaTest.ManovaTest();
 
             var enumerator = dataGroupedBySmells.GetEnumerator();
@@ -92,7 +92,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 var codeSmellGroup = enumerator.Current;
                 var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
                 
-                exporter.Export(codeSmellGroup.ToList(),
+                exporter.ExportForSingleAnnotator(codeSmellGroup.ToList(),
                     "SanityCheck_" + codeSmell + "_Annotator_", 
                     annotatorId);
 
