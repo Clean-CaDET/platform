@@ -24,7 +24,7 @@ namespace SmartTutor.Controllers.Progress
         {
             //TODO: Extract learner ID so that we can see the Status of each KN.
             var nodes = _progressService.GetKnowledgeNodes(lectureId, null);
-            if (nodes == null) return NotFound();
+            if (nodes == null) return NotFound("Lecture does not contain any nodes.");
             return Ok(_mapper.Map<List<KnowledgeNodeProgressDTO>>(nodes));
         }
         //TODO: The URLs don't follow best practices because the tension between KN and KNProgress. Will need to study this more.

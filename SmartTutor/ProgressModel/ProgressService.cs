@@ -25,6 +25,7 @@ namespace SmartTutor.ProgressModel
         public List<NodeProgress> GetKnowledgeNodes(int lectureId, int? learnerId)
         {
             var nodes = _lectureRepository.GetKnowledgeNodes(lectureId);
+            if (nodes == null) return null;
             if (learnerId == null) return ShowSampleNodes(nodes);
             //TODO: Check if prerequisites fulfilled.
             return null;
