@@ -20,7 +20,7 @@ namespace SmellDetector.Detectors.RuleEngines
         {
             if (_criteria.MeetCriteria(metrics))
             {
-                return new Issue {IssueType = _smellType, CodeSnippetId = codeSnippetId};
+                return new Issue(_smellType, codeSnippetId);
             }
             return null;
         }

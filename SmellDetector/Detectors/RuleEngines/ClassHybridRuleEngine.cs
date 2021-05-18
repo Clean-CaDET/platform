@@ -34,7 +34,7 @@ namespace SmellDetector.Detectors.RuleEngines
                 if(ClassHasEnoughLongMethods(methodIssuesReport))
                 {
                     partialReport.AddIssue(caDETClass.FullName,
-                        new Issue { IssueType = SmellType.GOD_CLASS, CodeSnippetId = caDETClass.FullName });
+                        new Issue(SmellType.GOD_CLASS, caDETClass.FullName));
                 }
             }
             return partialReport;
@@ -43,7 +43,7 @@ namespace SmellDetector.Detectors.RuleEngines
         private bool ClassHasEnoughLongMethods(PartialSmellDetectionReport report)
         {
             int longMethodCounter = 0;
-            foreach (List<Issue> issues in report.CodeItemIssues.Values)
+            foreach (List<Issue> issues in report.CodeSnippetIssues.Values)
             {
                 longMethodCounter += issues.Count(issue => issue.IssueType == SmellType.LONG_METHOD);
             }

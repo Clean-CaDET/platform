@@ -2,7 +2,7 @@
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
-using SmartTutor.Tests.DataFactories;
+using SmartTutor.Tests.TestData;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;

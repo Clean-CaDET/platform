@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.Controllers.DTOs.QualityAnalysis;
-using SmartTutor.Controllers.DTOs.SubmissionEvaluation;
 using SmartTutor.QualityAnalysis;
 
 namespace SmartTutor.Controllers
@@ -20,10 +19,10 @@ namespace SmartTutor.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CodeEvaluationDTO> SubmitChallenge([FromBody] CodeSubmissionDTO codeSubmission)
+        public ActionResult<CodeEvaluationDTO> Evaluate([FromBody] CodeSubmissionDTO codeSubmission)
         {
             var evaluation = _qualityAnalyzerService.EvaluateCode(_mapper.Map<CodeSubmission>(codeSubmission));
-            return Ok(_mapper.Map<ChallengeEvaluationDTO>(evaluation));
+            return Ok(_mapper.Map<CodeEvaluationDTO>(evaluation));
         }
     }
 }

@@ -6,6 +6,6 @@ namespace SmartTutor.Controllers.DTOs.QualityAnalysis
     public class IssueAdviceDTO
     {
         public string IssueType { get; set; }
-        public List<LearningObjectSummaryDTO> Summaries { get; set; }
+        public List<int> SummaryIds { get; set; }
     }
 }

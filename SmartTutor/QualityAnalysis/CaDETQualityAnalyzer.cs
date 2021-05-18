@@ -44,7 +44,7 @@ namespace SmartTutor.QualityAnalysis
             return qualityEvaluation;
         }
 
-        private List<IssueAdvice> GetSummaries(List<Issue> issues)
+        private List<IssueAdvice> GetSummaries(IEnumerable<Issue> issues)
         {
             var issueTypes = issues.Select(i => i.IssueType.ToString()).ToList();
             return _adviceRepository.GetAdvice(issueTypes);

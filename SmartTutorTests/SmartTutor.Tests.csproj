@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestData\SmellyProject\ImGuiHelper.cs" />
+    <Compile Remove="TestData\SmellyProject\Painter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="TestData\SmellyProject\ImGuiHelper.cs" />
+    <None Include="TestData\SmellyProject\Painter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Moq" Version="4.16.1" />

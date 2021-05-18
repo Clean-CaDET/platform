@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.Tests.DataFactories
+﻿namespace SmartTutor.Tests.TestData
 {
     internal class ChallengeTestData
     {
