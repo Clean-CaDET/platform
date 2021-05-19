@@ -16,7 +16,7 @@
   The Clean Code and Design Educational Tool (Clean CaDET) is a platform dedicated to the study of clean code. It presents a conglomerate of AI-powered tools for educators, learners, practitioners, and researchers studying clean code.
   </p>
 <p align="justify">
-  Clean CaDET started as a project funded by the [Science Fund of the Republic of Serbia](http://fondzanauku.gov.rs/?lang=en). It hopes to grow into an active open-source community dedicated to software engineers' growth and their pursuit to build sustainable, high-quality software.
+  Clean CaDET started as a project funded by the <a href="http://fondzanauku.gov.rs/?lang=en">Science Fund of the Republic of Serbia</a>. It hopes to grow into an active open-source community dedicated to software engineers' growth and their pursuit to build sustainable, high-quality software.
 </p>
 
 - [Introduction](#introduction)
