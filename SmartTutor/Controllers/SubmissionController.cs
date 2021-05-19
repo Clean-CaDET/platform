@@ -6,7 +6,7 @@ using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Submissions;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
+using SmartTutor.ProgressModel.Exceptions;
 
 namespace SmartTutor.Controllers
 {
@@ -31,12 +31,11 @@ namespace SmartTutor.Controllers
             try
             {
                 challengeEvaluation =
-                    _submissionService.EvaluateChallenge(_mapper.Map<ChallengeSubmission>(challengeSubmission),
-                        challengeSubmission.LearnerId);
+                    _submissionService.EvaluateChallenge(_mapper.Map<ChallengeSubmission>(challengeSubmission));
             }
-            catch (BadHttpRequestException e)
+            catch (LearnerNotEnrolledInCourse e)
             {
-                return BadRequest(e.Message);
+                return Forbid(e.Message);
             }
             catch (InvalidOperationException e)
             {
@@ -53,14 +52,13 @@ namespace SmartTutor.Controllers
         {
             try
             {
-                var evaluation = _submissionService.EvaluateAnswers(_mapper.Map<QuestionSubmission>(submission),
-                    submission.LearnerId);
+                var evaluation = _submissionService.EvaluateAnswers(_mapper.Map<QuestionSubmission>(submission));
                 if (evaluation == null) return NotFound();
                 return Ok(_mapper.Map<List<AnswerEvaluationDTO>>(evaluation));
             }
-            catch (BadHttpRequestException e)
+            catch (LearnerNotEnrolledInCourse e)
             {
-                return BadRequest(e.Message);
+                return Forbid(e.Message);
             }
         }
 

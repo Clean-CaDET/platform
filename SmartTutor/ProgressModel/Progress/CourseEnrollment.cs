@@ -1,7 +1,4 @@
-﻿using System;
-using SmartTutor.ContentModel.Lectures;
-
-namespace SmartTutor.LearnerModel.Learners
+﻿namespace SmartTutor.ProgressModel.Progress
 {
     public class CourseEnrollment
     {

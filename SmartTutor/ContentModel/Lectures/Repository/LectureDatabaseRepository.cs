@@ -14,6 +14,29 @@ namespace SmartTutor.ContentModel.Lectures.Repository
             _dbContext = dbContext;
         }
 
+        public Course GetCourse(int id)
+        {
+            return _dbContext.Courses.FirstOrDefault(c => c.Id == id);
+        }
+
+        public HashSet<int> GetCoursesIdsByLOsId(int learningObjectSummeryId)
+        {
+            var courseIds = new HashSet<int>();
+            var knowledgeNodes = GetKnowledgeNodesBySummary(learningObjectSummeryId);
+
+            foreach (var lecture in knowledgeNodes.Select(knowledgeNode => GetLecture(knowledgeNode.LectureId)))
+            {
+                courseIds.Add(lecture.CourseId);
+            }
+
+            return courseIds;
+        }
+
+        public Lecture GetLecture(int id)
+        {
+            return _dbContext.Lectures.FirstOrDefault(l => l.Id == id);
+        }
+
         public List<Lecture> GetLectures()
         {
             return _dbContext.Lectures.Include(l => l.KnowledgeNodes).ToList();
@@ -27,12 +50,8 @@ namespace SmartTutor.ContentModel.Lectures.Repository
 
         public KnowledgeNode GetKnowledgeNodeWithSummaries(int id)
         {
-            return _dbContext.KnowledgeNodes.Where(n => n.Id == id).Include(n => n.LearningObjectSummaries).FirstOrDefault();
-        }
-
-        public Course GetCourse(int id)
-        {
-            return _dbContext.Courses.FirstOrDefault(c => c.Id == id);
+            return _dbContext.KnowledgeNodes.Where(n => n.Id == id).Include(n => n.LearningObjectSummaries)
+                .FirstOrDefault();
         }
 
         public List<KnowledgeNode> GetKnowledgeNodesBySummary(int id)
@@ -40,11 +59,6 @@ namespace SmartTutor.ContentModel.Lectures.Repository
             var learningObjectSummary = _dbContext.LearningObjectSummaries.Where(los => los.Id == id)
                 .Include(los => los.KnowledgeNodes).FirstOrDefault();
             return learningObjectSummary?.KnowledgeNodes;
-        }
-
-        public Lecture GetLecture(int id)
-        {
-            return _dbContext.Lectures.FirstOrDefault(l => l.Id == id);
         }
     }
 }

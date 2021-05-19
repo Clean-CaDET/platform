@@ -44,9 +44,12 @@ namespace SmartTutor.Tests.Unit
                 .Returns(Text3);
 
             Mock<ILearnerRepository> learnerRepo = new Mock<ILearnerRepository>();
-            learnerRepo.Setup(repo => repo.GetById(1)).Returns(new Learner(1,1,2,4,3));
-            learnerRepo.Setup(repo => repo.GetById(2)).Returns(new Learner(2,3,4,1,2));
-            learnerRepo.Setup(repo => repo.GetById(3)).Returns(new Learner(3,2,3,1,4));
+            learnerRepo.Setup(repo => repo.GetById(1))
+                .Returns(new Learner(1, 1, 2, 4, 3, new List<CourseEnrollment>()));
+            learnerRepo.Setup(repo => repo.GetById(2))
+                .Returns(new Learner(2, 3, 4, 1, 2, new List<CourseEnrollment>()));
+            learnerRepo.Setup(repo => repo.GetById(3))
+                .Returns(new Learner(3, 2, 3, 1, 4, new List<CourseEnrollment>()));
 
             return new VARKRecommender(learningObjectRepo.Object, learnerRepo.Object);
         }
@@ -67,19 +70,22 @@ namespace SmartTutor.Tests.Unit
                 {
                     1,
                     KnowledgeNode,
-                    new NodeProgress(0, 1, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Text1, Text2, Text3})
+                    new NodeProgress(0, 1, KnowledgeNode, NodeStatus.Started,
+                        new List<LearningObject> {Text1, Text2, Text3})
                 },
                 new object[]
                 {
                     2,
                     KnowledgeNode,
-                    new NodeProgress(0, 2, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Video1, Image2, Text3})
+                    new NodeProgress(0, 2, KnowledgeNode, NodeStatus.Started,
+                        new List<LearningObject> {Video1, Image2, Text3})
                 },
                 new object[]
                 {
                     3,
                     KnowledgeNode,
-                    new NodeProgress(0, 3, KnowledgeNode, NodeStatus.Started, new List<LearningObject> {Question1, ArrangeTask2, Text3})
+                    new NodeProgress(0, 3, KnowledgeNode, NodeStatus.Started,
+                        new List<LearningObject> {Question1, ArrangeTask2, Text3})
                 }
             };
         //TODO: Rework.

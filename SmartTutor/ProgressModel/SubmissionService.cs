@@ -7,10 +7,10 @@ using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel.Exceptions;
 
 namespace SmartTutor.ProgressModel
 {
@@ -31,13 +31,14 @@ namespace SmartTutor.ProgressModel
             _lectureRepository = lectureRepository;
         }
 
-        public ChallengeEvaluation EvaluateChallenge(ChallengeSubmission submission, int learnerId)
+        public ChallengeEvaluation EvaluateChallenge(ChallengeSubmission submission)
         {
             Challenge challenge = _learningObjectRepository.GetChallenge(submission.ChallengeId);
-            if (!IsLearningObjectInLearnersCourses(challenge, learnerId))
+            if (!IsLearningObjectInLearnersCourses(challenge, submission.LearnerId))
             {
-                throw new BadHttpRequestException("Learner is not in this challenges course!");
+                throw new LearnerNotEnrolledInCourse(submission.LearnerId);
             }
+
             if (challenge == null) return null;
 
             var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode);
@@ -54,13 +55,14 @@ namespace SmartTutor.ProgressModel
             return evaluation;
         }
 
-        public List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission, int learnerId)
+        public List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission)
         {
             var question = _learningObjectRepository.GetQuestion(submission.QuestionId);
-            if (!IsLearningObjectInLearnersCourses(question, learnerId))
+            if (!IsLearningObjectInLearnersCourses(question, submission.LearnerId))
             {
-                throw new BadHttpRequestException("Learner is not in this questions course!");
+                throw new LearnerNotEnrolledInCourse(submission.LearnerId);
             }
+
             var evaluations = question.EvaluateAnswers(submission.SubmittedAnswerIds);
 
             if (evaluations.Select(a => a.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
@@ -80,28 +82,13 @@ namespace SmartTutor.ProgressModel
 
             return evaluations;
         }
-        
+
         private bool IsLearningObjectInLearnersCourses(LearningObject learningObject, int learnerId)
         {
-            var courseIds = GetCoursesIdsByLOsId(learningObject);
+            var courseIds = _lectureRepository.GetCoursesIdsByLOsId(learningObject.LearningObjectSummaryId);
             var learner = _learnerRepository.GetById(learnerId);
-
-            return learner.CourseEnrollments.Any(learnerCourseEnrollment => courseIds.Contains(learnerCourseEnrollment.CourseId));
-        }
-
-        private HashSet<int> GetCoursesIdsByLOsId(LearningObject learningObject)
-        {
-            var learningObjectSummary =
-                _learningObjectRepository.GetLearningObjectSummary(learningObject.LearningObjectSummaryId);
-            var knowledgeNodes = _lectureRepository.GetKnowledgeNodesBySummary(learningObjectSummary.Id);
-            var courseIds = new HashSet<int>();
-
-            foreach (var lecture in knowledgeNodes.Select(knowledgeNode => _lectureRepository.GetLecture(knowledgeNode.LectureId)))
-            {
-                courseIds.Add(lecture.CourseId);
-            }
-
-            return courseIds;
+            return learner.CourseEnrollments.Any(learnerCourseEnrollment =>
+                courseIds.Contains(learnerCourseEnrollment.CourseId));
         }
     }
 }

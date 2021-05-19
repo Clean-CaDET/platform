@@ -13,5 +13,25 @@ namespace SmartTutor.ProgressModel.Submissions
         {
             IsCorrect = true;
         }
+
+        protected Submission()
+        {
+        }
+
+        public Submission(int id, int learnerId, bool isCorrect, DateTime timeStamp)
+        {
+            Id = id;
+            LearnerId = learnerId;
+            IsCorrect = isCorrect;
+            TimeStamp = timeStamp;
+        }
+
+        protected Submission(Submission submission)
+        {
+            Id = submission.Id;
+            LearnerId = submission.LearnerId;
+            IsCorrect = submission.IsCorrect;
+            TimeStamp = submission.TimeStamp;
+        }
     }
 }

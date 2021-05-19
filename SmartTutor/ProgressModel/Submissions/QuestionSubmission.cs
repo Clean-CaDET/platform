@@ -7,8 +7,12 @@ namespace SmartTutor.ProgressModel.Submissions
         public List<int> SubmittedAnswerIds { get; private set; }
         public int QuestionId { get; private set; }
 
-        private QuestionSubmission() {}
-        public QuestionSubmission(int questionId, List<int> submittedAnswerIds): this()
+        private QuestionSubmission()
+        {
+        }
+
+        public QuestionSubmission(int questionId, List<int> submittedAnswerIds, Submission submission) : base(
+            submission)
         {
             QuestionId = questionId;
             SubmittedAnswerIds = submittedAnswerIds;

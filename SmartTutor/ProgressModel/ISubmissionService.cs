@@ -8,8 +8,8 @@ namespace SmartTutor.ProgressModel
 {
     public interface ISubmissionService
     {
-        ChallengeEvaluation EvaluateChallenge(ChallengeSubmission submission, int learnerId);
-        List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission, int learnerId);
+        ChallengeEvaluation EvaluateChallenge(ChallengeSubmission submission);
+        List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission);
         List<ArrangeTaskContainerEvaluation> EvaluateArrangeTask(ArrangeTaskSubmission submission);
     }
 }
