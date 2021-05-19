@@ -28,7 +28,7 @@
 - [Team](#team)
 
 # Introduction
-The vision and high-level idea behind Clean CaDET is described in the [overview video](https://www.youtube.com/watch?v=fBENFfjC49A). Next, we define the problem domain that is the primary focus of our research and development efforts. 
+The vision and high-level idea behind Clean CaDET is described in the [overview video](https://www.youtube.com/watch?v=fBENFfjC49A). 
 
 ## What is the problem?
 <p align="justify">
