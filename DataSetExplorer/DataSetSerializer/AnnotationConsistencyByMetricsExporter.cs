@@ -10,8 +10,8 @@ namespace DataSetExplorer.DataSetSerializer
 {
     class AnnotationConsistencyByMetricsExporter
     {
-        private readonly string _singleAnnotatorTemplatePath = "../../../DataSetSerializer/Template/Single_Annotator_Sanity_Check_Template.xlsx";
-        private readonly string _multipleAnnotatorsTemplatePath = "../../../DataSetSerializer/Template/Between_Annotators_Sanity_Check_Template.xlsx";
+        private readonly string _singleAnnotatorTemplatePath = "../../../DataSetSerializer/Template/Single_Annotator_Consistency_Template.xlsx";
+        private readonly string _multipleAnnotatorsTemplatePath = "../../../DataSetSerializer/Template/Consistency_Between_Annotators_Template.xlsx";
         private readonly string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;
@@ -21,27 +21,30 @@ namespace DataSetExplorer.DataSetSerializer
             _exportPath = exportPath;
         }
 
-        public void ExportForSingleAnnotator(List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataSetInstances,
-            string fileName, int annotatorId)
+        public void ExportAnnotationsFromAnnotator(int annotatorId, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataSetInstances,
+            string fileName)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            _excelFile = new ExcelPackage(new FileInfo(_singleAnnotatorTemplatePath));
-            _sheet = _excelFile.Workbook.Worksheets[0];
-            PopulateTemplateForSingle(dataSetInstances, annotatorId);
+            InitializeExcelSheet(_singleAnnotatorTemplatePath);
+            PopulateTemplateForAnnotator(annotatorId, dataSetInstances);
             Serialize(fileName + annotatorId);
         }
 
-        public void ExportForMultipleAnnotators(List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataSetInstances,
-            string fileName, int severity)
+        public void ExportAnnotatorsForSeverity(int severity, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataSetInstances,
+            string fileName)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            _excelFile = new ExcelPackage(new FileInfo(_multipleAnnotatorsTemplatePath));
-            _sheet = _excelFile.Workbook.Worksheets[0];
-            PopulateTemplateForMultiple(dataSetInstances, severity);
+            InitializeExcelSheet(_multipleAnnotatorsTemplatePath);
+            PopulateTemplateForSeverity(severity, dataSetInstances);
             Serialize(fileName + severity);
         }
 
-        private void PopulateTemplateForSingle(List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances, int annotatorId)
+        private void InitializeExcelSheet(string templatePath)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            _excelFile = new ExcelPackage(new FileInfo(templatePath));
+            _sheet = _excelFile.Workbook.Worksheets[0];
+        }
+
+        private void PopulateTemplateForAnnotator(int annotatorId, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances)
         {
             for (var i = 0; i < instances.Count; i++)
             {
@@ -51,7 +54,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateTemplateForMultiple(List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances, int severity)
+        private void PopulateTemplateForSeverity(int severity, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances)
         {
             var j = 0;
             foreach (var instance in instances)
@@ -84,6 +87,5 @@ namespace DataSetExplorer.DataSetSerializer
             var filePath = _exportPath + fileName + ".xlsx";
             _excelFile.SaveAs(new FileInfo(filePath));
         }
-
     }
 }

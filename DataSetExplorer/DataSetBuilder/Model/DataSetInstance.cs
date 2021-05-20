@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeModel.CaDETModel.CodeItems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public string ProjectLink { get; }
         public SnippetType Type { get; }
         public ISet<DataSetAnnotation> Annotations { get; }
+        public Dictionary<CaDETMetric, double> MetricFeatures { get; set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
 
         internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type)
         {
@@ -93,8 +95,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         public bool IsAnnotatedBy(int annotatorId)
         {
-            if (Annotations.Count(a => a.Annotator.Id == annotatorId) == 0) return false;
-            return true;
+            return Annotations.Any(a => a.Annotator.Id == annotatorId);
         }
 
         public override int GetHashCode()

@@ -7,16 +7,18 @@ using System.Linq;
 
 namespace DataSetExplorer.DataSetSerializer
 {
-    public class DataSetWithAnnotationsExporter
+    public class NewDataSetExporter
     {
-        private readonly string _templatePath = "../../../DataSetSerializer/Template/Dataset_Annotation_Template.xlsx";
+        private readonly string _templatePath = "../../../DataSetSerializer/Template/New_Dataset_Template.xlsx";
         private readonly string _exportPath;
         //TODO: ColumnHeuristicsModel should be repurposed as some kind of HeuristicCatalog and put into the domain layer
         private readonly ColumnHeuristicsModel _requiredSmells;
-        public DataSetWithAnnotationsExporter(string exportPath, ColumnHeuristicsModel smells)
+        private bool _includeMetrics;
+        public NewDataSetExporter(string exportPath, ColumnHeuristicsModel smells, bool includeMetrics)
         {
             _exportPath = exportPath;
             _requiredSmells = smells;
+            _includeMetrics = includeMetrics;
         }
         public void Export(DataSet project, string fileName)
         {
@@ -31,7 +33,7 @@ namespace DataSetExplorer.DataSetSerializer
             {
                 var sheet = template.Workbook.Worksheets.First(s => s.Name == smell.Value);
                 var instances = smell.RelevantSnippetType().SelectMany(project.GetInstancesOfType).ToList();
-                PopulateInstances(sheet, instances);
+                PopulateInstances(sheet, instances, smell);
             }
 
             return template;
@@ -67,17 +69,30 @@ namespace DataSetExplorer.DataSetSerializer
             sheet.Cells[2, 4 + 2*heuristics.Count].Value = "Custom heuristics.";
         }
 
-        private void PopulateInstances(ExcelWorksheet sheet, List<DataSetInstance> instances)
+        private void PopulateInstances(ExcelWorksheet sheet, List<DataSetInstance> instances, CodeSmell smell)
         {
+            int numOfHeuristics = _requiredSmells.GetHeuristics(smell).Count() + 1; // +1 for custom heuristic
             for (var i = 0; i < instances.Count; i++)
             {
                 var row = 4 + i;
                 sheet.Cells[row, 1].Value = instances[i].CodeSnippetId;
                 sheet.Cells[row, 2].Value = instances[i].Link;
+                if (_includeMetrics) PopulateMetrics(sheet, instances[i], row, 4 + numOfHeuristics*2);
 
                 if (i == instances.Count - 1) break;
                 var nextRow = row + 1;
                 sheet.Cells[row + ":" + row].Copy(sheet.Cells[nextRow + ":" + nextRow]);
+            }
+        }
+
+        private void PopulateMetrics(ExcelWorksheet sheet, DataSetInstance dataSetInstance, int row, int column)
+        {
+            sheet.Cells[1, column].Value = "Metrics";
+            foreach (var metric in dataSetInstance.MetricFeatures)
+            {
+                sheet.Cells[3, column].Value = metric.Key;
+                sheet.Cells[row, column].Value = metric.Value;
+                column++;
             }
         }
 

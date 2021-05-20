@@ -37,11 +37,11 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             //FindInstancesRequiringAdditionalAnnotationUseCase();
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
             //ExportAnnotatedDataSet();
-            //SanityCheckForSingleAnnotator(1);
-            SanityCheckBetweenAnnotatorsForSeverity(1);
+            //CheckAnnotationConsistencyForAnnotator(1);
+            CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(1);
         }
 
-        private static void SanityCheckBetweenAnnotatorsForSeverity(int severity)
+        private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
         {
             var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId: null);
 
@@ -54,9 +54,8 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 var codeSmellGroup = enumerator.Current;
                 var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
 
-                exporter.ExportForMultipleAnnotators(codeSmellGroup.ToList(),
-                    "SanityCheck_" + codeSmell + "_Severity_",
-                    severity);
+                exporter.ExportAnnotatorsForSeverity(severity, codeSmellGroup.ToList(),
+                    "SanityCheck_" + codeSmell + "_Severity_");
 
                 manovaTest.SetupTestArguments(
                     "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Severity_" + severity + ".xlsx",
@@ -79,7 +78,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             return projects;
         }
 
-        private static void SanityCheckForSingleAnnotator(int annotatorId)
+        private static void CheckAnnotationConsistencyForAnnotator(int annotatorId)
         {
             var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId);
 
@@ -92,9 +91,8 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 var codeSmellGroup = enumerator.Current;
                 var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
                 
-                exporter.ExportForSingleAnnotator(codeSmellGroup.ToList(),
-                    "SanityCheck_" + codeSmell + "_Annotator_", 
-                    annotatorId);
+                exporter.ExportAnnotationsFromAnnotator(annotatorId, codeSmellGroup.ToList(),
+                    "SanityCheck_" + codeSmell + "_Annotator_");
 
                 manovaTest.SetupTestArguments(
                     "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Annotator_" + annotatorId + ".xlsx",
@@ -107,7 +105,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         {
             var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId: null);
 
-            var exporter = new DataSetWithMetricsExporter("D:/ccadet/annotations/annotated/Output/");
+            var exporter = new CompleteDataSetExporter("D:/ccadet/annotations/annotated/Output/");
             var enumerator = dataGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
             {
@@ -196,7 +194,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             var dataSet = CreateDataSetFromRepository(
                 "https://github.com/MonoGame/MonoGame/tree/4802d00db04dc7aa5fe07cd2d908f9a4b090a4fd",
                 "C:/sdataset-p2/MonoGame");
-            var exporter = new DataSetWithAnnotationsExporter("C:/DSOutput/", new ColumnHeuristicsModel());
+            var exporter = new NewDataSetExporter("C:/DSOutput/", new ColumnHeuristicsModel(), false);
             exporter.Export(dataSet, "MonoGame");
         }
 

@@ -8,14 +8,14 @@ using System.Linq;
 
 namespace DataSetExplorer.DataSetSerializer
 {
-    class DataSetWithMetricsExporter
+    class CompleteDataSetExporter
     {
-        private readonly string _templatePath = "../../../DataSetSerializer/Template/Dataset_Metrics_Template.xlsx";
+        private readonly string _templatePath = "../../../DataSetSerializer/Template/Complete_Dataset_Template.xlsx";
         private readonly string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;
 
-        public DataSetWithMetricsExporter(string exportPath)
+        public CompleteDataSetExporter(string exportPath)
         {
             _exportPath = exportPath;
         }

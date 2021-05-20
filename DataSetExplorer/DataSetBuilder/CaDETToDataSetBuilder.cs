@@ -115,8 +115,12 @@ namespace DataSetExplorer.DataSetBuilder
 
         private List<DataSetInstance> CaDETToDataSetClasses(List<CaDETClass> cadetClasses)
         {
-            return cadetClasses.Select(c => 
-                new DataSetInstance(c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class)).ToList();
+            return cadetClasses.Select(c =>
+            {
+                var dataSetInstance = new DataSetInstance(c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class);
+                dataSetInstance.MetricFeatures = _cadetProject.GetMetricsForCodeSnippet(c.FullName);
+                return dataSetInstance;
+            }).ToList();
         }
 
         private string GetCodeUrl(string snippetId)
@@ -151,8 +155,12 @@ namespace DataSetExplorer.DataSetBuilder
 
         private List<DataSetInstance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
         {
-            return cadetMembers.Select(m => 
-                new DataSetInstance(m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function)).ToList();
+            return cadetMembers.Select(m =>
+            {
+                var dataSetInstance = new DataSetInstance(m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function);
+                dataSetInstance.MetricFeatures = _cadetProject.GetMetricsForCodeSnippet(m.Signature());
+                return dataSetInstance;
+            }).ToList();
         }
     }
 }
