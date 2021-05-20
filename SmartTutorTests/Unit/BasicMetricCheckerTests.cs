@@ -2,7 +2,7 @@
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
-using SmartTutorTests.DataFactories;
+using SmartTutor.Tests.TestData;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -24,7 +24,7 @@ namespace SmartTutor.Tests.Unit
                 new List<MetricRangeRule>
                 {
                     new MetricRangeRule(33703, "MELOC", 2, 5, new ChallengeHint(337002)),
-                    new MetricRangeRule(33704, "NOP", 1, 4, new ChallengeHint(6))
+                    new MetricRangeRule(33704, "NOP", 2, 4, new ChallengeHint(6))
                 }
             );
         }

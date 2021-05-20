@@ -12,6 +12,11 @@
             Id = id;
         }
 
+        public ChallengeHint(int id, string content): this(id)
+        {
+            Content = content;
+        }
+
         public override int GetHashCode()
         {
             return Id;
@@ -28,3 +33,5 @@
         }
     }
 }
+
+

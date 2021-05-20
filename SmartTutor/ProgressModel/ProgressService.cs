@@ -25,6 +25,7 @@ namespace SmartTutor.ProgressModel
         public List<NodeProgress> GetKnowledgeNodes(int lectureId, int? learnerId)
         {
             var nodes = _lectureRepository.GetKnowledgeNodes(lectureId);
+            if (nodes == null) return null;
             if (learnerId == null) return ShowSampleNodes(nodes);
             //TODO: Check if prerequisites fulfilled.
             return null;
@@ -43,7 +44,7 @@ namespace SmartTutor.ProgressModel
             if (learnerId == null)
             {
                 return new NodeProgress(
-                    0, 0, knowledgeNode, NodeStatus.Unlocked, _instructor.BuildSimpleNode(knowledgeNode));
+                    0, 0, knowledgeNode, NodeStatus.Unlocked, _instructor.GatherDefaultLearningObjects(knowledgeNode.LearningObjectSummaries));
             }
 
             return BuildNodeForLearner(knowledgeNode, (int) learnerId);
@@ -52,7 +53,7 @@ namespace SmartTutor.ProgressModel
         private NodeProgress BuildNodeForLearner(KnowledgeNode node, int learnerId)
         {
             var nodeProgress = _progressRepository.GetNodeProgressForLearner(learnerId, node.Id) ?? new NodeProgress(
-                0, learnerId, node, NodeStatus.Unlocked, _instructor.BuildNodeForLearner(learnerId, node)
+                0, learnerId, node, NodeStatus.Unlocked, _instructor.GatherLearningObjectsForLearner(learnerId, node.LearningObjectSummaries)
             );
 
             //TODO: Create learning session and save.

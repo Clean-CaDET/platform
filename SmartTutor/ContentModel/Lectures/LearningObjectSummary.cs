@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using SmartTutor.QualityAnalysis;
+using System.Collections.Generic;
 
 namespace SmartTutor.ContentModel.Lectures
 {
@@ -13,5 +14,8 @@ namespace SmartTutor.ContentModel.Lectures
             Id = id;
             Description = description;
         }
+
+        //TODO: Remove if EF6 supports unidirectional many-to-many
+        private List<IssueAdvice> Advice { get; set; }
     }
 }

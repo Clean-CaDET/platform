@@ -1,3 +1,6 @@
+DELETE FROM public."IssueAdviceLearningObjectSummary";
+DELETE FROM public."Advice";
+
 DELETE FROM public."ArrangeTaskContainerSubmissions";
 DELETE FROM public."ArrangeTaskSubmissions";
 DELETE FROM public."ChallengeSubmissions";
@@ -29,17 +32,14 @@ DELETE FROM public."Lectures";
 DELETE FROM public."Courses";
 
 INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (1, 'SU-1-2021', 1, 2, 3, 4);
+	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
+	VALUES (1, 'SU-1-2021', 1, 2, 3, 4, 'C:/Smart-Tutor/1/Workspace');
 INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (2, 'SU-2-2021', 4, 3, 2, 1);
+	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
+	VALUES (2, 'SU-2-2021', 4, 3, 2, 1, 'C:/Smart-Tutor/2/Workspace');
 INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (3, 'SU-3-2021', 1, 4, 3, 2);
-INSERT INTO public."Learners"(
-	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
-	VALUES (4, 'SU-3-2021', 1, 2, 4, 3);
+	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
+	VALUES (3, 'SU-3-2021', 1, 4, 3, 2, 'C:/Smart-Tutor/3/Workspace');
 
 INSERT INTO public."Courses"(
 	"Id")
@@ -70,10 +70,6 @@ INSERT INTO public."Lectures"(
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description")
 	VALUES (4, 'Spregnutost', 'Dva gusto spregnuta softverska modula u velikom stepenu zavise jedan od drugog i često se ponašaju kao jedan veliki modul. Ovakvi moduli imaju puno međusobnih veza (poput upotrebe atributa ili poziva metoda) i znaju razne detalje jedan o drugom. Izmena jednog takvog modula gotovo uvek povlači modifikaciju (i bagove) drugog. Ako je sistem prepun ovakvih sprega, postaje trom i težak za izmenu. Sa druge strane, ako modul sakriva mnoštvo logike iza jednostavnog API-a, značajno je ograničena mogućnost sprezanja sa takvim modulom. Kroz ovu lekciju učimo da pravimo ovakve module.');
-	
-INSERT INTO public."Lectures"(
-	"Id", "Name", "Description")
-	VALUES (5, 'Princip jedne odgovornosti', 'Vodeći princip inženjerstva softvera ističe da svaki modul treba da ispunjava jedan cilj koji je onoliko apstraktan koliko i sam modul. Privatna metoda koja radi sa detaljima će imati veoma konkretan cilj. Aplikacija ima jedan cilj na visokom nivou asptrakcije koji se razlaže na slučajeve korišćenja koje potom podržavamo sa manje apstraktnim objektima i njihovima metodama. U tako dizajniranom sistemu, svaka izmena je fokusirana samo na one module koji su vezani za cilj koji je afektovan. Kroz ovu lekciju razlažemo ovaj vodeći princip i gledamo kako vodi naš razvoj softvera.');
 	
 	
 	
@@ -213,8 +209,8 @@ INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (12, 10);
 INSERT INTO public."Challenges"(
-	"Id", "Description", "Url", "SolutionIdForeignKey")
-	VALUES (12, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Naming/01. Noise Words" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 11);
+	"Id", "Description", "Url", "TestSuiteLocation", "SolutionIdForeignKey")
+	VALUES (12, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Naming/01. Noise Words" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 'Naming.Noise', 11);
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (2, 12);
@@ -224,7 +220,7 @@ INSERT INTO public."ChallengeHints"(
 	VALUES (6, 'Izbegavaj generične reči koje se mogu koristiti da opišu bilo kakav kod (npr. Manager, Data), kao i one koje ponavljaju informacije koje već stoje u imenu tipa (npr. List, Num).', 9);
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "BannedWords", "HintId")
-	VALUES (2, '{{"Data","Info","Str","Set","The"}}', 6);
+	VALUES (2, '{"Data","Info","Str","Set","The"}', 6);
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -256,8 +252,8 @@ INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (7, 7);
 INSERT INTO public."Challenges"(
-	"Id", "Description", "Url", "SolutionIdForeignKey")
-	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "Naming/02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository', 8);
+	"Id", "Description", "Url", "TestSuiteLocation", "SolutionIdForeignKey")
+	VALUES (7, 'U svojoj brzopletosti, često nabacamo kratka imena kako bismo što pre ispisali kod koji radi. U sklopu direktorijuma "Naming/02. Meaningful Words" proširi kod korisnim imenima koji uklanjaju potrebe za komentarima i isprati zadatke u zaglavlju klase.', 'https://github.com/Clean-CaDET/challenge-repository', 'Naming.Meaning', 8);
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (1, 7);
@@ -267,7 +263,7 @@ INSERT INTO public."ChallengeHints"(
 	VALUES (7, 'Razmisli kako da integrišeš domenski značajne reči poput "Enroll", "newCourse", "Maximum" i "Active" u imena koja koristiš u svom kodu.', 6);
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "RequiredWords", "HintId")
-	VALUES (1, '{{"Enroll","newCourse","Maximum","Active"}}', 7);
+	VALUES (1, '{"Enroll","newCourse","Maximum","Active"}', 7);
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -425,19 +421,19 @@ INSERT INTO public."ArrangeTasks"(
 	"Id", "Text")
 	VALUES (32, 'Prateći kod predstavlja primer čiste funkcije.
 
-    public List<Doctor> GetSuitableDoctors(Operation operation){{
+    public List<Doctor> GetSuitableDoctors(Operation operation){
     	List<Doctor> doctors = doctorRepository.FindAll();
     
     	List<Doctor> suitableDoctors = new ArrayList<>();
-    	foreach(Doctor doctor in doctors){{
+    	foreach(Doctor doctor in doctors){
     		if(IsCapable(doctor, operation.GetRequiredCapabilities())
-    		    && IsAvailable(doctor, operation.GetTimeSlot())){{
+    		    && IsAvailable(doctor, operation.GetTimeSlot())){
     			suitableDoctors.Add(doctor);
-    		}}
-    	}}
+    		}
+    	}
     
     	return suitableDoctors;
-    }}
+    }
 
 Rasporedi zahteve za izmenu softvera tako da su vezani za funkcije koje bismo verovatno menjali da bismo ih ispoštovali.');
 INSERT INTO public."ArrangeTaskContainers"(
@@ -557,8 +553,8 @@ INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (41, 41);
 INSERT INTO public."Challenges"(
-	"Id", "Url", "Description", "SolutionIdForeignKey")
-	VALUES (41, 'https://github.com/Clean-CaDET/challenge-repository', 'Da imamo kratke metode ne treba da bude naš konačan cilj, već posledica praćenja dobrih praksi. Ipak, funkcija koja prevazilazi nekoliko desetina linija je dobar kandidat za refaktorisanje. U sklopu direktorijuma "Methods/01. Small Methods" ekstrahuj logički povezan kod tako da završiš sa kolekcijom sitnijih metoda čije ime jasno označava njihovu svrhu.', 42);
+	"Id", "Url", "Description", "TestSuiteLocation", "SolutionIdForeignKey")
+	VALUES (41, 'https://github.com/Clean-CaDET/challenge-repository', 'Da imamo kratke metode ne treba da bude naš konačan cilj, već posledica praćenja dobrih praksi. Ipak, funkcija koja prevazilazi nekoliko desetina linija je dobar kandidat za refaktorisanje. U sklopu direktorijuma "Methods/01. Small Methods" ekstrahuj logički povezan kod tako da završiš sa kolekcijom sitnijih metoda čije ime jasno označava njihovu svrhu.', 'Methods.Small', 42);
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (3, 41);
@@ -585,8 +581,8 @@ INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (44, 44);
 INSERT INTO public."Challenges"(
-	"Id", "Url", "Description", "SolutionIdForeignKey")
-	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Složene funkcije su one koje zahtevaju visok mentalni napor da se razume sva logika i tokovi kontrole. Mnogi aspekti koda doprinose otežanom razumevanju - čudna imena, dugački izrazi, duboko ugnježdavanje. U sklopu direktorijuma "Methods/02. Simple Methods" refaktoriši funkcije tako da ih pojednostaviš i smanjiš dupliranje koda.', 46);
+	"Id", "Url", "Description", "TestSuiteLocation", "SolutionIdForeignKey")
+	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Složene funkcije su one koje zahtevaju visok mentalni napor da se razume sva logika i tokovi kontrole. Mnogi aspekti koda doprinose otežanom razumevanju - čudna imena, dugački izrazi, duboko ugnježdavanje. U sklopu direktorijuma "Methods/02. Simple Methods" refaktoriši funkcije tako da ih pojednostaviš i smanjiš dupliranje koda.', 'Methods.Simple', 46);
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (4, 44);
@@ -631,8 +627,8 @@ INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (49, 49);
 INSERT INTO public."Challenges"(
-	"Id", "Url", "Description", "SolutionIdForeignKey")
-	VALUES (49, 'https://github.com/Clean-CaDET/challenge-repository', 'Redukcija broja parametra pozitivno utiče na razumevanje samog zaglavlja funkcije i informacije šta ona radi. Pored toga, redukcijom liste parametra često smanjujemo broj zadataka koje funkcija radi. U sklopu direktorijuma "Methods/03. Parameter Lists" primeni strategije za redukciju parametra i refaktoriši funkcije.', 50);
+	"Id", "Url", "Description", "TestSuiteLocation", "SolutionIdForeignKey")
+	VALUES (49, 'https://github.com/Clean-CaDET/challenge-repository', 'Redukcija broja parametra pozitivno utiče na razumevanje samog zaglavlja funkcije i informacije šta ona radi. Pored toga, redukcijom liste parametra često smanjujemo broj zadataka koje funkcija radi. U sklopu direktorijuma "Methods/03. Parameter Lists" primeni strategije za redukciju parametra i refaktoriši funkcije.', 'Methods.Params', 50);
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (5, 49);
@@ -825,3 +821,425 @@ INSERT INTO public."QuestionAnswers"(
 INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
 	VALUES (26, 'Kada pišemo čiste funkcije, naši klijenti mogu da čitaju i razumeju naš kod.', false, 'Izjava nije tačna. Čiste funkcije koje opisuju poslovnu logiku treba da budu razumljive našim klijentima. Međutim, ne treba zaboraviti značajan deo logike koja će omogućiti obradu HTTP zahteva, interakciju sa bazom, kriptografiju i ostale tehničke detalje koji su poznati inženjnerima softvera, ali ne i ljudima za koje se pravi softver.', 66);
+
+
+--== Cohesion ==- FK Node	
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (15, 'Definiši razliku između strukturalne i semantičke kohezije.', 0, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (100, 'Semantic Cohesion Definition', 15);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (101, 'Semantic Cohesion Example', 15);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (102, 'Structural Cohesion Definition', 15);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (103, 'Structural Cohesion Example', 15);
+	
+
+-- Cohesion - FK Node
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (100, 100);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (100, 'Kohezija modula definiše koliko njegovi elementi formiraju značajnu i atomičnu celinu. 
+
+Elementi *visoko-kohezivnog modula* smisleno "pripadaju zajedno" i zajedno ostvaruju jasno definisan zadatak. Za ovakve module kažemo da imaju jednu odgovornost. Tako instrukcije koje čine visoko-kohezivnu funkciju zajedno izvršavaju jedan zadatak, dok klasa sadrži metode koje su usko povezane i zajedno izvršavaju jednu odgovornost. Takve module je lakše imenovati jer ime definiše tu odgovornost, odnosno zadatak koji modul vrši.
+
+*Nisko-kohezivni moduli* rade više stvari i čine skup slabo povezanih elemenata. Klasa koja se bavi obradom HTTP zahteva, radom sa datotekama i poslovnom logikom sadrži više značajnih celina u sebi, odgovara na više odgovornosti i kao celina ima nisku koheziju.
+
+Tip kohezije koji smo opisali do sada nazivamo **semantička kohezija**. Pod semantikom smatramo značenje koje pridodajemo određenom segmentu koda - nešto što definišemo kroz njegovo ime i zadatke, odgovornosti ili ciljeve koje dati kod treba da ispuni. Pošto je semantika zasnovana na jeziku kojim se služimo i zavisi od domena za koji pravimo softver, semantičku koheziju je izazovno odrediti.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (101, 101);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (101, 'https://i.ibb.co/56Fzt6L/RS-semantic-example.png', 'Leva klasa izvršava par odgovornosti - više nego što njeno ime ističe.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (102, 102);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (102, 'Kohezija modula se može definisati kao strukturalna metrika. Primeri jednostavnih strukturalnih metrika su broj linija koda klase (engl. *lines of code*; *LOC*) i broj metoda klase (engl. *number of methods defined*; *NMD*).
+
+Kohezija ili nedostatak kohezije (engl. *Lack of cohesion of methods*; *LCOM*) je složenija strukturalna metrika koja određuje stepen "umreženosti" elemenata modula. Ovo podrazumeva brojanje veza između elemenata, gde bi primer veze kod klase bio pristup atributa od strane metode.
+
+Visoko-kohezivne klase imaju gustu mrežu veza, gde će većina metoda koristiti većinu atributa. Nisko-kohezivne klase imaju retku mrežu, gde će većina metoda pristupati manjem podskupu atributa.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (103, 103);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (103, 'https://i.ibb.co/QQ7XDK5/structural-cohesion-example.png', 'Koja klasa ima gušću mrežu? Kako bismo refaktorisali klasu sa niskom kohezijom?');
+	
+
+--== Cohesion ==- PK Node 1
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (16, 'Primeni formulu za računanje strukturalne kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (110, 'Structural Cohesion Advanced Example', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (111, 'Structural Cohesion Formula', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (112, 'Structural Cohesion Calculation', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (113, 'Structural Cohesion Exceptions', 16); -- TODO: Another LO that is based on text (or image)
+	
+/*INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (114, 'Challenge Structural Cohesion', 16);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (115, 'Challenge Structural Cohesion Solution', 16); TODO*/
+	
+-- Cohesion - PK Node 1
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (110, 110);
+INSERT INTO public."ArrangeTasks"(
+	"Id", "Text")
+	VALUES (110, 'Ispitaj sledeću klasu:
+	
+    class StoreApplication
+    {
+        private string _fileLocation;
+        private string _lineSeparator;
+        private List<Product> _availableProducts;
+    
+        //Constructor omitted for brevity.
+        public void RefreshInventory()
+        {
+            File.Create(_fileLocation);
+        }
+
+        public void LoadInventory()
+        {
+            string[] lines = File.ReadAllLines(_fileLocation);
+            foreach (string line in lines)
+            {
+                string[] productElements = line.Split(_lineSeparator);
+                _availableProducts.Add(new Product(productElements));
+            }
+        }
+
+        public Product GetProduct(string name)
+        {
+            foreach (var product in _availableProducts)
+            {
+                if (product.Name.Equals(name)) return product;
+            }
+            return null;
+        }
+
+        public List<Product> GetProductsCheaperThan(double price)
+        {
+            List<Product> retVal = new List<Product>();
+            foreach (var product in _availableProducts)
+            {
+                if (product.Price < price) retVal.Add(product);
+            }
+
+            return retVal;
+        }
+    }
+
+Ako posmatramo strukturalnu koheziju klase kao broj veza (pristupa polja od strane metode) u klasi, rasporedi navedena polja i atribute u sledeće klase da proizvedeš što kohezivnije klase.');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (111, 110, 'StoreApplication');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (112, 110, 'ProductStorage');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (111, 112, '_fileLocation');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (112, 112, '_lineSeparator');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (113, 112, 'RefreshInventory');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (114, 112, 'LoadInventory');
+INSERT INTO public."ArrangeTaskContainers"(
+	"Id", "ArrangeTaskId", "Title")
+	VALUES (113, 110, 'ProductCache');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (115, 113, '_availableProducts');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (116, 113, 'GetProduct');
+INSERT INTO public."ArrangeTaskElements"(
+	"Id", "ArrangeTaskContainerId", "Text")
+	VALUES (117, 113, 'GetProductsCheaperThan');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (111, 111);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (111, 'https://i.ibb.co/w6T0Mg5/RS-structural-formula.png', 'Izračunaj vrednost strukturalne kohezije za prethodni primer (pre i posle refaktorisanja).');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (112, 112);
+INSERT INTO public."Questions"(
+	"Id", "Text")
+	VALUES (112, 'Primeni prethodnu formulu da izračunaš strukturalnu koheziju za sledeću klasu:
+	
+	class StudentEnrollments
+    {
+        private List<Course> _activeCourses;
+        private List<Course> _completedCourses;
+
+        //Constructor omitted for brevity.
+        public int GetActiveCoursesESPB()
+        {
+            int totalEspb = 0;
+            foreach (Course course in _activeCourses)
+            {
+                totalEspb += course.ESPB;
+            }
+            return totalEspb;
+        }
+
+        public void EnrollInCourse(Course newCourse)
+        {
+            if (GetActiveCoursesESPB() + newCourse.ESPB > EnrollmentConstants.MAX_ALLOWED_ACTIVE_ESPB)
+                throw new InsufficientESPBRemainingException();
+
+            foreach (Course prerequisite in newCourse.PrerequisiteCourses)
+            {
+                if(_completedCourses.Contains(prerequisite)) continue;
+                throw new PrerequisiteCourseNotCompletedException();
+            }
+
+            _activeCourses.Add(newCourse);
+        }
+    }
+	');
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (110, 'Kohezija je 0.', false, '', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (111, 'Kohezija je 0.25.', false, '', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (112, 'Kohezija je 0.5.', false, '', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (113, 'Kohezija je 0.75.', true, 'Ovaj odgovor je ispravan. Klasa ima 2 metode i 2 polja. EnrollInCourse koristi oba polja, dok GetActiveCoursesESPB koristi samo jedno. Primenom formule dobijamo (2+1)/(2*2) = 0.75.', 112);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (114, 'Kohezija je 1.', false, '', 112);
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (113, 113);
+INSERT INTO public."Questions"(
+	"Id", "Text")
+	VALUES (113, 'Primeni prethodnu formulu da izračunaš strukturalnu koheziju za sledeće klase:
+	
+	class Course
+    {
+        private string _name;
+		private int _espb;
+		
+		public string GetName()
+		{
+		    return _name;
+		}
+		
+		public int GetEspb()
+		{
+		    return _espb;
+		}
+    }
+	
+	class CourseValidator
+	{
+        public bool IsValid(Course c)
+		{
+		    if(c.GetName() == null || c.GetName().Equals("")) return false;
+			return c.GetEspb() > 0;
+		}
+	}
+	');
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (120, 'Kohezija Course klase je 0.5, a CourseValidator klase je 0.', false, '', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (121, 'Kohezija Course klase je 0, a CourseValidator klase nije moguće izračunati.', false, '', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (122, 'Kohezija Course klase je 0.5, a CourseValidator klase nije moguće izračunati.', true, 'Ova izjava je tačna. Kroz ovaj primer uočavamo okolnosti u kojima strukturalna kohezija ne daje značajan podatak. Ako je klasa funkcionalna klasa (sadrži samo metode bez polja) formula koju koristimo nije primenljiva jer posmatra vezu kao spoj polja i metode. Ako je klasa suštinski struktura podataka (ima samo polja uz getter i setter metode) kohezija je niska i mogli bismo je povećati podelom u klase koje imaju po 1 polje, što bi bilo besmisleno. Iz navedenog vidimo da je strukturalna kohezija korisna samo kada radimo sa "pravim objektima" - kolekcijom atributa i metoda koje koriste veći broj atributa da izvrše zadatak i kolektivno ispune neku odgovornost.', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (123, 'Kohezija Course i CourseValidator klase je 0.', false, '', 113);
+INSERT INTO public."QuestionAnswers"(
+	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
+	VALUES (124, 'Kohezija Course klase je 0.5, a CourseValidator klase je 1.', false, '', 113);
+
+
+--== Cohesion ==- PK Node 2
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (17, 'Primeni formulu za računanje semantičke kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (120, 'Semantic Cohesion Advanced Example', 17);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (121, 'Semantic Cohesion Formula', 17); -- TODO: Zadatak (npr. ArrangeTask za odgovornosti).
+	
+/*INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (122, 'Challenge Semantic Cohesion', 17);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (123, 'Challenge Semantic Cohesion Solution', 17);TODO*/
+	
+-- Cohesion - PK Node 2
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (120, 120);
+INSERT INTO public."Videos"(
+	"Id", "Url")
+	VALUES (120, 'https://www.youtube.com/watch?v=qE-Gmu_YuQE'); -- TODO: RS
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (121, 121);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (121, 'https://i.ibb.co/HzzCFVC/RS-semantic-cohesion.png', 'Nepreciznost ove formule potiče od labave definicije "odgovornosti" i semantičkog značenja koji dodeljujemo nekom parčetu koda. Problem je dodatno otežan što se prati izvršavanje date odgovornosti na nivou čitavog sistema, a ne samo posmatranog modula.');
+	--TODO PK1 and PK2 challenges
+
+--== Cohesion ==- CK Node
+INSERT INTO public."KnowledgeNodes"(
+	"Id", "LearningObjective", "Type", "LectureId")
+	VALUES (18, 'Razumi značaj kohezivnih modula za održivi razvoj softvera.', 2, 3);
+
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (130, 'Cohesion Analogy', 18);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (131, 'Cohesion Adhesion', 18);
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (132, 'Cohesion Big Picture', 18); -- Paketi servisi.
+	
+INSERT INTO public."LearningObjectSummaries"(
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (133, 'Cohesion Recap', 18);
+
+
+-- Cohesion -- CK Node
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (130, 130);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (130, 'Programski kod je mehanizam putem kog komuniciramo sa računarom. U složenom softveru, istovremeno vodimo više razgovora. Dogovaramo se kako da bezbedno transportujemo podatke, kako da keširamo odgovore na zahteve, šta čini validan unos i koji su koraci odabrane poslovne kalkulacije.
+	
+Polazeći od ove analogije, možemo da posmatramo sistem izgrađen od nisko-kohezivnih modula kao glasnu žurku gde se mnoge glasne konverzacije vode. U takvom ambijentu je teško fokusirati se na jedan razgovor i često čujemo pogrešne reši (ili ne čujemo pa klimamo glavom kao da je sve jasno).
+	
+Naspram toga, sistem izgrađen od visoko-kohezivnih modula je poput kvalitetnog foruma za onlajn diskusiju. Svaki segment foruma je fokusiran na jednu temu, tako da je lako ispratiti o čemu se priča. Kada je neophodno pronaći podatak o nekoj temi, lako je izdvojiti relevantni deo foruma.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (131, 131);
+INSERT INTO public."Images"(
+	"Id", "Url", "Caption")
+	VALUES (131, 'https://i.ibb.co/6wH5NrY/RS-dung.png', 'Lepljivi moduli su "utility" i "misc" paketi, kao i "Manager" i "Service" klase. Zbog svog generičnog imena, lako je opravdati bilo koji dodatak u ovakav modul - što postavlja pitanje da li se neko parče logike nalazi na smislenom mestu ili u kontejneru koji zovemo "ostalo"?');
+	
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (132, 132);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (132, 'Kroz ovu lekciju smo se u značajnoj meri fokusirali na koheziju klase i veza između njenih elemenata. Možemo ukratko sagledati jednostavnije i složenije module i kako se kohezija odnosi na njih.
+	
+- Funkcije kao najjednostavniji autonomni modul ima visoku koheziju ako njene instrukcije kolektivno izvršavaju jedan zadatak. Funkcija sa niskom kohezijom često poseduje "regione" instrukcija (odvojene komentarom ili praznim redom), gde se svaki region bavi posebnim zadatkom. U goroj varijanti, ovi regioni su isprepletani i teško je odrediti koje sve zadatke vrši funkcija. Kod funkcija je semantička kohezija značajnija metrika jer je teško definisati strukturalnu metriku za veze između instrukcija.
+- Visoko-kohezivni paketi podrazumevaju kolekciju klasa koje rade zajedno kako bi ostvarili neki cilj višeg nivoa apstrakcije. Ovakav paket izvršava značajan deo poslovne ili aplikativne logike uz minimalnu podršku drugih paketa. Pored semantičke kohezije, moguće je uposliti strukturalne metrike koje određuju spregnutost između klasa (engl. *Coupling between objects*; *CBO*). Dobro formiran paket će imati dosta više sprega između objekata koji su deo tog paketa nego između unutrašnjih i spoljašnjih objekata. Ovakve pakete je jednostavno promovisati u zasebne aplikacije ili mikroservise ukoliko postoji potreba za time.');
+
+INSERT INTO public."LearningObjects"(
+	"Id", "LearningObjectSummaryId")
+	VALUES (133, 133);
+INSERT INTO public."Texts"(
+	"Id", "Content")
+	VALUES (133, 'TODO');
+	
+
+
+--=== CODE QUALITY ADVICE
+INSERT INTO public."Advice"(
+	"Id", "IssueType")
+	VALUES (1, 'LONG_METHOD');
+INSERT INTO public."Advice"(
+	"Id", "IssueType")
+	VALUES (2, 'GOD_CLASS');
+	
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 30);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 33);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 40);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 43);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 45);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 60);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 62);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (1, 63);
+	
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (2, 100);
+INSERT INTO public."IssueAdviceLearningObjectSummary"(
+	"AdviceId", "SummariesId")
+	VALUES (2, 102);

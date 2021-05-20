@@ -1,10 +1,11 @@
-﻿using System;
-using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
+﻿using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FunctionalityTester;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;
@@ -41,7 +42,8 @@ namespace SmartTutor.ProgressModel
 
             if (challenge == null) return null;
 
-            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode);
+            //var tester = new WorkspaceFunctionalityTester(_submissionRepository.GetWorkspacePath(submission.LearnerId));
+            var evaluation = challenge.CheckChallengeFulfillment(submission.SourceCode, null);
 
             if (evaluation.ChallengeCompleted) submission.MarkCorrect();
             _submissionRepository.SaveChallengeSubmission(submission);

@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using SmellDetector.Controllers;
+﻿using CodeModel.CaDETModel.CodeItems;
 using SmellDetector.SmellModel;
+using System.Collections.Generic;
 
 namespace SmellDetector.Detectors.RuleEngines
 {
     public class Rule
     {
-        private readonly String _DOI;
+        private readonly string _DOI;
         private readonly Criteria _criteria;
         private readonly SmellType _smellType;
-        public Rule(String DOI, Criteria criteria, SmellType smellType)
+        public Rule(string DOI, Criteria criteria, SmellType smellType)
         {
             _DOI = DOI;
             _criteria = criteria;
             _smellType = smellType;
         }
 
-        public Issue Validate(String codeSnippetId, Dictionary<String, double> metrics)
+        public Issue Validate(string codeSnippetId, Dictionary<CaDETMetric, double> metrics)
         {
             if (_criteria.MeetCriteria(metrics))
             {
-                Issue newIssue = new Issue();
-                newIssue.IssueType = _smellType;
-                newIssue.CodeSnippetId = codeSnippetId;
-                return newIssue;
+                return new Issue(_smellType, codeSnippetId);
             }
             return null;
         }

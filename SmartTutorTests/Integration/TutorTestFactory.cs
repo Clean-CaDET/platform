@@ -7,7 +7,6 @@ using SmartTutor.Database;
 using System;
 using System.IO;
 using System.Linq;
-using SmartTutor.ProgressModel;
 
 namespace SmartTutor.Tests.Integration
 {

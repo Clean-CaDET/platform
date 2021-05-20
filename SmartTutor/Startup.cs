@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -11,16 +10,20 @@ using Microsoft.Extensions.Hosting;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures.Repository;
-using SmartTutor.Controllers.Mappers;
+using SmartTutor.Controllers.Content.Mappers;
+using SmartTutor.Controllers.KeycloakAuth;
 using SmartTutor.Database;
 using SmartTutor.InstructorModel.Instructors;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.LearnerModel.Workspaces;
 using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Feedback.Repository;
 using SmartTutor.ProgressModel.Progress.Repository;
 using SmartTutor.ProgressModel.Submissions.Repository;
-using SmartTutor.Controllers.KeycloakAuth;
+using SmartTutor.QualityAnalysis;
+using SmartTutor.QualityAnalysis.Repository;
+using System;
 
 namespace SmartTutor
 {
@@ -57,11 +60,16 @@ namespace SmartTutor
             services.AddScoped<ISubmissionRepository, SubmissionDatabaseRepository>();
             services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
-            
+
             services.AddScoped<ILearnerService, LearnerService>();
+            services.Configure<WorkspaceOptions>(Configuration.GetSection(WorkspaceOptions.ConfigKey));
+            services.AddScoped<IWorkspaceCreator, NoWorkspaceCreator>();
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
-            
+
             services.AddScoped<IInstructor, VARKRecommender>();
+
+            services.AddScoped<ICodeQualityAnalyzer, CaDETQualityAnalyzer>();
+            services.AddScoped<IAdviceRepository, AdviceDatabaseRepository>();
 
             AuthenticationConfig(services);
             AuthorizationConfig(services);
@@ -122,7 +130,7 @@ namespace SmartTutor
                 .AllowCredentials()); // allow credentials
 
             app.UseHttpsRedirection();
-            
+
             app.UseAuthentication();
 
             app.UseRouting();

@@ -59,7 +59,7 @@ namespace SmartTutor.Tests.Unit
         public void Builds_personalized_node(int learnerId, KnowledgeNode node,
             NodeProgress expectedNodeProgress)
         {
-            var result = _instructor.BuildNodeForLearner(learnerId, node);
+            var result = _instructor.GatherLearningObjectsForLearner(learnerId, node.LearningObjectSummaries);
             result.ShouldBe(expectedNodeProgress.LearningObjects);
         }
 

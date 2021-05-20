@@ -6,7 +6,7 @@ namespace SmartTutor.InstructorModel.Instructors
 {
     public interface IInstructor
     {
-        List<LearningObject> BuildNodeForLearner(int learnerId, KnowledgeNode knowledgeNode);
-        List<LearningObject> BuildSimpleNode(KnowledgeNode knowledgeNode);
+        List<LearningObject> GatherLearningObjectsForLearner(int learnerId, List<LearningObjectSummary> learningObjectSummaries);
+        List<LearningObject> GatherDefaultLearningObjects(List<LearningObjectSummary> learningObjectSummaries);
     }
 }

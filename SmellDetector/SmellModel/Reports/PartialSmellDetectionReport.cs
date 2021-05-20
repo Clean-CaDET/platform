@@ -4,19 +4,17 @@ namespace SmellDetector.SmellModel.Reports
 {
     public class PartialSmellDetectionReport
     {
-        public Dictionary<string, List<Issue>> CodeItemIssues { get; set; }
+        public Dictionary<string, ISet<Issue>> CodeSnippetIssues { get; set; }
 
         public PartialSmellDetectionReport()
         {
-            CodeItemIssues = new Dictionary<string, List<Issue>>();
+            CodeSnippetIssues = new Dictionary<string, ISet<Issue>>();
         }
 
-        public void AddIssue(string codeItemId, Issue issue) { AddIssues(codeItemId, new List<Issue> { issue }); }
-
-        public void AddIssues(string codeItemId, List<Issue> issues)
+        public void AddIssue(string codeItemId, Issue issue)
         {
-            if (!CodeItemIssues.ContainsKey(codeItemId)) CodeItemIssues.Add(codeItemId, issues);
-            else CodeItemIssues[codeItemId].AddRange(issues);
+            if (!CodeSnippetIssues.ContainsKey(codeItemId)) CodeSnippetIssues.Add(codeItemId, new HashSet<Issue> { issue });
+            else CodeSnippetIssues[codeItemId].Add(issue);
         }
     }
 }

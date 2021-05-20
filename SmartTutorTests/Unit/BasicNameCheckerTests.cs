@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Shouldly;
+﻿using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
-using SmartTutorTests.DataFactories;
+using SmartTutor.Tests.TestData;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit
@@ -17,13 +17,13 @@ namespace SmartTutor.Tests.Unit
         public void Evaluates_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints, bool expectedCompletion)
         {
             //TODO: Readonly lists
-            var challenge = new Challenge(1, 1, "", "", null, new List<ChallengeFulfillmentStrategy>
+            var challenge = new Challenge(1, 1, new List<ChallengeFulfillmentStrategy>
             {
                 new BasicNameChecker(null, new List<string> { "Payment", "PaymentService", "compensation" }, new ChallengeHint(11)),
                 new BasicNameChecker(new List<string> { "Class", "List", "Method" }, null, new ChallengeHint(21))
             });
 
-            var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt);
+            var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt, null);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
 
             actualHints.Count.ShouldBe(expectedHints.Count);
