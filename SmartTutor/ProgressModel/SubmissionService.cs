@@ -85,10 +85,10 @@ namespace SmartTutor.ProgressModel
 
         private bool IsLearningObjectInLearnersCourses(LearningObject learningObject, int learnerId)
         {
-            var courseIds = _lectureRepository.GetCoursesIdsByLOsId(learningObject.LearningObjectSummaryId);
+            var courseId = _lectureRepository.GetCourseIdByLOId(learningObject.LearningObjectSummaryId);
             var learner = _learnerRepository.GetById(learnerId);
             return learner.CourseEnrollments.Any(learnerCourseEnrollment =>
-                courseIds.Contains(learnerCourseEnrollment.CourseId));
+                learnerCourseEnrollment.CourseId == courseId);
         }
     }
 }

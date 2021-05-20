@@ -6,13 +6,12 @@ namespace SmartTutor.ContentModel.Lectures
     {
         public int Id { get; private set; }
         public string Description { get; private set; }
-        public List<KnowledgeNode> KnowledgeNodes {get;private set;}
+        public KnowledgeNode KnowledgeNode {get; private set; }
 
         public LearningObjectSummary(int id, string description)
         {
             Id = id;
             Description = description;
-            KnowledgeNodes = new List<KnowledgeNode>();
         }
     }
 }

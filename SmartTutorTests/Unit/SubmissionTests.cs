@@ -83,10 +83,9 @@ namespace SmartTutor.Tests.Unit
 
         private static ILectureRepository CreateLectureMockRepository()
         {
-            HashSet<int> courses = new HashSet<int> {1, 2, 3};
-            Mock<ILectureRepository> lectureRepo = new Mock<ILectureRepository>();
-            lectureRepo.Setup(repo => repo.GetCoursesIdsByLOsId(It.IsAny<int>()))
-                .Returns(courses);
+            var lectureRepo = new Mock<ILectureRepository>();
+            lectureRepo.Setup(repo => repo.GetCourseIdByLOId(It.IsAny<int>()))
+                .Returns(1);
             return lectureRepo.Object;
         }
 

@@ -1,4 +1,5 @@
-﻿using SmartTutor.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartTutor.Database;
 using System.Linq;
 
 namespace SmartTutor.LearnerModel.Learners.Repository
@@ -14,11 +15,11 @@ namespace SmartTutor.LearnerModel.Learners.Repository
 
         public Learner GetById(int learnerId)
         {
-            return _dbContext.Learners.Find(learnerId);
+            return _dbContext.Learners.Where(l => l.Id == learnerId).Include(l => l.CourseEnrollments).FirstOrDefault();
         }
         public Learner GetByIndex(string index)
         {
-            return _dbContext.Learners.FirstOrDefault(learner => learner.StudentIndex.Equals(index));
+            return _dbContext.Learners.Where(learner => learner.StudentIndex.Equals(index)).Include(l => l.CourseEnrollments).FirstOrDefault();
         }
 
         public Learner SaveOrUpdate(Learner learner)

@@ -5,6 +5,7 @@ DELETE FROM public."QuestionSubmissions";
 DELETE FROM public."NodeProgresses";
 DELETE FROM public."LearningObjectFeedback";
 
+DELETE FROM public."CourseEnrollment";
 DELETE FROM public."Learners";
 
 DELETE FROM public."Texts";
@@ -25,6 +26,7 @@ DELETE FROM public."LearningObjects";
 DELETE FROM public."LearningObjectSummaries";
 DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
+DELETE FROM public."Courses";
 
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
@@ -38,6 +40,20 @@ INSERT INTO public."Learners"(
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore")
 	VALUES (4, 'SU-3-2021', 1, 2, 4, 3);
+
+INSERT INTO public."Courses"(
+	"Id")
+	VALUES (1);
+
+INSERT INTO public."CourseEnrollment"(
+	"Id", "CourseId", "LearnerId")
+	VALUES (1, 1, 1);
+INSERT INTO public."CourseEnrollment"(
+	"Id", "CourseId", "LearnerId")
+	VALUES (2, 1, 2);
+INSERT INTO public."CourseEnrollment"(
+	"Id", "CourseId", "LearnerId")
+	VALUES (3, 1, 3);
 
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description")
