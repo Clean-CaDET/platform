@@ -29,7 +29,6 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NOPF] = CountNumberOfProtectedFields(parsedClass),
                 [CaDETMetric.CMNB] = CountMaxNestedBlocks(parsedClass),
                 [CaDETMetric.RFC] = CountUniqueMethodInvocations(parsedClass),
-                [CaDETMetric.CBO] = CountDependencies(parsedClass),
                 [CaDETMetric.ICBMC] = GetICBMCCohesionValue(parsedClass)
             };
         }
