@@ -40,10 +40,17 @@ INSERT INTO public."Learners"(
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
 	VALUES (3, 'SU-3-2021', 1, 4, 3, 2, 'C:/Smart-Tutor/3/Workspace');
+INSERT INTO public."Learners"(
+    "Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
+    VALUES (4, 'SU-4-2021', 1, 4, 3, 2, 'C:/Smart-Tutor/3/Workspace');
 
 INSERT INTO public."Courses"(
 	"Id")
 	VALUES (1);
+INSERT INTO public."Courses"(
+    "Id")
+    VALUES (2);
+
 
 INSERT INTO public."CourseEnrollment"(
 	"Id", "CourseId", "LearnerId")
@@ -54,6 +61,10 @@ INSERT INTO public."CourseEnrollment"(
 INSERT INTO public."CourseEnrollment"(
 	"Id", "CourseId", "LearnerId")
 	VALUES (3, 1, 3);
+INSERT INTO public."CourseEnrollment"(
+    "Id", "CourseId", "LearnerId")
+    VALUES (4, 2, 4);
+
 
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description", "CourseId")

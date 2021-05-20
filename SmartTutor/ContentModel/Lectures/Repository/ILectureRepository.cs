@@ -10,6 +10,6 @@ namespace SmartTutor.ContentModel.Lectures.Repository
         List<Lecture> GetLectures();
         List<KnowledgeNode> GetKnowledgeNodes(int id);
         KnowledgeNode GetKnowledgeNodeWithSummaries(int id);
-        KnowledgeNode GetKnowledgeNodesBySummary(int id);
+        KnowledgeNode GetKnowledgeNodeBySummary(int id);
     }
 }

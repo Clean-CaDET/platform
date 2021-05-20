@@ -60,6 +60,7 @@ namespace SmartTutor.ProgressModel
         public List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission)
         {
             var question = _learningObjectRepository.GetQuestion(submission.QuestionId);
+            Console.WriteLine(question);
             if (!IsLearningObjectInLearnersCourses(question, submission.LearnerId))
             {
                 throw new LearnerNotEnrolledInCourse(submission.LearnerId);

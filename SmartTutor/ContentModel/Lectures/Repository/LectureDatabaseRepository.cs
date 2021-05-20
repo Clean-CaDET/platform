@@ -21,7 +21,7 @@ namespace SmartTutor.ContentModel.Lectures.Repository
 
         public int GetCourseIdByLOId(int learningObjectSummaryId)
         {
-            var knowledgeNode = GetKnowledgeNodesBySummary(learningObjectSummaryId);
+            var knowledgeNode = GetKnowledgeNodeBySummary(learningObjectSummaryId);
 
             var lecture = GetLecture(knowledgeNode.LectureId);
 
@@ -50,7 +50,7 @@ namespace SmartTutor.ContentModel.Lectures.Repository
                 .FirstOrDefault();
         }
 
-        public KnowledgeNode GetKnowledgeNodesBySummary(int id)
+        public KnowledgeNode GetKnowledgeNodeBySummary(int id)
         {
             var learningObjectSummary = _dbContext.LearningObjectSummaries.Where(los => los.Id == id)
                 .Include(los => los.KnowledgeNode).FirstOrDefault();
