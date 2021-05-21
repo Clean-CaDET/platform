@@ -90,7 +90,10 @@ namespace CodeModel.CodeParsers.CSharp
                 var cohesionGraph = new ICBMCGraph(cutMatrix);
                 if (cohesionGraph.IsDisconnected())
                 {
-                    subGraphPairs.Add(new SubGraphPair(cohesionGraph, edgeGroup));
+                    SubGraphPair subGraphPair = new SubGraphPair(cohesionGraph, edgeGroup);
+                    if (subGraphPair.LeftSubGraph.IsDisconnected() || subGraphPair.RightSubGraph.IsDisconnected())
+                        continue;
+                    subGraphPairs.Add(subGraphPair);
                 }
             }
 
