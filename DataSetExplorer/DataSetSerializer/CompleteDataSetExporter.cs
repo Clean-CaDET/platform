@@ -20,8 +20,7 @@ namespace DataSetExplorer.DataSetSerializer
             _exportPath = exportPath;
         }
 
-        public void Export(List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataSetInstances,
-            string fileName)
+        public void Export(List<DataSetInstance> dataSetInstances, string fileName)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _excelFile = new ExcelPackage(new FileInfo(_templatePath));
@@ -30,29 +29,28 @@ namespace DataSetExplorer.DataSetSerializer
             Serialize(fileName);
         }
 
-        private void PopulateTemplate(List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances)
+        private void PopulateTemplate(List<DataSetInstance> instances)
         {
             PopulateHeader(instances);
             for (var i = 0; i < instances.Count; i++)
             {
                 var row = 3 + i;
-                _sheet.Cells[row, 1].Value = instances[i].Item1.CodeSnippetId;
-                _sheet.Cells[row, 2].Value = instances[i].Item1.Link;
+                _sheet.Cells[row, 1].Value = instances[i].CodeSnippetId;
+                _sheet.Cells[row, 2].Value = instances[i].Link;
                 _sheet.Cells[row, 3].Value =
-                    instances[i].Item1.Annotations.First().InstanceSmell.Value;
-                _sheet.Cells[row, 4].Value = instances[i].Item1.ProjectLink;
+                    instances[i].Annotations.First().InstanceSmell.Value;
+                _sheet.Cells[row, 4].Value = instances[i].ProjectLink;
 
-                PopulateMetrics(instances[i].Item2, row);
+                PopulateMetrics(instances[i].MetricFeatures, row);
                 PopulateAnnotations(instances[i], row);
             }
         }
 
-        private void PopulateHeader(List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances)
+        private void PopulateHeader(List<DataSetInstance> instances)
         {
-            var maxAnnotated = instances.Select(i => i.Item1)
-                .OrderByDescending(i => i.Annotations.Count())
+            var maxAnnotated = instances.OrderByDescending(i => i.Annotations.Count())
                 .First().Annotations.ToList();
-            var numOfMetrics = instances.First().Item2.Count;
+            var numOfMetrics = instances.First().MetricFeatures.Count;
             _sheet.Cells[1, 6 + numOfMetrics].Value = _sheet.Cells[1, 6].Value;
             _sheet.Cells[2, 5 + numOfMetrics].Value = _sheet.Cells[2, 7].Value;
             _sheet.Cells[1, 5, 1, 4 + numOfMetrics].Merge = true;
@@ -75,13 +73,13 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateAnnotations(Tuple<DataSetInstance, Dictionary<CaDETMetric, double>> instance, int row)
+        private void PopulateAnnotations(DataSetInstance instance, int row)
         {
-            var numOfMetrics = instance.Item2.Count;
-            _sheet.Cells[row, 5 + numOfMetrics].Value = instance.Item1.GetFinalAnnotation();
+            var numOfMetrics = instance.MetricFeatures.Count;
+            _sheet.Cells[row, 5 + numOfMetrics].Value = instance.GetFinalAnnotation();
 
             var i = 0;
-            var annotations = instance.Item1.Annotations;
+            var annotations = instance.Annotations;
             while (_sheet.Cells[2, 6 + numOfMetrics + i].Value != null)
             {
                 var annotationByCurrentAnnotator = annotations.FirstOrDefault(a => a.Annotator.Id.Equals(_sheet.Cells[2, 6 + numOfMetrics + i].Value));

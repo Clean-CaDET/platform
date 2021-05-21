@@ -63,10 +63,10 @@ namespace DataSetExplorer.DataSetSerializer
             var heuristics = _requiredSmells.GetHeuristics(smell);
             for (var i = 0; i < heuristics.Count; i++)
             {
-                sheet.Cells[2, 4, 4, 5].Copy(sheet.Cells[2, 6 + 2 * i, 4, 7 + 2 * i]);
-                sheet.Cells[2, 4 + 2 * i].Value = heuristics[i];
+                sheet.Cells[2, 4, 4, 5].Copy(sheet.Cells[2, 6 + (2 * i), 4, 7 + (2 * i)]);
+                sheet.Cells[2, 4 + (2 * i)].Value = heuristics[i];
             }
-            sheet.Cells[2, 4 + 2*heuristics.Count].Value = "Custom heuristics.";
+            sheet.Cells[2, 4 + (2*heuristics.Count)].Value = "Custom heuristics.";
         }
 
         private void PopulateInstances(ExcelWorksheet sheet, List<DataSetInstance> instances, CodeSmell smell)
@@ -77,7 +77,7 @@ namespace DataSetExplorer.DataSetSerializer
                 var row = 4 + i;
                 sheet.Cells[row, 1].Value = instances[i].CodeSnippetId;
                 sheet.Cells[row, 2].Value = instances[i].Link;
-                if (_includeMetrics) PopulateMetrics(sheet, instances[i], row, 4 + numOfHeuristics*2);
+                if (_includeMetrics) PopulateMetrics(sheet, instances[i], row, 4 + (numOfHeuristics*2));
 
                 if (i == instances.Count - 1) break;
                 var nextRow = row + 1;

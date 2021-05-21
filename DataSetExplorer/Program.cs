@@ -43,7 +43,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
 
         private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
         {
-            var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId: null);
+            var dataGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
 
             var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
             var manovaTest = new ManovaTest.ManovaTest();
@@ -59,7 +59,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
 
                 manovaTest.SetupTestArguments(
                     "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Severity_" + severity + ".xlsx",
-                    codeSmellGroup.First().Item2.Keys.ToList(), "Annotator");
+                    codeSmellGroup.First().MetricFeatures.Keys.ToList(), "Annotator");
                 manovaTest.RunTest();
             }
         }
@@ -80,12 +80,12 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
 
         private static void CheckAnnotationConsistencyForAnnotator(int annotatorId)
         {
-            var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId);
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
 
             var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
             var manovaTest = new ManovaTest.ManovaTest();
 
-            var enumerator = dataGroupedBySmells.GetEnumerator();
+            var enumerator = instancesGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var codeSmellGroup = enumerator.Current;
@@ -96,17 +96,17 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
 
                 manovaTest.SetupTestArguments(
                     "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Annotator_" + annotatorId + ".xlsx",
-                    codeSmellGroup.First().Item2.Keys.ToList(), "Annotation");
+                    codeSmellGroup.First().MetricFeatures.Keys.ToList(), "Annotation");
                 manovaTest.RunTest();
             }
         }
 
         private static void ExportAnnotatedDataSet()
         {
-            var dataGroupedBySmells = GetAnnotationsAndMetricsGroupedBySmells(annotatorId: null);
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
 
             var exporter = new CompleteDataSetExporter("D:/ccadet/annotations/annotated/Output/");
-            var enumerator = dataGroupedBySmells.GetEnumerator();
+            var enumerator = instancesGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var codeSmellGroup = enumerator.Current;
@@ -114,9 +114,9 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             }
         }
 
-        private static IEnumerable<IGrouping<string, Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>> GetAnnotationsAndMetricsGroupedBySmells(int? annotatorId)
+        private static IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(int? annotatorId)
         {
-            var annotationsAndMetrics = new List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>();
+            var allAnnotatedInstances = new List<DataSetInstance>();    
 
             var projects = GetAnnotatedProjects();
             foreach (var key in projects.Keys)
@@ -127,10 +127,9 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 var annotatedInstances = LoadDataSet(projects[key].ToString()).GetAllInstances();
                 LoadAnnotators(ref annotatedInstances);
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
-                var instanceMetrics = GetMetricsForExport(annotatedInstances, project);
-                annotationsAndMetrics.AddRange(JoinAnnotationsAndMetrics(annotatedInstances, instanceMetrics));
+                allAnnotatedInstances.AddRange(FillInstancesWithMetrics(annotatedInstances, project));
             }
-            return annotationsAndMetrics.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
+            return allAnnotatedInstances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Value);
         }
 
         private static void LoadAnnotators(ref List<DataSetInstance> annotatedInstances)
@@ -156,15 +155,12 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 .ToList();
         }
 
-        private static Dictionary<string, Dictionary<CaDETMetric, double>> GetMetricsForExport(List<DataSetInstance> annotatedInstances, CaDETProject project)
+        private static List<DataSetInstance> FillInstancesWithMetrics(List<DataSetInstance> annotatedInstances, CaDETProject project)
         {
-            Dictionary<string, Dictionary<CaDETMetric, double>> allMetrics =
-                new Dictionary<string, Dictionary<CaDETMetric, double>>();
-            foreach (var instance in annotatedInstances)
-            {
-                allMetrics[instance.CodeSnippetId] = project.GetMetricsForCodeSnippet(instance.CodeSnippetId);
-            }
-            return allMetrics;
+            return annotatedInstances.Select(i => { 
+                i.MetricFeatures = project.GetMetricsForCodeSnippet(i.CodeSnippetId); 
+                return i; 
+            }).ToList();
         }
 
         private static void FindInstancesWithAllDisagreeingAnnotationsUseCase()

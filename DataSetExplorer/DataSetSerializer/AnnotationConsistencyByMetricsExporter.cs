@@ -21,7 +21,7 @@ namespace DataSetExplorer.DataSetSerializer
             _exportPath = exportPath;
         }
 
-        public void ExportAnnotationsFromAnnotator(int annotatorId, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataSetInstances,
+        public void ExportAnnotationsFromAnnotator(int annotatorId, List<DataSetInstance> dataSetInstances,
             string fileName)
         {
             InitializeExcelSheet(_singleAnnotatorTemplatePath);
@@ -29,7 +29,7 @@ namespace DataSetExplorer.DataSetSerializer
             Serialize(fileName + annotatorId);
         }
 
-        public void ExportAnnotatorsForSeverity(int severity, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataSetInstances,
+        public void ExportAnnotatorsForSeverity(int severity, List<DataSetInstance> dataSetInstances,
             string fileName)
         {
             InitializeExcelSheet(_multipleAnnotatorsTemplatePath);
@@ -44,27 +44,27 @@ namespace DataSetExplorer.DataSetSerializer
             _sheet = _excelFile.Workbook.Worksheets[0];
         }
 
-        private void PopulateTemplateForAnnotator(int annotatorId, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances)
+        private void PopulateTemplateForAnnotator(int annotatorId, List<DataSetInstance> instances)
         {
             for (var i = 0; i < instances.Count; i++)
             {
                 var row = 2 + i;
-                _sheet.Cells[row, 1].Value = instances[i].Item1.Annotations.First(a => a.Annotator.Id == annotatorId).Severity;
-                PopulateMetrics(instances[i].Item2, row);
+                _sheet.Cells[row, 1].Value = instances[i].Annotations.First(a => a.Annotator.Id == annotatorId).Severity;
+                PopulateMetrics(instances[i].MetricFeatures, row);
             }
         }
 
-        private void PopulateTemplateForSeverity(int severity, List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> instances)
+        private void PopulateTemplateForSeverity(int severity, List<DataSetInstance> instances)
         {
             var j = 0;
             foreach (var instance in instances)
             {
-                foreach (var annotation in instance.Item1.Annotations)
+                foreach (var annotation in instance.Annotations)
                 {
                     if (annotation.Severity == severity)
                     {
                         _sheet.Cells[2 + j, 1].Value = annotation.Annotator.Id;
-                        PopulateMetrics(instance.Item2, 2 + j);
+                        PopulateMetrics(instance.MetricFeatures, 2 + j);
                         j++;
                     }
                 }

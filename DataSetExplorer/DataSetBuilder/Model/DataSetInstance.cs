@@ -85,6 +85,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
             IEnumerable<IGrouping<int, DataSetAnnotation>> annotationsGroupedBySeverity)
         {
             var severityCounts = annotationsGroupedBySeverity.Select(group => group.Count());
+            if (severityCounts.Count() == 1) return true;
             return severityCounts.Any(count => count != severityCounts.First());
         }
 
