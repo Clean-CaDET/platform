@@ -92,102 +92,75 @@ namespace CodeModel.CodeParsers.CSharp
         public bool IsDisconnected()
         {
             if (EdgesInGraph.Count == 0) return true;
+            if (CheckIfRowOrColumnIsEmpty(Matrix)) return true;
             Edge firstEdge = EdgesInGraph[0];
-            var edges = StartSearchForEdges(new List<int>(), new List<int>(), new List<Edge> {firstEdge},
-                new List<Edge> {firstEdge});
+            var edges = FindEdgesStartingFromEdge(firstEdge);
             return edges.Count != EdgesInGraph.Count;
         }
 
-        private List<Edge> StartSearchForEdges(List<int> visitedRows, List<int> visitedColumns, List<Edge> visited,
-            List<Edge> edgesToVisit)
-        {
-            var foundEdges = new List<Edge>();
-
-            foreach (var edge in edgesToVisit)
-            {
-                if (!visitedRows.Contains(edge.Method))
-                {
-                    foundEdges.AddRange(SearchRowForConnections(visited, edge.Method));
-                    visitedRows.Add(edge.Method);
-                }
-                else if (!visited.Contains(edge))
-                {
-                    visited.Add(edge);
-                }
-
-                if (!visitedColumns.Contains(edge.Field))
-                {
-                    foundEdges.AddRange(SearchColumnForConnections(visited, edge.Field));
-                    visitedColumns.Add(edge.Field);
-                }
-                else if (!visited.Contains(edge))
-                {
-                    visited.Add(edge);
-                }
-            }
-
-            return foundEdges.Count == 0
-                ? visited
-                : StartSearchForEdges(visitedRows, visitedColumns, visited, foundEdges);
-        }
-
-        private List<Edge> SarchForEdges(List<Edge> visited, List<Edge> edges)
+        private List<Edge> FindEdgesStartingFromEdge(Edge firstEdge)
         {
             List<int> visitedRows = new List<int>();
             List<int> visitedColumns = new List<int>();
-            var foundEdges = new List<Edge>();
-            foreach (var edge in edges)
+            HashSet<Edge> collectedEdges = new HashSet<Edge>();
+            HashSet<Edge> edgesToVisit = new HashSet<Edge>() {firstEdge};
+            HashSet<Edge> visitedEdges = edgesToVisit.ToHashSet();
+
+            while (edgesToVisit.Count != 0)
             {
-                if (!visitedRows.Contains(edge.Method))
+                HashSet<Edge> edgesForNextIteration = new HashSet<Edge>();
+                foreach (var edge in edgesToVisit)
                 {
-                    foundEdges.AddRange(SearchRowForConnections(visited, edge.Method));
-                    visitedRows.Add(edge.Method);
-                }
+                    if (!visitedRows.Contains(edge.Method))
+                    {
+                        List<Edge> foundRowEdges = FindEdgesInDimension(0, edge.Method, visitedEdges);
+                        foundRowEdges.ForEach(edge =>
+                        {
+                            visitedEdges.Add(edge);
+                            edgesForNextIteration.Add(edge);
+                        });
+                        visitedRows.Add(edge.Method);
+                    }
 
-                if (!visitedColumns.Contains(edge.Field))
+                    if (!visitedColumns.Contains(edge.Field))
+                    {
+                        List<Edge> foundColumnEdges = FindEdgesInDimension(1, edge.Field, visitedEdges);
+                        foundColumnEdges.ForEach(edge =>
+                        {
+                            visitedEdges.Add(edge);
+                            edgesForNextIteration.Add(edge);
+                        });
+                        visitedColumns.Add(edge.Field);
+                    }
+                }
+                foreach (var visitedEdge in edgesToVisit)
                 {
-                    foundEdges.AddRange(SearchColumnForConnections(visited, edge.Field));
-                    visitedColumns.Add(edge.Field);
+                    collectedEdges.Add(visitedEdge);
                 }
-
-                visited.Add(edge);
+                edgesToVisit = edgesForNextIteration;
             }
 
-            visited.AddRange(edges);
-
-            return SarchForEdges(edges, foundEdges);
+            return collectedEdges.ToList();
         }
 
-        private List<Edge> SearchRowForConnections(List<Edge> edges, int row)
+        private List<Edge> FindEdgesInDimension(int dimension, int lineInDimension, HashSet<Edge> visitedEdges)
         {
-            var newEdges = new List<Edge>();
-            for (var j = 0; j < Matrix.GetLength(1); j++)
+            List<Edge> foundEdges = new List<Edge>();
+
+            foreach (var edge in EdgesInGraph)
             {
-                var temp = new Edge(row, j);
-                if (!edges.Contains(temp) && Matrix[row, j] == 1)
+                if (dimension == 0 && edge.Method == lineInDimension && !visitedEdges.Contains(edge))
                 {
-                    newEdges.Add(temp);
+                    foundEdges.Add(edge);
+                }
+                else if (dimension == 1 && edge.Field == lineInDimension && !visitedEdges.Contains(edge))
+                {
+                    foundEdges.Add(edge);
                 }
             }
 
-            return newEdges;
+            return foundEdges;
         }
-
-        private List<Edge> SearchColumnForConnections(List<Edge> edges, int column)
-        {
-            var newEdges = new List<Edge>();
-            for (var i = 0; i < Matrix.GetLength(1); i++)
-            {
-                var temp = new Edge(i, column);
-                if (!edges.Contains(temp) && Matrix[i, column] == 1)
-                {
-                    newEdges.Add(temp);
-                }
-            }
-
-            return newEdges;
-        }
-
         public bool IsFullyConnected()
         {
             return EdgesInGraph.Count == Matrix.Length;
@@ -196,6 +169,7 @@ namespace CodeModel.CodeParsers.CSharp
         private IEnumerable<Edge[]> GetCutEdgeGroupCandidates()
         {
             var data = EdgesInGraph.ToArray();
+            if (data.Length == 0) return new List<Edge[]>(); // TODO
 
             return Enumerable
                 .Range(1, (1 << data.Length) - 2)
@@ -206,18 +180,17 @@ namespace CodeModel.CodeParsers.CSharp
 
         private bool CheckIfRowOrColumnIsEmpty(int[,] matrix)
         {
-            if (CheckForEmptyLineInDimension(matrix, 0)) return true;
-            if (CheckForEmptyLineInDimension(matrix, 1)) return true; // TODO if has only one dimension
+            if (CheckForEmptyLineInRow(matrix)) return true;
+            if (CheckForEmptyLineInColumn(matrix)) return true; // TODO if has only one dimension
             return false;
         }
 
-        private bool CheckForEmptyLineInDimension(int[,] matrix, int dimensionToCheck)
+        private bool CheckForEmptyLineInRow(int[,] matrix)
         {
-            int otherDimension = 1 == dimensionToCheck ? 0 : 1;
-            for (int i = 0; i < matrix.GetLength(dimensionToCheck); i++)
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 bool isEmpty = true;
-                for (int j = 0; j < matrix.GetLength(otherDimension); j++)
+                for (int j = 0; j < matrix.GetLength(1); j++)
                 {
                     if (matrix[i, j] != 0)
                     {
@@ -240,6 +213,26 @@ namespace CodeModel.CodeParsers.CSharp
                 for (int j = 0; j < matrix.GetLength(0); j++)
                 {
                     if (matrix[j, i] != 0)
+                    {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+
+                if (isEmpty) return true;
+            }
+
+            return false;
+        }
+
+        private bool CheckForEmptyLineInColumn(int[,] matrix)
+        {
+            for (int i = 0; i < matrix.GetLength(1); i++)
+            {
+                bool isEmpty = true;
+                for (int j = 0; j < matrix.GetLength(0); j++)
+                {
+                    if (Matrix[j, i] != 0)
                     {
                         isEmpty = false;
                         break;
@@ -308,8 +301,7 @@ namespace CodeModel.CodeParsers.CSharp
                 CutEdges = new Edge[edgeGroup.Length];
                 Array.Copy(edgeGroup, CutEdges, edgeGroup.Length);
 
-                var edgesInSubGraph = cohesionGraph.StartSearchForEdges(new List<int>(), new List<int>(),
-                    new List<Edge>() {cohesionGraph.EdgesInGraph[0]}, new List<Edge>() {cohesionGraph.EdgesInGraph[0]});
+                var edgesInSubGraph = cohesionGraph.FindEdgesStartingFromEdge(cohesionGraph.EdgesInGraph[0]);
                 var remainingEdges = cohesionGraph.EdgesInGraph.Where(e => !edgesInSubGraph.Contains(e)).ToList();
                 var subGraph = CreateSubGraph(edgesInSubGraph);
                 var subGraphFromRemainingEdges = CreateSubGraph(remainingEdges);
