@@ -74,7 +74,8 @@ namespace CodeModel.CodeParsers.CSharp
             foreach (var edgeGroup in cutEdgeGroupCandidates)
             {
                 var cutMatrix = RemoveEdgesFromMatrix(edgeGroup);
-                if (CheckIfRowOrColumnIsEmpty(cutMatrix)) continue;
+                if (CheckIfMethodsInvokeAtLeastOneField(cutMatrix)) continue;
+                if (CheckIfFieldsAreInvokedByAtLeastOneMethod(cutMatrix)) continue;
 
                 // TODO strategy
 
@@ -92,7 +93,7 @@ namespace CodeModel.CodeParsers.CSharp
         public bool IsDisconnected()
         {
             if (EdgesInGraph.Count == 0) return true;
-            if (CheckIfRowOrColumnIsEmpty(Matrix)) return true;
+            // if (CheckIfRowOrColumnIsEmpty(Matrix)) return true; // TODO
             Edge firstEdge = EdgesInGraph[0];
             var edges = FindEdgesStartingFromEdge(firstEdge);
             return edges.Count != EdgesInGraph.Count;
@@ -100,18 +101,18 @@ namespace CodeModel.CodeParsers.CSharp
 
         private List<Edge> FindEdgesStartingFromEdge(Edge firstEdge)
         {
-            List<int> visitedRows = new List<int>();
-            List<int> visitedColumns = new List<int>();
+            List<int> visitedMethods = new List<int>();
+            List<int> visitedFields = new List<int>();
             HashSet<Edge> collectedEdges = new HashSet<Edge>();
             HashSet<Edge> edgesToVisit = new HashSet<Edge>() {firstEdge};
-            HashSet<Edge> visitedEdges = edgesToVisit.ToHashSet();
+            HashSet<Edge> visitedEdges = edgesToVisit.ToHashSet(); // provjeri
 
             while (edgesToVisit.Count != 0)
             {
                 HashSet<Edge> edgesForNextIteration = new HashSet<Edge>();
                 foreach (var edge in edgesToVisit)
                 {
-                    if (!visitedRows.Contains(edge.Method))
+                    if (!visitedMethods.Contains(edge.Method))
                     {
                         List<Edge> foundRowEdges = FindEdgesInDimension(0, edge.Method, visitedEdges);
                         foundRowEdges.ForEach(edge =>
@@ -119,10 +120,10 @@ namespace CodeModel.CodeParsers.CSharp
                             visitedEdges.Add(edge);
                             edgesForNextIteration.Add(edge);
                         });
-                        visitedRows.Add(edge.Method);
+                        visitedMethods.Add(edge.Method);
                     }
 
-                    if (!visitedColumns.Contains(edge.Field))
+                    if (!visitedFields.Contains(edge.Field))
                     {
                         List<Edge> foundColumnEdges = FindEdgesInDimension(1, edge.Field, visitedEdges);
                         foundColumnEdges.ForEach(edge =>
@@ -130,7 +131,7 @@ namespace CodeModel.CodeParsers.CSharp
                             visitedEdges.Add(edge);
                             edgesForNextIteration.Add(edge);
                         });
-                        visitedColumns.Add(edge.Field);
+                        visitedFields.Add(edge.Field);
                     }
                 }
                 foreach (var visitedEdge in edgesToVisit)
@@ -178,14 +179,7 @@ namespace CodeModel.CodeParsers.CSharp
                     .ToArray());
         }
 
-        private bool CheckIfRowOrColumnIsEmpty(int[,] matrix)
-        {
-            if (CheckForEmptyLineInRow(matrix)) return true;
-            if (CheckForEmptyLineInColumn(matrix)) return true; // TODO if has only one dimension
-            return false;
-        }
-
-        private bool CheckForEmptyLineInRow(int[,] matrix)
+        private bool CheckIfMethodsInvokeAtLeastOneField(int[,] matrix)
         {
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
@@ -205,7 +199,7 @@ namespace CodeModel.CodeParsers.CSharp
             return false;
         }
 
-        private bool CheckForEmptyLineInColumn(int[,] matrix)
+        private bool CheckIfFieldsAreInvokedByAtLeastOneMethod(int[,] matrix)
         {
             for (int i = 0; i < matrix.GetLength(1); i++)
             {
@@ -213,26 +207,6 @@ namespace CodeModel.CodeParsers.CSharp
                 for (int j = 0; j < matrix.GetLength(0); j++)
                 {
                     if (matrix[j, i] != 0)
-                    {
-                        isEmpty = false;
-                        break;
-                    }
-                }
-
-                if (isEmpty) return true;
-            }
-
-            return false;
-        }
-
-        private bool CheckForEmptyLineInColumn(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(1); i++)
-            {
-                bool isEmpty = true;
-                for (int j = 0; j < matrix.GetLength(0); j++)
-                {
-                    if (Matrix[j, i] != 0)
                     {
                         isEmpty = false;
                         break;
@@ -272,22 +246,13 @@ namespace CodeModel.CodeParsers.CSharp
             public override bool Equals(object? obj)
             {
                 var edge = obj as Edge;
-                return Equals(edge);
-            }
-
-            private bool Equals(Edge other)
-            {
-                return Method == other.Method && Field == other.Field;
+                if (edge == null) return false;
+                return Method == edge.Method && Field == edge.Field;
             }
 
             public override int GetHashCode()
             {
                 return HashCode.Combine(Method, Field);
-            }
-
-            public Edge Copy()
-            {
-                return new Edge(this.Method, this.Field);
             }
         }
 
