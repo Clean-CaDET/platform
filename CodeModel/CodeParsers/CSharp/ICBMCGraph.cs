@@ -69,7 +69,7 @@ namespace CodeModel.CodeParsers.CSharp
 
         private List<SubGraphPair> GetSubGraphPairs()
         {
-            var cutEdgeGroupCandidates = GetCutEdgeGroupCandidates(); // TODO CutEdgeGroup
+            var cutEdgeGroupCandidates = GetCutEdgeGroupCandidates();
             var subGraphPairs = new List<SubGraphPair>();
             foreach (var edgeGroup in cutEdgeGroupCandidates)
             {
@@ -93,7 +93,6 @@ namespace CodeModel.CodeParsers.CSharp
         public bool IsDisconnected()
         {
             if (EdgesInGraph.Count == 0) return true;
-            // if (CheckIfRowOrColumnIsEmpty(Matrix)) return true; // TODO
             Edge firstEdge = EdgesInGraph[0];
             var edges = FindEdgesStartingFromEdge(firstEdge);
             return edges.Count != EdgesInGraph.Count;
@@ -105,7 +104,6 @@ namespace CodeModel.CodeParsers.CSharp
             List<int> visitedFields = new List<int>();
             HashSet<Edge> collectedEdges = new HashSet<Edge>();
             HashSet<Edge> edgesToVisit = new HashSet<Edge>() {firstEdge};
-            HashSet<Edge> visitedEdges = edgesToVisit.ToHashSet(); // provjeri
 
             while (edgesToVisit.Count != 0)
             {
@@ -114,30 +112,24 @@ namespace CodeModel.CodeParsers.CSharp
                 {
                     if (!visitedMethods.Contains(edge.Method))
                     {
-                        List<Edge> foundRowEdges = FindEdgesInDimension(0, edge.Method, visitedEdges);
-                        foundRowEdges.ForEach(edge =>
-                        {
-                            visitedEdges.Add(edge);
-                            edgesForNextIteration.Add(edge);
-                        });
+                        List<Edge> foundRowEdges = FindEdgesInDimension(0, edge.Method);
+                        foundRowEdges.ForEach(e => edgesForNextIteration.Add(e));
                         visitedMethods.Add(edge.Method);
                     }
 
                     if (!visitedFields.Contains(edge.Field))
                     {
-                        List<Edge> foundColumnEdges = FindEdgesInDimension(1, edge.Field, visitedEdges);
-                        foundColumnEdges.ForEach(edge =>
-                        {
-                            visitedEdges.Add(edge);
-                            edgesForNextIteration.Add(edge);
-                        });
+                        List<Edge> foundColumnEdges = FindEdgesInDimension(1, edge.Field);
+                        foundColumnEdges.ForEach(e => edgesForNextIteration.Add(e));
                         visitedFields.Add(edge.Field);
                     }
                 }
+
                 foreach (var visitedEdge in edgesToVisit)
                 {
                     collectedEdges.Add(visitedEdge);
                 }
+
                 edgesToVisit = edgesForNextIteration;
             }
 
@@ -150,11 +142,11 @@ namespace CodeModel.CodeParsers.CSharp
 
             foreach (var edge in EdgesInGraph)
             {
-                if (dimension == 0 && edge.Method == lineInDimension && !visitedEdges.Contains(edge))
+                if (dimension == 0 && edge.Method == lineInDimension)
                 {
                     foundEdges.Add(edge);
                 }
-                else if (dimension == 1 && edge.Field == lineInDimension && !visitedEdges.Contains(edge))
+                else if (dimension == 1 && edge.Field == lineInDimension)
                 {
                     foundEdges.Add(edge);
                 }
@@ -162,6 +154,7 @@ namespace CodeModel.CodeParsers.CSharp
 
             return foundEdges;
         }
+
         public bool IsFullyConnected()
         {
             return EdgesInGraph.Count == Matrix.Length;
@@ -258,7 +251,8 @@ namespace CodeModel.CodeParsers.CSharp
 
         internal class SubGraphPair
         {
-            internal List<ICBMCGraph> SubGraphs { get; set; }
+            internal ICBMCGraph LeftSubGraph { get; set; }
+            internal ICBMCGraph RightSubGraph { get; set; }
             internal Edge[] CutEdges { get; set; }
 
             public SubGraphPair(ICBMCGraph cohesionGraph, Edge[] edgeGroup)
@@ -268,10 +262,10 @@ namespace CodeModel.CodeParsers.CSharp
 
                 var edgesInSubGraph = cohesionGraph.FindEdgesStartingFromEdge(cohesionGraph.EdgesInGraph[0]);
                 var remainingEdges = cohesionGraph.EdgesInGraph.Where(e => !edgesInSubGraph.Contains(e)).ToList();
-                var subGraph = CreateSubGraph(edgesInSubGraph);
-                var subGraphFromRemainingEdges = CreateSubGraph(remainingEdges);
-                SubGraphs = new List<ICBMCGraph>()
-                    {new ICBMCGraph(subGraph), new ICBMCGraph(subGraphFromRemainingEdges)};
+                var leftSubGraphMatrix = CreateSubGraph(edgesInSubGraph);
+                var rightSubGraphMatrix = CreateSubGraph(remainingEdges);
+                LeftSubGraph = new ICBMCGraph(leftSubGraphMatrix);
+                RightSubGraph = new ICBMCGraph(rightSubGraphMatrix);
             }
 
             private int[,] CreateSubGraph(List<Edge> edges)
