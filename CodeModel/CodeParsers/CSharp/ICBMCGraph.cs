@@ -29,6 +29,10 @@ namespace CodeModel.CodeParsers.CSharp
             SubGraphPairs = GetSubGraphPairs();
         }
 
+        /// <summary>
+        /// Member is normal method if it's neither constructor, nor getter or setter,
+        /// nor delegate function.
+        /// </summary>
         private bool IsMemberNormalMethod(CaDETMember m)
         {
             return m.Type == CaDETMemberType.Method &&
@@ -67,6 +71,10 @@ namespace CodeModel.CodeParsers.CSharp
             return edges;
         }
 
+        /// <summary>
+        /// Find all possible subgraphs that can be created from this graph
+        /// by removing method-field combinations (edges).
+        /// </summary>
         private List<SubGraphPair> GetSubGraphPairs()
         {
             var cutEdgeGroupCandidates = GetCutEdgeGroupCandidates();
@@ -89,7 +97,10 @@ namespace CodeModel.CodeParsers.CSharp
             return subGraphPairs;
         }
 
-        // TODO
+        /// <summary>
+        /// Graph is disconnected if we can't find all edges in it
+        /// by searching for them starting from some edge.
+        /// </summary>
         public bool IsDisconnected()
         {
             if (EdgesInGraph.Count == 0) return true;
@@ -98,6 +109,10 @@ namespace CodeModel.CodeParsers.CSharp
             return edges.Count != EdgesInGraph.Count;
         }
 
+        /// <summary>
+        /// Start from given edge and search for edges in that edge's
+        /// row or column. Returns all edges that it found.
+        /// </summary>
         private List<Edge> FindEdgesStartingFromEdge(Edge firstEdge)
         {
             List<int> visitedMethods = new List<int>();
@@ -136,7 +151,10 @@ namespace CodeModel.CodeParsers.CSharp
             return collectedEdges.ToList();
         }
 
-        private List<Edge> FindEdgesInDimension(int dimension, int lineInDimension, HashSet<Edge> visitedEdges)
+        /// <summary>
+        /// Finds fields that method is using, and vice versa.
+        /// </summary>
+        private List<Edge> FindEdgesInDimension(int dimension, int lineInDimension)
         {
             List<Edge> foundEdges = new List<Edge>();
 
