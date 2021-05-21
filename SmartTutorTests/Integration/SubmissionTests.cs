@@ -154,7 +154,6 @@ namespace SmartTutor.Tests.Integration
             }
         };
         
-     
         [Fact]
         public void Rejects_bad_arrange_task_submission()
         {
