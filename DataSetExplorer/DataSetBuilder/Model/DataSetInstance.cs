@@ -14,7 +14,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public ISet<DataSetAnnotation> Annotations { get; }
         public Dictionary<CaDETMetric, double> MetricFeatures { get; set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
 
-        internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type)
+        internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
         {
             CodeSnippetId = codeSnippetId;
             Link = link;
@@ -23,6 +23,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
             Validate();
             Annotations = new HashSet<DataSetAnnotation>();
+            MetricFeatures = metricFeatures;
         }
 
         private void Validate()
