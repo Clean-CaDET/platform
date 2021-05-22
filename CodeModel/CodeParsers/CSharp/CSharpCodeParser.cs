@@ -169,8 +169,8 @@ namespace CodeModel.CodeParsers.CSharp
             var nonUniqueFullNameClasses = new List<CaDETClass>();
             for (int i = 0; i < parsedClasses.Count - 1; i++)
             {
-                if(parsedClasses[i].IsPartialClass()) continue;
-                for (int j = i+1; j < parsedClasses.Count; j++)
+                if (parsedClasses[i].IsPartialClass()) continue;
+                for (int j = i + 1; j < parsedClasses.Count; j++)
                 {
                     if (parsedClasses[i].FullName.Equals(parsedClasses[j].FullName))
                     {
@@ -259,8 +259,11 @@ namespace CodeModel.CodeParsers.CSharp
         private List<CaDETClass> GetTypes(List<CaDETClass> classes, CaDETLinkedType type)
         {
             List<CaDETClass> types = new List<CaDETClass>();
-            types.Add(CheckForSingleOrArrayType(classes, type.FullType));
-            types.AddRange(GetCollectionTypes(classes, type.FullType));
+            if (type != null && type.FullType != null)
+            {
+                types.Add(CheckForSingleOrArrayType(classes, type.FullType));
+                types.AddRange(GetCollectionTypes(classes, type.FullType));
+            }
             return types.Where(t => t != null).ToList();
         }
 
@@ -268,7 +271,6 @@ namespace CodeModel.CodeParsers.CSharp
         {
             var foundType = classes.FirstOrDefault(c => c.FullName.Equals(fullType));
             if (foundType != null) return foundType;
-
             foundType = GetArrayType(classes, fullType);
             return foundType;
         }
