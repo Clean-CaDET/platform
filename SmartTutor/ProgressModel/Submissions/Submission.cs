@@ -2,36 +2,16 @@
 
 namespace SmartTutor.ProgressModel.Submissions
 {
-    public class Submission
+    public abstract class Submission
     {
-        public int Id { get; private set; }
-        public int LearnerId { get; private set; }
-        public bool IsCorrect { get; private set; }
+        public int Id { get; protected set; }
+        public int LearnerId { get; protected set; }
+        public bool IsCorrect { get; protected set; }
         public DateTime TimeStamp { get; private set; } = DateTime.Now;
 
         public void MarkCorrect()
         {
             IsCorrect = true;
-        }
-
-        protected Submission()
-        {
-        }
-
-        public Submission(int id, int learnerId, bool isCorrect, DateTime timeStamp)
-        {
-            Id = id;
-            LearnerId = learnerId;
-            IsCorrect = isCorrect;
-            TimeStamp = timeStamp;
-        }
-
-        protected Submission(Submission submission)
-        {
-            Id = submission.Id;
-            LearnerId = submission.LearnerId;
-            IsCorrect = submission.IsCorrect;
-            TimeStamp = submission.TimeStamp;
         }
     }
 }

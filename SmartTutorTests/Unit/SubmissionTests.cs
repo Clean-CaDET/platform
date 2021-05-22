@@ -99,24 +99,22 @@ namespace SmartTutor.Tests.Unit
             correctness.ShouldBe(expectedCorrectness);
         }
 
-        private static readonly Submission Submission = new Submission(1, 1, true, DateTime.Now);
-
         public static IEnumerable<object[]> AnswersTestData =>
             new List<object[]>
             {
                 new object[]
                 {
-                    new QuestionSubmission(19, new List<int> {10, 11, 12, 13}, Submission),
+                    new QuestionSubmission(19, new List<int> {10, 11, 12, 13}),
                     new List<bool> {false, true, true, false}
                 },
                 new object[]
                 {
-                    new QuestionSubmission(19, new List<int> {10, 13}, Submission),
+                    new QuestionSubmission(19, new List<int> {10, 13}),
                     new List<bool> {false, false, false, false}
                 },
                 new object[]
                 {
-                    new QuestionSubmission(19, new List<int> {11, 12}, Submission),
+                    new QuestionSubmission(19, new List<int> {11, 12}),
                     new List<bool> {true, true, true, true}
                 }
             };
