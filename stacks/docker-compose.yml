@@ -32,7 +32,7 @@ services:
       AUTHORITY: ${AUTHORITY}
       AUDIENCE: ${AUDIENCE}
     deploy:
-      replicas: 1
+      replicas: 4
       update_config:
         parallelism: 2
         delay: 5s
