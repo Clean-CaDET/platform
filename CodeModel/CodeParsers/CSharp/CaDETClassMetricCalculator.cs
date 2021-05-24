@@ -29,6 +29,7 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NOPF] = CountNumberOfProtectedFields(parsedClass),
                 [CaDETMetric.CMNB] = CountMaxNestedBlocks(parsedClass),
                 [CaDETMetric.RFC] = CountUniqueMethodInvocations(parsedClass),
+                [CaDETMetric.CBO] = CountDependencies(parsedClass),
                 [CaDETMetric.ICBMC] = GetICBMCCohesionValue(parsedClass)
             };
         }
@@ -187,16 +188,25 @@ namespace CodeModel.CodeParsers.CSharp
             {
                 invokedMethods.UnionWith(member.InvokedMethods.ToList());
             }
-
             return invokedMethods.Count();
+        }
+
+        // Implementation based on https://github.com/mauricioaniche/ck
+        private int CountDependencies(CaDETClass parsedClass)
+        {
+            List<CaDETClass> allDependencies = new List<CaDETClass>();
+            allDependencies.AddRange(parsedClass.GetFieldLinkedTypes().Distinct());
+            allDependencies.AddRange(parsedClass.GetMethodLinkedReturnTypes().Distinct());
+            allDependencies.AddRange(parsedClass.GetMethodLinkedVariableTypes().Distinct());
+            var uniqueDependencies = allDependencies.GroupBy(d => d.FullName).Select(d => d.First());
+            return uniqueDependencies.Count();
         }
 
         private double GetICBMCCohesionValue(CaDETClass parsedClass)
         {
-            ICBMCGraph graph = new ICBMCGraph(parsedClass);
+            ICBMCGraph icbmcGraph = new ICBMCGraph(parsedClass);
             ICBMCCalculator calculator = new ICBMCCalculator();
-            return calculator.Calculate(graph);
+            return calculator.Calculate(icbmcGraph);
         }
-
     }
 }

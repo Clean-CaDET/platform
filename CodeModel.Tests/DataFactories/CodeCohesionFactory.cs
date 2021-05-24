@@ -6,7 +6,6 @@ namespace RepositoryCompilerTests.DataFactories
 {
     class CodeCohesionFactory
     {
-
         public IEnumerable<string> GetCohesionClasses()
         {
             return new[]
@@ -432,7 +431,6 @@ namespace RepositoryCompilerTests.DataFactories
                 }
             }"
             };
-
         }
     }
 }

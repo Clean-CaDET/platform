@@ -424,7 +424,6 @@ namespace CodeModel.Tests.Unit
             //testClass3.Metrics[CaDETMetric.ICBMC].ShouldBe(0.22);
             //testClass4.Metrics[CaDETMetric.ICBMC].ShouldBe(0.05);
             //testClass5.Metrics[CaDETMetric.ICBMC].ShouldBe(0.16);
-
         }
     }
 }

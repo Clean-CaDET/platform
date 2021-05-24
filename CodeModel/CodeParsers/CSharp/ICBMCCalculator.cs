@@ -7,7 +7,6 @@ namespace CodeModel.CodeParsers.CSharp
 {
     internal class ICBMCCalculator
     {
-
         /// <summary>
         /// Process base cases since this is recursive function,
         /// then calculate cohesion for each subgraph pair and return maximum value.
@@ -33,6 +32,5 @@ namespace CodeModel.CodeParsers.CSharp
                    (Calculate(subGraphPair.LeftSubGraph) + Calculate(subGraphPair.RightSubGraph)) / 2;
             return Math.Round(cohesion, 2);
         }
-
     }
 }
