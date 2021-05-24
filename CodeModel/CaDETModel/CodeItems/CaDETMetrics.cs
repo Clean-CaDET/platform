@@ -89,6 +89,11 @@
         /// </summary>
         CBO,
 
+        /// <summary>
+        /// ICBMC: Improved CBMC (Cohesion based on member connectivity)
+        /// </summary>
+        ICBMC,
+
         #endregion
 
         #region MemberMetrics
