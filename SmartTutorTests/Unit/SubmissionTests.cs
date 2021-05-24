@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Questions;
@@ -8,6 +9,10 @@ using SmartTutor.ProgressModel.Submissions;
 using SmartTutor.ProgressModel.Submissions.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.LearnerModel.Learners;
+using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel.Progress;
 using Xunit;
 
 namespace SmartTutor.Tests.Unit
@@ -15,12 +20,15 @@ namespace SmartTutor.Tests.Unit
     public class SubmissionTests
     {
         private readonly ISubmissionService _service;
+
         public SubmissionTests()
         {
-            _service = new SubmissionService(CreateMockRepository(), new Mock<ISubmissionRepository>().Object);
+            _service = new SubmissionService(CreateLearningObjectMockRepository(),
+                new Mock<ISubmissionRepository>().Object, CreateLearnerMockRepository(),
+                CreateLectureMockRepository());
         }
 
-        private static ILearningObjectRepository CreateMockRepository()
+        private static ILearningObjectRepository CreateLearningObjectMockRepository()
         {
             Mock<ILearningObjectRepository> learningObjectRepo = new Mock<ILearningObjectRepository>();
             learningObjectRepo.Setup(repo => repo.GetQuestion(19))
@@ -56,6 +64,29 @@ namespace SmartTutor.Tests.Unit
                     }),
                 }));
             return learningObjectRepo.Object;
+        }
+
+        private static ILearnerRepository CreateLearnerMockRepository()
+        {
+            var courseEnrollments = new List<CourseEnrollment>()
+            {
+                new CourseEnrollment(1, 1),
+                new CourseEnrollment(2, 2),
+                new CourseEnrollment(3, 3)
+            };
+            var learner = new Learner(1, 1, 1, 1, 1, courseEnrollments);
+            Mock<ILearnerRepository> learnerRepo = new Mock<ILearnerRepository>();
+            learnerRepo.Setup(repo => repo.GetById(It.IsAny<int>()))
+                .Returns(learner);
+            return learnerRepo.Object;
+        }
+
+        private static ILectureRepository CreateLectureMockRepository()
+        {
+            var lectureRepo = new Mock<ILectureRepository>();
+            lectureRepo.Setup(repo => repo.GetCourseIdByLOId(It.IsAny<int>()))
+                .Returns(1);
+            return lectureRepo.Object;
         }
 
         [Theory]
@@ -105,11 +136,11 @@ namespace SmartTutor.Tests.Unit
                 {
                     new ArrangeTaskSubmission(32, new List<ArrangeTaskContainerSubmission>
                     {
-                        new ArrangeTaskContainerSubmission(1, 1, new List<int> { 1, 5 }),
-                        new ArrangeTaskContainerSubmission(2, 2, new List<int> { 2 }),
-                        new ArrangeTaskContainerSubmission(3, 3, new List<int> { 3 }),
+                        new ArrangeTaskContainerSubmission(1, 1, new List<int> {1, 5}),
+                        new ArrangeTaskContainerSubmission(2, 2, new List<int> {2}),
+                        new ArrangeTaskContainerSubmission(3, 3, new List<int> {3}),
                         new ArrangeTaskContainerSubmission(4, 4, new List<int> { }),
-                        new ArrangeTaskContainerSubmission(5, 5, new List<int> { 4 }),
+                        new ArrangeTaskContainerSubmission(5, 5, new List<int> {4}),
                     }),
                     new List<bool> {false, true, true, false, false}
                 },
@@ -117,11 +148,11 @@ namespace SmartTutor.Tests.Unit
                 {
                     new ArrangeTaskSubmission(32, new List<ArrangeTaskContainerSubmission>
                     {
-                        new ArrangeTaskContainerSubmission(1, 1, new List<int> { 1,2,3,4,5 }),
-                        new ArrangeTaskContainerSubmission(2, 2, new List<int> {}),
-                        new ArrangeTaskContainerSubmission(3, 3, new List<int> {}),
-                        new ArrangeTaskContainerSubmission(4, 4, new List<int> {}),
-                        new ArrangeTaskContainerSubmission(5, 5, new List<int> {}),
+                        new ArrangeTaskContainerSubmission(1, 1, new List<int> {1, 2, 3, 4, 5}),
+                        new ArrangeTaskContainerSubmission(2, 2, new List<int> { }),
+                        new ArrangeTaskContainerSubmission(3, 3, new List<int> { }),
+                        new ArrangeTaskContainerSubmission(4, 4, new List<int> { }),
+                        new ArrangeTaskContainerSubmission(5, 5, new List<int> { }),
                     }),
                     new List<bool> {false, false, false, false, false}
                 },
@@ -129,11 +160,11 @@ namespace SmartTutor.Tests.Unit
                 {
                     new ArrangeTaskSubmission(32, new List<ArrangeTaskContainerSubmission>
                     {
-                        new ArrangeTaskContainerSubmission (1, 1, new List<int> { 1 }),
-                        new ArrangeTaskContainerSubmission(2, 2, new List<int> { 2 }),
-                        new ArrangeTaskContainerSubmission(3, 3, new List<int> { 3 }),
-                        new ArrangeTaskContainerSubmission(4, 4, new List<int> { 4 }),
-                        new ArrangeTaskContainerSubmission(5, 5, new List<int> { 5 }),
+                        new ArrangeTaskContainerSubmission(1, 1, new List<int> {1}),
+                        new ArrangeTaskContainerSubmission(2, 2, new List<int> {2}),
+                        new ArrangeTaskContainerSubmission(3, 3, new List<int> {3}),
+                        new ArrangeTaskContainerSubmission(4, 4, new List<int> {4}),
+                        new ArrangeTaskContainerSubmission(5, 5, new List<int> {5}),
                     }),
                     new List<bool> {true, true, true, true, true}
                 }

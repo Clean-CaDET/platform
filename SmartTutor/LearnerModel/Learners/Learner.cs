@@ -1,4 +1,5 @@
-﻿using SmartTutor.LearnerModel.Workspaces;
+using SmartTutor.LearnerModel.Workspaces;
+using SmartTutor.ProgressModel.Progress;
 using System.Collections.Generic;
 
 namespace SmartTutor.LearnerModel.Learners
@@ -14,15 +15,22 @@ namespace SmartTutor.LearnerModel.Learners
         public int AuralScore { get; private set; }
         public int ReadWriteScore { get; private set; }
         public int KinaestheticScore { get; private set; }
+        public List<CourseEnrollment> CourseEnrollments { get; private set; }
         public Workspace Workspace { get; set; }
 
-        public Learner(int id, int visualScore, int auralScore, int readWriteScore, int kinaestheticScore)
+        public Learner(int id, int visualScore, int auralScore, int readWriteScore, int kinaestheticScore,
+            List<CourseEnrollment> courseEnrollments)
         {
             Id = id;
             VisualScore = visualScore;
             AuralScore = auralScore;
             ReadWriteScore = readWriteScore;
             KinaestheticScore = kinaestheticScore;
+            CourseEnrollments = courseEnrollments;
+        }
+
+        private Learner()
+        {
         }
 
         public Dictionary<LearningPreference, int> VARKScore()
@@ -41,7 +49,8 @@ namespace SmartTutor.LearnerModel.Learners
             if (varkScore[LearningPreference.Aural] != 0) AuralScore = varkScore[LearningPreference.Aural];
             if (varkScore[LearningPreference.Visual] != 0) VisualScore = varkScore[LearningPreference.Visual];
             if (varkScore[LearningPreference.ReadWrite] != 0) ReadWriteScore = varkScore[LearningPreference.ReadWrite];
-            if (varkScore[LearningPreference.Kinaesthetic] != 0) KinaestheticScore = varkScore[LearningPreference.Kinaesthetic];
+            if (varkScore[LearningPreference.Kinaesthetic] != 0)
+                KinaestheticScore = varkScore[LearningPreference.Kinaesthetic];
         }
     }
 }

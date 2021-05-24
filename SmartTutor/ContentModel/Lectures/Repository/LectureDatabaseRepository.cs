@@ -14,6 +14,25 @@ namespace SmartTutor.ContentModel.Lectures.Repository
             _dbContext = dbContext;
         }
 
+        public Course GetCourse(int id)
+        {
+            return _dbContext.Courses.FirstOrDefault(c => c.Id == id);
+        }
+
+        public int GetCourseIdByLOId(int learningObjectSummaryId)
+        {
+            var knowledgeNode = GetKnowledgeNodeBySummary(learningObjectSummaryId);
+
+            var lecture = GetLecture(knowledgeNode.LectureId);
+
+            return lecture.CourseId;
+        }
+
+        public Lecture GetLecture(int id)
+        {
+            return _dbContext.Lectures.FirstOrDefault(l => l.Id == id);
+        }
+
         public List<Lecture> GetLectures()
         {
             return _dbContext.Lectures.Include(l => l.KnowledgeNodes).ToList();
@@ -27,7 +46,15 @@ namespace SmartTutor.ContentModel.Lectures.Repository
 
         public KnowledgeNode GetKnowledgeNodeWithSummaries(int id)
         {
-            return _dbContext.KnowledgeNodes.Where(n => n.Id == id).Include(n => n.LearningObjectSummaries).FirstOrDefault();
+            return _dbContext.KnowledgeNodes.Where(n => n.Id == id).Include(n => n.LearningObjectSummaries)
+                .FirstOrDefault();
+        }
+
+        public KnowledgeNode GetKnowledgeNodeBySummary(int id)
+        {
+            var learningObjectSummary = _dbContext.LearningObjectSummaries.Where(los => los.Id == id)
+                .Include(los => los.KnowledgeNode).FirstOrDefault();
+            return learningObjectSummary?.KnowledgeNode;
         }
     }
 }
