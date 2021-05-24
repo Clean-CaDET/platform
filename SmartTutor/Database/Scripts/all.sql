@@ -990,7 +990,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (111, 111);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (111, 'https://i.ibb.co/w6T0Mg5/RS-structural-formula.png', 'Izračunaj vrednost strukturalne kohezije za prethodni primer (pre i posle refaktorisanja).');
+	VALUES (111, 'https://i.ibb.co/w6T0Mg5/RS-structural-formula.png', 'Izračunaj vrednost strukturalne kohezije za proizvoljan primer koda kako bi utemeljio razumevanje ove formule.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
