@@ -78,6 +78,24 @@ namespace SmartTutor.Tests.Integration
                 false
             }
         };
+        
+        [Fact]
+        public void Question_and_learner_are_in_different_courses_returns_forbidden_status()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var controller = new SubmissionController(_factory.Services.GetRequiredService<IMapper>(), scope.ServiceProvider.GetRequiredService<ISubmissionService>());
+            var submission = new QuestionSubmissionDTO
+            {
+                QuestionId = 17, Answers = new List<QuestionAnswerDTO>
+                {
+                    new QuestionAnswerDTO {Id = 2},
+                    new QuestionAnswerDTO {Id = 5}
+                },
+                LearnerId = 4
+            };
+            
+            controller.SubmitQuestionAnswers(submission).Result.ShouldBeOfType(typeof(ForbidResult));
+        }
 
         [Theory]
         [MemberData(nameof(ArrangeTaskSubmissions))]
@@ -135,7 +153,7 @@ namespace SmartTutor.Tests.Integration
                 true
             }
         };
-
+        
         [Fact]
         public void Rejects_bad_arrange_task_submission()
         {

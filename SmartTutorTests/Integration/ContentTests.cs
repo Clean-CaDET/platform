@@ -29,7 +29,7 @@ namespace SmartTutor.Tests.Integration
 
             var lectures = ((OkObjectResult) controller.GetLectures().Result).Value as List<LectureDTO>;
 
-            var expectedLectureIds = new List<int> {1, 2, 3, 4, 5};
+            var expectedLectureIds = new List<int> {1, 2, 3, 4};
             var actualLectureIds = lectures.Select(l => l.Id);
             actualLectureIds.Count().ShouldBe(expectedLectureIds.Count);
             actualLectureIds.All(expectedLectureIds.Contains).ShouldBeTrue();

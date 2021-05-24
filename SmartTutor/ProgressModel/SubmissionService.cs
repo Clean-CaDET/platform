@@ -8,6 +8,10 @@ using SmartTutor.ProgressModel.Submissions.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects;
+using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.LearnerModel.Learners.Repository;
+using SmartTutor.ProgressModel.Exceptions;
 
 namespace SmartTutor.ProgressModel
 {
@@ -15,16 +19,27 @@ namespace SmartTutor.ProgressModel
     {
         private readonly ILearningObjectRepository _learningObjectRepository;
         private readonly ISubmissionRepository _submissionRepository;
+        private readonly ILearnerRepository _learnerRepository;
+        private readonly ILectureRepository _lectureRepository;
 
-        public SubmissionService(ILearningObjectRepository learningObjectRepository, ISubmissionRepository submissionRepository)
+        public SubmissionService(ILearningObjectRepository learningObjectRepository,
+            ISubmissionRepository submissionRepository, ILearnerRepository learnerRepository,
+            ILectureRepository lectureRepository)
         {
             _learningObjectRepository = learningObjectRepository;
             _submissionRepository = submissionRepository;
+            _learnerRepository = learnerRepository;
+            _lectureRepository = lectureRepository;
         }
 
         public ChallengeEvaluation EvaluateChallenge(ChallengeSubmission submission)
         {
             Challenge challenge = _learningObjectRepository.GetChallenge(submission.ChallengeId);
+            if (!IsLearningObjectInLearnersCourses(challenge, submission.LearnerId))
+            {
+                throw new LearnerNotEnrolledInCourse(submission.LearnerId);
+            }
+
             if (challenge == null) return null;
 
             //var tester = new WorkspaceFunctionalityTester(_submissionRepository.GetWorkspacePath(submission.LearnerId));
@@ -45,6 +60,11 @@ namespace SmartTutor.ProgressModel
         public List<AnswerEvaluation> EvaluateAnswers(QuestionSubmission submission)
         {
             var question = _learningObjectRepository.GetQuestion(submission.QuestionId);
+            if (!IsLearningObjectInLearnersCourses(question, submission.LearnerId))
+            {
+                throw new LearnerNotEnrolledInCourse(submission.LearnerId);
+            }
+
             var evaluations = question.EvaluateAnswers(submission.SubmittedAnswerIds);
 
             if (evaluations.Select(a => a.SubmissionWasCorrect).All(c => c)) submission.MarkCorrect();
@@ -63,6 +83,14 @@ namespace SmartTutor.ProgressModel
             _submissionRepository.SaveArrangeTaskSubmission(submission);
 
             return evaluations;
+        }
+
+        private bool IsLearningObjectInLearnersCourses(LearningObject learningObject, int learnerId)
+        {
+            var courseId = _lectureRepository.GetCourseIdByLOId(learningObject.LearningObjectSummaryId);
+            var learner = _learnerRepository.GetById(learnerId);
+            return learner.CourseEnrollments.Any(learnerCourseEnrollment =>
+                learnerCourseEnrollment.CourseId == courseId);
         }
     }
 }
