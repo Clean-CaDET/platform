@@ -8,6 +8,7 @@ DELETE FROM public."QuestionSubmissions";
 DELETE FROM public."NodeProgresses";
 DELETE FROM public."LearningObjectFeedback";
 
+DELETE FROM public."CourseEnrollment";
 DELETE FROM public."Learners";
 
 DELETE FROM public."Texts";
@@ -28,6 +29,7 @@ DELETE FROM public."LearningObjects";
 DELETE FROM public."LearningObjectSummaries";
 DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
+DELETE FROM public."Courses";
 
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
@@ -38,6 +40,20 @@ INSERT INTO public."Learners"(
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
 	VALUES (3, 'SU-3-2021', 1, 4, 3, 2, 'C:/Smart-Tutor/3/Workspace');
+
+INSERT INTO public."Courses"(
+	"Id")
+	VALUES (1);
+
+INSERT INTO public."CourseEnrollment"(
+	"Id", "CourseId", "LearnerId")
+	VALUES (1, 1, 1);
+INSERT INTO public."CourseEnrollment"(
+	"Id", "CourseId", "LearnerId")
+	VALUES (2, 1, 2);
+INSERT INTO public."CourseEnrollment"(
+	"Id", "CourseId", "LearnerId")
+	VALUES (3, 1, 3);
 
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description")
@@ -54,10 +70,6 @@ INSERT INTO public."Lectures"(
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description")
 	VALUES (4, 'Spregnutost', 'Dva gusto spregnuta softverska modula u velikom stepenu zavise jedan od drugog i često se ponašaju kao jedan veliki modul. Ovakvi moduli imaju puno međusobnih veza (poput upotrebe atributa ili poziva metoda) i znaju razne detalje jedan o drugom. Izmena jednog takvog modula gotovo uvek povlači modifikaciju (i bagove) drugog. Ako je sistem prepun ovakvih sprega, postaje trom i težak za izmenu. Sa druge strane, ako modul sakriva mnoštvo logike iza jednostavnog API-a, značajno je ograničena mogućnost sprezanja sa takvim modulom. Kroz ovu lekciju učimo da pravimo ovakve module.');
-	
-INSERT INTO public."Lectures"(
-	"Id", "Name", "Description")
-	VALUES (5, 'Princip jedne odgovornosti', 'Vodeći princip inženjerstva softvera ističe da svaki modul treba da ispunjava jedan cilj koji je onoliko apstraktan koliko i sam modul. Privatna metoda koja radi sa detaljima će imati veoma konkretan cilj. Aplikacija ima jedan cilj na visokom nivou asptrakcije koji se razlaže na slučajeve korišćenja koje potom podržavamo sa manje apstraktnim objektima i njihovima metodama. U tako dizajniranom sistemu, svaka izmena je fokusirana samo na one module koji su vezani za cilj koji je afektovan. Kroz ovu lekciju razlažemo ovaj vodeći princip i gledamo kako vodi naš razvoj softvera.');
 	
 	
 	
@@ -990,7 +1002,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (111, 111);
 INSERT INTO public."Images"(
 	"Id", "Url", "Caption")
-	VALUES (111, 'https://i.ibb.co/w6T0Mg5/RS-structural-formula.png', 'Izračunaj vrednost strukturalne kohezije za prethodni primer (pre i posle refaktorisanja).');
+	VALUES (111, 'https://i.ibb.co/w6T0Mg5/RS-structural-formula.png', 'Izračunaj vrednost strukturalne kohezije za proizvoljan primer koda kako bi utemeljio razumevanje ove formule.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")

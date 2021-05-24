@@ -7,6 +7,7 @@ using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.Lectures;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -90,6 +91,11 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         public LearningObject GetLearningObjectForSummary(int summaryId)
         {
             return _dbContext.LearningObjects.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
+        }
+
+        public LearningObjectSummary GetLearningObjectSummary(int summaryId)
+        {
+            return _dbContext.LearningObjectSummaries.FirstOrDefault(los => los.Id == summaryId);
         }
     }
 }

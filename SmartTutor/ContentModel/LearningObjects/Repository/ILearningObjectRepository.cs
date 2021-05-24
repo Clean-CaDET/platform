@@ -2,6 +2,7 @@
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using System.Collections.Generic;
+using SmartTutor.ContentModel.Lectures;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
@@ -17,5 +18,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         Text GetTextForSummary(int summaryId);
         Video GetVideoForSummary(int summaryId);
         LearningObject GetLearningObjectForSummary(int summaryId);
+        LearningObjectSummary GetLearningObjectSummary(int summaryId);
     }
 }

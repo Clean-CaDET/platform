@@ -36,10 +36,35 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             //MakeExcelFromProjectUseCase();
             //FindInstancesRequiringAdditionalAnnotationUseCase();
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
-            ExportAnnotatedDataSet();
+            //ExportAnnotatedDataSet();
+            //CheckAnnotationConsistencyForAnnotator(1);
+            CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(1);
         }
-        
-        private static void ExportAnnotatedDataSet()
+
+        private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
+        {
+            var dataGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
+
+            var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
+            var manovaTest = new ManovaTest.ManovaTest();
+
+            var enumerator = dataGroupedBySmells.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var codeSmellGroup = enumerator.Current;
+                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
+
+                exporter.ExportAnnotatorsForSeverity(severity, codeSmellGroup.ToList(),
+                    "SanityCheck_" + codeSmell + "_Severity_");
+
+                manovaTest.SetupTestArguments(
+                    "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Severity_" + severity + ".xlsx",
+                    codeSmellGroup.First().MetricFeatures.Keys.ToList(), "Annotator");
+                manovaTest.RunTest();
+            }
+        }
+
+        private static ListDictionary GetAnnotatedProjects()
         {
             ListDictionary projects = new ListDictionary(); // local repository path, annotations folder path
             projects.Add("D:/ccadet/annotations/repos/BurningKnight", "D:/ccadet/annotations/annotated/BurningKnight");
@@ -48,12 +73,40 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
             projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
             projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
+            projects.Add("D:/ccadet/annotations/repos/MonoGame", "D:/ccadet/annotations/annotated/MonoGame");
+            projects.Add("D:/ccadet/annotations/repos/Osu", "D:/ccadet/annotations/annotated/Osu");
+            return projects;
+        }
 
-            var dataForExport = PrepareDataForExport(projects);
-            var groupedBySmells = dataForExport.GroupBy(t => t.Item1.Annotations.ToList()[0].InstanceSmell.Value);
+        private static void CheckAnnotationConsistencyForAnnotator(int annotatorId)
+        {
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
 
-            var exporter = new DataSetWithMetricsExporter("D:/ccadet/annotations/annotated/Output/");
-            var enumerator = groupedBySmells.GetEnumerator();
+            var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
+            var manovaTest = new ManovaTest.ManovaTest();
+
+            var enumerator = instancesGroupedBySmells.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var codeSmellGroup = enumerator.Current;
+                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
+                
+                exporter.ExportAnnotationsFromAnnotator(annotatorId, codeSmellGroup.ToList(),
+                    "SanityCheck_" + codeSmell + "_Annotator_");
+
+                manovaTest.SetupTestArguments(
+                    "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Annotator_" + annotatorId + ".xlsx",
+                    codeSmellGroup.First().MetricFeatures.Keys.ToList(), "Annotation");
+                manovaTest.RunTest();
+            }
+        }
+
+        private static void ExportAnnotatedDataSet()
+        {
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
+
+            var exporter = new CompleteDataSetExporter("D:/ccadet/annotations/annotated/Output/");
+            var enumerator = instancesGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var codeSmellGroup = enumerator.Current;
@@ -61,22 +114,22 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             }
         }
 
-        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> PrepareDataForExport(ListDictionary projects)
+        private static IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(int? annotatorId)
         {
-            List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> dataForExport =
-                new List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>>();
+            var allAnnotatedInstances = new List<DataSetInstance>();    
 
+            var projects = GetAnnotatedProjects();
             foreach (var key in projects.Keys)
             {
-                CodeModelFactory factory = new CodeModelFactory(LanguageEnum.CSharp);
+                CodeModelFactory factory = new CodeModelFactory();
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
 
                 var annotatedInstances = LoadDataSet(projects[key].ToString()).GetAllInstances();
                 LoadAnnotators(ref annotatedInstances);
-                var instanceMetrics = GetMetricsForExport(annotatedInstances, project);
-                dataForExport.AddRange(JoinAnnotationsAndMetrics(annotatedInstances, instanceMetrics));
+                if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
+                allAnnotatedInstances.AddRange(FillInstancesWithMetrics(annotatedInstances, project));
             }
-            return dataForExport;
+            return allAnnotatedInstances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Value);
         }
 
         private static void LoadAnnotators(ref List<DataSetInstance> annotatedInstances)
@@ -102,15 +155,12 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
                 .ToList();
         }
 
-        private static Dictionary<string, Dictionary<CaDETMetric, double>> GetMetricsForExport(List<DataSetInstance> annotatedInstances, CaDETProject project)
+        private static List<DataSetInstance> FillInstancesWithMetrics(List<DataSetInstance> annotatedInstances, CaDETProject project)
         {
-            Dictionary<string, Dictionary<CaDETMetric, double>> allMetrics =
-                new Dictionary<string, Dictionary<CaDETMetric, double>>();
-            foreach (var instance in annotatedInstances)
-            {
-                allMetrics[instance.CodeSnippetId] = project.GetMetricsForCodeSnippet(instance.CodeSnippetId);
-            }
-            return allMetrics;
+            return annotatedInstances.Select(i => { 
+                i.MetricFeatures = project.GetMetricsForCodeSnippet(i.CodeSnippetId); 
+                return i; 
+            }).ToList();
         }
 
         private static void FindInstancesWithAllDisagreeingAnnotationsUseCase()
@@ -140,7 +190,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             var dataSet = CreateDataSetFromRepository(
                 "https://github.com/MonoGame/MonoGame/tree/4802d00db04dc7aa5fe07cd2d908f9a4b090a4fd",
                 "C:/sdataset-p2/MonoGame");
-            var exporter = new DataSetWithAnnotationsExporter("C:/DSOutput/", new ColumnHeuristicsModel());
+            var exporter = new NewDataSetExporter("C:/DSOutput/", new ColumnHeuristicsModel(), false);
             exporter.Export(dataSet, "MonoGame");
         }
 
