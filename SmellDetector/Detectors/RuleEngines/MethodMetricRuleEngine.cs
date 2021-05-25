@@ -32,6 +32,34 @@ namespace SmellDetector.Detectors.RuleEngines
                                   SmellType.LONG_METHOD);
         }
 
+        private void DefineTopXMetricRules(List<CaDETMember> methods)
+        {
+            int indexOfSignificantMetricValue = CalculateIndexBasedOnPercentage(methods, 20);
+            double mlocThreshold = FindTopXMetricValuesInProject(methods, CaDETMetric.MLOC, indexOfSignificantMetricValue);
+
+            Rule rule1 = new Rule("10.1016/j.jss.2006.10.018",
+                                                new AndCriteria(new AndCriteria(new MetricCriteria(CaDETMetric.MLOC, OperationEnum.GREATER_OR_EQUALS, mlocThreshold),
+                                                                                 new MetricCriteria(CaDETMetric.MLOC, OperationEnum.GREATER_OR_EQUALS, 70)),
+                                                                new AndCriteria(new OrCriteria(new MetricCriteria(CaDETMetric.NOP, OperationEnum.GREATER_THAN, 4),
+                                                                                               new MetricCriteria(CaDETMetric.NOLV, OperationEnum.GREATER_THAN, 4)),
+                                                                                new MetricCriteria(CaDETMetric.MMNB, OperationEnum.GREATER_THAN, 4))),
+                                SmellType.LONG_METHOD);
+            _dynamicRules.Add(rule1);
+
+        }
+
+        private double FindTopXMetricValuesInProject(List<CaDETMember> methods, CaDETMetric metric, int indexOfMetricValue)
+        {
+            List<double> metricValues = methods.Select(c => c.Metrics[metric]).ToList();
+            metricValues.Sort();
+            return metricValues[indexOfMetricValue];
+        }
+
+        private int CalculateIndexBasedOnPercentage(List<CaDETMember> methods, int percentage)
+        {
+            return methods.Count * percentage / 100;
+        }
+
         public PartialSmellDetectionReport FindIssues(List<CaDETClass> classes)
         {
             List<CaDETMember> methods = classes.SelectMany(c => c.Members).ToList();
@@ -40,6 +68,7 @@ namespace SmellDetector.Detectors.RuleEngines
 
             foreach (var method in methods)
             {
+                //DefineTopXMetricRules(method.Parent.Members)
                 var issues = ApplyRule(method);
                 foreach (var issue in issues.Where(issue => issue != null))
                 {
