@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace DataSetExplorer.ManovaTest
+namespace DataSetExplorer.AnnotationConsistencyTests
 {
     class ManovaTest
     {
-        private readonly string _manovaScriptFile = "../../../ManovaTest/manova_test.py";
-        private readonly string _pythonPath = "../../../ManovaTest/venv/Scripts/python.exe";
+        private readonly string _manovaScriptFile = "../../../AnnotationConsistencyTests/manova_test.py";
+        private readonly string _pythonPath = "../../../AnnotationConsistencyTests/venv/Scripts/python.exe";
         private string _annotatedInstancesFile;
         private string _metrics;
         private string _independentVariable;

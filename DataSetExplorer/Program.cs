@@ -38,7 +38,34 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
             //ExportAnnotatedDataSet();
             //CheckAnnotationConsistencyForAnnotator(1);
-            CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(1);
+            //CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(1);
+            CheckMetricsSignificanceInAnnotationsForAnnotator(1);
+        }
+
+        private static void CheckMetricsSignificanceInAnnotationsForAnnotator(int annotatorId)
+        {
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
+
+            var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/anova/Output/");
+            var anovaTest = new AnnotationConsistencyTests.AnovaTest();
+
+            var enumerator = instancesGroupedBySmells.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var codeSmellGroup = enumerator.Current;
+                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
+
+                exporter.ExportAnnotationsFromAnnotator(annotatorId, codeSmellGroup.ToList(),
+                    "SanityCheck_" + codeSmell + "_Annotator_");
+
+                foreach (var metric in codeSmellGroup.First().MetricFeatures.Keys.ToList())
+                {
+                    anovaTest.SetupTestArguments(
+                    "D:/ccadet/annotations/sanity_check/anova/Output/SanityCheck_" + codeSmell + "_Annotator_" + annotatorId + ".xlsx",
+                    metric, "Annotation");
+                    anovaTest.RunTest();
+                }
+            }
         }
 
         private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
@@ -46,7 +73,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             var dataGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
 
             var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
-            var manovaTest = new ManovaTest.ManovaTest();
+            var manovaTest = new AnnotationConsistencyTests.ManovaTest();
 
             var enumerator = dataGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
@@ -83,7 +110,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
 
             var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
-            var manovaTest = new ManovaTest.ManovaTest();
+            var manovaTest = new AnnotationConsistencyTests.ManovaTest();
 
             var enumerator = instancesGroupedBySmells.GetEnumerator();
             while (enumerator.MoveNext())
