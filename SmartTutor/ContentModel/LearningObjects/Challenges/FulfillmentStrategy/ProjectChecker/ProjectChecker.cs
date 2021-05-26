@@ -42,29 +42,16 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
             foreach (var member in solutionAttempt.SelectMany(caDETClass => caDETClass.Members.Where(
                 member => codeSnippetId.Equals(member.Signature()) && !member.Type.Equals(CaDETMemberType.Property))))
             {
-                string fullName = GetFullNameOfSnippet(codeSnippetId);
                 return new CaDETClass
                 {
                     Members = new List<CaDETMember> { member },
-                    FullName = fullName,
-                    Name = GetNameOfSnippet(fullName),
+                    FullName = "",
+                    Name = "",
                     Fields = new List<CaDETField>()
                 };
             }
 
             throw new KeyNotFoundException("Code snippet id wasn't found.");
-        }
-
-        private string GetFullNameOfSnippet(string codeSnippetId)
-        {
-            int memberNameLength = string.Concat(codeSnippetId.Reverse().ToArray().TakeWhile((c) => c != '.')).Length;
-            return codeSnippetId.Substring(0, codeSnippetId.Length - memberNameLength - 1);
-        }
-
-        private string GetNameOfSnippet(string fullName)
-        {
-            string reversedNameOfSnippet = string.Concat(fullName.Reverse().ToArray().TakeWhile((c) => c != '.'));
-            return new string(reversedNameOfSnippet.Reverse().ToArray());
         }
     }
 }
