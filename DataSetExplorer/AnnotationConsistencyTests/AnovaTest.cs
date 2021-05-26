@@ -1,5 +1,8 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSetSerializer;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -12,16 +15,12 @@ namespace DataSetExplorer.AnnotationConsistencyTests
         private string _annotatedInstancesFile;
         private string _metric;
         private string _independentVariable;
-        
-        public void SetupTestArguments(string annotatedInstancesFile, CaDETMetric metric, string independentVariable)
-        {
-            _annotatedInstancesFile = annotatedInstancesFile;
-            _metric = metric.ToString();
-            _independentVariable = independentVariable;
-        }
+        private readonly string _annotatedInstancesFolderPath = "D:/ccadet/annotations/sanity_check/anova/Output/";
 
-        public void RunTest()
+        public void RunTest(int annotatorId, List<DataSetInstance> instances, string codeSmell, CaDETMetric metric)
         {
+            string exportedAnnotationsFile = ExportAnnotations(annotatorId, instances, codeSmell);
+            SetupTestArguments(exportedAnnotationsFile, metric, "Annotation");
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = _pythonPath,
@@ -33,6 +32,21 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             using StreamReader reader = process.StandardOutput;
             string result = reader.ReadToEnd();
             Console.Write(result);
+        }
+
+        private string ExportAnnotations(int annotatorId, List<DataSetInstance> instances, string codeSmell)
+        {
+            var exportedAnnotationsFile = "SanityCheck_" + codeSmell + "_Annotator_" + annotatorId;
+            var exporter = new AnnotationConsistencyByMetricsExporter(_annotatedInstancesFolderPath);
+            exporter.ExportAnnotationsFromAnnotator(annotatorId, instances, exportedAnnotationsFile);
+            return exportedAnnotationsFile;
+        }
+
+        private void SetupTestArguments(string exportedAnnotationsFile, CaDETMetric metric, string independentVariable)
+        {
+            _annotatedInstancesFile = _annotatedInstancesFolderPath + exportedAnnotationsFile + ".xlsx";
+            _metric = metric.ToString();
+            _independentVariable = independentVariable;
         }
     }
 }
