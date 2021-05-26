@@ -18,7 +18,7 @@ namespace SmartTutor.Tests.Integration
             {
                 var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<SmartTutorContext>));
                 services.Remove(descriptor);
-                
+
                 services.AddDbContext<SmartTutorContext>(opt =>
                     opt.UseNpgsql(CreateConnectionStringForTest()));
 

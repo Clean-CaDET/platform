@@ -32,7 +32,7 @@ namespace SmartTutor.Tests.Unit
             Mock<ILectureRepository> lectureRepo = new Mock<ILectureRepository>();
             lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(1)).Returns(kn1);
             lectureRepo.Setup(repo => repo.GetKnowledgeNodeWithSummaries(2)).Returns(kn2);
-            
+
             return new ProgressService(new Mock<IInstructor>().Object, lectureRepo.Object, progressRepo.Object);
         }
 

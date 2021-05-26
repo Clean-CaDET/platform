@@ -15,7 +15,7 @@ using Xunit;
 
 namespace SmartTutor.Tests.Integration
 {
-    public class SubmissionTests: IClassFixture<TutorApplicationTestFactory<Startup>>
+    public class SubmissionTests : IClassFixture<TutorApplicationTestFactory<Startup>>
     {
         private readonly TutorApplicationTestFactory<Startup> _factory;
 
@@ -161,7 +161,8 @@ namespace SmartTutor.Tests.Integration
             var controller = new SubmissionController(_factory.Services.GetRequiredService<IMapper>(), scope.ServiceProvider.GetRequiredService<ISubmissionService>());
             var submission = new ArrangeTaskSubmissionDTO
             {
-                ArrangeTaskId = 32, LearnerId = 1,
+                ArrangeTaskId = 32,
+                LearnerId = 1,
                 Containers = new List<ArrangeTaskContainerDTO>
                 {
                     new ArrangeTaskContainerDTO
@@ -186,7 +187,7 @@ namespace SmartTutor.Tests.Integration
             var dbContext = scope.ServiceProvider.GetRequiredService<SmartTutorContext>();
 
             var actualEvaluation = ((OkObjectResult)controller.SubmitChallenge(submission).Result).Value as ChallengeEvaluationDTO;
-            
+
             actualEvaluation.SolutionLO.Id.ShouldBe(expectedEvaluation.SolutionLO.Id);
             actualEvaluation.ChallengeId.ShouldBe(expectedEvaluation.ChallengeId);
             actualEvaluation.ApplicableHints.Count.ShouldBe(expectedEvaluation.ApplicableHints.Count);
@@ -250,7 +251,7 @@ namespace SmartTutor.Tests.Integration
             {
                 ChallengeId = 41,
                 LearnerId = 1,
-                SourceCode = new []
+                SourceCode = new[]
                 {
                     @"public class Test
                     {
