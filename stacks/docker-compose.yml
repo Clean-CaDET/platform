@@ -29,6 +29,8 @@ services:
       DATABASE_SCHEMA: ${SMART_TUTOR_DATABASE_SCHEMA}
       DATABASE_USERNAME: ${SMART_TUTOR_DATABASE_USERNAME}
       DATABASE_PASSWORD: ${SMART_TUTOR_DATABASE_PASSWORD}
+      AUTHORITY: ${AUTHORITY}
+      AUDIENCE: ${AUDIENCE}
     deploy:
       replicas: 4
       update_config:
@@ -56,17 +58,31 @@ services:
         delay: 5s
       restart_policy:
         condition: on-failure
-
-
+        
+  keycloak:
+    image: jboss/keycloak
+    networks:
+      - database
+      - backend
+    environment:
+      PROXY_ADDRESS_FORWARDING: ${PROXY_ADDRESS_FORWARDING}
+      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_FRONTEND_URL}
+      DB_VENDOR: ${KEYCLOAK_DATABASE_VENDOR}
+      DB_ADDR: ${KEYCLOAK_DATABASE_ADDR}
+      DB_DATABASE: ${KEYCLOAK_DATABASE_SCHEMA}
+      DB_USER: ${KEYCLOAK_DATABASE_USER}
+      DB_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      
 volumes:
   database-data:
     name: clean-cadet-database
 
-
 networks:
   public:
     name: public
-    driver: overlay 
+    driver: overlay
   backend:
     name: backend
     driver: overlay

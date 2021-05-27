@@ -88,8 +88,8 @@ namespace SmartTutor
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = Configuration["Jwt:Authority"];
-                options.Audience = Configuration["Jwt:Audience"];
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY") ?? "http://localhost:8080/auth/realms/master";
+                options.Audience = Environment.GetEnvironmentVariable("AUDIENCE") ?? "demo-app";
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.Events = new JwtBearerEvents
