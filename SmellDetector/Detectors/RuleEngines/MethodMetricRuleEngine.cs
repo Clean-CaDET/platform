@@ -64,7 +64,7 @@ namespace SmellDetector.Detectors.RuleEngines
         {
             double mlocThreshold = CalculateAverageMLOCForProject(methods);
 
-            Rule rule1 = new Rule("10.1016/j.jss.2006.10.018", new MetricCriteria(CaDETMetric.MLOC, OperationEnum.GREATER_THAN, mlocThreshold), SmellType.LONG_METHOD);
+            Rule rule1 = new Rule("https://doi.org/10.1016/j.jss.2015.05.024", new MetricCriteria(CaDETMetric.MLOC, OperationEnum.GREATER_THAN, mlocThreshold), SmellType.LONG_METHOD);
             _dynamicRules.Add(rule1);
 
         }
@@ -85,7 +85,7 @@ namespace SmellDetector.Detectors.RuleEngines
 
             foreach (var method in methods)
             {
-                DefineSpecialRuleForMLOCMetric(method.Parent.Members);
+                DefineSpecialRuleFromLiArticle(method.Parent.Members);
                 var issues = ApplyRules(method);
                 foreach (var issue in issues.Where(issue => issue != null))
                 {
