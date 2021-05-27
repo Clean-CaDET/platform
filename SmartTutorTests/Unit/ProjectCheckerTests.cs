@@ -43,6 +43,12 @@ namespace SmartTutor.Tests.Unit
         {
             var challenge = new Challenge(1, 1, new List<ChallengeFulfillmentStrategy> { _projectChecker });
 
+            if (!expectedCompletion)
+            {
+                Should.Throw<KeyNotFoundException>(() => challenge.CheckChallengeFulfillment(submissionAttempt, null));
+                return;
+            }
+
             var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt, null);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
 
@@ -65,6 +71,12 @@ namespace SmartTutor.Tests.Unit
                         new ChallengeHint(337001)
                     },
                     true
+                },
+                new object[]
+                {
+                    ChallengeTestData.GetTwoViolatingClasses(),
+                    new List<ChallengeHint>(),
+                    false
                 }
             };
     }
