@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
@@ -12,10 +13,12 @@ using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Progress;
 using SmartTutor.ProgressModel.Submissions;
+using System;
 using SmartTutor.QualityAnalysis;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace SmartTutor.Database
 {
@@ -128,17 +131,20 @@ namespace SmartTutor.Database
         private static void ConfigureProjectChecker(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ChallengeFulfillmentStrategy>()
-               .Property<string?>("StrategiesApplicableToSnippetCheckerForeignKey").IsRequired(false);
+               .Property<string>("StrategiesApplicableToSnippetCheckerForeignKey").IsRequired(false);
 
             modelBuilder.Entity<ProjectChecker>()
                 .Property(pc => pc.StrategiesApplicableToSnippet)
                 .IsRequired()
-                .HasConversion<string[]>(
+                .HasConversion(
                     sats => ((IEnumerable)sats).Cast<object>().Select(x => x.ToString()).ToArray(),
                     sats => sats == null
                         ? new Dictionary<string, List<ChallengeFulfillmentStrategy>>()
-                        : JsonConvert.DeserializeObject<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(sats.ToString())
-            );
+                        : JsonSerializer.Deserialize<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(sats.ToString(), null),
+                        new ValueComparer<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(
+                            (c1, c2) => c1.SequenceEqual(c2),
+                            c => c.Aggregate(0, (a, sats) => HashCode.Combine(a, sats.GetHashCode())))
+                );
         }
     }
 }
