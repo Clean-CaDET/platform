@@ -105,16 +105,16 @@ namespace SmellDetector.Detectors.RuleEngines
 
         }
 
-        private double FindTopXMetricValuesInProject(List<CaDETClass> caDetClassDtoList, CaDETMetric metric, int indexOfMetricValue)
+        private double FindTopXMetricValuesInProject(List<CaDETClass> classes, CaDETMetric metric, int indexOfMetricValue)
         {
-            List<double> metricValues = caDetClassDtoList.Select(c => c.Metrics[metric]).ToList();
+            List<double> metricValues = classes.Select(c => c.Metrics[metric]).ToList();
             metricValues.Sort();
-            return metricValues[indexOfMetricValue];
+            return metricValues.Count <= indexOfMetricValue ? metricValues[metricValues.Count - 1] : metricValues[indexOfMetricValue];
         }
 
-        private int CalculateIndexBasedOnPercentage(List<CaDETClass> caDetClassDtoList, int percentage)
+        private int CalculateIndexBasedOnPercentage(List<CaDETClass> classes, int percentage)
         {
-            return caDetClassDtoList.Count * percentage / 100;
+            return classes.Count * percentage / 100;
         }
 
         public PartialSmellDetectionReport FindIssues(List<CaDETClass> classes)
@@ -125,7 +125,7 @@ namespace SmellDetector.Detectors.RuleEngines
 
             foreach(var cadetClass in classes)
             {
-                var issues = ApplyRule(cadetClass);
+                var issues = ApplyRules(cadetClass);
                 foreach (var issue in issues.Where(issue => issue != null))
                 {
                     partialReport.AddIssue(issue.CodeSnippetId, issue);
@@ -134,7 +134,7 @@ namespace SmellDetector.Detectors.RuleEngines
             return partialReport;
         }
 
-        private List<Issue> ApplyRule(CaDETClass c)
+        private List<Issue> ApplyRules(CaDETClass c)
         {
             List<Issue> issues = _rules.Select(r => r.Validate(c.FullName, c.Metrics)).ToList();
             issues.AddRange(_dynamicRules.Select(r => r.Validate(c.FullName, c.Metrics)).ToList());
