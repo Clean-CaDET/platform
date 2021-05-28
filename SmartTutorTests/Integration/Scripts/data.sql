@@ -17,6 +17,7 @@ DELETE FROM public."Videos";
 DELETE FROM public."MetricRangeRules";
 DELETE FROM public."BasicMetricCheckers";
 DELETE FROM public."BasicNameCheckers";
+DELETE FROM public."ProjectCheckers";
 DELETE FROM public."ChallengeHints";
 DELETE FROM public."ChallengeFulfillmentStrategies";
 DELETE FROM public."Challenges";
