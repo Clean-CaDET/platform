@@ -32,7 +32,7 @@ namespace DataSetExplorer.Tests.Unit
                 new Annotator(2, 2, 2),
                 new Annotator(3, 2, 3)
             };
-            JoinInstancesAndAnnotators(ref classes, annotators);
+            JoinInstancesAndAnnotators(classes, annotators);
 
             var allClassAnnotations = classes.SelectMany(c => c.Annotations);
             allClassAnnotations.First(a => a.Annotator.Id == 1).Annotator.ShouldBe(annotators.Find(a => a.Id == 1));
@@ -40,7 +40,7 @@ namespace DataSetExplorer.Tests.Unit
             allClassAnnotations.First(a => a.Annotator.Id == 3).Annotator.ShouldBe(annotators.Find(a => a.Id == 3));
         }
 
-        private void JoinInstancesAndAnnotators(ref List<DataSetInstance> annotatedInstances, List<Annotator> annotators)
+        private void JoinInstancesAndAnnotators(List<DataSetInstance> annotatedInstances, List<Annotator> annotators)
         {
             foreach (var annotation in annotatedInstances.SelectMany(i => i.Annotations))
             {
