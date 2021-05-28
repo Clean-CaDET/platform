@@ -26,7 +26,7 @@ namespace DataSetExplorer.DataSetSerializer
         {
             InitializeExcelSheet(_singleAnnotatorTemplatePath);
             PopulateTemplateForAnnotator(annotatorId, dataSetInstances);
-            Serialize(fileName + annotatorId);
+            Serialize(fileName);
         }
 
         public void ExportAnnotatorsForSeverity(int severity, List<DataSetInstance> dataSetInstances,
@@ -34,7 +34,7 @@ namespace DataSetExplorer.DataSetSerializer
         {
             InitializeExcelSheet(_multipleAnnotatorsTemplatePath);
             PopulateTemplateForSeverity(severity, dataSetInstances);
-            Serialize(fileName + severity);
+            Serialize(fileName);
         }
 
         private void InitializeExcelSheet(string templatePath)
