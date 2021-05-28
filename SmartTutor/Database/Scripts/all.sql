@@ -916,9 +916,38 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (115, 'Challenge Structural Cohesion Solution', 16); TODO*/
 	
 -- Cohesion - PK Node 1
+INSERT INTO public."Challenges"(
+	"Id", "Description", "Url", "TestSuiteLocation", "SolutionIdForeignKey")
+	VALUES (103, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Classes/02. Structural Cohesion" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 'Classes.Structural', 111);
+
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (8, 103, 'Classes.Structural.PharmacyService');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (9, 103, 'Classes.Structural.VacationSlot');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (10, 103, 'Classes.Structural.Stocktake');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (11, 103, 'Classes.Structural.Weekend');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (12, 103, 'Classes.Structural.Pharmacist');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (13, 103, 'Classes.Structural.Run');
+	
+INSERT INTO public."ProjectCheckers"(
+	"Id", "StrategiesApplicableToSnippet")
+	VALUES (2, '{"Classes.Structural.PharmacyService","Classes.Structural.VacationSlot","Classes.Structural.Stocktake","Classes.Structural.Weekend","Classes.Structural.Pharmacist","Classes.Structural.Run"}');
+
+
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (110, 110);
+
 INSERT INTO public."ArrangeTasks"(
 	"Id", "Text")
 	VALUES (110, 'Ispitaj sledeću klasu:
@@ -1130,6 +1159,21 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (123, 'Challenge Semantic Cohesion Solution', 17);TODO*/
 	
 -- Cohesion - PK Node 2
+INSERT INTO public."Challenges"(
+	"Id", "Description", "Url", "TestSuiteLocation", "SolutionIdForeignKey")
+	VALUES (101, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Classes/01. Semantic Cohesion" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 'Classes.Semantic', 121);
+
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (6, 101, 'Classes.Semantic.Pharmacist');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (7, 101, 'Classes.Semantic.Stocktake');
+
+INSERT INTO public."ProjectCheckers"(
+	"Id", "StrategiesApplicableToSnippet")
+	VALUES (1, '{"Classes.Semantic.Pharmacist","Classes.Semantic.Stocktake"}');
+
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (120, 120);
