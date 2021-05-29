@@ -1,4 +1,6 @@
-﻿using Shouldly;
+﻿using CodeModel;
+using CodeModel.CaDETModel.CodeItems;
+using Shouldly;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
@@ -21,11 +23,15 @@ namespace SmartTutor.Tests.Unit
             Dictionary<string, List<ChallengeFulfillmentStrategy>> semanticStrategiesApplicableToSnippet = new();
             semanticStrategiesApplicableToSnippet.Add("Classes.Semantic.Pharmacist", new List<ChallengeFulfillmentStrategy>()
             {
-                new BasicNameChecker(new List<string> { "PharmacistInfo", "PharmacistId" }, new List<string> { "Pharmacist", "Id" }, new ChallengeHint(21))
+                new BasicNameChecker(new List<string> { "IsProfitableStocktakeForDay", "GetAllStocktakeResourcesNames" }, new List<string> { "Pharmacist", "HasAllVitaminsForDay", "GetAllNotProfitablePharmacistStocktakeMonthsForYear" }, new ChallengeHint(21))
             });
             semanticStrategiesApplicableToSnippet.Add("Classes.Semantic.Stocktake", new List<ChallengeFulfillmentStrategy>()
             {
-                new BasicNameChecker(new List<string> { "_nameStr" }, new List<string> { "_name", "Stocktake" }, new ChallengeHint(22))
+                new BasicNameChecker(new List<string> { "GetAllNotProfitablePharmacistStocktakeMonthsForYear" }, new List<string> { "Stocktake", "IsProfitableStocktakeForDay", "GetAllStocktakeResourcesNames" }, new ChallengeHint(22))
+            });
+            semanticStrategiesApplicableToSnippet.Add("Classes.Semantic.Run", new List<ChallengeFulfillmentStrategy>()
+            {
+                new BasicNameChecker(new List<string> (), new List<string> { "Run" }, new ChallengeHint(23))
             });
             _semanticProjectChecker = new ProjectChecker(semanticStrategiesApplicableToSnippet);
 
@@ -34,86 +40,58 @@ namespace SmartTutor.Tests.Unit
             {
                 new BasicMetricChecker(
                     new List<MetricRangeRule> {
-                        new MetricRangeRule(33701, "NMD", 1, 2, new ChallengeHint(337001)),
-                        new MetricRangeRule(33702, "CLOC", 4, 25, new ChallengeHint(337002)),
-                        new MetricRangeRule(33703, "LCOM", -1, 0, new ChallengeHint(337003)),
-                        new MetricRangeRule(33704, "CBO", 0, 0, new ChallengeHint(337004))
+                        new MetricRangeRule(33701, "NMD", 1, 4, new ChallengeHint(337001)),
+                        new MetricRangeRule(33702, "CLOC", 25, 70, new ChallengeHint(337002)),
+                        new MetricRangeRule(33703, "LCOM", -1, 1, new ChallengeHint(337003)),
+                        new MetricRangeRule(33704, "CBO", -1, 2, new ChallengeHint(337004))
                     },
                     new List<MetricRangeRule> {
-                         new MetricRangeRule(33705, "MELOC", 1, 15, new ChallengeHint(337005))
+                         new MetricRangeRule(33705, "MELOC", -1, 15, new ChallengeHint(337005))
                     }
                 ),
                 new BasicNameChecker(new List<string> (), new List<string> { "PharmacyService" }, new ChallengeHint(30))
-            });
-            structuralStrategiesApplicableToSnippet.Add("Classes.Structural.VacationSlot", new List<ChallengeFulfillmentStrategy>()
-            {
-                new BasicMetricChecker(
-                    new List<MetricRangeRule> {
-                        new MetricRangeRule(33706, "NMD", 0, 1, new ChallengeHint(337006)),
-                        new MetricRangeRule(33707, "LCOM", -1, 0, new ChallengeHint(337007)),
-                        new MetricRangeRule(33708, "CBO", 0, 0, new ChallengeHint(337008))
-                    },
-                    new List<MetricRangeRule> {
-                         new MetricRangeRule(33709, "MELOC", 1, 15, new ChallengeHint(337009))
-                    }
-                ),
-                new BasicNameChecker(new List<string> (), new List<string> { "VacationSlot" }, new ChallengeHint(31))
-            });
-            structuralStrategiesApplicableToSnippet.Add("Classes.Structural.Stocktake", new List<ChallengeFulfillmentStrategy>()
-            {
-                new BasicMetricChecker(
-                    new List<MetricRangeRule> {
-                        new MetricRangeRule(33710, "NMD", 0, 1, new ChallengeHint(337010)),
-                        new MetricRangeRule(33711, "LCOM", -1, 0, new ChallengeHint(337011)),
-                        new MetricRangeRule(33712, "CBO", 0, 0, new ChallengeHint(337012))
-                    },
-                    new List<MetricRangeRule> {
-                         new MetricRangeRule(33713, "MELOC", 1, 15, new ChallengeHint(337013))
-                    }
-                ),
-                new BasicNameChecker(new List<string> (), new List<string> { "Stocktake" }, new ChallengeHint(32))
-            });
-            structuralStrategiesApplicableToSnippet.Add("Classes.Structural.Weekend", new List<ChallengeFulfillmentStrategy>()
-            {
-                new BasicMetricChecker(
-                    new List<MetricRangeRule> {
-                        new MetricRangeRule(33714, "NMD", 0, 1, new ChallengeHint(337014)),
-                        new MetricRangeRule(33715, "LCOM", -1, 0, new ChallengeHint(337015)),
-                        new MetricRangeRule(33716, "CBO", 0, 0, new ChallengeHint(337016))
-                    },
-                    new List<MetricRangeRule> {
-                         new MetricRangeRule(33717, "MELOC", 1, 15, new ChallengeHint(337017))
-                    }
-                ),
-                new BasicNameChecker(new List<string> (), new List<string> { "Weekend" }, new ChallengeHint(33))
             });
             structuralStrategiesApplicableToSnippet.Add("Classes.Structural.Pharmacist", new List<ChallengeFulfillmentStrategy>()
             {
                 new BasicMetricChecker(
                     new List<MetricRangeRule> {
-                        new MetricRangeRule(33718, "NMD", 0, 1, new ChallengeHint(337018)),
-                        new MetricRangeRule(33719, "LCOM", -1, 0, new ChallengeHint(337019)),
-                        new MetricRangeRule(33720, "CBO", 1, 2, new ChallengeHint(337020))
+                        new MetricRangeRule(33706, "NMD", 0, 2, new ChallengeHint(337006)),
+                        new MetricRangeRule(33707, "LCOM", -1, 0, new ChallengeHint(337007)),
+                        new MetricRangeRule(33708, "CBO", -1, 0, new ChallengeHint(337008))
                     },
                     new List<MetricRangeRule> {
-                         new MetricRangeRule(33721, "MELOC", 1, 15, new ChallengeHint(337021))
+                         new MetricRangeRule(33709, "MELOC", -1, 15, new ChallengeHint(337009))
                     }
                 ),
-                new BasicNameChecker(new List<string> (), new List<string> { "Pharmacist" }, new ChallengeHint(34))
+                new BasicNameChecker(new List<string> (), new List<string> { "Pharmacist" }, new ChallengeHint(31))
             });
-            structuralStrategiesApplicableToSnippet.Add("Classes.Structural.Run", new List<ChallengeFulfillmentStrategy>()
+            structuralStrategiesApplicableToSnippet.Add("Classes.Structural.Pill", new List<ChallengeFulfillmentStrategy>()
             {
                 new BasicMetricChecker(
                     new List<MetricRangeRule> {
-                        new MetricRangeRule(33722, "NMD", 0, 1, new ChallengeHint(337022)),
-                        new MetricRangeRule(33723, "LCOM", -1, 0, new ChallengeHint(337023)),
-                        new MetricRangeRule(33724, "CBO", 0, 1, new ChallengeHint(337024))
+                        new MetricRangeRule(33710, "NMD", 0, 1, new ChallengeHint(337010)),
+                        new MetricRangeRule(33711, "LCOM", -1, 0, new ChallengeHint(337011)),
+                        new MetricRangeRule(33712, "CBO", -1, 0, new ChallengeHint(337012))
                     },
                     new List<MetricRangeRule> {
-                         new MetricRangeRule(33725, "MELOC", 1, 15, new ChallengeHint(337025))
+                         new MetricRangeRule(33713, "MELOC", -1, 15, new ChallengeHint(337013))
                     }
                 ),
-                new BasicNameChecker(new List<string> (), new List<string> { "Run" }, new ChallengeHint(35))
+                new BasicNameChecker(new List<string> (), new List<string> { "Pill" }, new ChallengeHint(32))
+            });
+            structuralStrategiesApplicableToSnippet.Add("Classes.Structural.Purchase", new List<ChallengeFulfillmentStrategy>()
+            {
+                new BasicMetricChecker(
+                    new List<MetricRangeRule> {
+                        new MetricRangeRule(33714, "NMD", 1, 3, new ChallengeHint(337014)),
+                        new MetricRangeRule(33715, "LCOM", -1, 1, new ChallengeHint(337015)),
+                        new MetricRangeRule(33716, "CBO", -1, 3, new ChallengeHint(337016))
+                    },
+                    new List<MetricRangeRule> {
+                         new MetricRangeRule(33717, "MELOC", -1, 15, new ChallengeHint(337017))
+                    }
+                ),
+                new BasicNameChecker(new List<string> (), new List<string> { "Purchase" }, new ChallengeHint(33))
             });
             _structuralProjectChecker = new ProjectChecker(structuralStrategiesApplicableToSnippet);
         }
@@ -122,13 +100,7 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(SemanticProjectCheckerChallengeTest))]
         public void Evaluates_semantic_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints, bool expectedCompletion)
         {
-            var challenge = new Challenge(51, 1, new List<ChallengeFulfillmentStrategy> { _semanticProjectChecker });
-
-            if (!expectedCompletion)
-            {
-                Should.Throw<KeyNotFoundException>(() => challenge.CheckChallengeFulfillment(submissionAttempt, null));
-                return;
-            }
+            var challenge = new Challenge(101, 1, new List<ChallengeFulfillmentStrategy> { _semanticProjectChecker });
 
             var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt, null);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
@@ -142,7 +114,8 @@ namespace SmartTutor.Tests.Unit
         [MemberData(nameof(StructuralProjectCheckerChallengeTest))]
         public void Evaluates_structural_solution_submission(string[] submissionAttempt, List<ChallengeHint> expectedHints, bool expectedCompletion)
         {
-            var challenge = new Challenge(52, 2, new List<ChallengeFulfillmentStrategy> { _structuralProjectChecker });
+            List<CaDETClass> classes = new CodeModelFactory().CreateProject(submissionAttempt).Classes;
+            var challenge = new Challenge(103, 2, new List<ChallengeFulfillmentStrategy> { _structuralProjectChecker });
 
             var challengeEvaluation = challenge.CheckChallengeFulfillment(submissionAttempt, null);
             var actualHints = challengeEvaluation.ApplicableHints.GetHints();
@@ -156,18 +129,23 @@ namespace SmartTutor.Tests.Unit
             {
                 new object[]
                 {
-                    SemanticProjectCheckerChallengeTestData.GetFourPassingClasses(),
+                    SemanticProjectCheckerChallengeTestData.GetPassingClasses(),
                      new List<ChallengeHint>
-                    {
+                     {
                         new ChallengeHint(21),
-                        new ChallengeHint(22)
-                    },
+                        new ChallengeHint(22),
+                        new ChallengeHint(23)
+                     },
                     true
                 },
                 new object[]
                 {
-                    SemanticProjectCheckerChallengeTestData.GetFourViolatingClasses(),
-                    new List<ChallengeHint>(),
+                    SemanticProjectCheckerChallengeTestData.GetViolatingClasses(),
+                    new List<ChallengeHint>
+                    {
+                        new ChallengeHint(21),
+                        new ChallengeHint(22)
+                    },
                     false
                 }
             };
@@ -177,7 +155,7 @@ namespace SmartTutor.Tests.Unit
            {
                 new object[]
                 {
-                    StructuralProjectCheckerChallengeTestData.GetFourPassingClasses(),
+                    StructuralProjectCheckerChallengeTestData.GetPassingClasses(),
                     new List<ChallengeHint>
                     {
                         new ChallengeHint(33701),
@@ -197,30 +175,20 @@ namespace SmartTutor.Tests.Unit
                         new ChallengeHint(33715),
                         new ChallengeHint(33716),
                         new ChallengeHint(33717),
-                        new ChallengeHint(33718),
-                        new ChallengeHint(33719),
-                        new ChallengeHint(33720),
-                        new ChallengeHint(33721),
-                        new ChallengeHint(33722),
-                        new ChallengeHint(33723),
-                        new ChallengeHint(33724),
-                        new ChallengeHint(33725),
                         new ChallengeHint(30),
                         new ChallengeHint(31),
                         new ChallengeHint(32),
-                        new ChallengeHint(33),
-                        new ChallengeHint(34),
-                        new ChallengeHint(35)
+                        new ChallengeHint(33)
                     },
                     true
                 },
                 new object[]
                 {
-                    StructuralProjectCheckerChallengeTestData.GetFourViolatingClasses(),
+                    StructuralProjectCheckerChallengeTestData.GetViolatingClasses(),
                     new List<ChallengeHint>
                     {
-                        new ChallengeHint(33701),
-                        new ChallengeHint(33706)
+                        new ChallengeHint(337005),
+                        new ChallengeHint(337014)
                     },
                     false
                 }

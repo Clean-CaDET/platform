@@ -2,7 +2,7 @@
 {
     internal class SemanticProjectCheckerChallengeTestData
     {
-        public static string[] GetFourPassingClasses()
+        public static string[] GetPassingClasses()
         {
             return new[]
            {
@@ -13,39 +13,40 @@ using System.Linq;
 
 namespace Classes.Semantic
 {
-    public class Pharmacist
+     public class Pharmacist
     {
-        public int Id { get; }
-        public ISet<Stocktake> Stocktakes { get; } = new HashSet<Stocktake>();
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public List<Stocktake> StocktakesDone { get; set; }
 
-        public bool HasStocktakes(List<Stocktake> stocktakeSet)
+        public bool HasAllVitaminsForDay(DateTime day)
         {
-            foreach (var stocktake in stocktakeSet)
+            foreach (var stocktake in StocktakesDone)
             {
-                if (!Stocktakes.Contains(stocktake)) return false;
+                if (stocktake.DayOfStocktake.Date.Equals(day.Date))
+                {
+                    foreach (var vitamin in stocktake.Vitamins)
+                    {
+                        if (vitamin.Value <= 0) return false;
+                    }
+                }
             }
 
             return true;
         }
 
-        public void AssignStocktake(Stocktake stocktakeData)
+        public List<int> GetAllNotProfitablePharmacistStocktakeMonthsForYear(Pharmacist pharmacist, int year)
         {
-            if (Stocktakes.Contains(stocktakeData)) throw new ThePharmacistAlreadyHasStocktakeException(""Pharmacist: "" + Id.ToString() + ""Stock: "" + stocktakeData);
-            Stocktakes.Add(stocktakeData);
-        }
-
-    }
-}",
-@"using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Classes.Semantic
-{
-public class ThePharmacistAlreadyHasStocktakeException : Exception
-    {
-        public ThePharmacistAlreadyHasStocktakeException(string id) : base(Id)
-        {
+            List<int> allNotProfitableMonths = new List<int>();
+            foreach (var stocktake in pharmacist.StocktakesDone)
+            {
+                DateTime timeOfStocktake = stocktake.DayOfStocktake;
+                if (stocktake.Profit <= 0 && timeOfStocktake.Year == year && !allNotProfitableMonths.Contains(timeOfStocktake.Month))
+                {
+                    allNotProfitableMonths.Add(timeOfStocktake.Month);
+                }
+            }
+            return allNotProfitableMonths;
         }
     }
 }",
@@ -57,22 +58,38 @@ namespace Classes.Semantic
 {
 public class Stocktake
     {
-        private readonly string _name;
+        public Dictionary<string, int> Medicines { get; }
+        public Dictionary<string, int> Vitamins { get; }
+        public double Profit { get; }
+        public DateTime DayOfStocktake { get; }
 
-        public Stocktake(string name)
+        public Stocktake(Dictionary<string, int> medicines, Dictionary<string, int> vitamins, double profit, DateTime dayOfStocktake)
         {
-            _name = name;
+            Medicines = medicines;
+            Vitamins = vitamins;
+            Profit = profit;
+            DayOfStocktake = dayOfStocktake;
         }
 
-        public override bool Equals(object? obj)
+        public bool IsProfitableStocktakeForDay(Stocktake stocktake, DateTime day)
         {
-            if (!(obj is Stocktake other)) return false;
-            return other._name.Equals(_name);
+            bool isDayOfStocktake = stocktake.DayOfStocktake.Date.Equals(day.Date);
+            bool isProfitable = stocktake.Profit > 0;
+            return isDayOfStocktake && isProfitable;
         }
 
-        public override int GetHashCode()
+        public List<string> GetAllStocktakeResourcesNames(Stocktake stocktake)
         {
-            return _name.GetHashCode();
+            List<string> allResources = new List<string>();
+            foreach (var medicine in stocktake.Medicines)
+            {
+                allResources.Add(medicine.Key);
+            }
+            foreach (var vitamin in stocktake.Vitamins)
+            {
+                allResources.Add(vitamin.Key);
+            }
+            return allResources;
         }
     }
 }",
@@ -82,43 +99,76 @@ using System.Linq;
 
 namespace Classes.Semantic
 {
-#region Run
+ #region Run
     public class Run
     {
         private readonly Pharmacist _pharmacist;
 
         public Run()
         {
-            _pharmacist = new Pharmacist();
-            _pharmacist.AssignStocktake(new Stocktake(""Test 1""));
-            _pharmacist.AssignStocktake(new Stocktake(""Test 2""));
-            _pharmacist.AssignStocktake(new Stocktake(""Test 3""));
+            _pharmacist.Id = 135671;
+            _pharmacist.FullName = ""Petar Milenković"";
+            _pharmacist.StocktakesDone = new List<Stocktake> {
+            new Stocktake(new Dictionary<string, int>
+                {
+                    { ""Brufen"", 15 },
+                    { ""Aspirin"", 81 },
+                    { ""Panadol"", 0 },
+                    { ""Paracetamol"", 1 }
+                },
+                new Dictionary<string, int>
+                {
+                    { ""Vitamin C"", 3 },
+                    { ""Vitamin B"", 24 }
+                },
+                -359,
+                DateTime.Now
+            ),
+            new Stocktake(new Dictionary<string, int>
+                {
+                    { ""Brufen"", 78 },
+                    { ""Aspirin"", 0 },
+                    { ""Panadol"", 0 },
+                    { ""Paracetamol"", 14 }
+                }, new Dictionary<string, int>
+                {
+                    { ""Vitamin C"", 5 },
+                    { ""Vitamin B"", 15 }
+                },
+                671,
+                DateTime.Now.AddDays(31)
+            ),
+            new Stocktake(new Dictionary<string, int>
+                {
+                    { ""Brufen"", 0 },
+                    { ""Aspirin"", 47 },
+                    { ""Panadol"", 6 },
+                    { ""Paracetamol"", 7 }
+                },
+                new Dictionary<string, int>
+                {
+                    { ""Vitamin C"", 0 },
+                    { ""Vitamin B"", 21 }
+                },
+                783,
+                DateTime.Now.AddDays(62)
+            )};
         }
 
-        public void AddStock()
+        public bool HasAllVitaminsForDay(DateTime day)
         {
-            _pharmacist.AssignStocktake(new Stocktake(""Test 1""));
-        }
-
-        public List<Stocktake> GetStock()
-        {
-            return _pharmacist.Stocktakes.ToList();
-        }
-
-        public bool HasStock(List<Stocktake> all)
-        {
-            return _pharmacist.HasStocktake(all);
+            return _pharmacist.HasAllVitaminsForDay(day);
         }
     }
 #endregion
-}"
-            };
+}
+" };
         }
 
-        public static string[] GetFourViolatingClasses()
+        public static string[] GetViolatingClasses()
         {
             return new[]
-            {
+          {
 @"
 using System;
 using System.Collections.Generic;
@@ -126,39 +176,47 @@ using System.Linq;
 
 namespace Classes.Semantic
 {
-    public class PharmacistInfo
+     public class Pharmacist
     {
-        public int PharmacistId { get; }
-        public ISet<Stocktake> Stocktakes { get; } = new HashSet<Stocktake>();
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public List<Stocktake> StocktakesDone { get; set; }
 
-        public bool HasStocktakes(List<Stocktake> stocktakeSet)
+        public bool HasAllVitaminsForDay(DateTime day)
         {
-            foreach (var stocktake in stocktakeSet)
+            foreach (var stocktake in StocktakesDone)
             {
-                if (!Stocktakes.Contains(stocktake)) return false;
+                if (stocktake.DayOfStocktake.Date.Equals(day.Date))
+                {
+                    foreach (var vitamin in stocktake.Vitamins)
+                    {
+                        if (vitamin.Value <= 0) return false;
+                    }
+                }
             }
 
             return true;
         }
 
-        public void AssignStocktake(Stocktake stocktakeData)
+        public bool IsProfitableStocktakeForDay(Stocktake stocktake, DateTime day)
         {
-            if (Stocktakes.Contains(stocktakeData)) throw new ThePharmacistAlreadyHasStocktakeException(""Pharmacist: "" + PharmacistId.ToString() + ""Stock: "" + stocktakeData);
-            Stocktakes.Add(stocktakeData);
+            bool isDayOfStocktake = stocktake.DayOfStocktake.Date.Equals(day.Date);
+            bool isProfitable = stocktake.Profit > 0;
+            return isDayOfStocktake && isProfitable;
         }
 
-    }
-}",
-@"using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Classes.Semantic
-{
-public class ThePharmacistAlreadyHasStocktakeException : Exception
-    {
-        public ThePharmacistAlreadyHasStocktakeException(string pharmacistId) : base(pharmacistId)
+        public List<string> GetAllStocktakeResourcesNames(Stocktake stocktake)
         {
+            List<string> allResources = new List<string>();
+            foreach (var medicine in stocktake.Medicines)
+            {
+                allResources.Add(medicine.Key);
+            }
+            foreach (var vitamin in stocktake.Vitamins)
+            {
+                allResources.Add(vitamin.Key);
+            }
+            return allResources;
         }
     }
 }",
@@ -170,23 +228,33 @@ namespace Classes.Semantic
 {
 public class Stocktake
     {
-        private readonly string _nameStr;
+        public Dictionary<string, int> Medicines { get; }
+        public Dictionary<string, int> Vitamins { get; }
+        public double Profit { get; }
+        public DateTime DayOfStocktake { get; }
 
-        public Stocktake(string name)
+        public Stocktake(Dictionary<string, int> medicines, Dictionary<string, int> vitamins, double profit, DateTime dayOfStocktake)
         {
-            _nameStr = name;
+            Medicines = medicines;
+            Vitamins = vitamins;
+            Profit = profit;
+            DayOfStocktake = dayOfStocktake;
         }
 
-        public override bool Equals(object? obj)
+        public List<int> GetAllNotProfitablePharmacistStocktakeMonthsForYear(Pharmacist pharmacist, int year)
         {
-            if (!(obj is Stocktake other)) return false;
-            return other._nameStr.Equals(_nameStr);
+            List<int> allNotProfitableMonths = new List<int>();
+            foreach (var stocktake in pharmacist.StocktakesDone)
+            {
+                DateTime timeOfStocktake = stocktake.DayOfStocktake;
+                if (stocktake.Profit <= 0 && timeOfStocktake.Year == year && !allNotProfitableMonths.Contains(timeOfStocktake.Month))
+                {
+                    allNotProfitableMonths.Add(timeOfStocktake.Month);
+                }
+            }
+            return allNotProfitableMonths;
         }
 
-        public override int GetHashCode()
-        {
-            return _nameStr.GetHashCode();
-        }
     }
 }",
 @"using System;
@@ -195,37 +263,70 @@ using System.Linq;
 
 namespace Classes.Semantic
 {
-#region Run
+ #region Run
     public class Run
     {
-        private readonly PharmacistInfo _pharmacist;
+        private readonly Pharmacist _pharmacist;
 
         public Run()
         {
-            _pharmacist = new PharmacistInfo();
-            _pharmacist.AssignStocktake(new Stocktake(""Test 1""));
-            _pharmacist.AssignStocktake(new Stocktake(""Test 2""));
-            _pharmacist.AssignStocktake(new Stocktake(""Test 3""));
+            _pharmacist.Id = 135671;
+            _pharmacist.FullName = ""Petar Milenković"";
+            _pharmacist.StocktakesDone = new List<Stocktake> {
+            new Stocktake(new Dictionary<string, int>
+                {
+                    { ""Brufen"", 15 },
+                    { ""Aspirin"", 81 },
+                    { ""Panadol"", 0 },
+                    { ""Paracetamol"", 1 }
+                },
+                new Dictionary<string, int>
+                {
+                    { ""Vitamin C"", 3 },
+                    { ""Vitamin B"", 24 }
+                },
+                -359,
+                DateTime.Now
+            ),
+            new Stocktake(new Dictionary<string, int>
+                {
+                    { ""Brufen"", 78 },
+                    { ""Aspirin"", 0 },
+                    { ""Panadol"", 0 },
+                    { ""Paracetamol"", 14 }
+                }, new Dictionary<string, int>
+                {
+                    { ""Vitamin C"", 5 },
+                    { ""Vitamin B"", 15 }
+                },
+                671,
+                DateTime.Now.AddDays(31)
+            ),
+            new Stocktake(new Dictionary<string, int>
+                {
+                    { ""Brufen"", 0 },
+                    { ""Aspirin"", 47 },
+                    { ""Panadol"", 6 },
+                    { ""Paracetamol"", 7 }
+                },
+                new Dictionary<string, int>
+                {
+                    { ""Vitamin C"", 0 },
+                    { ""Vitamin B"", 21 }
+                },
+                783,
+                DateTime.Now.AddDays(62)
+            )};
         }
 
-        public void AddStock()
+        public bool HasAllVitaminsForDay(DateTime day)
         {
-            _pharmacist.AssignStocktake(new Stocktake(""Test 1""));
-        }
-
-        public List<Stocktake> GetStock()
-        {
-            return _pharmacist.Stocktakes.ToList();
-        }
-
-        public bool HasStock(List<Stocktake> all)
-        {
-            return _pharmacist.HasStocktake(all);
+            return _pharmacist.HasAllVitaminsForDay(day);
         }
     }
 #endregion
-}"
-            };
+}
+" };
         }
     }
 }

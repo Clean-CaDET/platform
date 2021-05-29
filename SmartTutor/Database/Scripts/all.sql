@@ -940,22 +940,16 @@ INSERT INTO public."ChallengeFulfillmentStrategies"(
 	VALUES (14, 103, 'Classes.Structural.Pill');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (15, 103, 'Classes.Structural.PillForm');
+	VALUES (15, 103, 'Classes.Structural.Purchase');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (16, 103, 'Classes.Structural.PillForm');
+	VALUES (16, 103, 'Classes.Structural.Purchase');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (17, 103, 'Classes.Structural.Purchase');
+	VALUES (17, 103, 'Classes.Structural.Run');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (18, 103, 'Classes.Structural.Purchase');
-INSERT INTO public."ChallengeFulfillmentStrategies"(
-	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (19, 103, 'Classes.Structural.Run');
-INSERT INTO public."ChallengeFulfillmentStrategies"(
-	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (20, 103, 'Classes.Structural.Run');
+	VALUES (18, 103, 'Classes.Structural.Run');
 
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "RequiredWords")
@@ -968,17 +962,82 @@ INSERT INTO public."BasicNameCheckers"(
 	VALUES (14, '{"GetMostExpensiveGranulePurchaseInPharmacyForPharmacists"}','{"Pill"}');
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "BannedWords", "RequiredWords")
-	VALUES (16, '{"GetMostExpensiveGranulePurchaseInPharmacyForPharmacists"}','{"PillForm"}');
-INSERT INTO public."BasicNameCheckers"(
-	"Id", "BannedWords", "RequiredWords")
-	VALUES (18, '{"GetMostExpensiveGranulePurchaseInPharmacyForPharmacists"}', '{"Purchase"}');
+	VALUES (16, '{"GetMostExpensiveGranulePurchaseInPharmacyForPharmacists"}', '{"Purchase"}');
 INSERT INTO public."BasicNameCheckers"(
 	"Id", "RequiredWords")
-	VALUES (20, '{"Run"}');
+	VALUES (18, '{"Run"}');
+
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (11);
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (13);
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (15);
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (17);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (6, 'NMD', 1, 4, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (7, 'CLOC', 25, 70, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (8, 'LCOM', -1, 1, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (9, 'CBO', -1, 2, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (10, 'MELOC', -1, 15, NULL, NULL, 11);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (11, 'NMD', 0, 2, NULL, 13, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (12, 'LCOM', -1, 0, NULL, 13, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (13, 'CBO', -1, 0, NULL, 13, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (14, 'MELOC', -1, 15, NULL, NULL, 13);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (15, 'NMD', 0, 1, NULL, 15, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (16, 'LCOM', -1, 0, NULL, 15, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (17, 'CBO', -1, 0, NULL, 15, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (18, 'MELOC', -1, 15, NULL, NULL, 15);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (19, 'NMD', 1, 3, NULL, 17, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (20, 'LCOM', -1, 1, NULL, 17, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (21, 'CBO', -1, 3, NULL, 17, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (22, 'MELOC', -1, 15, NULL, NULL, 17);
 
 INSERT INTO public."ProjectCheckers"(
 	"Id", "StrategiesApplicableToSnippet")
-	VALUES (2, '{"Classes.Structural.PharmacyService","Classes.Structural.Pharmacist","Classes.Structural.Pill","Classes.Structural.PillForm","Classes.Structural.Purchase","Classes.Structural.Run"}');
+	VALUES (2, '{"Classes.Structural.PharmacyService","Classes.Structural.Pharmacist","Classes.Structural.Pill","Classes.Structural.Purchase","Classes.Structural.Run"}');
 
 
 INSERT INTO public."LearningObjects"(

@@ -930,30 +930,126 @@ INSERT INTO public."LearningObjectSummaries"(
 -- Cohesion - PK Node 1
 INSERT INTO public."Challenges"(
 	"Id", "Description", "Url", "TestSuiteLocation", "SolutionIdForeignKey")
-	VALUES (103, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Classes/02. Structural Cohesion" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 'Classes.Structural', 111);
+	VALUES (103, 'Jedinstvena svrha metode je nešto što nam uvek treba biti na umu prilikom definisanja istih. U sklopu direktorijuma "Classes/02. Structural Cohesion" isprati zadatke u zaglavlju klase i ekstraktuj metode iz postojeće.', 'https://github.com/Clean-CaDET/challenge-repository', 'Classes.Structural', 111);
 
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (8, 103, 'Classes.Structural.PharmacyService');
+	VALUES (9, 103, 'Classes.Structural.PharmacyService');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (9, 103, 'Classes.Structural.VacationSlot');
+	VALUES (10, 103, 'Classes.Structural.PharmacyService');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (10, 103, 'Classes.Structural.Stocktake');
-INSERT INTO public."ChallengeFulfillmentStrategies"(
-	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (11, 103, 'Classes.Structural.Weekend');
+	VALUES (11, 103, 'Classes.Structural.Pharmacist');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
 	VALUES (12, 103, 'Classes.Structural.Pharmacist');
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
-	VALUES (13, 103, 'Classes.Structural.Run');
+	VALUES (13, 103, 'Classes.Structural.Pill');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (14, 103, 'Classes.Structural.Pill');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (15, 103, 'Classes.Structural.Purchase');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (16, 103, 'Classes.Structural.Purchase');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (17, 103, 'Classes.Structural.Run');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (18, 103, 'Classes.Structural.Run');
+
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "RequiredWords")
+	VALUES (10, '{"PharmacyService"}');
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "BannedWords", "RequiredWords")
+	VALUES (12, '{"GetMostExpensiveGranulePurchaseInPharmacyForPharmacists"}', '{"Pharmacist"}');	
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "BannedWords", "RequiredWords")
+	VALUES (14, '{"GetMostExpensiveGranulePurchaseInPharmacyForPharmacists"}','{"Pill"}');
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "BannedWords", "RequiredWords")
+	VALUES (16, '{"GetMostExpensiveGranulePurchaseInPharmacyForPharmacists"}', '{"Purchase"}');
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "RequiredWords")
+	VALUES (18, '{"Run"}');
+
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (11);
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (13);
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (15);
+INSERT INTO public."BasicMetricCheckers"(
+	"Id")
+	VALUES (17);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (6, 'NMD', 1, 4, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (7, 'CLOC', 25, 70, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (8, 'LCOM', -1, 1, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (9, 'CBO', -1, 2, NULL, 11, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (10, 'MELOC', -1, 15, NULL, NULL, 11);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (11, 'NMD', 0, 2, NULL, 13, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (12, 'LCOM', -1, 0, NULL, 13, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (13, 'CBO', -1, 0, NULL, 13, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (14, 'MELOC', -1, 15, NULL, NULL, 13);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (15, 'NMD', 0, 1, NULL, 15, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (16, 'LCOM', -1, 0, NULL, 15, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (17, 'CBO', -1, 0, NULL, 15, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (18, 'MELOC', -1, 15, NULL, NULL, 15);
+
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (19, 'NMD', 1, 3, NULL, 17, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (20, 'LCOM', -1, 1, NULL, 17, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (21, 'CBO', -1, 3, NULL, 17, NULL);
+INSERT INTO public."MetricRangeRules"(
+	"Id", "MetricName", "FromValue", "ToValue", "HintId", "ClassMetricCheckerForeignKey", "MethodMetricCheckerForeignKey")
+	VALUES (22, 'MELOC', -1, 15, NULL, NULL, 17);
 
 INSERT INTO public."ProjectCheckers"(
 	"Id", "StrategiesApplicableToSnippet")
-	VALUES (2, '{"Classes.Structural.PharmacyService","Classes.Structural.VacationSlot","Classes.Structural.Stocktake","Classes.Structural.Weekend","Classes.Structural.Pharmacist","Classes.Structural.Run"}');
+	VALUES (2, '{"Classes.Structural.PharmacyService","Classes.Structural.Pharmacist","Classes.Structural.Pill","Classes.Structural.Purchase","Classes.Structural.Run"}');
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -1171,7 +1267,7 @@ INSERT INTO public."LearningObjectSummaries"(
 -- Cohesion - PK Node 2
 INSERT INTO public."Challenges"(
 	"Id", "Description", "Url", "TestSuiteLocation", "SolutionIdForeignKey")
-	VALUES (101, 'Često definišemo naša imena uz pomoć generičnih i beznačajnih reči koji ponavljaju jasnu informaciju ili ništa posebno ne kažu. U sklopu direktorijuma "Classes/01. Semantic Cohesion" isprati zadatke u zaglavlju klase i ukloni suvišne reči iz imena u kodu.', 'https://github.com/Clean-CaDET/challenge-repository', 'Classes.Semantic', 121);
+	VALUES (101, 'Nepovezanost funkcija sa klasom može se izbeći detektovanjem povezanosti polja date klase sa sadržinom i svrhom njenih metoda. U sklopu direktorijuma "Classes/01. Semantic Cohesion" isprati zadatke u zaglavlju klase i premesti metode na odgovarajuća mesta.', 'https://github.com/Clean-CaDET/challenge-repository', 'Classes.Semantic', 121);
 
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
@@ -1179,10 +1275,23 @@ INSERT INTO public."ChallengeFulfillmentStrategies"(
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
 	VALUES (7, 101, 'Classes.Semantic.Stocktake');
+INSERT INTO public."ChallengeFulfillmentStrategies"(
+	"Id", "ChallengeId", "StrategiesApplicableToSnippetCheckerForeignKey")
+	VALUES (8, 101, 'Classes.Semantic.Run');
+
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "BannedWords", "RequiredWords")
+	VALUES (6, '{"IsProfitableStocktakeForDay","GetAllStocktakeResourcesNames"}', '{"Pharmacist","HasAllVitaminsForDay","GetAllNotProfitablePharmacistStocktakeMonthsForYear"}');
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "BannedWords", "RequiredWords")
+	VALUES (7, '{"GetAllNotProfitablePharmacistStocktakeMonthsForYear"}', '{"Stocktake","IsProfitableStocktakeForDay","GetAllStocktakeResourcesNames"}');	
+INSERT INTO public."BasicNameCheckers"(
+	"Id", "RequiredWords")
+	VALUES (8, '{"Run"}');
 
 INSERT INTO public."ProjectCheckers"(
 	"Id", "StrategiesApplicableToSnippet")
-	VALUES (1, '{"Classes.Semantic.Pharmacist","Classes.Semantic.Stocktake"}');
+	VALUES (1, '{"Classes.Semantic.Pharmacist","Classes.Semantic.Stocktake","Classes.Semantic.Run"}');
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
