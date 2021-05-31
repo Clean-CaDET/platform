@@ -57,7 +57,7 @@ namespace SmartTutor.Tests.Integration
             var port = "5432";
             var database = "smart-tutor-test";
             var user = "postgres";
-            var password = "super";
+            var password = "root";
             var integratedSecurity = "false";
             var pooling = "true";
 

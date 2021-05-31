@@ -10,6 +10,7 @@ using SmartTutor.ProgressModel;
 using SmartTutor.Tests.TestData;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -78,7 +79,7 @@ namespace SmartTutor.Tests.Integration
                 false
             }
         };
-        
+
         [Fact]
         public void Question_and_learner_are_in_different_courses_returns_forbidden_status()
         {
@@ -86,14 +87,15 @@ namespace SmartTutor.Tests.Integration
             var controller = new SubmissionController(_factory.Services.GetRequiredService<IMapper>(), scope.ServiceProvider.GetRequiredService<ISubmissionService>());
             var submission = new QuestionSubmissionDTO
             {
-                QuestionId = 17, Answers = new List<QuestionAnswerDTO>
+                QuestionId = 17,
+                Answers = new List<QuestionAnswerDTO>
                 {
                     new QuestionAnswerDTO {Id = 2},
                     new QuestionAnswerDTO {Id = 5}
                 },
                 LearnerId = 4
             };
-            
+
             controller.SubmitQuestionAnswers(submission).Result.ShouldBeOfType(typeof(ForbidResult));
         }
 
@@ -153,7 +155,7 @@ namespace SmartTutor.Tests.Integration
                 true
             }
         };
-        
+
         [Fact]
         public void Rejects_bad_arrange_task_submission()
         {
@@ -185,7 +187,6 @@ namespace SmartTutor.Tests.Integration
             using var scope = _factory.Services.CreateScope();
             var controller = new SubmissionController(_factory.Services.GetRequiredService<IMapper>(), scope.ServiceProvider.GetRequiredService<ISubmissionService>());
             var dbContext = scope.ServiceProvider.GetRequiredService<SmartTutorContext>();
-
             var actualEvaluation = ((OkObjectResult)controller.SubmitChallenge(submission).Result).Value as ChallengeEvaluationDTO;
 
             actualEvaluation.SolutionLO.Id.ShouldBe(expectedEvaluation.SolutionLO.Id);
@@ -224,6 +225,68 @@ namespace SmartTutor.Tests.Integration
                         Id = 1, LearningObject = new TextDTO {Id = 43},
                         ApplicableToCodeSnippets = new List<string> { "ExamplesApp.Method.PaymentService.CreatePayment(int, int)" }
                     } }
+                }
+            },
+            new object[]
+            {
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 101, SourceCode = GetCode("SemanticCohesion/IncorrectSemanticCohesion")},
+                new ChallengeEvaluationDTO
+                {
+                     ChallengeCompleted = false, ChallengeId = 101, SolutionLO = new ImageDTO {Id = 121},
+                     ApplicableHints = new List<ChallengeHintDTO> { new ChallengeHintDTO
+                     {
+                        Id = 8, LearningObject = new TextDTO {Id = 100},
+                        ApplicableToCodeSnippets = new List<string> { "Classes.Semantic.Pharmacist" }
+                     } }
+                }
+            },
+            new object[]
+            {
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 101, SourceCode = GetCode("SemanticCohesion/CorrectSemanticCohesion")},
+                new ChallengeEvaluationDTO
+                {
+                     ChallengeCompleted = true, ChallengeId = 101, SolutionLO = new ImageDTO {Id = 121},
+                     ApplicableHints = new List<ChallengeHintDTO> { new ChallengeHintDTO
+                     {
+                        Id = 8, LearningObject = new TextDTO {Id = 100},
+                        ApplicableToCodeSnippets = new List<string> { "Classes.Semantic.Stocktake" }
+                     } }
+                }
+            },
+            new object[]
+            {
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 103, SourceCode = GetCode("StructuralCohesion/IncorrectStructuralCohesion")},
+                new ChallengeEvaluationDTO
+                {
+                     ChallengeCompleted = false, ChallengeId = 103, SolutionLO = new ImageDTO {Id = 111},
+                     ApplicableHints = new List<ChallengeHintDTO> {
+                        new ChallengeHintDTO
+                     {
+                        Id = 8, LearningObject = new TextDTO {Id = 100},
+                        ApplicableToCodeSnippets = new List<string> { "Classes.Structural.Pharmacist" }
+                     }, new ChallengeHintDTO
+                     {
+                        Id = 9, LearningObject = new TextDTO {Id = 102},
+                        ApplicableToCodeSnippets = new List<string> { "Classes.Structural.Pill" }
+                     } }
+                }
+            },
+            new object[]
+            {
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 103, SourceCode = GetCode("StructuralCohesion/CorrectStructuralCohesion")},
+                new ChallengeEvaluationDTO
+                {
+                     ChallengeCompleted = true, ChallengeId = 103, SolutionLO = new ImageDTO {Id = 111},
+                     ApplicableHints = new List<ChallengeHintDTO> {
+                        new ChallengeHintDTO
+                     {
+                        Id = 8, LearningObject = new TextDTO {Id = 100},
+                        ApplicableToCodeSnippets = new List<string> { "Classes.Structural.PharmacyService" }
+                     }, new ChallengeHintDTO
+                     {
+                        Id = 9, LearningObject = new TextDTO {Id = 102},
+                        ApplicableToCodeSnippets = new List<string> { "Classes.Structural.Purchase" }
+                     } }
                 }
             }
         };
@@ -268,5 +331,10 @@ namespace SmartTutor.Tests.Integration
             errors.Split("\n").Length.ShouldBe(1);
         }
 
+        private static string[] GetCode(string projectPath)
+        {
+            var testDataFiles = Directory.GetFiles("../../../TestData/" + projectPath);
+            return testDataFiles.Select(File.ReadAllText).ToArray();
+        }
     }
 }
