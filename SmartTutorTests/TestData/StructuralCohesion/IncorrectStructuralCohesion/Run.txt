@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Classes.Structural
+{
+ #region Run
+    public class Run
+    {
+        private readonly PharmacyService _service = new PharmacyService();
+
+        public Run()
+        {
+           Pharmacist pharmacistFirst = new Pharmacist(12787, "Lazar", "Višnjić", "lazar55visnjic@gmail.com", "021/7745-720");
+            Pharmacist pharmacistSecond = new Pharmacist(24221, "Katarina", "Miljković", "KataRinaMiljkoVic00@gmail.com", "021/4364-001");
+            _service.Pharmacists = new List<Pharmacist> { pharmacistFirst, pharmacistSecond };
+
+            Pill pillFirst = new Pill(789, "Brufen", PillForm.Granule, DateTime.Now.AddMonths(32), 400, 101.99);
+            Pill pillSecond = new Pill(799, "Vitamin C", PillForm.Granule, DateTime.Now.AddMonths(15), 550, 100.00);
+            Pill pillThird = new Pill(748, "Vitamin B", PillForm.Capsule, DateTime.Now.AddYears(1), 300, 570.35);
+            Pill pillFourth = new Pill(712, "Aspirin", PillForm.Granule, DateTime.Now.AddMonths(21), 150, 237.50);
+            _service.Purchases = new List<Purchase>
+            {
+                new Purchase(5550121, 401.99, new List<Pill> { pillFirst, pillSecond, pillSecond, pillSecond, pillSecond}, DateTime.Now.AddMinutes(150), pharmacistFirst),
+                new Purchase(5550122, 807.85, new List<Pill> { pillThird, pillFourth }, DateTime.Now.AddHours(27), pharmacistSecond),
+                new Purchase(5455510, 670.35, new List<Pill> { pillSecond, pillThird }, DateTime.Now.AddDays(3), new Pharmacist(44541, "Sanja", "Gojković", "123sanja123@gmail.com", "021/7522-616"))
+            };
+        }
+
+        public Purchase GetMostExpensiveGranulePurchaseInPharmacyForPharmacists(List<int> pharmacistIds)
+        {
+            return _service.GetMostExpensiveGranulePurchaseInPharmacyForPharmacists(pharmacistIds);
+        }
+    }
+#endregion
+}

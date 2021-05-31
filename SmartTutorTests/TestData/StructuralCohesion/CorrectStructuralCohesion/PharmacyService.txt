@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Classes.Structural
+{
+public class PharmacyService
+    {
+        public List<Purchase> Purchases { get; set; }
+        public List<Pharmacist> Pharmacists { get; set; }
+        
+        private List<Pharmacist> GetPharmacyPharmacists(List<int> pharmacistIds) 
+        {
+            // Get only pharmacists from this pharmacy.
+            List<Pharmacist> pharmacists = new List<Pharmacist>();
+            foreach (var pharmacist in Pharmacists)
+            {
+                foreach (var pharmacistId in pharmacistIds)
+                {
+                    if (pharmacist.Id == pharmacistId)
+                    {
+                        pharmacists.Add(pharmacist);
+                    }
+                }
+            }
+            return pharmacists;
+        }
+
+        private List<Purchase> GetPharmacyPharmacistsPurchases(List<int> pharmacistIds) 
+        {
+           // Get all purchases from pharmacists.
+            List<Purchase> purchases = new List<Purchase>();
+            foreach (var purchase in Purchases)
+            {
+                foreach (var pharmacist in GetPharmacyPharmacists(pharmacistIds))
+                {
+                    if (pharmacist == purchase.Pharmacist)
+                    {
+                        purchases.Add(purchase);
+                    }
+                }
+            }
+            return purchases;
+        }
+
+        private Purchase GetMostExpensiveGranulePurchase(List<Purchase> granulePurchases) 
+        {
+            // Get most expensive purchase.
+            double maxGranulePurchaseCost = 0;
+            Purchase mostExpensiveGranulePurchase = null;
+            foreach (var granulePurchase in granulePurchases)
+            {
+                if (granulePurchase.Cost > maxGranulePurchaseCost)
+                {
+                    maxGranulePurchaseCost = granulePurchase.Cost;
+                    mostExpensiveGranulePurchase = granulePurchase;
+                }
+            }
+
+            return mostExpensiveGranulePurchase;
+        }
+
+        internal Purchase GetMostExpensiveGranulePurchaseInPharmacyForPharmacists(List<int> pharmacistIds)
+        {
+            List<Purchase> pharmacyPharmacistsPurchases = GetPharmacyPharmacistsPurchases(pharmacistIds);
+            List<Purchase> granulePurchases = pharmacyPharmacistsPurchases[0].GetGranulePurchases(pharmacyPharmacistsPurchases);
+            return GetMostExpensiveGranulePurchase(granulePurchases);
+        }
+    }
+}

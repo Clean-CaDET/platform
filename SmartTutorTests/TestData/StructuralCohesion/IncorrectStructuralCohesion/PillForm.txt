@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Classes.Structural
+{
+ public enum PillForm
+    {
+        Tablet,
+        Capsule,
+        Spansule,
+        Softgel,
+        Liquid,
+        Granule,
+        Powder
+    }
+}

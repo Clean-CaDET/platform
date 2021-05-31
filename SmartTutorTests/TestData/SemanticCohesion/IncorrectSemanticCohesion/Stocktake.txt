@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Classes.Semantic
+{
+public class Stocktake
+    {
+        public Dictionary<string, int> Medicines { get; }
+        public Dictionary<string, int> Vitamins { get; }
+        public double Profit { get; }
+        public DateTime DayOfStocktake { get; }
+
+        public Stocktake(Dictionary<string, int> medicines, Dictionary<string, int> vitamins, double profit, DateTime dayOfStocktake)
+        {
+            Medicines = medicines;
+            Vitamins = vitamins;
+            Profit = profit;
+            DayOfStocktake = dayOfStocktake;
+        }
+
+        public List<int> GetAllNotProfitablePharmacistStocktakeMonthsForYear(Pharmacist pharmacist, int year)
+        {
+            List<int> allNotProfitableMonths = new List<int>();
+            foreach (var stocktake in pharmacist.StocktakesDone)
+            {
+                DateTime timeOfStocktake = stocktake.DayOfStocktake;
+                if (stocktake.Profit <= 0 && timeOfStocktake.Year == year && !allNotProfitableMonths.Contains(timeOfStocktake.Month))
+                {
+                    allNotProfitableMonths.Add(timeOfStocktake.Month);
+                }
+            }
+            return allNotProfitableMonths;
+        }
+
+    }
+}

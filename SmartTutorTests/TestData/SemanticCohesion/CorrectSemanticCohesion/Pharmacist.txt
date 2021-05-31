@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Classes.Semantic
+{
+     public class Pharmacist
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public List<Stocktake> StocktakesDone { get; set; }
+
+        public bool HasAllVitaminsForDay(DateTime day)
+        {
+            foreach (var stocktake in StocktakesDone)
+            {
+                if (stocktake.DayOfStocktake.Date.Equals(day.Date))
+                {
+                    foreach (var vitamin in stocktake.Vitamins)
+                    {
+                        if (vitamin.Value <= 0) return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public List<int> GetAllNotProfitablePharmacistStocktakeMonthsForYear(Pharmacist pharmacist, int year)
+        {
+            List<int> allNotProfitableMonths = new List<int>();
+            foreach (var stocktake in pharmacist.StocktakesDone)
+            {
+                DateTime timeOfStocktake = stocktake.DayOfStocktake;
+                if (stocktake.Profit <= 0 && timeOfStocktake.Year == year && !allNotProfitableMonths.Contains(timeOfStocktake.Month))
+                {
+                    allNotProfitableMonths.Add(timeOfStocktake.Month);
+                }
+            }
+            return allNotProfitableMonths;
+        }
+    }
+}

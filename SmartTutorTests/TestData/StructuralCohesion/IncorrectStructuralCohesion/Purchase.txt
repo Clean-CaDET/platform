@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Classes.Structural
+{
+public class Purchase
+    {
+        public int Id { get; }
+        public double Cost { get; }
+        public List<Pill> PurchasedPills { get; }
+        public DateTime PurchaseTime { get; }
+        public Pharmacist Pharmacist { get; }
+
+        public Purchase(int id, double cost, List<Pill> purchasedPills, DateTime purchaseTime, Pharmacist pharmacist)
+        {
+            Id = id;
+            Cost = cost;
+            PurchasedPills = purchasedPills;
+            PurchaseTime = purchaseTime;
+            Pharmacist = pharmacist;
+        }
+    }
+}

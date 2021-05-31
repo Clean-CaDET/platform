@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Classes.Structural
+{
+public class Pill
+    {
+        public int Id { get; }
+        public string Name { get; }
+        public PillForm Form { get; }
+        public DateTime ExpiryDate { get; }
+        public double MgMeasure { get; }
+        public double Price { get; }
+
+        public Pill(int id, string name, PillForm form, DateTime expiryDate, double mgMeasure, double price)
+        {
+            Id = id;
+            Name = name;
+            Form = form;
+            ExpiryDate = expiryDate;
+            MgMeasure = mgMeasure;
+            Price = price;
+        }
+    }
+}

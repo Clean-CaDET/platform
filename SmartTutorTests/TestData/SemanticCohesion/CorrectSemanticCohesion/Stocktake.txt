@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Classes.Semantic
+{
+public class Stocktake
+    {
+        public Dictionary<string, int> Medicines { get; }
+        public Dictionary<string, int> Vitamins { get; }
+        public double Profit { get; }
+        public DateTime DayOfStocktake { get; }
+
+        public Stocktake(Dictionary<string, int> medicines, Dictionary<string, int> vitamins, double profit, DateTime dayOfStocktake)
+        {
+            Medicines = medicines;
+            Vitamins = vitamins;
+            Profit = profit;
+            DayOfStocktake = dayOfStocktake;
+        }
+
+        public bool IsProfitableStocktakeForDay(Stocktake stocktake, DateTime day)
+        {
+            bool isDayOfStocktake = stocktake.DayOfStocktake.Date.Equals(day.Date);
+            bool isProfitable = stocktake.Profit > 0;
+            return isDayOfStocktake && isProfitable;
+        }
+
+        public List<string> GetAllStocktakeResourcesNames(Stocktake stocktake)
+        {
+            List<string> allResources = new List<string>();
+            foreach (var medicine in stocktake.Medicines)
+            {
+                allResources.Add(medicine.Key);
+            }
+            foreach (var vitamin in stocktake.Vitamins)
+            {
+                allResources.Add(vitamin.Key);
+            }
+            return allResources;
+        }
+    }
+}

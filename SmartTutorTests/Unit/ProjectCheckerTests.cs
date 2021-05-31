@@ -6,8 +6,8 @@ using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.MetricChecker;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.ProjectChecker;
-using SmartTutor.Tests.DataFactories;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -129,7 +129,7 @@ namespace SmartTutor.Tests.Unit
             {
                 new object[]
                 {
-                    SemanticProjectCheckerChallengeTestData.GetPassingClasses(),
+                     GetCode("SemanticCohesion/CorrectSemanticCohesion"),
                      new List<ChallengeHint>
                      {
                         new ChallengeHint(21),
@@ -140,7 +140,7 @@ namespace SmartTutor.Tests.Unit
                 },
                 new object[]
                 {
-                    SemanticProjectCheckerChallengeTestData.GetViolatingClasses(),
+                    GetCode("SemanticCohesion/IncorrectSemanticCohesion"),
                     new List<ChallengeHint>
                     {
                         new ChallengeHint(21),
@@ -155,7 +155,7 @@ namespace SmartTutor.Tests.Unit
            {
                 new object[]
                 {
-                    StructuralProjectCheckerChallengeTestData.GetPassingClasses(),
+                    GetCode("StructuralCohesion/CorrectStructuralCohesion"),
                     new List<ChallengeHint>
                     {
                         new ChallengeHint(33701),
@@ -184,7 +184,7 @@ namespace SmartTutor.Tests.Unit
                 },
                 new object[]
                 {
-                    StructuralProjectCheckerChallengeTestData.GetViolatingClasses(),
+                    GetCode("StructuralCohesion/IncorrectStructuralCohesion"),
                     new List<ChallengeHint>
                     {
                         new ChallengeHint(337005),
@@ -193,5 +193,11 @@ namespace SmartTutor.Tests.Unit
                     false
                 }
            };
+
+        private static string[] GetCode(string projectPath)
+        {
+            var testDataFiles = Directory.GetFiles("../../../TestData/" + projectPath);
+            return testDataFiles.Select(File.ReadAllText).ToArray();
+        }
     }
 }
