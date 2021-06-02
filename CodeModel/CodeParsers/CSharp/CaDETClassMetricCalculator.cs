@@ -19,6 +19,8 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NMD_NAD] = GetNumberOfMethodsDeclared(parsedClass) + GetNumberOfAttributesDefined(parsedClass),
                 [CaDETMetric.WMC] = GetWeightedMethodPerClass(parsedClass),
                 [CaDETMetric.LCOM] = GetLackOfCohesionOfMethods(parsedClass),
+                [CaDETMetric.LCOM3] = GetLackOfCohesionOfMethods3(parsedClass),
+                [CaDETMetric.LCOM4] = GetLackOfCohesionOfMethods4(parsedClass),
                 [CaDETMetric.TCC] = GetTightClassCohesion(parsedClass),
                 [CaDETMetric.ATFD] = GetAccessToForeignData(parsedClass),
                 [CaDETMetric.CNOR] = CountReturnStatements(parsedClass),
@@ -32,6 +34,7 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.CBO] = CountDependencies(parsedClass),
             };
         }
+
         public int GetLinesOfCode(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
@@ -67,6 +70,55 @@ namespace CodeModel.CodeParsers.CSharp
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
             return Math.Round(1 - methodFieldAccess/maxCohesion, 3);
+        }
+
+        /// <summary>
+        /// LCOM - Lack of Cohesion of Methods
+        /// Article: Chidamber and Kemerer, 1991, "Towards a Metric Suite for Object-Oriented Design", Proc. OOPSLA'91, Sigplan Notices, 26(11), 197-211
+        /// </summary> 
+        private double GetLackOfCohesionOfMethods3(CaDETClass parsedClass)
+        {
+            var numberOfAttributes = GetNumberOfAttributesDefined(parsedClass);
+            var numberOfMethods = GetNumberOfMethodsDeclared(parsedClass);
+          
+            if (numberOfMethods == 0 || numberOfAttributes == 0) return 0;
+            if (numberOfMethods == 1) return 0;
+
+            double methodFieldAccess = 0;
+            foreach (var method in parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)))
+            {
+                methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
+            }
+            return Math.Round((numberOfMethods - methodFieldAccess/numberOfAttributes) / (numberOfMethods - 1), 3);
+        }
+
+        /// <summary>
+        /// LCOM - Lack of Cohesion of Methods
+        /// DOI: 10.1145/2723742.2723753
+        /// </summary>
+        private double GetLackOfCohesionOfMethods4(CaDETClass parsedClass)
+        {
+            var methods = parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)).ToList();
+
+            var numberOfMethodsThatAccessOwnFieldsOrMethods = CountNumberOfMethodsThatAccessToOwnFieldsOrMethods(parsedClass, methods);
+            var numberOfMethodsThatShareAccessToFieldOrAccessor = CountMethodPairsThatShareAccessToAFieldOrAccessor(methods);
+
+            return numberOfMethodsThatAccessOwnFieldsOrMethods - numberOfMethodsThatShareAccessToFieldOrAccessor;
+        }
+
+        private int CountNumberOfMethodsThatAccessToOwnFieldsOrMethods(CaDETClass parsedClass, List<CaDETMember> methods)
+        {
+            int counter = 0;
+            foreach (var method in methods)
+            {
+                int numberOfOwnFieldAndMethodsAccessed = CountOwnFieldAndAccessorAccessed(parsedClass, method);
+                numberOfOwnFieldAndMethodsAccessed += method.InvokedMethods.Count(method => Enumerable.Contains(parsedClass.Members, method));
+                if (numberOfOwnFieldAndMethodsAccessed != 0)
+                {
+                    counter++;
+                }
+            }
+            return counter;
         }
 
         /// <summary>

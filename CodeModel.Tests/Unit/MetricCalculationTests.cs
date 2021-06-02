@@ -70,6 +70,32 @@ namespace CodeModel.Tests.Unit
         }
 
         [Fact]
+        public void Calculates_lack_of_cohesion_3()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            dateRange.Metrics[CaDETMetric.LCOM3].ShouldBe(0);
+            doctor.Metrics[CaDETMetric.LCOM3].ShouldBe(1.125);
+        }
+
+        [Fact]
+        public void Calculates_lack_of_cohesion_4()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            dateRange.Metrics[CaDETMetric.LCOM4].ShouldBe(1);
+            doctor.Metrics[CaDETMetric.LCOM4].ShouldBe(3);
+        }
+
+        [Fact]
         public void Calculates_tight_class_cohesion()
         {
             CodeModelFactory factory = new CodeModelFactory();

@@ -15,6 +15,16 @@
         LCOM,
 
         /// <summary>
+        /// LCOM: Lack of cohesion of methods
+        /// </summary>
+        LCOM3,
+
+        /// <summary>
+        /// LCOM: Lack of cohesion of methods
+        /// </summary>
+        LCOM4,
+
+        /// <summary>
         /// NMD: Number of methods declared
         /// </summary>
         NMD,
