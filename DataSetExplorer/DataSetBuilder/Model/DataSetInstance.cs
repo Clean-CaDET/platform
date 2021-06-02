@@ -21,14 +21,15 @@ namespace DataSetExplorer.DataSetBuilder.Model
             ProjectLink = projectLink;
             Type = type;
 
-            Validate();
+            
             Annotations = new HashSet<DataSetAnnotation>();
             MetricFeatures = metricFeatures;
+            Validate();
         }
 
         private void Validate()
         {
-            if (string.IsNullOrEmpty(CodeSnippetId)) throw new InvalidOperationException("CodeSnippetId cannot be empty.");
+            if (string.IsNullOrEmpty(CodeSnippetId)) throw new ArgumentException("CodeSnippetId cannot be empty.");
         }
 
         internal void AddAnnotation(DataSetAnnotation annotation)

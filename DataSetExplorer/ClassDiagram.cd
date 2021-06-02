@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DataSetExplorer.DataSetBuilder.Model.Annotator">
+    <Position X="10.75" Y="1.75" Width="1.75" />
+    <Members>
+      <Method Name="Annotator" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAgAAAAAAAAAAAAIAAAIAAABAAAAA=</HashCode>
+      <FileName>DataSetBuilder\Model\Annotator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataSetExplorer.DataSetBuilder.Model.CodeSmell">
+    <Position X="4.5" Y="2" Width="1.5" />
+    <Members>
+      <Method Name="CodeSmell" Hidden="true" />
+      <Method Name="RelevantSnippetType" Hidden="true" />
+      <Method Name="Validate" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>DataSetBuilder\Model\CodeSmell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataSetExplorer.DataSetBuilder.Model.DataSet">
+    <Position X="3" Y="0.5" Width="3.25" />
+    <Members>
+      <Method Name="AddInstances" Hidden="true" />
+      <Method Name="DataSet" Hidden="true" />
+      <Method Name="GetAllInstances" Hidden="true" />
+      <Method Name="GetInstancesOfType" Hidden="true" />
+      <Method Name="GetInstancesWithAllDisagreeingAnnotations" Hidden="true" />
+      <Method Name="GetInsufficientlyAnnotatedInstances" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAACAAAAAEAAAAACAQAACAAAAA=</HashCode>
+      <FileName>DataSetBuilder\Model\DataSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_instances" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DataSetExplorer.DataSetBuilder.Model.DataSetAnnotation">
+    <Position X="7.25" Y="2.75" Width="2.5" />
+    <Members>
+      <Method Name="DataSetAnnotation" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="Validate" Hidden="true" />
+    </Members>
+    <AssociationLine Name="ApplicableHeuristics" Type="DataSetExplorer.DataSetBuilder.Model.SmellHeuristic" FixedFromPoint="true">
+      <Path>
+        <Point X="7.25" Y="3.688" />
+        <Point X="6" Y="3.688" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.096" Y="-0.364" Height="0.182" Width="1.458" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAIEgAAAAAAAAAAAAYAAAAAQAAQAAAA=</HashCode>
+      <FileName>DataSetBuilder\Model\DataSetAnnotation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="InstanceSmell" />
+      <Property Name="Annotator" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ApplicableHeuristics" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DataSetExplorer.DataSetBuilder.Model.DataSetInstance">
+    <Position X="7.25" Y="0.5" Width="2.5" />
+    <Members>
+      <Method Name="AddAnnotation" Hidden="true" />
+      <Method Name="AddAnnotations" Hidden="true" />
+      <Method Name="DataSetInstance" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="GetAnnotationFromMostExperiencedAnnotator" Hidden="true" />
+      <Method Name="GetFinalAnnotation" Hidden="true" />
+      <Method Name="GetHashCode" Hidden="true" />
+      <Method Name="GetMajorityAnnotation" Hidden="true" />
+      <Method Name="GetSortedAnnotatorIds" Hidden="true" />
+      <Method Name="HasMajoritySeverityVote" Hidden="true" />
+      <Method Name="HasNoAgreeingAnnotations" Hidden="true" />
+      <Method Name="IsAnnotatedBy" Hidden="true" />
+      <Method Name="IsSufficientlyAnnotated" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="Validate" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAAAAAAIAAKAhAAEgAAEAAAAQgQQAIAIAQgAQAAAAoA=</HashCode>
+      <FileName>DataSetBuilder\Model\DataSetInstance.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Annotations" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DataSetExplorer.DataSetBuilder.Model.SmellHeuristic">
+    <Position X="4" Y="3.25" Width="2" />
+    <Members>
+      <Method Name="SmellHeuristic" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAEAAAAEAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>DataSetBuilder\Model\SmellHeuristic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="DataSetExplorer.DataSetBuilder.Model.SnippetType">
+    <Position X="10.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataSetBuilder\Model\DataSetInstance.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -41,19 +41,28 @@ The vision and high-level idea behind Clean CaDET is described in the [overview 
 ## Who is it for?
 
 ### Practitioners
+<p align="justify">
 Through its primary feature set, Clean CaDET detects code smells through AI models. It then offers personalized suggestions to the user in the form of educational content to help them resolve the identified issues. It acts as a digital assistant for software engineering practitioners, which integrates into their development environment to analyze their code.
-
-- For more details regarding the **code quality analysis** workflow, useful for *practitioners*, check out the [wiki pages](https://github.com/Clean-CaDET/platform/wiki).
+<ul>
+  <li>For more details regarding the <b>code quality analysis</b> workflow, useful for <i>practitioners</i>, check out the <a href="https://github.com/Clean-CaDET/platform/wiki" target="_blank">wiki pages</a>.</li>
+</ul>
+</p>
 
 ### Learners and educators
+<p align="justify">
 A significant module of Clean CaDET is the *Smart Tutor*. It hosts the learner's model, a collection of learning objects, and instructional rules that select the most appropriate educational content for the particular learner. This functionality is integrated into the code quality analysis workflow, and it can be accessed as a standalone educational tool. By directly interacting with the *Smart Tutor*, learners can explore various clean code topics and engage with the challenge subsystem to learn how to refactor and analyze code quality in a gamified environment.
-
-- For more details regarding the **Smart Tutor** module, useful for *learners and educators*, check out the [module's page](https://github.com/Clean-CaDET/platform/wiki/Module-Smart-Tutor).
+<ul>
+  <li>For more details regarding the <b>Smart Tutor</b> module, useful for <i>learners and educators</i>, check out the <a href="https://github.com/Clean-CaDET/platform/wiki/Module-Smart-Tutor" target="_blank">module's page</a>.</li>
+</ul>
+</p>
 
 ### Researchers
-While developing AI algorithms for code smell detection, we processed existing datasets and built [our own](https://www.techrxiv.org/articles/preprint/Towards_a_systematic_approach_to_manual_annotation_of_code_smells/14159183). To automate the process of dataset construction and analysis, we developed the *Dataset Explorer* tool.
-
-- For more details regarding the **Dataset Explorer** module, useful for *researchers*, check out the [module's page](https://github.com/Clean-CaDET/platform/wiki/Module-Dataset-Explorer).
+<p align="justify">
+While developing AI algorithms for code smell detection, we processed existing datasets and built <a href="https://www.techrxiv.org/articles/preprint/Towards_a_systematic_approach_to_manual_annotation_of_code_smells/14159183" target="_blank">our own</a>. To automate the process of dataset construction and analysis, we developed the *Dataset Explorer* tool.
+<ul>
+  <li>For more details regarding the <b>Dataset Explorer</b> module, useful for <i>researchers</i>, check out the <a href="https://github.com/Clean-CaDET/platform/wiki/Module-Dataset-Explorer" target="_blank">module's page</a></li>
+</ul>
+</p>
 
 # Team
 <p align="justify">
