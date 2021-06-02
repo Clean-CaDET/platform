@@ -110,7 +110,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             while (enumerator.MoveNext())
             {
                 var codeSmellGroup = enumerator.Current;
-                exporter.Export(codeSmellGroup.ToList(), "DataSet_" + codeSmellGroup.Key);
+                exporter.Export(codeSmellGroup.ToList(), codeSmellGroup.Key, "DataSet_" + codeSmellGroup.Key);
             }
         }
 
@@ -145,14 +145,6 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             {
                     annotation.Annotator = annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
             }
-        }
-
-        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> JoinAnnotationsAndMetrics(List<DataSetInstance> dataSetInstances,
-            Dictionary<string, Dictionary<CaDETMetric, double>> datasetInstancesMetrics)
-        {
-            return dataSetInstances.Select(i => 
-                new Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>(i, datasetInstancesMetrics[i.CodeSnippetId]))
-                .ToList();
         }
 
         private static List<DataSetInstance> FillInstancesWithMetrics(List<DataSetInstance> annotatedInstances, CaDETProject project)
