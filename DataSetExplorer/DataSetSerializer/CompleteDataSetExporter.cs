@@ -190,7 +190,7 @@ namespace DataSetExplorer.DataSetSerializer
         private void PopulateHeuristicValues(List<string> smellHeuristics, List<SmellHeuristic> applicableHeuristics, int row, int annotationNum)
         {
             var numOfHeuristics = smellHeuristics.Count();
-            applicableHeuristics = GetHeuristicsForExport(smellHeuristics, applicableHeuristics);
+            applicableHeuristics = GetCodeSmellHeuristicsForExport(smellHeuristics, applicableHeuristics);
 
             for (var i = 0; i < applicableHeuristics.Count(); i++)
             {
@@ -201,7 +201,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private List<SmellHeuristic> GetHeuristicsForExport(List<string> heuristics, List<SmellHeuristic> applicableHeuristics)
+        private List<SmellHeuristic> GetCodeSmellHeuristicsForExport(List<string> heuristics, List<SmellHeuristic> applicableHeuristics)
         {
             RemoveOrdinalNumberFromSmellDescription(applicableHeuristics);
             var heuristicsForExport = new List<SmellHeuristic>();
