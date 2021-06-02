@@ -8,7 +8,7 @@ using System.IO;
 
 namespace DataSetExplorer.AnnotationConsistencyTests
 {
-    class AnovaTest
+    public class AnovaTest
     {
         private readonly string _anovaScriptFile = "../../../AnnotationConsistencyTests/anova_test.py";
         private readonly string _pythonPath = "../../../AnnotationConsistencyTests/venv/Scripts/python.exe";

@@ -9,6 +9,8 @@ using System.Linq;
 using CodeModel;
 using CodeModel.CaDETModel;
 using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.AnnotationConsistencyTests;
+using static DataSetExplorer.AnnotationConsistencyTests.ManovaTest;
 
 namespace DataSetExplorer
 {
@@ -45,7 +47,7 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         private static void CheckMetricsSignificanceInAnnotationsForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
-            var anovaTest = new AnnotationConsistencyTests.AnovaTest();
+            var anovaTest = new AnovaTest();
 
             foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
@@ -63,16 +65,8 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
-            var manovaTest = new AnnotationConsistencyTests.ManovaTest();
-
-            foreach (var codeSmellGroup in instancesGroupedBySmells)
-            {
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
-                var instances = codeSmellGroup.ToList();
-                
-                manovaTest.RunTestForMultipleAnnotators(severity, instances, codeSmell, metrics);
-            }
+            var manovaTest = new ManovaTest();
+            manovaTest.Run(instancesGroupedBySmells, severity, new TestDelegate(manovaTest.TestForMultipleAnnotators));
         }
 
         private static ListDictionary GetAnnotatedProjects()
@@ -92,16 +86,8 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         private static void CheckAnnotationConsistencyForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
-            var manovaTest = new AnnotationConsistencyTests.ManovaTest();
-
-            foreach (var codeSmellGroup in instancesGroupedBySmells)
-            {
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
-                var instances = codeSmellGroup.ToList();
-
-                manovaTest.RunTestForSingleAnnotator(annotatorId, instances, codeSmell, metrics);
-            }
+            var manovaTest = new ManovaTest();
+            manovaTest.Run(instancesGroupedBySmells, annotatorId, new TestDelegate(manovaTest.TestForSingleAnnotator));
         }
 
         private static void ExportAnnotatedDataSet()

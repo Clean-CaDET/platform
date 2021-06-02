@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace DataSetExplorer.AnnotationConsistencyTests
 {
-    class ManovaTest
+    public class ManovaTest
     {
         private readonly string _manovaScriptFile = "../../../AnnotationConsistencyTests/manova_test.py";
         private readonly string _pythonPath = "../../../AnnotationConsistencyTests/venv/Scripts/python.exe";
@@ -17,7 +18,22 @@ namespace DataSetExplorer.AnnotationConsistencyTests
         private string _independentVariable;
         private readonly string _annotatedInstancesFolderPath = "D:/ccadet/annotations/sanity_check/Output/";
 
-        public void RunTestForMultipleAnnotators(int severity, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
+        public delegate void TestDelegate(int id, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics);
+
+        public void Run(IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells,
+            int id, TestDelegate test)
+        {
+            foreach (var codeSmellGroup in instancesGroupedBySmells)
+            {
+                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
+                var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
+                var instances = codeSmellGroup.ToList();
+
+                test(id, instances, codeSmell, metrics);
+            }
+        }
+
+        public void TestForMultipleAnnotators(int severity, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
         {
             string exportedAnnotatorsFile = ExportAnnotatorsForSeverity(severity, instances, codeSmell);
             SetupTestArguments(exportedAnnotatorsFile, metrics, "Annotator");
@@ -42,7 +58,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             return exportedAnnotatorsFile;
         }
 
-        public void RunTestForSingleAnnotator(int annotatorId, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
+        public void TestForSingleAnnotator(int annotatorId, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
         {
             string exportedAnnotationsFile = ExportAnnotationsForSingleAnnotator(annotatorId, instances, codeSmell);
             SetupTestArguments(exportedAnnotationsFile, metrics, "Annotation");
