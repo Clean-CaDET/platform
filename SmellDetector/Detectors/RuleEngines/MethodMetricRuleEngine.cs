@@ -30,6 +30,9 @@ namespace SmellDetector.Detectors.RuleEngines
                                           new MetricCriteria(CaDETMetric.CYCLO, OperationEnum.GREATER_THAN, 4)),
                                       new MetricCriteria(CaDETMetric.MMNB, OperationEnum.GREATER_THAN, 3)),
                                   SmellType.LONG_METHOD);
+            _rules.Add(rule1);
+            _rules.Add(rule2);
+            _rules.Add(rule3);
         }
 
         private void DefineSpecialRuleFromLiArticle(List<CaDETMember> methods)
@@ -42,7 +45,7 @@ namespace SmellDetector.Detectors.RuleEngines
                                                                                     new MetricCriteria(CaDETMetric.MLOC, OperationEnum.GREATER_OR_EQUALS, 70)),
                                                                 new AndCriteria(new OrCriteria(new MetricCriteria(CaDETMetric.NOP, OperationEnum.GREATER_THAN, 4),
                                                                                                 new MetricCriteria(CaDETMetric.NOLV, OperationEnum.GREATER_THAN, 4)),
-                                                                                new MetricCriteria(CaDETMetric.MMNB, OperationEnum.GREATER_THAN, 4))),
+                                                                                new MetricCriteria(CaDETMetric.CYCLO, OperationEnum.GREATER_THAN, 4))),
                                 SmellType.LONG_METHOD);
             _dynamicRules.Add(rule1);
         }
@@ -64,9 +67,10 @@ namespace SmellDetector.Detectors.RuleEngines
         {
             double mlocThreshold = CalculateAverageMLOCForProject(methods);
 
-            Rule rule1 = new Rule("https://doi.org/10.1016/j.jss.2015.05.024", new MetricCriteria(CaDETMetric.MLOC, OperationEnum.GREATER_THAN, mlocThreshold), SmellType.LONG_METHOD);
+            Rule rule1 = new Rule("https://doi.org/10.1016/j.jss.2015.05.024",
+                                        new MetricCriteria(CaDETMetric.MLOC, OperationEnum.GREATER_THAN, mlocThreshold),
+                                    SmellType.LONG_METHOD);
             _dynamicRules.Add(rule1);
-
         }
 
         private double CalculateAverageMLOCForProject(List<CaDETMember> methods)

@@ -34,6 +34,7 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.CBO] = CountDependencies(parsedClass),
                 [CaDETMetric.DIT] = CountInheritanceLevel(parsedClass),
                 [CaDETMetric.DCC] = CountClassCoupling(parsedClass),
+                [CaDETMetric.ATFD_10] = GetAccessToForeignDataDirectly(parsedClass),
             };
         }
 
@@ -58,6 +59,22 @@ namespace CodeModel.CodeParsers.CSharp
             }
 
             return accessedExternalAccessors.Count + accessedExternalFields.Count;
+        }
+
+        /// <summary>
+        /// ATFD: Access To Foreign Data Directly
+        /// DOI: 10.1145/1852786.1852797
+        /// </summary>
+        private double GetAccessToForeignDataDirectly(CaDETClass parsedClass)
+        {
+            ISet<CaDETField> accessedExternalFields = new HashSet<CaDETField>();
+
+            foreach (var member in parsedClass.Members)
+            {
+                accessedExternalFields.UnionWith(member.AccessedFields.Where(f => !f.Parent.Equals(member.Parent)));
+            }
+
+            return accessedExternalFields.Count;
         }
 
         private double GetLackOfCohesionOfMethods(CaDETClass parsedClass)
@@ -91,7 +108,7 @@ namespace CodeModel.CodeParsers.CSharp
             {
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
-            return Math.Round((numberOfMethods - methodFieldAccess/numberOfAttributes) / (numberOfMethods - 1), 3);
+            return Math.Round((numberOfMethods - (methodFieldAccess/numberOfAttributes)) / (numberOfMethods - 1), 3);
         }
 
         /// <summary>
@@ -255,7 +272,7 @@ namespace CodeModel.CodeParsers.CSharp
             return uniqueDependencies.Count();
         }
 
-
+        //Implementation based on http://www.theijes.com/papers/v5-i6/C05014019.pdf
         private int CountClassCoupling(CaDETClass parsedClass)
         {
             List<CaDETClass> allDependencies = new List<CaDETClass>();
@@ -268,9 +285,9 @@ namespace CodeModel.CodeParsers.CSharp
             return uniqueDependencies.Count();
         }
 
+        //Implementation based on https://objectscriptquality.com/docs/metrics/depth-inheritance-tree
         private int CountInheritanceLevel(CaDETClass parsedClass)
         {
-
             CaDETClass parent = parsedClass.Parent;
             if (parent == null)
             {

@@ -50,6 +50,11 @@
         ATFD,
 
         /// <summary>
+        /// ATFD: Access to foreign data directly
+        /// </summary>
+        ATFD_10,
+
+        /// <summary>
         /// TCC: Tight class cohesion
         /// </summary>
         TCC,

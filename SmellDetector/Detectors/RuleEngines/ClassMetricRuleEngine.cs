@@ -22,7 +22,7 @@ namespace SmellDetector.Detectors.RuleEngines
             Rule rule2 = new Rule("https://doi.org/10.1145/2162049.2162069",
                                   new AndCriteria(
                                             new AndCriteria(
-                                                new MetricCriteria(CaDETMetric.ATFD, OperationEnum.GREATER_THAN, 2),
+                                                new MetricCriteria(CaDETMetric.ATFD, OperationEnum.GREATER_THAN, 5),
                                                 new MetricCriteria(CaDETMetric.WMC, OperationEnum.GREATER_OR_EQUALS, 47)),
                                             new MetricCriteria(CaDETMetric.TCC, OperationEnum.LESS_THAN, 0.3)),
                                   SmellType.GOD_CLASS);
@@ -76,6 +76,21 @@ namespace SmellDetector.Detectors.RuleEngines
                                       new MetricCriteria(CaDETMetric.CYCLO, OperationEnum.GREATER_THAN, 20)
                                       ),
                                   SmellType.GOD_CLASS);
+            Rule rule12 = new Rule("",
+                                  new OrCriteria(
+                                      new MetricCriteria(CaDETMetric.DIT, OperationEnum.GREATER_THAN, 5),
+                                      new MetricCriteria(CaDETMetric.DCC, OperationEnum.GREATER_THAN, 10)
+                                      ),
+                                  SmellType.GOD_CLASS);
+            //ATFD se u ovom radu računa kao broj atributa kojima je direktno pristupljeno. Da li uzeti u obzir?
+            Rule rule13 = new Rule("10.1145/1852786.1852797",
+                                  new AndCriteria(
+                                            new AndCriteria(
+                                                new MetricCriteria(CaDETMetric.ATFD_10, OperationEnum.GREATER_THAN, 5),
+                                                new MetricCriteria(CaDETMetric.WMC, OperationEnum.GREATER_OR_EQUALS, 47)),
+                                            new MetricCriteria(CaDETMetric.TCC, OperationEnum.LESS_THAN, 0.33)),
+                                  SmellType.GOD_CLASS);
+
             _rules = new List<Rule>();
             _rules.Add(rule1);
             _rules.Add(rule2);
@@ -87,6 +102,8 @@ namespace SmellDetector.Detectors.RuleEngines
             _rules.Add(rule9);
             _rules.Add(rule10);
             _rules.Add(rule11);
+            _rules.Add(rule12);
+            _rules.Add(rule13);
             _dynamicRules = new List<Rule>();
         }
 
