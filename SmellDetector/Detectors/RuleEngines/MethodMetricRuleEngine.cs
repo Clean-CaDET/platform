@@ -50,7 +50,6 @@ namespace SmellDetector.Detectors.RuleEngines
             _dynamicRules.Add(rule1);
         }
         
-
         private double FindTopXMetricValuesInProject(List<CaDETMember> methods, CaDETMetric metric, int indexOfMetricValue)
         {
             List<double> metricValues = methods.Select(c => c.Metrics[metric]).ToList();

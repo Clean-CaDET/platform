@@ -55,7 +55,7 @@ namespace CodeModel.CaDETModel.CodeItems
 
         public List<CaDETClass> GetMethodInvocationsTypes()
         {
-            List<CaDETMember> invokedMethods = Members.SelectMany(m => m.InvokedMethods).Where(m => m.Type is CaDETMemberType.Method).ToList();
+            List<CaDETMember> invokedMethods = Members.SelectMany(m => m.InvokedMethods).ToList();
             return invokedMethods.Select(m => m.Parent).ToList();
         }
 
