@@ -169,6 +169,5 @@ namespace DataSetExplorer
             var importer = new ExcelImporter(folder);
             return importer.Import("Clean CaDET");
         }
-
     }
 }
