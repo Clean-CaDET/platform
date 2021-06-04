@@ -229,10 +229,10 @@ namespace SmartTutor.Tests.Integration
             },
             new object[]
             {
-                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 101, SourceCode = GetCode("SemanticCohesion/IncorrectSemanticCohesion")},
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 122, SourceCode = GetCode("SemanticCohesion/IncorrectSemanticCohesion")},
                 new ChallengeEvaluationDTO
                 {
-                     ChallengeCompleted = false, ChallengeId = 101, SolutionLO = new ImageDTO {Id = 121},
+                     ChallengeCompleted = false, ChallengeId = 122, SolutionLO = new ImageDTO {Id = 123},
                      ApplicableHints = new List<ChallengeHintDTO> { new ChallengeHintDTO
                      {
                         Id = 8, LearningObject = new TextDTO {Id = 100},
@@ -242,10 +242,10 @@ namespace SmartTutor.Tests.Integration
             },
             new object[]
             {
-                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 101, SourceCode = GetCode("SemanticCohesion/CorrectSemanticCohesion")},
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 122, SourceCode = GetCode("SemanticCohesion/CorrectSemanticCohesion")},
                 new ChallengeEvaluationDTO
                 {
-                     ChallengeCompleted = true, ChallengeId = 101, SolutionLO = new ImageDTO {Id = 121},
+                     ChallengeCompleted = true, ChallengeId = 122, SolutionLO = new ImageDTO {Id = 123},
                      ApplicableHints = new List<ChallengeHintDTO> { new ChallengeHintDTO
                      {
                         Id = 8, LearningObject = new TextDTO {Id = 100},
@@ -255,10 +255,10 @@ namespace SmartTutor.Tests.Integration
             },
             new object[]
             {
-                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 103, SourceCode = GetCode("StructuralCohesion/IncorrectStructuralCohesion")},
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 114, SourceCode = GetCode("StructuralCohesion/IncorrectStructuralCohesion")},
                 new ChallengeEvaluationDTO
                 {
-                     ChallengeCompleted = false, ChallengeId = 103, SolutionLO = new ImageDTO {Id = 111},
+                     ChallengeCompleted = false, ChallengeId = 114, SolutionLO = new ImageDTO {Id = 115},
                      ApplicableHints = new List<ChallengeHintDTO> {
                         new ChallengeHintDTO
                      {
@@ -273,18 +273,18 @@ namespace SmartTutor.Tests.Integration
             },
             new object[]
             {
-                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 103, SourceCode = GetCode("StructuralCohesion/CorrectStructuralCohesion")},
+                new ChallengeSubmissionDTO { LearnerId = 1, ChallengeId = 114, SourceCode = GetCode("StructuralCohesion/CorrectStructuralCohesion")},
                 new ChallengeEvaluationDTO
                 {
-                     ChallengeCompleted = true, ChallengeId = 103, SolutionLO = new ImageDTO {Id = 111},
+                     ChallengeCompleted = true, ChallengeId = 114, SolutionLO = new ImageDTO {Id = 115},
                      ApplicableHints = new List<ChallengeHintDTO> {
                         new ChallengeHintDTO
                      {
-                        Id = 8, LearningObject = new TextDTO {Id = 100},
+                        Id = 8, LearningObject = new TextDTO {Id = 114},
                         ApplicableToCodeSnippets = new List<string> { "Classes.Structural.PharmacyService" }
                      }, new ChallengeHintDTO
                      {
-                        Id = 9, LearningObject = new TextDTO {Id = 102},
+                        Id = 9, LearningObject = new TextDTO {Id = 122},
                         ApplicableToCodeSnippets = new List<string> { "Classes.Structural.Purchase" }
                      } }
                 }

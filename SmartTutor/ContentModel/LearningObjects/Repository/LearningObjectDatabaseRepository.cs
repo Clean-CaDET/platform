@@ -7,6 +7,7 @@ using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.Database;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.ProjectChecker;
 using SmartTutor.ContentModel.Lectures;
 
 namespace SmartTutor.ContentModel.LearningObjects.Repository
@@ -49,6 +50,11 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                     .ThenInclude(r => r.Hint)
                 .Include(c => c.FulfillmentStrategies)
                     .ThenInclude(s => (s as BasicNameChecker).Hint)
+                .Include(c => c.FulfillmentStrategies)
+                    .ThenInclude(s => (s as ProjectChecker).StrategiesApplicableToSnippet)
+                    .ThenInclude(s => s.Strategies)
+                //How to handle composite associations with polymorphic elements? This is a good example where a JSON structure (NoSQL) is better.
+                //TODO: Rework
                 .FirstOrDefault();
         }
 

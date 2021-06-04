@@ -6,27 +6,27 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy
 {
     public class ProjectChecker : ChallengeFulfillmentStrategy
     {
-        public Dictionary<string, List<ChallengeFulfillmentStrategy>> StrategiesApplicableToSnippet { get; private set; }
+        public List<SnippetStrategies> StrategiesApplicableToSnippet { get; private set; }
 
         private ProjectChecker() { }
 
-        public ProjectChecker(Dictionary<string, List<ChallengeFulfillmentStrategy>> strategiesApplicableToSnippet) : this()
+        public ProjectChecker(List<SnippetStrategies> strategiesApplicableToSnippet) : this()
         {
             StrategiesApplicableToSnippet = strategiesApplicableToSnippet;
         }
 
         public override List<ChallengeHint> GetAllHints()
         {
-            return StrategiesApplicableToSnippet.SelectMany(sas => sas.Value).SelectMany(cfs => cfs.GetAllHints()).ToList();
+            return StrategiesApplicableToSnippet.SelectMany(sas => sas.Strategies).SelectMany(cfs => cfs.GetAllHints()).ToList();
         }
 
         public override HintDirectory EvaluateSubmission(List<CaDETClass> solutionAttempt)
         {
             var challengeHints = new HintDirectory();
-            foreach (var codeSnippetId in StrategiesApplicableToSnippet.Keys)
+            foreach (var snippetStrategy in StrategiesApplicableToSnippet)
             {
-                var codeSnippet = FindCodeSnippet(codeSnippetId, solutionAttempt);
-                foreach (var strategy in StrategiesApplicableToSnippet[codeSnippetId])
+                var codeSnippet = FindCodeSnippet(snippetStrategy.CodeSnippetId, solutionAttempt);
+                foreach (var strategy in snippetStrategy.Strategies)
                 {
                     challengeHints.MergeHints(strategy.EvaluateSubmission(new List<CaDETClass>() { codeSnippet }));
                 }

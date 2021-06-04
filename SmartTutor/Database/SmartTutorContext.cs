@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
@@ -13,12 +12,7 @@ using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Progress;
 using SmartTutor.ProgressModel.Submissions;
-using System;
 using SmartTutor.QualityAnalysis;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 
 namespace SmartTutor.Database
 {
@@ -68,7 +62,6 @@ namespace SmartTutor.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigureBasicMetricChecker(modelBuilder);
-            ConfigureProjectChecker(modelBuilder);
 
             modelBuilder.Entity<Text>().ToTable("Texts");
             modelBuilder.Entity<Image>().ToTable("Images");
@@ -90,6 +83,9 @@ namespace SmartTutor.Database
         private static void ConfigureChallenge(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Challenge>().ToTable("Challenges");
+
+            modelBuilder.Entity<ChallengeFulfillmentStrategy>().Property<int?>("ChallengeId").IsRequired(false);
+            modelBuilder.Entity<ChallengeFulfillmentStrategy>().Property<int?>("SnippetStrategiesId").IsRequired(false);
 
             modelBuilder.Entity<BasicNameChecker>().ToTable("BasicNameCheckers");
             modelBuilder.Entity<BasicMetricChecker>().ToTable("BasicMetricCheckers");
@@ -126,25 +122,6 @@ namespace SmartTutor.Database
                 .HasMany(b => b.MethodMetricRules)
                 .WithOne()
                 .HasForeignKey("MethodMetricCheckerForeignKey");
-        }
-
-        private static void ConfigureProjectChecker(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ChallengeFulfillmentStrategy>()
-               .Property<string>("StrategiesApplicableToSnippetCheckerForeignKey").IsRequired(false);
-
-            modelBuilder.Entity<ProjectChecker>()
-                .Property(pc => pc.StrategiesApplicableToSnippet)
-                .IsRequired()
-                .HasConversion(
-                    sats => ((IEnumerable)sats).Cast<object>().Select(x => x.ToString()).ToArray(),
-                    sats => sats == null
-                        ? new Dictionary<string, List<ChallengeFulfillmentStrategy>>()
-                        : JsonSerializer.Deserialize<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(sats.ToString(), null),
-                        new ValueComparer<Dictionary<string, List<ChallengeFulfillmentStrategy>>>(
-                            (c1, c2) => c1.SequenceEqual(c2),
-                            c => c.Aggregate(0, (a, sats) => HashCode.Combine(a, sats.GetHashCode())))
-                );
         }
     }
 }

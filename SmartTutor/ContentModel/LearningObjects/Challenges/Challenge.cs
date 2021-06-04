@@ -30,10 +30,10 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
             var errorEvaluation = CheckSyntaxErrors(solution.SyntaxErrors);
             if (errorEvaluation != null) return errorEvaluation;
 
-            if (tester == null) return StrategyEvaluation(solution);
+            if (tester == null) return RunFulfillmentStrategies(solution);
 
             var functionalEvaluation = tester.IsFunctionallyCorrect(solutionAttempt, TestSuiteLocation);
-            return functionalEvaluation ?? StrategyEvaluation(solution);
+            return functionalEvaluation ?? RunFulfillmentStrategies(solution);
         }
 
         private ChallengeEvaluation CheckSyntaxErrors(IReadOnlyCollection<string> syntaxErrors)
@@ -45,7 +45,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Challenges
             return evaluation;
         }
 
-        private ChallengeEvaluation StrategyEvaluation(CaDETProject solution)
+        private ChallengeEvaluation RunFulfillmentStrategies(CaDETProject solution)
         {
             var evaluation = new ChallengeEvaluation(Id);
             foreach (var strategy in FulfillmentStrategies)
