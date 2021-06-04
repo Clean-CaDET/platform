@@ -205,6 +205,38 @@ namespace CodeModel.Tests.Unit
         }
 
         [Fact]
+        public void Calculates_number_of_hierarchy_levels()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetClassesWithHierarchy()).Classes;
+
+            var entity = classes.Find(c => c.Name.Equals("Entity"));
+            var employee = classes.Find(c => c.Name.Equals("Employee"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+
+            entity.Metrics[CaDETMetric.DIT].ShouldBe(0);
+            employee.Metrics[CaDETMetric.DIT].ShouldBe(1);
+            doctor.Metrics[CaDETMetric.DIT].ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_class_coupling()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCouplingClasses()).Classes;
+
+            var test1 = classes.Find(c => c.Name.Equals("Test1"));
+            var test2 = classes.Find(c => c.Name.Equals("Test2"));
+            var test3 = classes.Find(c => c.Name.Equals("Test3"));
+
+            test1.Metrics[CaDETMetric.DCC].ShouldBe(0);
+            test2.Metrics[CaDETMetric.DCC].ShouldBe(1);
+            test3.Metrics[CaDETMetric.DCC].ShouldBe(2);
+        }
+
+        [Fact]
         public void Calculates_invoked_methods_in_a_class()
         {
             CodeModelFactory factory = new CodeModelFactory();

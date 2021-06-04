@@ -767,6 +767,48 @@ namespace CodeModel.Tests.DataFactories
             };
         }
 
+        public IEnumerable<string> GetCouplingClasses()
+        {
+            return new[]
+            {
+                @"
+            namespace Test.Data
+            {
+                public class Test1
+                {
+                    public int _param1 { get; set; }
+                    public int _param2 { get; set; }
+
+                    public Test1(int param1, int param2)
+                    {
+                        _param1 = param1;
+                        _param2 = param2;
+                    }
+                }
+            }",
+                @"
+            namespace Test.Data
+            {
+                public class Test2
+                {
+                    public Test1 _test;
+                }
+            }",
+                @"
+            namespace Test.Data
+            {
+                public class Test3
+                {
+                    public Test2 _test2;
+
+                    public Test1 method(Test1 test){
+                        return test;
+                    }
+                }
+            }"
+            };
+        }
+
         public IEnumerable<string> GetClassesFromDifferentNamespace()
         {
             return new[]

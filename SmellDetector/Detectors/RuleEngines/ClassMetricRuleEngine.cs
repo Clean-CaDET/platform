@@ -62,7 +62,15 @@ namespace SmellDetector.Detectors.RuleEngines
                                       new OrCriteria(new MetricCriteria(CaDETMetric.NAD, OperationEnum.GREATER_THAN, 9),
                                                      new MetricCriteria(CaDETMetric.NMD, OperationEnum.GREATER_THAN, 20))),
                                   SmellType.GOD_CLASS);
-            Rule rule10 = new Rule("10.1109/TSE.2011.9",
+            Rule rule10 = new Rule("10.1109/JCSSE.2011.5930141",
+                                  new OrCriteria(
+                                      new OrCriteria(new MetricCriteria(CaDETMetric.LCOM3, OperationEnum.GREATER_THAN, 0.8),
+                                                    new MetricCriteria(CaDETMetric.LCOM4, OperationEnum.GREATER_THAN, 1)),
+                                      new OrCriteria(new MetricCriteria(CaDETMetric.NMD, OperationEnum.GREATER_THAN, 20),
+                                                    new MetricCriteria(CaDETMetric.NAD, OperationEnum.GREATER_THAN, 20))
+                                      ),
+                                  SmellType.GOD_CLASS);
+            Rule rule11 = new Rule("10.1109/TSE.2011.9",
                                   new OrCriteria(
                                       new MetricCriteria(CaDETMetric.CLOC, OperationEnum.GREATER_THAN, 100),
                                       new MetricCriteria(CaDETMetric.CYCLO, OperationEnum.GREATER_THAN, 20)
@@ -78,6 +86,7 @@ namespace SmellDetector.Detectors.RuleEngines
             _rules.Add(rule7);
             _rules.Add(rule9);
             _rules.Add(rule10);
+            _rules.Add(rule11);
             _dynamicRules = new List<Rule>();
         }
 

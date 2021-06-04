@@ -45,6 +45,20 @@ namespace CodeModel.CaDETModel.CodeItems
                 .SelectMany(v => v.GetLinkedTypes()).ToList();
         }
 
+        public List<CaDETClass> GetMethodLinkedParameterTypes()
+        {
+            List<CaDETParameter> parameters = Members.SelectMany(m => m.Params).ToList();
+            return parameters.Select(p => p.Type)
+                   .Where(v => v.LinkedTypes != null)
+                   .SelectMany(v => v.LinkedTypes).ToList();
+        }
+
+        public List<CaDETClass> GetMethodInvocationsTypes()
+        {
+            List<CaDETMember> invokedMethods = Members.SelectMany(m => m.InvokedMethods).Where(m => m.Type is CaDETMemberType.Method).ToList();
+            return invokedMethods.Select(m => m.Parent).ToList();
+        }
+
         public CaDETMember FindMember(string name)
         {
             return Members.Find(method => method.Name.Equals(name));

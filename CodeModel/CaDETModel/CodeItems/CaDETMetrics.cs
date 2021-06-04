@@ -85,6 +85,16 @@
         NOPF,
 
         /// <summary>
+        /// DIT: Depth inheritance hierarchy
+        /// </summary>
+        DIT,
+
+        /// <summary>
+        /// DCC: Direct class coupling
+        /// </summary>
+        DCC,
+
+        /// <summary>
         /// CMNB: Max nested blocks from all class members
         /// </summary>
         CMNB,

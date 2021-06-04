@@ -32,6 +32,8 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.CMNB] = CountMaxNestedBlocks(parsedClass),
                 [CaDETMetric.RFC] = CountUniqueMethodInvocations(parsedClass),
                 [CaDETMetric.CBO] = CountDependencies(parsedClass),
+                [CaDETMetric.DIT] = CountInheritanceLevel(parsedClass),
+                [CaDETMetric.DCC] = CountClassCoupling(parsedClass),
             };
         }
 
@@ -251,6 +253,31 @@ namespace CodeModel.CodeParsers.CSharp
             allDependencies.AddRange(parsedClass.GetMethodLinkedVariableTypes().Distinct());
             var uniqueDependencies = allDependencies.GroupBy(d => d.FullName).Select(d => d.First());
             return uniqueDependencies.Count();
+        }
+
+
+        private int CountClassCoupling(CaDETClass parsedClass)
+        {
+            List<CaDETClass> allDependencies = new List<CaDETClass>();
+            allDependencies.AddRange(parsedClass.GetFieldLinkedTypes().Where(c => c.FullName != parsedClass.FullName).Distinct());
+            allDependencies.AddRange(parsedClass.GetMethodLinkedReturnTypes().Where(c => c.FullName != parsedClass.FullName).Distinct());
+            allDependencies.AddRange(parsedClass.GetMethodLinkedVariableTypes().Where(c => c.FullName != parsedClass.FullName).Distinct());
+            allDependencies.AddRange(parsedClass.GetMethodLinkedParameterTypes().Where(c => c.FullName != parsedClass.FullName).Distinct());
+            allDependencies.AddRange(parsedClass.GetMethodInvocationsTypes().Where(c => c.FullName != parsedClass.FullName).Distinct());
+            var uniqueDependencies = allDependencies.GroupBy(d => d.FullName).Select(d => d.First());
+            return uniqueDependencies.Count();
+        }
+
+        private int CountInheritanceLevel(CaDETClass parsedClass)
+        {
+
+            CaDETClass parent = parsedClass.Parent;
+            if (parent == null)
+            {
+                return 0;
+            }
+
+            return 1 + CountInheritanceLevel(parent);
         }
     }
 }
