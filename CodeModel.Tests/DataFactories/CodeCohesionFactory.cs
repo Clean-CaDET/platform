@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -446,6 +446,94 @@ namespace RepositoryCompilerTests.DataFactories
                     {
                         int x = 0;
                         return c == 0;
+                    }
+                }
+            }",
+                @"
+            namespace TestApp
+            {
+                public class TestClass6
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAZero()
+                    {
+                        bool x = IsCZero();
+                        return a == 0 || x;
+                    }
+                    public bool IsBEqualToC()
+                    {
+                        int x = 0;
+                        return b == c && IsAX();
+                    }
+                    private bool IsAX()
+                    {
+                        int x = 0;
+                        return a == x;
+                    }
+                    private bool IsCZero()
+                    {
+                        int x = 0;
+                        return c == 0;
+                    }
+                }
+            }",
+                @"
+            namespace TestApp
+            {
+                public class TestClass7
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAZero()
+                    {
+                        bool x = IsCZero();
+                        return a == 0 || x;
+                    }
+                    public bool IsBEqualToC()
+                    {
+                        bool x = IsCZero();
+                        return b == c && x;
+                    }
+                    public bool IsAX()
+                    {
+                        bool x = IsCZero();
+                        return a == x;
+                    }
+                    private bool IsCZero()
+                    {
+                        int x = 0;
+                        return c == x;
+                    }
+                }
+            }",
+                @"
+            namespace TestApp
+            {
+                public class TestClass8
+                {
+                    private int a;
+                    private int b;
+                    private int c;
+
+                    public bool IsAZero()
+                    {
+                        bool x = IsBEqualToC();
+                        return a == 0 || x;
+                    }
+                    private bool IsBEqualToC()
+                    {
+                        int x = 0;
+                        return b == c && IsAX();
+                    }
+                    private bool IsAX()
+                    {
+                        int x = 0;
+                        return a == x;
                     }
                 }
             }"

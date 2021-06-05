@@ -1,4 +1,4 @@
-using CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel.CaDETModel.CodeItems;
 using CodeModel.Tests.DataFactories;
 using Shouldly;
 using System.Collections.Generic;
@@ -410,6 +410,7 @@ namespace CodeModel.Tests.Unit
 
             TestEdgeCases(classes);
             TestClassesWithPublicMethodsOnly(classes);
+            TestClassesWithPublicAndPrivateMethods(classes);
         }
         private void TestEdgeCases(List<CaDETClass> classes)
         {
@@ -435,6 +436,16 @@ namespace CodeModel.Tests.Unit
             testClass3.Metrics[CaDETMetric.ICBMC].ShouldBe(0.42);
             testClass4.Metrics[CaDETMetric.ICBMC].ShouldBe(0.05);
             testClass5.Metrics[CaDETMetric.ICBMC].ShouldBe(0.1);
+        }
+
+        private void TestClassesWithPublicAndPrivateMethods(List<CaDETClass> classes)
+        {
+            var testClass6 = classes.Find(c => c.Name.Equals("TestClass6"));
+            var testClass7 = classes.Find(c => c.Name.Equals("TestClass7"));
+            var testClass8 = classes.Find(c => c.Name.Equals("TestClass8"));
+            testClass6.Metrics[CaDETMetric.ICBMC].ShouldBe(0.33);
+            testClass7.Metrics[CaDETMetric.ICBMC].ShouldBe(0.22);
+            testClass8.Metrics[CaDETMetric.ICBMC].ShouldBe(1);
         }
     }
 }
