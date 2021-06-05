@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -210,20 +210,40 @@ namespace RepositoryCompilerTests.DataFactories
             @"
             namespace TestApp
             {
-                public class TestClass0
+                public class HighestCohesion
                 {
                     private int a;
                     private int b;
 
                     public bool IsAZero()
                     {
-                        int asdf = b;
+                        int x = b;
                         return a == 0;
                     }
                     public bool APlusB()
                     {
-                        double asdf = 324;
+                        double x = 324;
                         return a + b;
+                    }
+                }
+            }",
+            @"
+            namespace TestApp
+            {
+                public class LowestCohesion
+                {
+                    private int a;
+                    private int b;
+
+                    public bool IsAZero()
+                    {
+                        int x = 0;
+                        return a == x;
+                    }
+                    public bool IsBZero()
+                    {
+                        double x = 0;
+                        return x == b;
                     }
                 }
             }",
@@ -398,7 +418,6 @@ namespace RepositoryCompilerTests.DataFactories
                     }
                 }
             }",
-
                 @"
             namespace TestApp
             {
