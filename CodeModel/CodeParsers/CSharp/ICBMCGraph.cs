@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
@@ -50,8 +50,9 @@ namespace CodeModel.CodeParsers.CSharp
             int[,] matrix = new int[normalMethods.Count, fields.Count + fieldDefiningAccessors.Count];
             for (var i = 0; i < normalMethods.Count; i++)
             {
+                var accessedFields = normalMethods[i].GetDirectlyAndIndirectlyAccessedOwnFields();
                 for (var j = 0; j < fields.Count; j++)
-                    if (normalMethods[i].AccessedFields.Contains(fields[j]))
+                    if (accessedFields.Contains(fields[j]))
                         matrix[i, j] = 1;
                     else
                         matrix[i, j] = 0;

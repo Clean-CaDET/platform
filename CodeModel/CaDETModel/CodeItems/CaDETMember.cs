@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CodeModel.CaDETModel.CodeItems
@@ -74,6 +75,40 @@ namespace CodeModel.CaDETModel.CodeItems
                 }
             }
             return accessedOwnAccessors;
+        }
+
+        public List<CaDETField> GetDirectlyAndIndirectlyAccessedOwnFields()
+        {
+            HashSet<CaDETMember> members = new HashSet<CaDETMember>(){this};
+            HashSet<CaDETField> fields = new HashSet<CaDETField>();
+
+            return FindAccessedOwnFields(members, fields).ToList();
+        }
+
+        private HashSet<CaDETField> FindAccessedOwnFields(HashSet<CaDETMember> members, HashSet<CaDETField> fields)
+        {
+            AddVisitedFields(fields, GetAccessedOwnFields());
+            foreach (var method in InvokedMethods)
+            {
+                if (members.Contains(method)) continue;
+
+                HashSet<CaDETField> foundFields = method.FindAccessedOwnFields(members, fields);
+                AddVisitedFields(fields, foundFields);
+                members.Add(method);
+            }
+
+            return fields;
+        }
+
+        private void AddVisitedFields(HashSet<CaDETField> fields, IEnumerable<CaDETField> fieldsToAdd)
+        {
+            foreach (var field in fieldsToAdd)
+            {
+                if (field.Parent == Parent)
+                {
+                    fields.Add(field);
+                }
+            }
         }
 
         public override bool Equals(object other)
