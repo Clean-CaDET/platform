@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
@@ -13,13 +13,18 @@ namespace CodeModel.CodeParsers.CSharp
 
         public ICBMCGraph(CaDETClass parsedClass)
         {
-            var normalMethods = parsedClass.Members.Where(IsMemberNormalMethod).ToList();
+            var normalMethods = parsedClass.Members.Where(m => IsMemberNormalMethod(m) && IsMemberPublic(m)).ToList();
             var fields = parsedClass.Fields;
             var fieldDefiningAccessors =
                 parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToList();
             Matrix = InitializeMatrix(normalMethods, fields, fieldDefiningAccessors);
             EdgesInGraph = GetAllEdgesInGraph();
             SubGraphPairs = GetSubGraphPairs();
+        }
+
+        private static bool IsMemberPublic(CaDETMember m)
+        {
+            return m.Modifiers.Exists(md => md.Value == CaDETModifierValue.Public);
         }
 
         private ICBMCGraph(int[,] matrix)
