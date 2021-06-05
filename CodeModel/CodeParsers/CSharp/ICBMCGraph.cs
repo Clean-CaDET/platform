@@ -7,7 +7,7 @@ namespace CodeModel.CodeParsers.CSharp
 {
     public class ICBMCGraph
     {
-        private int[,] Matrix { get; }
+        private int[,] MethodFieldAccessMapping { get; }
         private List<Edge> EdgesInGraph { get; }
         internal List<SubGraphPair> SubGraphPairs { get; set; }
 
@@ -17,7 +17,7 @@ namespace CodeModel.CodeParsers.CSharp
             var fields = parsedClass.Fields;
             var fieldDefiningAccessors =
                 parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToList();
-            Matrix = InitializeMatrix(normalMethods, fields, fieldDefiningAccessors);
+            MethodFieldAccessMapping = InitializeMatrix(normalMethods, fields, fieldDefiningAccessors);
             EdgesInGraph = GetAllEdgesInGraph();
             SubGraphPairs = GetSubGraphPairs();
         }
@@ -29,7 +29,7 @@ namespace CodeModel.CodeParsers.CSharp
 
         private ICBMCGraph(int[,] matrix)
         {
-            Matrix = matrix.Clone() as int[,];
+            MethodFieldAccessMapping = matrix.Clone() as int[,];
             EdgesInGraph = GetAllEdgesInGraph();
             SubGraphPairs = GetSubGraphPairs();
         }
@@ -70,9 +70,9 @@ namespace CodeModel.CodeParsers.CSharp
         private List<Edge> GetAllEdgesInGraph()
         {
             var edges = new List<Edge>();
-            for (var i = 0; i < Matrix.GetLength(0); i++)
-            for (var j = 0; j < Matrix.GetLength(1); j++)
-                if (Matrix[i, j] == 1)
+            for (var i = 0; i < MethodFieldAccessMapping.GetLength(0); i++)
+            for (var j = 0; j < MethodFieldAccessMapping.GetLength(1); j++)
+                if (MethodFieldAccessMapping[i, j] == 1)
                     edges.Add(new Edge(i, j));
             return edges;
         }
@@ -184,7 +184,7 @@ namespace CodeModel.CodeParsers.CSharp
 
         public bool IsFullyConnected()
         {
-            return EdgesInGraph.Count == Matrix.Length;
+            return EdgesInGraph.Count == MethodFieldAccessMapping.Length;
         }
 
         private IEnumerable<Edge[]> GetCutEdgeGroupCandidates()
@@ -241,7 +241,7 @@ namespace CodeModel.CodeParsers.CSharp
 
         private int[,] RemoveEdgesFromMatrix(IEnumerable<Edge> edges)
         {
-            var cutMatrix = Matrix.Clone() as int[,];
+            var cutMatrix = MethodFieldAccessMapping.Clone() as int[,];
             foreach (var edge in edges) cutMatrix[edge.Method, edge.Field] = 0;
 
             return cutMatrix;
@@ -249,7 +249,7 @@ namespace CodeModel.CodeParsers.CSharp
 
         public int GetMaximumNumberOfConnections()
         {
-            return Matrix.Length;
+            return MethodFieldAccessMapping.Length;
         }
 
         internal class Edge
