@@ -18,7 +18,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
             foreach (var instance in instances)
             {
-                if (_instances.TryGetValue(instance, out DataSetInstance existingInstance))
+                if (_instances.TryGetValue(instance, out var existingInstance))
                 {
                     existingInstance.AddAnnotations(instance);
                 } else
