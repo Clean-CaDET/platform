@@ -57,11 +57,11 @@ INSERT INTO public."CourseEnrollment"(
 
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description", "CourseId")
-	VALUES (1, 'Meaningful Names', 'We rely on names in all segments of our software - through them we identify variables, functions, classes, libraries and applications. Given their prevelance, it is crucial we select meaningful names to describe our code elements. When considering a function\' name, we see that a clear name can free us from examining the function\' body. On the other hand, a mysterious name requires more time and mental effort to understand what the code element represents. In the worst case, a poor name leads us to false conclusions and significantly increases the development time while we figure out the truth. To avoid such situations, this lecture teaches good and bad naming practices.', 1);
+	VALUES (1, 'Meaningful Names', 'We rely on names in all segments of our software - through them we identify variables, functions, classes, libraries and applications. Given their prevelance, it is crucial we select meaningful names to describe our code elements. When considering a function'' name, we see that a clear name can free us from examining the function'' body. On the other hand, a mysterious name requires more time and mental effort to understand what the code element represents. In the worst case, a poor name leads us to false conclusions and significantly increases the development time while we figure out the truth. To avoid such situations, this lecture teaches good and bad naming practices.', 1);
 	
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description", "CourseId")
-	VALUES (2, 'Clear Functions', 'A common notion is that functions should be short and have a small number of code lines. The reasoning behind this notion is that such functions are focused and easy to understand and reuse. However, our goal shouldn\'t be to create short functions. Instead, we should adhere to several good practices for creating clear functions, which will incidentally make many of our functions short. This lecture teaches these good practices for creating clean functions.', 1);
+	VALUES (2, 'Clear Functions', 'A common notion is that functions should be short and have a small number of code lines. The reasoning behind this notion is that such functions are focused and easy to understand and reuse. However, our goal shouldn''t be to create short functions. Instead, we should adhere to several good practices for creating clear functions, which will incidentally make many of our functions short. This lecture teaches these good practices for creating clean functions.', 1);
 	
 INSERT INTO public."Lectures"(
 	"Id", "Name", "Description", "CourseId")
@@ -91,7 +91,7 @@ INSERT INTO public."KnowledgeNodes"(
 --== Naming ==- CK Node	
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (4, 'Understand the impact that meaningful and mysterious names have on the programmer\' productivity.', 2, 1);
+	VALUES (4, 'Understand the impact that meaningful and mysterious names have on the programmer'' productivity.', 2, 1);
 
 --== Methods ==- FK Node	
 INSERT INTO public."KnowledgeNodes"(
@@ -121,7 +121,7 @@ INSERT INTO public."Texts"(
 	"Id", "Content")
 	VALUES (30, 'A function represents a *named* block of code that should address a meaningful task. In object-oriented programming, functions are often methods that define the behavior of some objects. The clean code principles that apply to functions are for the most part applicable to methods as well.
 
-A clean function is focused *on completing a single task*. The task is described through the function\'s header, including its name and the names of its parameters. Such focused functions often have a simple body that consists of easy-to-understand code. As a consequence, these functions usually have a small number of code lines.');
+A clean function is focused *on completing a single task*. The task is described through the function''s header, including its name and the names of its parameters. Such focused functions often have a simple body that consists of easy-to-understand code. As a consequence, these functions usually have a small number of code lines.');
 		
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -190,7 +190,7 @@ INSERT INTO public."Texts"(
 	"Id", "Content")
 	VALUES (33, 'What does it mean to be focused on a single task? Ideally, a function that does one thing knows the steps required to complete the thing, without knowing the details of each step (i.e., without knowing the steps required to complete each step).
 
-The method `getSuitableDoctors` knows the steps required to find suitable physicians by considering their capability and availability. This function does now know what makes a physician capable, nor the steps required to interact with some data storage. Likewise, `IsAvailable` knows the checks required to determine a physician\' availability (e.g., considering their work hours, other commitments, and vacation days). However, this function does not know the details of the logic for comparing the date and time ranges.');
+The method `getSuitableDoctors` knows the steps required to find suitable physicians by considering their capability and availability. This function does now know what makes a physician capable, nor the steps required to interact with some data storage. Likewise, `IsAvailable` knows the checks required to determine a physician'' availability (e.g., considering their work hours, other commitments, and vacation days). However, this function does not know the details of the logic for comparing the date and time ranges.');
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -238,7 +238,7 @@ INSERT INTO public."LearningObjectSummaries"(
 --== Methods ==- PK Node 3	
 INSERT INTO public."KnowledgeNodes"(
 	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (13, 'Apply the strategies for shortening a function\'s parameter list to create more focused functions.', 1, 3);--TODO: Move to 2 when translated
+	VALUES (13, 'Apply the strategies for shortening a function''s parameter list to create more focused functions.', 1, 3);--TODO: Move to 2 when translated
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -291,14 +291,14 @@ INSERT INTO public."LearningObjects"(
 	VALUES (43, 43);
 INSERT INTO public."Texts"(
 	"Id", "Content")
-	VALUES (43, 'Comments and whitespace (e.g., two blank code lines) in a function\' body *often* (though not always) define a region of code that should be extracted into a separate method. Any existing comments can help formulate a meaningful name for the new function.');
+	VALUES (43, 'Comments and whitespace (e.g., two blank code lines) in a function'' body *often* (though not always) define a region of code that should be extracted into a separate method. Any existing comments can help formulate a meaningful name for the new function.');
 	
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
 	VALUES (44, 44);
 INSERT INTO public."Challenges"(
 	"Id", "Url", "Description", "TestSuiteLocation", "SolutionIdForeignKey")
-	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Complex functions require high mental effort to reason about and understand the control flow. Many aspects contribute to a function\'s complexity - mysterious names, wide expressions, deep nesting. Consider the "Methods/02. Simple Methods" directory and refactor th functions to make them simpler and remove code duplication.', 'Methods.Simple', 46);
+	VALUES (44, 'https://github.com/Clean-CaDET/challenge-repository', 'Complex functions require high mental effort to reason about and understand the control flow. Many aspects contribute to a function''s complexity - mysterious names, wide expressions, deep nesting. Consider the "Methods/02. Simple Methods" directory and refactor th functions to make them simpler and remove code duplication.', 'Methods.Simple', 46);
 INSERT INTO public."ChallengeFulfillmentStrategies"(
 	"Id", "ChallengeId")
 	VALUES (4, 44);
@@ -311,7 +311,7 @@ INSERT INTO public."LearningObjects"(
 	VALUES (45, 45);
 INSERT INTO public."Texts"(
 	"Id", "Content")
-	VALUES (45, 'When we write small, focused functions, we can more easily abstract away the complexity of the function\'s body behind a meaningful name. We can replace a sophisticated conidtional expression (e.g., the condition of a branch that has several different logical operators) with a function call that describes the intent behind the expression. Likewise, we can abstract away a loop or set of calculations behind a good name.
+	VALUES (45, 'When we write small, focused functions, we can more easily abstract away the complexity of the function''s body behind a meaningful name. We can replace a sophisticated conidtional expression (e.g., the condition of a branch that has several different logical operators) with a function call that describes the intent behind the expression. Likewise, we can abstract away a loop or set of calculations behind a good name.
 	
 When we encounter code with deep nesting (e.g., a loop inside a branch, inside another loop, inside a try-catch block) we should consider if we can increase the readability of the code by extracting the inner most nested block or two into a separate function.');
 	
@@ -460,14 +460,14 @@ INSERT INTO public."Texts"(
 	VALUES (65, 'Imagine an application that has been in development for some time. It contains many classes that consist of multiple methods, most of which are focused on a single task. The application supports different uses cases by coordinating these small bits of logic.
 A new requirement arrives that warrants a change to the logic that performs a specific task. The programmer starts with the affected user control (e.g., button or form) and examines the code that works with this control. They then recursively apply the following algorithm:
 
-1. Examine the method\'s body, looking for significant names (e.g., of method invocations) that lead to the logic that needs to change.
+1. Examine the method''s body, looking for significant names (e.g., of method invocations) that lead to the logic that needs to change.
 2. For each name, analyze its meaning. If the name is significant, jump to the underlying code (using IDE shortcuts) and go to step 1. Otherwise ignore the name.
 
 Following this algorithm, the programmer avoids analyzing hundreds or thousands of code lines and instead interprets a handful of names. When they arrive at their destination, the required change is minimal, reducing the chance of regression. The programmer completes the task, having spent little of their mental energy.
 
 Now imagine a similar application that is built from huge functions with hundreds of code lines filled with mysterious names. The required change can be made after much research. The programmer must invest a lot of effort to maintain a high focus while they traverse the sophisticated logic. The change is risky and a bug can be easily introduced without a high mental investment. At the end of this journey, the programmer is exhausted and burdened by thoughts of future bug reports.
 
-Writing clean functions is more difficult than building code that only works. On the other hand, reading poorly written functions is harder than exploring small, focused functions with a clear intent. The question becomes - which aspect is more important? For any software that has been in development for more than a few months (or even weeks), most of the programmer\'s time is spent reading code. Therefore, we should reduce the burden of reading as much as possible.');
+Writing clean functions is more difficult than building code that only works. On the other hand, reading poorly written functions is harder than exploring small, focused functions with a clear intent. The question becomes - which aspect is more important? For any software that has been in development for more than a few months (or even weeks), most of the programmer''s time is spent reading code. Therefore, we should reduce the burden of reading as much as possible.');
 
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -489,13 +489,13 @@ INSERT INTO public."QuestionAnswers"(
 	VALUES (23, 'Methods should have four or fewere parameters.', false, 'The claim is not rigorous enough. Ideally, a method should have zero or one parameters, and two parameters are also acceptable. Everything above that is a candidate for refactoring, and there will be situations (e.g., constructors) where more parameters might be required.', 66);
 INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
-	VALUES (24, 'Focused functions with a clear name adhere to the OOP principle of abstraction.', true, 'The claim is correct. A clear function name abstracts away the logic of the function\'s body, which can help the programmer conclude if they should examine a function\'s body or skip it.', 66);
+	VALUES (24, 'Focused functions with a clear name adhere to the OOP principle of abstraction.', true, 'The claim is correct. A clear function name abstracts away the logic of the function''s body, which can help the programmer conclude if they should examine a function''s body or skip it.', 66);
 INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
 	VALUES (25, 'Creating clean functions is challenging, while examining a lot of focused functions is comparatively simple.', true, 'The claim is correct. It often takes additional effort to decompose complex logic and then identify and properly name subsets of that logic.', 66);
 INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
-	VALUES (26, 'When we write clean functions, our clients can read and understand our code.', false, 'The claim is not correct. Clean functions that describe business logic should be readable by our clients, as they mostly consist of names (e.g., objects and method invocations). However, there is a significant part of an application\'s code that is technically-focused - HTTP request processing, database interaction, cryptography, message queues are all valid concerns not understood by most of our clients.', 66);
+	VALUES (26, 'When we write clean functions, our clients can read and understand our code.', false, 'The claim is not correct. Clean functions that describe business logic should be readable by our clients, as they mostly consist of names (e.g., objects and method invocations). However, there is a significant part of an application''s code that is technically-focused - HTTP request processing, database interaction, cryptography, message queues are all valid concerns not understood by most of our clients.', 66);
 
 
 --=== CODE QUALITY ADVICE
