@@ -200,33 +200,21 @@ namespace DataSetExplorer.DataSetSerializer
                 _sheet.Cells[row, 2 + (numOfHeuristics * annotationNum) + i].Value = applicableHeuristics[i].IsApplicable;
             }
         }
-
+        
         private List<SmellHeuristic> GetCodeSmellHeuristicsForExport(List<string> heuristics, List<SmellHeuristic> applicableHeuristics)
         {
-            RemoveOrdinalNumberFromSmellDescription(applicableHeuristics);
             var heuristicsForExport = new List<SmellHeuristic>();
             foreach (var heuristic in heuristics)
             {
                 foreach (var applicableHeur in applicableHeuristics)
                 {
-                    if (heuristic.Contains(applicableHeur.Description)) {
+                    if (heuristic.Equals(applicableHeur.Description)) {
                         heuristicsForExport.Add(applicableHeur);
                         break;
                     }
                 }
             }
             return heuristicsForExport;
-        }
-
-        private void RemoveOrdinalNumberFromSmellDescription(List<SmellHeuristic> applicableHeuristics)
-        {
-            foreach (var heuristic in applicableHeuristics)
-            {
-                if (char.IsNumber(heuristic.Description[0]))
-                {
-                    heuristic.Description = heuristic.Description.Substring(2).Trim();
-                }
-            }
         }
 
         private void Serialize(string fileName)
