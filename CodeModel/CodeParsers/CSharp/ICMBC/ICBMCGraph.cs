@@ -20,14 +20,14 @@ namespace CodeModel.CodeParsers.CSharp
                 parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToList();
             MethodFieldAccessMapping = InitializeMatrix(normalMethods, fields, fieldDefiningAccessors);
             EdgesInGraph = GetAllEdgesInGraph();
-            SubGraphPairs = GetSubGraphPairs();
+            SubGraphPairs = SubGraphPair.FindValidSubGraphPairs(EdgesInGraph, MethodFieldAccessMapping);
         }
 
         public ICBMCGraph(int[,] matrix)
         {
             MethodFieldAccessMapping = matrix.Clone() as int[,];
             EdgesInGraph = GetAllEdgesInGraph();
-            SubGraphPairs = GetSubGraphPairs();
+            SubGraphPairs = SubGraphPair.FindValidSubGraphPairs(EdgesInGraph, MethodFieldAccessMapping);
         }
 
         private int[,] InitializeMatrix(List<CaDETMember> normalMethods, List<CaDETField> fields,
@@ -61,35 +61,6 @@ namespace CodeModel.CodeParsers.CSharp
                 if (MethodFieldAccessMapping[i, j] == 1)
                     edges.Add(new Edge(i, j));
             return edges;
-        }
-
-        /// <summary>
-        /// Find all possible subgraphs that can be created from this graph
-        /// by removing method-field combinations (edges).
-        /// </summary>
-        private List<SubGraphPair> GetSubGraphPairs()
-        {
-            var cutEdgeGroupCandidates = GetCutEdgeGroupCandidates();
-            var subGraphPairs = new List<SubGraphPair>();
-            foreach (var edgeGroup in cutEdgeGroupCandidates)
-            {
-                var cutMatrix = RemoveEdgesFromMatrix(edgeGroup);
-                if (CheckIfMethodsInvokeAtLeastOneField(cutMatrix)) continue;
-                if (CheckIfFieldsAreInvokedByAtLeastOneMethod(cutMatrix)) continue;
-
-                // TODO strategy
-
-                var cohesionGraph = new ICBMCGraph(cutMatrix);
-                if (cohesionGraph.IsDisconnected())
-                {
-                    SubGraphPair subGraphPair = new SubGraphPair(cohesionGraph, edgeGroup);
-                    if (subGraphPair.LeftSubGraph.IsDisconnected() || subGraphPair.RightSubGraph.IsDisconnected())
-                        continue;
-                    subGraphPairs.Add(subGraphPair);
-                }
-            }
-
-            return subGraphPairs;
         }
 
         /// <summary>
@@ -171,66 +142,6 @@ namespace CodeModel.CodeParsers.CSharp
         public bool IsFullyConnected()
         {
             return EdgesInGraph.Count == MethodFieldAccessMapping.Length;
-        }
-
-        private IEnumerable<Edge[]> GetCutEdgeGroupCandidates()
-        {
-            var data = EdgesInGraph.ToArray();
-            if (data.Length == 0) return new List<Edge[]>(); // TODO
-
-            return Enumerable
-                .Range(1, (1 << data.Length) - 2)
-                .Select(index => data
-                    .Where((v, i) => (index & (1 << i)) != 0)
-                    .ToArray());
-        }
-
-        private bool CheckIfMethodsInvokeAtLeastOneField(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                bool isEmpty = true;
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    if (matrix[i, j] != 0)
-                    {
-                        isEmpty = false;
-                        break;
-                    }
-                }
-
-                if (isEmpty) return true;
-            }
-
-            return false;
-        }
-
-        private bool CheckIfFieldsAreInvokedByAtLeastOneMethod(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(1); i++)
-            {
-                bool isEmpty = true;
-                for (int j = 0; j < matrix.GetLength(0); j++)
-                {
-                    if (matrix[j, i] != 0)
-                    {
-                        isEmpty = false;
-                        break;
-                    }
-                }
-
-                if (isEmpty) return true;
-            }
-
-            return false;
-        }
-
-        private int[,] RemoveEdgesFromMatrix(IEnumerable<Edge> edges)
-        {
-            var cutMatrix = MethodFieldAccessMapping.Clone() as int[,];
-            foreach (var edge in edges) cutMatrix[edge.Method, edge.Field] = 0;
-
-            return cutMatrix;
         }
 
         public int GetMaximumNumberOfConnections()
