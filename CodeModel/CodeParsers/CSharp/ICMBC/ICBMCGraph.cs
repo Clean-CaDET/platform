@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
+using CodeModel.CodeParsers.CSharp.ICMBC;
 
 namespace CodeModel.CodeParsers.CSharp
 {
     public class ICBMCGraph
     {
         private int[,] MethodFieldAccessMapping { get; }
-        private List<Edge> EdgesInGraph { get; }
+        internal List<Edge> EdgesInGraph { get; }
         internal List<SubGraphPair> SubGraphPairs { get; set; }
 
         public ICBMCGraph(CaDETClass parsedClass)
         {
-            var normalMethods = parsedClass.Members.Where(m => IsMemberNormalMethod(m) && IsMemberPublic(m)).ToList();
+            var normalMethods = parsedClass.Members.Where(m => m.IsMemberNormalMethod()).ToList();
             var fields = parsedClass.Fields;
             var fieldDefiningAccessors =
                 parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToList();
@@ -22,26 +23,11 @@ namespace CodeModel.CodeParsers.CSharp
             SubGraphPairs = GetSubGraphPairs();
         }
 
-        private static bool IsMemberPublic(CaDETMember m)
-        {
-            return m.Modifiers.Exists(md => md.Value == CaDETModifierValue.Public);
-        }
-
-        private ICBMCGraph(int[,] matrix)
+        public ICBMCGraph(int[,] matrix)
         {
             MethodFieldAccessMapping = matrix.Clone() as int[,];
             EdgesInGraph = GetAllEdgesInGraph();
             SubGraphPairs = GetSubGraphPairs();
-        }
-
-        /// <summary>
-        /// Member is normal method if it's neither constructor, nor getter or setter,
-        /// nor delegate function.
-        /// </summary>
-        private bool IsMemberNormalMethod(CaDETMember m)
-        {
-            return m.Type == CaDETMemberType.Method &&
-                   m.Metrics[CaDETMetric.MELOC] > 1; // && m.Modifiers.Contains(new CaDETModifier("public"));
         }
 
         private int[,] InitializeMatrix(List<CaDETMember> normalMethods, List<CaDETField> fields,
@@ -122,7 +108,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// Start from given edge and search for edges in that edge's
         /// row or column. Returns all edges that it found.
         /// </summary>
-        private List<Edge> FindEdgesStartingFromEdge(Edge firstEdge)
+        internal List<Edge> FindEdgesStartingFromEdge(Edge firstEdge)
         {
             List<int> visitedMethods = new List<int>();
             List<int> visitedFields = new List<int>();
@@ -252,90 +238,30 @@ namespace CodeModel.CodeParsers.CSharp
             return MethodFieldAccessMapping.Length;
         }
 
-        internal class Edge
+        /// <summary>
+        /// Process base cases since this is recursive function,
+        /// then calculate cohesion for each subgraph pair and return maximum value.
+        /// </summary>
+        public double Calculate()
         {
-            public int Method { get; }
-            public int Field { get; }
-
-            public Edge(int method, int field)
-            {
-                Method = method;
-                Field = field;
-            }
-
-            public override bool Equals(object? obj)
-            {
-                var edge = obj as Edge;
-                if (edge == null) return false;
-                return Method == edge.Method && Field == edge.Field;
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(Method, Field);
-            }
+            if (IsDisconnected())
+                return 0;
+            if (IsFullyConnected())
+                return 1;
+            var cohesionValues = new List<double>();
+            foreach (var subGraphPair in SubGraphPairs)
+                cohesionValues.Add(ICMBC(subGraphPair));
+            return cohesionValues.Count == 0 ? 0 : cohesionValues.Max(); // TODO
         }
 
-        internal class SubGraphPair
+        /// <summary>
+        /// ICBMC calculation formula. Rounds the result to 2 digits.
+        /// </summary>
+        private double ICMBC(SubGraphPair subGraphPair)
         {
-            internal ICBMCGraph LeftSubGraph { get; set; }
-            internal ICBMCGraph RightSubGraph { get; set; }
-            internal Edge[] CutEdges { get; set; }
-
-            public SubGraphPair(ICBMCGraph cohesionGraph, Edge[] edgeGroup)
-            {
-                CutEdges = new Edge[edgeGroup.Length];
-                Array.Copy(edgeGroup, CutEdges, edgeGroup.Length);
-
-                var edgesInSubGraph = cohesionGraph.FindEdgesStartingFromEdge(cohesionGraph.EdgesInGraph[0]);
-                var remainingEdges = cohesionGraph.EdgesInGraph.Where(e => !edgesInSubGraph.Contains(e)).ToList();
-                var leftSubGraphMatrix = CreateSubGraph(edgesInSubGraph);
-                var rightSubGraphMatrix = CreateSubGraph(remainingEdges);
-                LeftSubGraph = new ICBMCGraph(leftSubGraphMatrix);
-                RightSubGraph = new ICBMCGraph(rightSubGraphMatrix);
-            }
-
-            private int[,] CreateSubGraph(List<Edge> edges)
-            {
-                var fieldsIndexMapping = GetFieldsIndexMapping(edges);
-                var methodsIndexMapping = GetMethodsIndexMapping(edges);
-                var subGraph = new int[methodsIndexMapping.Count, fieldsIndexMapping.Count];
-                foreach (var edge in edges)
-                    subGraph[methodsIndexMapping[edge.Method], fieldsIndexMapping[edge.Field]] = 1;
-
-                return subGraph;
-            }
-
-            private Dictionary<int, int> GetFieldsIndexMapping(List<Edge> edges)
-            {
-                var oldIndexToNewOne = new Dictionary<int, int>();
-                var i = 0;
-                foreach (var edge in edges)
-                {
-                    if (oldIndexToNewOne.ContainsKey(edge.Field)) continue;
-                    oldIndexToNewOne[edge.Field] = i++;
-                }
-
-                return oldIndexToNewOne;
-            }
-
-            private Dictionary<int, int> GetMethodsIndexMapping(List<Edge> edges)
-            {
-                var oldIndexToNewOne = new Dictionary<int, int>();
-                var i = 0;
-                foreach (var edge in edges)
-                {
-                    if (oldIndexToNewOne.ContainsKey(edge.Method)) continue;
-                    oldIndexToNewOne[edge.Method] = i++;
-                }
-
-                return oldIndexToNewOne;
-            }
-
-            public double GetNumberOfCutEdges()
-            {
-                return CutEdges.Length;
-            }
+            double cohesion = subGraphPair.GetNumberOfCutEdges() / GetMaximumNumberOfConnections() *
+                   (subGraphPair.LeftSubGraph.Calculate() + subGraphPair.RightSubGraph.Calculate()) / 2;
+            return Math.Round(cohesion, 2);
         }
     }
 }

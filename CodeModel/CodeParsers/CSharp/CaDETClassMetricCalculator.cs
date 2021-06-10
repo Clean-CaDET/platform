@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeModel.CodeParsers.CSharp.ICMBC;
 
 namespace CodeModel.CodeParsers.CSharp
 {
@@ -205,8 +206,7 @@ namespace CodeModel.CodeParsers.CSharp
         private double GetICBMCCohesionValue(CaDETClass parsedClass)
         {
             ICBMCGraph icbmcGraph = new ICBMCGraph(parsedClass);
-            ICBMCCalculator calculator = new ICBMCCalculator();
-            return calculator.Calculate(icbmcGraph);
+            return icbmcGraph.Calculate();
         }
     }
 }

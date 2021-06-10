@@ -80,35 +80,37 @@ namespace CodeModel.CaDETModel.CodeItems
         public List<CaDETField> GetDirectlyAndIndirectlyAccessedOwnFields()
         {
             HashSet<CaDETMember> members = new HashSet<CaDETMember>(){this};
-            HashSet<CaDETField> fields = new HashSet<CaDETField>();
 
-            return FindAccessedOwnFields(members, fields).ToList();
+            return FindAccessedOwnFields(members).ToList();
         }
 
-        private HashSet<CaDETField> FindAccessedOwnFields(HashSet<CaDETMember> members, HashSet<CaDETField> fields)
+        private HashSet<CaDETField> FindAccessedOwnFields(HashSet<CaDETMember> members)
         {
-            AddVisitedFields(fields, GetAccessedOwnFields());
-            foreach (var method in InvokedMethods)
+            HashSet<CaDETField> fields =  GetAccessedOwnFields().ToHashSet();
+            foreach (var method in InvokedMethods.Where(m => m.Parent.Equals(Parent)))
             {
                 if (members.Contains(method)) continue;
 
-                HashSet<CaDETField> foundFields = method.FindAccessedOwnFields(members, fields);
-                AddVisitedFields(fields, foundFields);
+                HashSet<CaDETField> foundFields = method.FindAccessedOwnFields(members);
+                fields.UnionWith(foundFields);
                 members.Add(method);
             }
 
             return fields;
         }
 
-        private void AddVisitedFields(HashSet<CaDETField> fields, IEnumerable<CaDETField> fieldsToAdd)
+        /// <summary>
+        /// Member is normal method if it's neither constructor, nor getter or setter,
+        /// nor delegate function. TODO accesses multiple fields
+        /// </summary>
+        public bool IsMemberNormalMethod()
         {
-            foreach (var field in fieldsToAdd)
-            {
-                if (field.Parent == Parent)
-                {
-                    fields.Add(field);
-                }
-            }
+            return Type == CaDETMemberType.Method && Metrics[CaDETMetric.MELOC] > 1 && IsMemberPublic();
+        }
+
+        private bool IsMemberPublic()
+        {
+            return Modifiers.Exists(md => md.Value == CaDETModifierValue.Public);
         }
 
         public override bool Equals(object other)
