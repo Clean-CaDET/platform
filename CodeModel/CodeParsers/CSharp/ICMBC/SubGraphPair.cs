@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CodeModel.CodeParsers.CSharp.ICMBC
 {
@@ -10,12 +11,11 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
     {
         internal ICBMCGraph LeftSubGraph { get; set; }
         internal ICBMCGraph RightSubGraph { get; set; }
-        internal Edge[] CutEdges { get; set; }
+        internal HashSet<Edge> CutEdges { get; set; }
 
-        public SubGraphPair(ICBMCGraph cohesionGraph, Edge[] edgeGroup)
+        public SubGraphPair(ICBMCGraph cohesionGraph, HashSet<Edge> edgeGroup)
         {
-            CutEdges = new Edge[edgeGroup.Length];
-            Array.Copy(edgeGroup, CutEdges, edgeGroup.Length);
+            CutEdges = edgeGroup.ToHashSet();
 
             var edgesInSubGraph = cohesionGraph.FindEdgesStartingFromEdge(cohesionGraph.EdgesInGraph[0]);
             var remainingEdges = cohesionGraph.EdgesInGraph.Where(e => !edgesInSubGraph.Contains(e)).ToList();
@@ -72,15 +72,17 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
             var subGraphPairs = new List<SubGraphPair>();
             foreach (var edgeGroup in cutEdgeGroupCandidates)
             {
+                if (subGraphPairs.Any(s => edgeGroup.IsProperSupersetOf(s.CutEdges))) continue;
                 var subGraphPair = CreateValidSubGraphPair(edgeGroup, methodFieldIndexMapping);
                 if (subGraphPair == null) continue;
+                subGraphPairs.RemoveAll(s => s.CutEdges.IsProperSupersetOf(subGraphPair.CutEdges));
                 subGraphPairs.Add(subGraphPair);
             }
 
             return subGraphPairs;
         }
 
-        private static SubGraphPair CreateValidSubGraphPair(Edge[] edgeGroup, int[,] methodFieldIndexMapping)
+        private static SubGraphPair CreateValidSubGraphPair(HashSet<Edge> edgeGroup, int[,] methodFieldIndexMapping)
         {
             var cutMatrix = RemoveEdgesFromMatrix(edgeGroup, methodFieldIndexMapping);
             if (CheckIfMethodsInvokeAtLeastOneField(cutMatrix)) return null;
@@ -96,16 +98,16 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
             return subGraphPair;
         }
 
-        private static IEnumerable<Edge[]> GetCutEdgeGroupCandidates(List<Edge> edgesInGraph)
+        private static IEnumerable<HashSet<Edge>> GetCutEdgeGroupCandidates(List<Edge> edgesInGraph)
         {
             var data = edgesInGraph.ToArray();
-            if (data.Length == 0) return new List<Edge[]>(); // TODO
+            if (data.Length == 0) return new List<HashSet<Edge>>(); // TODO
 
             return Enumerable
                 .Range(1, (1 << data.Length) - 2)
                 .Select(index => data
                     .Where((v, i) => (index & (1 << i)) != 0)
-                    .ToArray());
+                    .ToHashSet());
         }
 
         private static bool CheckIfMethodsInvokeAtLeastOneField(int[,] matrix)
@@ -158,7 +160,7 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
 
         public double GetNumberOfCutEdges()
         {
-            return CutEdges.Length;
+            return CutEdges.Count;
         }
 
     }
