@@ -83,8 +83,8 @@ namespace RepositoryCompilerTests.DataFactories
                     private int a2;
                     private int a3;
                     private int a4;
-                   
- 
+
+
                     internal bool m1IsEqual()
                     {
                         if((a1 == a2)){
@@ -106,9 +106,9 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return false;
                     }
-   
+
                     internal bool m4IsEqual()
-                    {          
+                    {
                         if((a2 == a4)){
                              return true;
                         }
@@ -126,8 +126,8 @@ namespace RepositoryCompilerTests.DataFactories
                     private int a2;
                     private int a3;
                     private int a4;
-                   
- 
+
+
                     internal bool m1IsEqual()
                     {
                         if((a1 == 5)){
@@ -135,7 +135,7 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return false;
                     }
- 
+
                     internal bool m2IsEqualM1()
                     {
                         if((a1 == 6)){
@@ -143,7 +143,7 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return false;
                     }
- 
+
                     internal bool m3IsEqualm3()
                     {
                         if((a1 == 7)){
@@ -151,9 +151,9 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return false;
                     }
-   
+
                     internal bool IsEqualm4()
-                    {          
+                    {
                         return false;
                     }
                 }
@@ -168,8 +168,8 @@ namespace RepositoryCompilerTests.DataFactories
                     private int a2;
                     private int a3;
                     private int a4;
-                   
- 
+
+
                     internal bool m1IsEqual()
                     {
                         if((a1 == a2 == a3)){
@@ -177,7 +177,7 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return false;
                     }
- 
+
                     internal bool m2IsEqualM1()
                     {
                         if((a1 == a2 == a3)){
@@ -185,7 +185,7 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return false;
                     }
- 
+
                     internal bool m3IsEqualm3()
                     {
                         if((a1 == a2 == a3)){
@@ -193,347 +193,10 @@ namespace RepositoryCompilerTests.DataFactories
                         }
                         return false;
                     }
-   
+
                     internal bool IsEqualm4()
-                    {          
+                    {
                         return false;
-                    }
-                }
-            }"
-            };
-        }
-
-        public IEnumerable<string> GetICBMCTestClasses()
-        {
-            return new[]
-            {
-            @"
-            namespace TestApp
-            {
-                public class HighestCohesion
-                {
-                    private int a;
-                    private int b;
-
-                    public bool IsAZero()
-                    {
-                        int x = b;
-                        return a == 0;
-                    }
-                    public bool APlusB()
-                    {
-                        double x = 324;
-                        return a + b;
-                    }
-                }
-            }",
-            @"
-            namespace TestApp
-            {
-                public class LowestCohesion
-                {
-                    private int a;
-                    private int b;
-
-                    public bool IsAZero()
-                    {
-                        int x = 0;
-                        return a == x;
-                    }
-                    public bool IsBZero()
-                    {
-                        double x = 0;
-                        return x == b;
-                    }
-                }
-            }",
-            @"
-            namespace TestApp
-            {
-                public class TestClass01
-                {
-                    private int a;
-                    private int b;
-
-                    public bool IsAZero()
-                    {
-                        int asdf = 21;
-                        return a == 0;
-                    }
-                    public bool APlusB()
-                    {
-                        double asdf = 324;
-                        return a + b;
-                    }
-                }
-            }",
-            @"
-            namespace TestApp
-            {
-                public class TestClass02
-                {
-                    private int a;
-                    private int b;
-
-                    public bool IsAZero()
-                    {
-                        int x = 21;
-                        return a == 0;
-                    }
-                    public int APlusNumPlusB()
-                    {
-                        int x = 324;
-                        return a + x + b;
-                    }
-                    public int BPlusNumPlusA()
-                    {
-                        int x = 12;
-                        return b + x + a;
-                    }
-                }
-            }",
-            @"
-            namespace TestApp
-            {
-                public class TestClass1
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAZero()
-                    {
-                        int asdf =  a;
-                        return a == 0;
-                    }
-                    public bool IsAPlusBEqualsC()
-                    {
-                        double asdf = 324;
-                        return a + b == c;
-                    }
-                    public bool IsAEqualsBPlusC()
-                    {
-                        int w;
-                        return a == b + c;
-                    }
-                    public bool IsCZero()
-                    {
-                        int asdf = c;
-                        return c == 0;
-                    }
-                }
-            }",
-                @"
-            namespace TestApp
-            {
-                public class TestClass2
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAC()
-                    {
-                        int x = 0;
-                        return a == c;
-                    }
-                    public bool IsAPlusBEqualsC()
-                    {
-                        int x = 0;
-                        return a + b == c;
-                    }
-                    public bool IsAEqualsBPlusC()
-                    {
-                        int x = 0;
-                        return a == b + c;
-                    }
-                    public bool IsCZero()
-                    {
-                        int x = 0;
-                        return c == 0;
-                    }
-                }
-            }",
-
-                @"
-            namespace TestApp
-            {
-                public class TestClass3
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAC()
-                    {
-                        int x = 0;
-                        return a == c;
-                    }
-                    public bool IsAPlusBEqualsC()
-                    {
-                        int x = 0;
-                        return a + b == c;
-                    }
-                    public bool IsAEqualsBPlusC()
-                    {
-                        int x = 0;
-                        return a == b + c;
-                    }
-                    public bool IsCZeroPlusA()
-                    {
-                        int x = 0;
-                        return c == 0 + a;
-                    }
-                }
-            }",
-
-                @"
-            namespace TestApp
-            {
-                public class TestClass4
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAZero()
-                    {
-                        int x = 0;
-                        return a == 0;
-                    }
-                    public bool IsAEqualsToC()
-                    {
-                        int x = 0;
-                        return a == c;
-                    }
-                    public bool IsBEqualToC()
-                    {
-                        int x = 0;
-                        return b == c;
-                    }
-                    public bool IsCZero()
-                    {
-                        int x = 0;
-                        return c == 0;
-                    }
-                }
-            }",
-                @"
-            namespace TestApp
-            {
-                public class TestClass5
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAZero()
-                    {
-                        int x = 0;
-                        return a == 0;
-                    }
-                    public bool IsAEqualsToCPlusB()
-                    {
-                        int x = 0;
-                        return a == c + b;
-                    }
-                    public bool IsBEqualToC()
-                    {
-                        int x = 0;
-                        return b == c;
-                    }
-                    public bool IsCZero()
-                    {
-                        int x = 0;
-                        return c == 0;
-                    }
-                }
-            }",
-                @"
-            namespace TestApp
-            {
-                public class TestClass6
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAZero()
-                    {
-                        bool x = IsCZero();
-                        return a == 0 || x;
-                    }
-                    public bool IsBEqualToC()
-                    {
-                        int x = 0;
-                        return b == c && IsAX();
-                    }
-                    private bool IsAX()
-                    {
-                        int x = 0;
-                        return a == x;
-                    }
-                    private bool IsCZero()
-                    {
-                        int x = 0;
-                        return c == 0;
-                    }
-                }
-            }",
-                @"
-            namespace TestApp
-            {
-                public class TestClass7
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAZero()
-                    {
-                        bool x = IsCZero();
-                        return a == 0 || x;
-                    }
-                    public bool IsBEqualToC()
-                    {
-                        bool x = IsCZero();
-                        return b == c && x;
-                    }
-                    public bool IsAX()
-                    {
-                        bool x = IsCZero();
-                        return a == x;
-                    }
-                    private bool IsCZero()
-                    {
-                        int x = 0;
-                        return c == x;
-                    }
-                }
-            }",
-                @"
-            namespace TestApp
-            {
-                public class TestClass8
-                {
-                    private int a;
-                    private int b;
-                    private int c;
-
-                    public bool IsAZero()
-                    {
-                        bool x = IsBEqualToC();
-                        return a == 0 || x;
-                    }
-                    private bool IsBEqualToC()
-                    {
-                        int x = 0;
-                        return b == c && IsAX();
-                    }
-                    private bool IsAX()
-                    {
-                        int x = 0;
-                        return a == x;
                     }
                 }
             }"

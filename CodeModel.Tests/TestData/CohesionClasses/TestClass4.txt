@@ -1,0 +1,33 @@
+namespace TestApp
+{
+    public class TestClass4
+    {
+        private int a;
+        private int b;
+        private int c;
+
+        public bool IsAZero()
+        {
+            int x = 0;
+            return a == 0;
+        }
+
+        public bool IsAEqualsToC()
+        {
+            int x = 0;
+            return a == c;
+        }
+
+        public bool IsBEqualToC()
+        {
+            int x = 0;
+            return b == c;
+        }
+
+        public bool IsCZero()
+        {
+            int x = 0;
+            return c == 0;
+        }
+    }
+}

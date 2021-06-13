@@ -1,0 +1,20 @@
+namespace TestApp
+{
+    public class HighestCohesion
+    {
+        private int a;
+        private int b;
+
+        public bool IsAZero()
+        {
+            int x = b;
+            return a == 0;
+        }
+
+        public int APlusB()
+        {
+            double x = 324;
+            return a + b;
+        }
+    }
+}

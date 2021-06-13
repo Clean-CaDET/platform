@@ -1,0 +1,20 @@
+namespace TestApp
+{
+    public class LowestCohesion
+    {
+        private int a;
+        private int b;
+
+        public bool IsAZero()
+        {
+            int x = 0;
+            return a == x;
+        }
+
+        public bool IsBZero()
+        {
+            double x = 0;
+            return x == b;
+        }
+    }
+}

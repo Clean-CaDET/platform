@@ -1,0 +1,33 @@
+namespace TestApp
+{
+    public class TestClass3
+    {
+        private int a;
+        private int b;
+        private int c;
+
+        public bool IsAC()
+        {
+            int x = 0;
+            return a == c;
+        }
+
+        public bool IsAPlusBEqualsC()
+        {
+            int x = 0;
+            return a + b == c;
+        }
+
+        public bool IsAEqualsBPlusC()
+        {
+            int x = 0;
+            return a == b + c;
+        }
+
+        public bool IsCZeroPlusA()
+        {
+            int x = 0;
+            return c == 0 + a;
+        }
+    }
+}

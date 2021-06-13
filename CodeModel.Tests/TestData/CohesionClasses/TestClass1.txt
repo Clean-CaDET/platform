@@ -1,0 +1,30 @@
+namespace TestApp
+{
+    public class TestClass1
+    {
+        private int a;
+        private int b;
+        private int c;
+
+        public bool IsAZero()
+        {
+            int asdf =  a;
+            return a == 0;
+        }
+        public bool IsAPlusBEqualsC()
+        {
+            double asdf = 324;
+            return a + b == c;
+        }
+        public bool IsAEqualsBPlusC()
+        {
+            int w;
+            return a == b + c;
+        }
+        public bool IsCZero()
+        {
+            int asdf = c;
+            return c == 0;
+        }
+    }
+}

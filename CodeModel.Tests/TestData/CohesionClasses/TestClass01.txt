@@ -1,0 +1,20 @@
+namespace TestApp
+{
+    public class TestClass01
+    {
+        private int a;
+        private int b;
+
+        public bool IsAZero()
+        {
+            int asdf = 21;
+            return a == 0;
+        }
+
+        public int APlusB()
+        {
+            double asdf = 324;
+            return a + b;
+        }
+    }
+}

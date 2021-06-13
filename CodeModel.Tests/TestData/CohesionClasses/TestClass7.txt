@@ -1,0 +1,33 @@
+namespace TestApp
+{
+    public class TestClass7
+    {
+        private int a;
+        private int b;
+        private int c;
+
+        public bool IsAZero()
+        {
+            bool x = IsCZero();
+            return a == 0 || x;
+        }
+
+        public bool IsBEqualToC()
+        {
+            bool x = IsCZero();
+            return b == c && x;
+        }
+
+        public bool IsAX()
+        {
+            bool x = IsCZero();
+            return a == 0 == x;
+        }
+
+        private bool IsCZero()
+        {
+            int x = 0;
+            return c == x;
+        }
+    }
+}

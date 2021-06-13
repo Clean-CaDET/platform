@@ -1,0 +1,26 @@
+namespace TestApp
+{
+    public class TestClass02
+    {
+        private int a;
+        private int b;
+
+        public bool IsAZero()
+        {
+            int x = 21;
+            return a == 0;
+        }
+
+        public int APlusNumPlusB()
+        {
+            int x = 324;
+            return a + x + b;
+        }
+
+        public int BPlusNumPlusA()
+        {
+            int x = 12;
+            return b + x + a;
+        }
+    }
+}
