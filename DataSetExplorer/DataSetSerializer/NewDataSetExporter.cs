@@ -13,12 +13,12 @@ namespace DataSetExplorer.DataSetSerializer
         private readonly string _exportPath;
         //TODO: ColumnHeuristicsModel should be repurposed as some kind of HeuristicCatalog and put into the domain layer
         private readonly ColumnHeuristicsModel _requiredSmells;
-        private bool _includeMetrics;
-        public NewDataSetExporter(string exportPath, ColumnHeuristicsModel smells, bool includeMetrics)
+        private readonly bool _includeMetrics;
+        public NewDataSetExporter(string exportPath, NewSpreadSheetColumnModel columnModel)
         {
             _exportPath = exportPath;
-            _requiredSmells = smells;
-            _includeMetrics = includeMetrics;
+            _requiredSmells = columnModel.SmellsAndHeuristics;
+            _includeMetrics = columnModel.IncludeMetrics;
         }
         public void Export(DataSet project, string fileName)
         {

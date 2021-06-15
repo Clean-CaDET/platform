@@ -12,7 +12,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public string ProjectLink { get; }
         public SnippetType Type { get; }
         public ISet<DataSetAnnotation> Annotations { get; }
-        public Dictionary<CaDETMetric, double> MetricFeatures { get; set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
+        public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
 
         internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
         {
@@ -21,14 +21,15 @@ namespace DataSetExplorer.DataSetBuilder.Model
             ProjectLink = projectLink;
             Type = type;
 
-            Validate();
+            
             Annotations = new HashSet<DataSetAnnotation>();
             MetricFeatures = metricFeatures;
+            Validate();
         }
 
         private void Validate()
         {
-            if (string.IsNullOrEmpty(CodeSnippetId)) throw new InvalidOperationException("CodeSnippetId cannot be empty.");
+            if (string.IsNullOrEmpty(CodeSnippetId)) throw new ArgumentException("CodeSnippetId cannot be empty.");
         }
 
         internal void AddAnnotation(DataSetAnnotation annotation)
