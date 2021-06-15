@@ -71,6 +71,5 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             string result = reader.ReadToEnd();
             Console.Write(result);
         }
-
     }
 }

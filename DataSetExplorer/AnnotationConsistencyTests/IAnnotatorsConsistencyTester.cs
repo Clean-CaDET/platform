@@ -8,7 +8,6 @@ namespace DataSetExplorer.AnnotationConsistencyTests
     {
         public void TestConsistencyBetweenAnnotators(int severity, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells);
 
-        public void TestConsistencyOfSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells);
-        
+        public void TestConsistencyOfSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells); 
     }
 }
