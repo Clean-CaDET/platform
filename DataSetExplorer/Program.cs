@@ -10,7 +10,6 @@ using CodeModel;
 using CodeModel.CaDETModel;
 using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.AnnotationConsistencyTests;
-using static DataSetExplorer.AnnotationConsistencyTests.ManovaTest;
 
 namespace DataSetExplorer
 {
@@ -47,47 +46,22 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
         private static void CheckMetricsSignificanceInAnnotationsForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
-            var anovaTest = new AnovaTest();
-
-            foreach (var codeSmellGroup in instancesGroupedBySmells)
-            {
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
-                var instances = codeSmellGroup.ToList();
-
-                foreach (var metric in metrics)
-                {
-                    anovaTest.RunTest(annotatorId, instances, codeSmell, metric);
-                }
-            }
+            IMetricsSignificanceTester tester = new AnovaTest();
+            tester.Test(annotatorId, instancesGroupedBySmells);
         }
 
         private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
-            var manovaTest = new ManovaTest();
-            manovaTest.Run(instancesGroupedBySmells, severity, new TestDelegate(manovaTest.TestForMultipleAnnotators));
-        }
-
-        private static ListDictionary GetAnnotatedProjects()
-        {
-            ListDictionary projects = new ListDictionary(); // local repository path, annotations folder path
-            projects.Add("D:/ccadet/annotations/repos/BurningKnight", "D:/ccadet/annotations/annotated/BurningKnight");
-            projects.Add("D:/ccadet/annotations/repos/Core2D", "D:/ccadet/annotations/annotated/Core2d");
-            projects.Add("D:/ccadet/annotations/repos/jellyfin", "D:/ccadet/annotations/annotated/Jellyfin");
-            projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
-            projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
-            projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
-            projects.Add("D:/ccadet/annotations/repos/MonoGame", "D:/ccadet/annotations/annotated/MonoGame");
-            projects.Add("D:/ccadet/annotations/repos/Osu", "D:/ccadet/annotations/annotated/Osu");
-            return projects;
+            IAnnotatorsConsistencyTester tester = new ManovaTest();
+            tester.TestConsistencyBetweenAnnotators(severity, instancesGroupedBySmells);
         }
 
         private static void CheckAnnotationConsistencyForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
-            var manovaTest = new ManovaTest();
-            manovaTest.Run(instancesGroupedBySmells, annotatorId, new TestDelegate(manovaTest.TestForSingleAnnotator));
+            IAnnotatorsConsistencyTester tester = new ManovaTest();
+            tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
         }
 
         private static void ExportAnnotatedDataSet()
@@ -186,6 +160,20 @@ https://github.com/dotnet/machinelearning/tree/44660297b4238a4f3e843bd071f5e8b21
             var builder = new CaDETToDataSetBuilder(projectAndCommitUrl, projectPath);
             return builder.IncludeMembersWith(10).IncludeClassesWith(3, 5).RandomizeClassSelection().RandomizeMemberSelection()
               .SetProjectExtractionPercentile(10).Build();
+        }
+
+        private static ListDictionary GetAnnotatedProjects()
+        {
+            ListDictionary projects = new ListDictionary(); // local repository path, annotations folder path
+            projects.Add("D:/ccadet/annotations/repos/BurningKnight", "D:/ccadet/annotations/annotated/BurningKnight");
+            projects.Add("D:/ccadet/annotations/repos/Core2D", "D:/ccadet/annotations/annotated/Core2d");
+            projects.Add("D:/ccadet/annotations/repos/jellyfin", "D:/ccadet/annotations/annotated/Jellyfin");
+            projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
+            projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
+            projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
+            projects.Add("D:/ccadet/annotations/repos/MonoGame", "D:/ccadet/annotations/annotated/MonoGame");
+            projects.Add("D:/ccadet/annotations/repos/Osu", "D:/ccadet/annotations/annotated/Osu");
+            return projects;
         }
     }
 }
