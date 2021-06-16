@@ -1,7 +1,7 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
-using System;
+using FluentResults;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,31 +15,33 @@ namespace DataSetExplorer.AnnotationConsistencyTests
         private readonly string _pythonPath = "../../../AnnotationConsistencyTests/venv/Scripts/python.exe";
         private string _annotatedInstancesFile;
         private string _dependentVariable;
-
         private string _independentVariable;
         private readonly string _annotatedInstancesFolderPath = "D:/ccadet/annotations/sanity_check/anova/Output/";
 
-        public void Test(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, Dictionary<string, string>>> Test(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
         {
+            var results = new Dictionary<string, Dictionary<string, string>>();
             foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
                 var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                Console.Write(codeSmell);
                 var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
                 var instances = codeSmellGroup.ToList();
-                RunTest(annotatorId, instances, codeSmell, metrics);
+                results[codeSmell] = TestCodeSmell(annotatorId, instances, codeSmell, metrics);
             }
+            return Result.Ok(results);
         }
 
-        public void RunTest(int annotatorId, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
+        private Dictionary<string, string> TestCodeSmell(int annotatorId, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
         {
+            var results = new Dictionary<string, string>();
             string exportedAnnotationsFile = ExportAnnotations(annotatorId, instances, codeSmell);
             foreach (var metric in metrics)
             {
-                Console.Write("Metric " + metric);
                 SetupTestArguments(exportedAnnotationsFile, metric, "Annotation");
-                StartProcess();
+                var result = StartProcess();
+                results[metric.ToString()] = result.Equals("") ? "Unable to calculate test result." : result;
             }
+            return results;
         }
 
         private string ExportAnnotations(int annotatorId, List<DataSetInstance> instances, string codeSmell)
@@ -57,7 +59,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             _independentVariable = independentVariable;
         }
 
-        private void StartProcess()
+        private string StartProcess()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -66,10 +68,9 @@ namespace DataSetExplorer.AnnotationConsistencyTests
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
-            using Process process = Process.Start(startInfo);
-            using StreamReader reader = process.StandardOutput;
-            string result = reader.ReadToEnd();
-            Console.Write(result);
+            Process process = Process.Start(startInfo);
+            StreamReader reader = process.StandardOutput;
+            return reader.ReadToEnd();
         }
     }
 }

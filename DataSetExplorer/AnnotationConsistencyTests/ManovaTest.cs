@@ -1,7 +1,7 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
-using System;
+using FluentResults;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -20,29 +20,31 @@ namespace DataSetExplorer.AnnotationConsistencyTests
 
         private delegate void PrepareTestDelegate(int id, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics);
 
-        public void TestConsistencyBetweenAnnotators(int severity, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, string>> TestConsistencyBetweenAnnotators(int severity, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
         {
-            RunTest(severity, instancesGroupedBySmells, PrepareDataForBetweenAnnotators);
+            return Test(severity, instancesGroupedBySmells, PrepareDataForBetweenAnnotators);
         }
 
-        public void TestConsistencyOfSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, string>> TestConsistencyOfSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
         {
-            RunTest(annotatorId, instancesGroupedBySmells, PrepareDataForSingleAnnotator);
+            return Test(annotatorId, instancesGroupedBySmells, PrepareDataForSingleAnnotator);
         }
 
-        private void RunTest(int id, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells,
+        private Result<Dictionary<string, string>> Test(int id, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells,
              PrepareTestDelegate prepareTest)
         {
+            var results = new Dictionary<string, string>();
             foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
                 var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                Console.Write(codeSmell);
                 var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
                 var instances = codeSmellGroup.ToList();
 
                 prepareTest(id, instances, codeSmell, metrics);
-                StartProcess();
+                var result = StartProcess();
+                results[codeSmell] = result.Equals("") ? "Unable to calculate test result." : result;
             }
+            return Result.Ok(results);
         }
 
         private void PrepareDataForBetweenAnnotators(int severity, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
@@ -79,7 +81,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             _independentVariable = independentVariable;
         }
 
-        private void StartProcess()
+        private string StartProcess()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -88,10 +90,9 @@ namespace DataSetExplorer.AnnotationConsistencyTests
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
-            using Process process = Process.Start(startInfo);
-            using StreamReader reader = process.StandardOutput;
-            string result = reader.ReadToEnd();
-            Console.Write(result);
+            Process process = Process.Start(startInfo);
+            StreamReader reader = process.StandardOutput;
+            return reader.ReadToEnd();
         }
     }
 }

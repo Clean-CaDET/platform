@@ -1,7 +1,5 @@
-﻿using DataSetExplorer.DataSetBuilder;
-using DataSetExplorer.DataSetBuilder.Model;
+﻿using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
-using DataSetExplorer.DataSetSerializer.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -33,21 +31,28 @@ namespace DataSetExplorer
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
             IMetricsSignificanceTester tester = new AnovaTest();
-            tester.Test(annotatorId, instancesGroupedBySmells);
+            var results = tester.Test(annotatorId, instancesGroupedBySmells);
+            foreach (var result in results.Value)
+            {
+                Console.WriteLine(result.Key);
+                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
+            }
         }
 
         private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
             IAnnotatorsConsistencyTester tester = new ManovaTest();
-            tester.TestConsistencyBetweenAnnotators(severity, instancesGroupedBySmells);
+            var results = tester.TestConsistencyBetweenAnnotators(severity, instancesGroupedBySmells);
+            results.Value.ToList().ForEach(result => Console.WriteLine(result.Key + "\n" + result.Value));
         }
 
         private static void CheckAnnotationConsistencyForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
             IAnnotatorsConsistencyTester tester = new ManovaTest();
-            tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
+            var results = tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
+            results.Value.ToList().ForEach(result => Console.Write(result.Key + "\n" + result.Value));
         }
 
         private static void ExportAnnotatedDataSet()

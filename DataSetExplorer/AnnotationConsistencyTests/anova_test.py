@@ -11,5 +11,4 @@ if __name__ == '__main__':
     independent_variable = sys.argv[3]
     lm = ols(dependent_variable + '~' + independent_variable, data=df).fit()
     table = anova_lm(lm)
-    print("METRIC " + dependent_variable)
     print(table)
