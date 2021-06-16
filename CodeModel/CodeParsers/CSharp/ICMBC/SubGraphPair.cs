@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,7 +68,8 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
         /// </summary>
         public static List<SubGraphPair> FindValidSubGraphPairs(List<Edge> edgesInGraph, int[,] methodFieldIndexMapping)
         {
-            var cutEdgeGroupCandidates = GetCutEdgeGroupCandidates(edgesInGraph);
+            var invalidEdgeGroups = GetInvalidEdgeGroups(edgesInGraph, methodFieldIndexMapping);
+            var cutEdgeGroupCandidates = GetCutEdgeGroupCandidates(edgesInGraph, invalidEdgeGroups);
             var subGraphPairs = new List<SubGraphPair>();
             foreach (var edgeGroup in cutEdgeGroupCandidates)
             {
@@ -82,11 +83,28 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
             return subGraphPairs;
         }
 
+        private static IEnumerable<HashSet<Edge>> GetInvalidEdgeGroups(List<Edge> edgesInGraph, int[,] methodFieldIndexMapping)
+        {
+            var retVal = new List<HashSet<Edge>>();
+            int biggerDimension = methodFieldIndexMapping.GetLength(0) > methodFieldIndexMapping.GetLength(1)
+                ? methodFieldIndexMapping.GetLength(0)
+                : methodFieldIndexMapping.GetLength(1);
+            for (int i = 0; i < biggerDimension; i++)
+            {
+                var edgesInARow = edgesInGraph.Where(e => e.Method == i).ToHashSet();
+                if (edgesInARow.Count == 0) continue;
+                retVal.Add(edgesInARow);
+                var edgesInAColumn = edgesInGraph.Where(e => e.Field == i).ToHashSet();
+                if (edgesInAColumn.Count == 0) continue;
+                retVal.Add(edgesInAColumn);
+            }
+
+            return retVal;
+        }
+
         private static SubGraphPair CreateValidSubGraphPair(HashSet<Edge> edgeGroup, int[,] methodFieldIndexMapping)
         {
             var cutMatrix = RemoveEdgesFromMatrix(edgeGroup, methodFieldIndexMapping);
-            if (CheckIfMethodsInvokeAtLeastOneField(cutMatrix)) return null;
-            if (CheckIfFieldsAreInvokedByAtLeastOneMethod(cutMatrix)) return null;
 
             // TODO strategy
 
@@ -98,56 +116,20 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
             return subGraphPair;
         }
 
-        private static IEnumerable<HashSet<Edge>> GetCutEdgeGroupCandidates(List<Edge> edgesInGraph)
+        private static IEnumerable<HashSet<Edge>> GetCutEdgeGroupCandidates(List<Edge> edgesInGraph, IEnumerable<HashSet<Edge>> invalidEdgeGroups)
         {
             var data = edgesInGraph.ToArray();
             if (data.Length == 0) return new List<HashSet<Edge>>(); // TODO
 
-            return Enumerable
+            var cutEdgeCombinations = Enumerable
                 .Range(1, (1 << data.Length) - 2)
                 .Select(index => data
                     .Where((v, i) => (index & (1 << i)) != 0)
                     .ToHashSet());
-        }
 
-        private static bool CheckIfMethodsInvokeAtLeastOneField(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                bool isEmpty = true;
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    if (matrix[i, j] != 0)
-                    {
-                        isEmpty = false;
-                        break;
-                    }
-                }
-
-                if (isEmpty) return true;
-            }
-
-            return false;
-        }
-
-        private static bool CheckIfFieldsAreInvokedByAtLeastOneMethod(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(1); i++)
-            {
-                bool isEmpty = true;
-                for (int j = 0; j < matrix.GetLength(0); j++)
-                {
-                    if (matrix[j, i] != 0)
-                    {
-                        isEmpty = false;
-                        break;
-                    }
-                }
-
-                if (isEmpty) return true;
-            }
-
-            return false;
+            return cutEdgeCombinations.Where(edgeGroup =>
+                !invalidEdgeGroups.Any(edgeGroup.IsSupersetOf)
+            );
         }
 
         private static int[,] RemoveEdgesFromMatrix(IEnumerable<Edge> edges, int[,] methodFieldAccessMapping)
@@ -162,6 +144,5 @@ namespace CodeModel.CodeParsers.CSharp.ICMBC
         {
             return CutEdges.Count;
         }
-
     }
 }
