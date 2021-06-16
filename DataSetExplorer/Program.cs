@@ -24,14 +24,27 @@ namespace DataSetExplorer
             //ExportAnnotatedDataSet();
             //CheckAnnotationConsistencyForAnnotator(1);
             //CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(1);
-            CheckMetricsSignificanceInAnnotationsForAnnotator(1);
+            //CheckMetricsSignificanceInAnnotationsForAnnotator(1);
+            CheckMetricsSignificanceBetweenAnnotators();
+        }
+
+        private static void CheckMetricsSignificanceBetweenAnnotators()
+        {
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(null);
+            IMetricsSignificanceTester tester = new AnovaTest();
+            var results = tester.TestBetweenAnnotators(instancesGroupedBySmells);
+            foreach (var result in results.Value)
+            {
+                Console.WriteLine(result.Key);
+                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
+            }
         }
 
         private static void CheckMetricsSignificanceInAnnotationsForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
             IMetricsSignificanceTester tester = new AnovaTest();
-            var results = tester.Test(annotatorId, instancesGroupedBySmells);
+            var results = tester.TestForSingleAnnotator(annotatorId, instancesGroupedBySmells);
             foreach (var result in results.Value)
             {
                 Console.WriteLine(result.Key);

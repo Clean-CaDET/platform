@@ -41,8 +41,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
                 var instances = codeSmellGroup.ToList();
 
                 prepareTest(id, instances, codeSmell, metrics);
-                var result = StartProcess();
-                results[codeSmell] = result.Equals("") ? "Unable to calculate test result." : result;
+                results[codeSmell] = StartProcess();
             }
             return Result.Ok(results);
         }
@@ -92,7 +91,8 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             };
             Process process = Process.Start(startInfo);
             StreamReader reader = process.StandardOutput;
-            return reader.ReadToEnd();
+            var result = reader.ReadToEnd();
+            return result.Equals("") ? "Unable to calculate test result." : result;
         }
     }
 }
