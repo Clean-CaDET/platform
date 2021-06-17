@@ -624,10 +624,9 @@ namespace CodeModel.Tests.DataFactories
             };
         }
 
-        public IEnumerable<string> GetCohesionClasses()
+        public string GetCohesionClasses()
         {
-            return new[]
-            {
+            return
                 @"
             using System.Collections.Generic;
             namespace DoctorApp.Model.Data.DateR
@@ -648,43 +647,7 @@ namespace CodeModel.Tests.DataFactories
                         return !(From > timeSpan.To || To < timeSpan.From);
                     }
                 }
-            }",
-                @"
-            using System.Collections.Generic;
-            using DoctorApp.Model.Data.DateR;
-            namespace DoctorApp.Model.Data
-            {
-                public class Doctor
-                {
-                    public string Test;
-                    public string Name { get; set; }
-                    public string Email { get; set; }
-                    public List<DateRange> HolidayDates { get; set; }
-
-                    public Doctor(string name, string email)
-                    {
-                        Name = name;
-                        Email = email;
-                        HolidayDates = new List<DateRange>();
-                    }
-
-                    public void ProcessTest()
-                    {
-                        Test = null;
-                    }
-
-                    public string GetTwoNames()
-                    {
-                        return Name + Name;
-                    }
-
-                    public string GetThreeEmails()
-                    {
-                        return Email + Email + Email;
-                    }
-                }
-            }"
-            };
+            }";
         }
 
         public IEnumerable<string> GetClassesWithHierarchy()
@@ -1077,5 +1040,11 @@ namespace CodeModel.Tests.DataFactories
                 15
             }
         };
+
+        public IEnumerable<string> readCodeFromFile(string path)
+        {
+            string text = System.IO.File.ReadAllText(path);
+            return new[] { text };
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace CodeModel.Tests.Unit
 {
     public class MetricCalculationTests
     {
-        private readonly CodeFactory _testDataFactory = new CodeFactory();
+        private static readonly CodeFactory _testDataFactory = new CodeFactory();
 
         [Fact]
         public void Calculates_lines_of_code_for_CSharp_class_elements()
@@ -69,20 +69,44 @@ namespace CodeModel.Tests.Unit
             doctor.Metrics[CaDETMetric.LCOM].ShouldBe(0.75);
         }
 
-        [Fact]
-        public void Calculates_lack_of_cohesion_3()
+        //[Fact]
+        //public void Calculates_lack_of_cohesion_3()
+        //{
+        //    CodeModelFactory factory = new CodeModelFactory();
+
+        //    List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
+
+        //    var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+        //    var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+        //    dateRange.Metrics[CaDETMetric.LCOM3].ShouldBe(0);
+        //    doctor.Metrics[CaDETMetric.LCOM3].ShouldBe(1.125);
+        //}
+
+        [Theory]
+        [MemberData(nameof(ChallengeTest))]
+        public void Calculates_lack_of_cohesion_3(IEnumerable<string> classCode, string className, double lcom3Metric)
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(classCode).Classes;
 
-            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
-            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
-            dateRange.Metrics[CaDETMetric.LCOM3].ShouldBe(0);
-            doctor.Metrics[CaDETMetric.LCOM3].ShouldBe(1.125);
+            var classToEvaluate = classes.Find(c => c.Name.Equals(className));
+            classToEvaluate.Metrics[CaDETMetric.LCOM3].ShouldBe(lcom3Metric);
         }
 
-        [Fact]
+        public static IEnumerable<object[]> ChallengeTest =>
+
+            new List<object[]>
+            {
+                new object[]
+                {
+                    _testDataFactory.readCodeFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    "Level",
+                    0.8
+                }
+            };
+
+    [Fact]
         public void Calculates_lack_of_cohesion_4()
         {
             CodeModelFactory factory = new CodeModelFactory();
