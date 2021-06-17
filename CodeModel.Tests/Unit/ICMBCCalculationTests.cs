@@ -1,11 +1,8 @@
-﻿using System;
+﻿using CodeModel.CaDETModel.CodeItems;
+using Shouldly;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CodeModel.CaDETModel.CodeItems;
-using Shouldly;
 using Xunit;
 
 namespace CodeModel.Tests.Unit
@@ -14,44 +11,85 @@ namespace CodeModel.Tests.Unit
     {
         [Theory]
         [MemberData(nameof(GetICMBCClasses))]
-        public void Test_ICMBC_cohesion_metric(string projectPath, List<double> expectedValue)
+        public void Test_ICMBC_cohesion_metric(string classPath, double expectedValue)
         {
-            string[] sourceCodes = GetCode(projectPath);
-            var project = new CodeModelFactory().CreateProject(sourceCodes);
+            string[] classCode = GetCode(classPath);
+            var project = new CodeModelFactory().CreateProject(classCode);
 
-            var actualValues = project.Classes.Select(c => c.Metrics[CaDETMetric.ICBMC]);
+            var actualValue = project.Classes[0].Metrics[CaDETMetric.ICBMC];
 
-            actualValues.Count().ShouldBe(expectedValue.Count);
-            actualValues.All(expectedValue.Contains).ShouldBeTrue();
+            actualValue.ShouldBe(expectedValue);
         }
 
         public static IEnumerable<object[]> GetICMBCClasses() => new List<object[]>()
         {
             new object[]
             {
-                "CohesionClasses",
-                new List<double>
-                {
-                    1,
-                    0,
-                    0.25,
-                    0.33,
-                    0.16,
-                    0.33,
-                    0.42,
-                    0.05,
-                    0.1,
-                    0.33,
-                    0.22,
-                    1
-                }
+                @"CohesionClasses\HighestCohesion.txt",
+                1
+            },
+            new object[]
+            {
+                @"CohesionClasses\LowestCohesion.txt",
+                0
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass01.txt",
+                0.25
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass02.txt",
+                0.33
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass1.txt",
+                0.16
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass2.txt",
+                0.33
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass3.txt",
+                0.42
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass4.txt",
+                0.05
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass5.txt",
+                0.1
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass6.txt",
+                0.33
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass7.txt",
+                0.22
+            },
+            new object[]
+            {
+                @"CohesionClasses\TestClass8.txt",
+                1
             }
         };
 
         private static string[] GetCode(string projectPath)
         {
-            var testDataFiles = Directory.GetFiles("../../../TestData/" + projectPath);
-            return testDataFiles.Select(File.ReadAllText).ToArray();
-        }
+            string classCode = File.ReadAllText("../../../TestData/" + projectPath);
+            return new[] {classCode};
     }
+}
+
 }
