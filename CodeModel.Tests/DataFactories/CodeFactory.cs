@@ -4,7 +4,6 @@ namespace CodeModel.Tests.DataFactories
 {
     public class CodeFactory
     {
-
         public IEnumerable<string> readClassFromFile(string path)
         {
             return new[] { System.IO.File.ReadAllText(path) };

@@ -37,7 +37,6 @@ namespace CodeModel.Tests.Unit
             classToEvaluate.Metrics[CaDETMetric.TCC].ShouldBe(tccMetric);
         }
 
-
         [Theory]
         [MemberData(nameof(LCOM3Test))]
         public void Calculates_lack_of_cohesion_3(IEnumerable<string> classCode, string className, double lcom3Metric)
