@@ -120,7 +120,7 @@ namespace CodeModel.CodeParsers.CSharp
             var methods = parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)).ToList();
 
             var numberOfMethodsThatAccessOwnFieldsOrMethods = CountNumberOfMethodsThatAccessToOwnFieldsOrMethods(parsedClass, methods);
-            var numberOfMethodsThatShareAccessToFieldOrAccessor = CountMethodPairsThatShareAccessToAFieldOrAccessor(methods);
+            var numberOfMethodsThatShareAccessToFieldOrAccessor = CountNumberOfMethodsThatShareAccessToAFieldOrAccessor(methods);
 
             return numberOfMethodsThatAccessOwnFieldsOrMethods - numberOfMethodsThatShareAccessToFieldOrAccessor;
         }
@@ -138,6 +138,28 @@ namespace CodeModel.CodeParsers.CSharp
                 }
             }
             return counter;
+        }
+
+        private static int CountNumberOfMethodsThatShareAccessToAFieldOrAccessor(List<CaDETMember> classMethods)
+        {
+            HashSet<CaDETMember> methodsThatShareAccess = new HashSet<CaDETMember>();
+
+            for (var i = 0; i < classMethods.Count - 1; i++)
+            {
+                for (var j = i + 1; j < classMethods.Count; j++)
+                {
+                    var firstMethod = classMethods[i];
+                    var secondMethod = classMethods[j];
+
+                    if (firstMethod.GetAccessedOwnFields().Intersect(secondMethod.GetAccessedOwnFields()).Any()
+                        || firstMethod.GetAccessedOwnAccessors().Intersect(secondMethod.GetAccessedOwnAccessors()).Any())
+                    {
+                        methodsThatShareAccess.Add(firstMethod);
+                        methodsThatShareAccess.Add(secondMethod);
+                    }
+                }
+            }
+            return methodsThatShareAccess.Count;
         }
 
         /// <summary>

@@ -57,85 +57,6 @@ namespace CodeModel.Tests.Unit
         }
 
         [Fact]
-        public void Calculates_lack_of_cohesion()
-        {
-            CodeModelFactory factory = new CodeModelFactory();
-
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
-
-            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
-            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
-            dateRange.Metrics[CaDETMetric.LCOM].ShouldBe(0);
-            doctor.Metrics[CaDETMetric.LCOM].ShouldBe(0.75);
-        }
-
-        //[Fact]
-        //public void Calculates_lack_of_cohesion_3()
-        //{
-        //    CodeModelFactory factory = new CodeModelFactory();
-
-        //    List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
-
-        //    var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
-        //    var doctor = classes.Find(c => c.Name.Equals("Doctor"));
-        //    dateRange.Metrics[CaDETMetric.LCOM3].ShouldBe(0);
-        //    doctor.Metrics[CaDETMetric.LCOM3].ShouldBe(1.125);
-        //}
-
-        [Theory]
-        [MemberData(nameof(ChallengeTest))]
-        public void Calculates_lack_of_cohesion_3(IEnumerable<string> classCode, string className, double lcom3Metric)
-        {
-            CodeModelFactory factory = new CodeModelFactory();
-
-            List<CaDETClass> classes = factory.CreateProject(classCode).Classes;
-
-            var classToEvaluate = classes.Find(c => c.Name.Equals(className));
-            classToEvaluate.Metrics[CaDETMetric.LCOM3].ShouldBe(lcom3Metric);
-        }
-
-        public static IEnumerable<object[]> ChallengeTest =>
-
-            new List<object[]>
-            {
-                new object[]
-                {
-                    _testDataFactory.readCodeFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
-                    "Level",
-                    0.8
-                }
-            };
-
-    [Fact]
-        public void Calculates_lack_of_cohesion_4()
-        {
-            CodeModelFactory factory = new CodeModelFactory();
-
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCohesionClasses()).Classes;
-
-            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
-            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
-            dateRange.Metrics[CaDETMetric.LCOM4].ShouldBe(1);
-            doctor.Metrics[CaDETMetric.LCOM4].ShouldBe(3);
-        }
-
-        [Fact]
-        public void Calculates_tight_class_cohesion()
-        {
-            CodeModelFactory factory = new CodeModelFactory();
-
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetTCCMultipleClassTexts()).Classes;
-
-            var class6 = classes.Find(c => c.Name.Equals("Class6"));
-            var class7 = classes.Find(c => c.Name.Equals("Class7"));
-            var class8 = classes.Find(c => c.Name.Equals("Class8"));
-
-            class6.Metrics[CaDETMetric.TCC].ShouldBe(0.67);
-            class7.Metrics[CaDETMetric.TCC].ShouldBe(0.5);
-            class8.Metrics[CaDETMetric.TCC].ShouldBe(0.5);
-        }
-
-        [Fact]
         public void Calculates_number_of_return_statements_in_class()
         {
             CodeModelFactory factory = new CodeModelFactory();
@@ -228,37 +149,109 @@ namespace CodeModel.Tests.Unit
             doctorService.Metrics[CaDETMetric.CBO].ShouldBe(2);
         }
 
-        [Fact]
-        public void Calculates_number_of_hierarchy_levels()
+        [Theory]
+        [MemberData(nameof(DITTest))]
+        public void Calculates_number_of_hierarchy_levels(IEnumerable<string> classCode, string className, double ditMetric)
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetClassesWithHierarchy()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(classCode).Classes;
 
-            var entity = classes.Find(c => c.Name.Equals("Entity"));
-            var employee = classes.Find(c => c.Name.Equals("Employee"));
-            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
-
-            entity.Metrics[CaDETMetric.DIT].ShouldBe(0);
-            employee.Metrics[CaDETMetric.DIT].ShouldBe(1);
-            doctor.Metrics[CaDETMetric.DIT].ShouldBe(2);
+            var classToEvaluate = classes.Find(c => c.Name.Equals(className));
+            classToEvaluate.Metrics[CaDETMetric.DIT].ShouldBe(ditMetric);
         }
 
-        [Fact]
-        public void Calculates_class_coupling()
+        public static IEnumerable<object[]> DITTest =>
+
+            new List<object[]>
+            {
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    "Level",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    "AsepriteReader",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    "AsepriteFile",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    "AsepriteWriter",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    "AudioWriter",
+                    0
+                }
+            };
+
+        [Theory]
+        [MemberData(nameof(DCCTest))]
+        public void Calculates_class_coupling(IEnumerable<string> classCode, string className, double dccMetric)
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(_testDataFactory.GetCouplingClasses()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(classCode).Classes;
 
-            var test1 = classes.Find(c => c.Name.Equals("Test1"));
-            var test2 = classes.Find(c => c.Name.Equals("Test2"));
-            var test3 = classes.Find(c => c.Name.Equals("Test3"));
-
-            test1.Metrics[CaDETMetric.DCC].ShouldBe(0);
-            test2.Metrics[CaDETMetric.DCC].ShouldBe(1);
-            test3.Metrics[CaDETMetric.DCC].ShouldBe(2);
+            var classToEvaluate = classes.Find(c => c.Name.Equals(className));
+            classToEvaluate.Metrics[CaDETMetric.DCC].ShouldBe(dccMetric);
         }
+
+        public static IEnumerable<object[]> DCCTest =>
+
+            new List<object[]>
+            {
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    "Level",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    "AsepriteReader",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    "AsepriteFile",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    "AsepriteWriter",
+                    0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    "AudioWriter",
+                    0
+                }
+            };
 
         [Fact]
         public void Calculates_invoked_methods_in_a_class()

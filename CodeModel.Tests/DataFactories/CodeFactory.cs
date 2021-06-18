@@ -4,6 +4,12 @@ namespace CodeModel.Tests.DataFactories
 {
     public class CodeFactory
     {
+
+        public IEnumerable<string> readClassFromFile(string path)
+        {
+            return new[] { System.IO.File.ReadAllText(path) };
+        }
+
         public IEnumerable<string> GetEffectiveLinesOfCodeTest()
         {
             return new[]
@@ -1040,11 +1046,5 @@ namespace CodeModel.Tests.DataFactories
                 15
             }
         };
-
-        public IEnumerable<string> readCodeFromFile(string path)
-        {
-            string text = System.IO.File.ReadAllText(path);
-            return new[] { text };
-        }
     }
 }
