@@ -1,0 +1,4 @@
+.dockerignore
+migration.sh
+build.sh
+sql

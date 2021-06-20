@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  smart-tutor:
+    image: cleancadet/smart-tutor:${SMART_TUTOR_VERSION-latest}
+    networks:
+      - application
+      - persistence
+    environment:
+      STAGE: ${SMART_TUTOR_STAGE}
+      DATABASE_HOST: ${SMART_TUTOR_DATABASE_HOST}
+      DATABASE_PORT: ${SMART_TUTOR_DATABASE_PORT}
+      DATABASE_SCHEMA: ${SMART_TUTOR_DATABASE_SCHEMA}
+      DATABASE_USERNAME: ${SMART_TUTOR_DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${SMART_TUTOR_DATABASE_PASSWORD}
+    deploy:
+      replicas: 4
+      update_config:
+        parallelism: 2
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+
+  keycloak:
+    image: jboss/keycloak:${KEYCLOAK_VERSION-13.0.1}
+    networks:
+      - application
+      - persistence
+    environment:
+      PROXY_ADDRESS_FORWARDING: ${PROXY_ADDRESS_FORWARDING}
+      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_FRONTEND_URL}
+      DB_VENDOR: ${KEYCLOAK_DATABASE_VENDOR}
+      DB_ADDR: ${KEYCLOAK_DATABASE_ADDR}
+      DB_DATABASE: ${KEYCLOAK_DATABASE_SCHEMA}
+      DB_USER_FILE: /run/secrets/keycloak-database-user
+      DB_PASSWORD_FILE: /run/secrets/keycloak-database-password
+      KEYCLOAK_USER_FILE: /run/secrets/keycloak-user
+      KEYCLOAK_PASSWORD_FILE: /run/secrets/keycloak-password
+    secrets:
+      - source: keycloak-database-password
+        target: keycloak-database-password
+      - source: keycloak-database-user
+        target: keycloak-database-user
+      - source: keycloak-password
+        target: keycloak-password
+      - source: keycloak-user
+        target: keycloak-user
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+
+secrets:
+  keycloak-database-password:
+    name: clean_cadet_keycloak_database_password_${STAGE-dev}
+    external: true
+  keycloak-database-user:
+    name: clean_cadet_keycloak_database_user_${STAGE-dev}
+    external: true
+  keycloak-password:
+    name: clean_cadet_keycloak_password_${STAGE-dev}
+    external: true
+  keycloak-user:
+    name: clean_cadet_keycloak_user_${STAGE-dev}
+    external: true
+
+networks:
+  application:
+    name: clean_cadet_application_${STAGE-dev}
+    driver: overlay
+    attachable: true
+  persistence:
+    name: clean_cadet_persistence_${STAGE-dev}
+    driver: overlay
+    external: true
