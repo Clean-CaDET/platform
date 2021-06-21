@@ -9,6 +9,6 @@ namespace DataSetExplorer.AnnotationConsistencyTests
     {
         public Result<Dictionary<string, Dictionary<string, string>>> TestForSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells);
 
-        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells);
+        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(int severity, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells);
     }
 }

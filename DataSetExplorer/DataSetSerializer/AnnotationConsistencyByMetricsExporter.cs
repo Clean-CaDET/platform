@@ -11,7 +11,6 @@ namespace DataSetExplorer.DataSetSerializer
     {
         private readonly string _singleAnnotatorTemplatePath = "../../../DataSetSerializer/Template/Single_Annotator_Consistency_Template.xlsx";
         private readonly string _multipleAnnotatorsTemplatePath = "../../../DataSetSerializer/Template/Consistency_Between_Annotators_Template.xlsx";
-        private readonly string _metricsSignificanceBetweenAnnotatorsTemplatePath = "../../../DataSetSerializer/Template/Metrics_Significance_Between_Annotators_Template.xlsx";
         private readonly string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;
@@ -34,13 +33,6 @@ namespace DataSetExplorer.DataSetSerializer
         {
             InitializeExcelSheet(_multipleAnnotatorsTemplatePath);
             PopulateTemplateForSeverity(severity, instances);
-            Serialize(fileName);
-        }
-
-        public void ExportAllAnnotations(List<DataSetInstance> instances, string fileName)
-        {
-            InitializeExcelSheet(_metricsSignificanceBetweenAnnotatorsTemplatePath);
-            PopulateTemplateWithAllAnnotations(instances);
             Serialize(fileName);
         }
 
@@ -74,21 +66,6 @@ namespace DataSetExplorer.DataSetSerializer
                         PopulateMetrics(instance.MetricFeatures, 2 + j, 2);
                         j++;
                     }
-                }
-            }
-        }
-
-        private void PopulateTemplateWithAllAnnotations(List<DataSetInstance> instances)
-        {
-            var j = 0;
-            foreach (var instance in instances)
-            {
-                foreach (var annotation in instance.Annotations)
-                {
-                    _sheet.Cells[2 + j, 1].Value = annotation.Annotator.Id;
-                    _sheet.Cells[2 + j, 2].Value = annotation.Severity;
-                    PopulateMetrics(instance.MetricFeatures, 2 + j, 3);
-                    j++;
                 }
             }
         }

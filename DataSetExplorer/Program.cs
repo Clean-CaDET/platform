@@ -25,14 +25,14 @@ namespace DataSetExplorer
             //CheckAnnotationConsistencyForAnnotator(1);
             //CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(1);
             //CheckMetricsSignificanceInAnnotationsForAnnotator(1);
-            CheckMetricsSignificanceBetweenAnnotators();
+            CheckMetricsSignificanceBetweenAnnotatorsForSeverity(0);
         }
 
-        private static void CheckMetricsSignificanceBetweenAnnotators()
+        private static void CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int severity)
         {
-            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(null);
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
             IMetricsSignificanceTester tester = new AnovaTest();
-            var results = tester.TestBetweenAnnotators(instancesGroupedBySmells);
+            var results = tester.TestBetweenAnnotators(severity, instancesGroupedBySmells);
             foreach (var result in results.Value)
             {
                 Console.WriteLine(result.Key);
