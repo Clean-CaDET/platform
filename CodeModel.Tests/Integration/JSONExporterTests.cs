@@ -39,6 +39,18 @@ namespace CodeModel.Tests.Integration
                 TestDataFactory.ReadClassFromFile(
                     "../../../DataFactories/TestClasses/JSONExporter/RegionCaptureForm.txt"),
                 "C:\\CCaDET-Tests\\CodeModel\\JSONExporter\\RegionCaptureForm.json"
+            },
+            new object[]
+            {
+                TestDataFactory.ReadClassFromFile(
+                    "../../../DataFactories/TestClasses/JSONExporter/ScreenRecorder.txt"),
+                "C:\\CCaDET-Tests\\CodeModel\\JSONExporter\\ScreenRecorder.json"
+            },
+            new object[]
+            {
+                TestDataFactory.ReadClassFromFile(
+                    "../../../DataFactories/TestClasses/JSONExporter/BoxDecoratorViewModel.txt"),
+                "C:\\CCaDET-Tests\\CodeModel\\JSONExporter\\BoxDecoratorViewModel.json"
             }
         };
     }
