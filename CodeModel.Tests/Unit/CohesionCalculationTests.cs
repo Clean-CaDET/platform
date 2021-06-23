@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using CodeModel.CaDETModel.CodeItems;
+﻿using CodeModel.CaDETModel.CodeItems;
 using CodeModel.Tests.DataFactories;
 using Shouldly;
+using System.Collections.Generic;
 using Xunit;
 
 namespace CodeModel.Tests.Unit
 {
-    public class CohessionCalculationTests
+    public class CohesionCalculationTests
     {
         private static readonly CodeFactory _testDataFactory = new CodeFactory();
 
@@ -67,35 +64,35 @@ namespace CodeModel.Tests.Unit
             {
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
                     "Level",
                     0.928
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
                     "AsepriteReader",
                     0
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
                     "AsepriteFile",
                     0.889
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
                     "AsepriteWriter",
                     -1
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
                     "AudioWriter",
                     -1
                 }
@@ -107,35 +104,35 @@ namespace CodeModel.Tests.Unit
             {
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
                     "Level",
                     0.17
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
                     "AsepriteReader",
                     -1
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
                     "AsepriteFile",
                     -1
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
                     "AsepriteWriter",
                     0
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
                     "AudioWriter",
                     0
                 }
@@ -147,35 +144,35 @@ namespace CodeModel.Tests.Unit
             {
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
                     "Level",
                     0.941
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
                     "AsepriteReader",
                     0
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
                     "AsepriteFile",
                     0
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
                     "AsepriteWriter",
                     0
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
                     "AudioWriter",
                     0
                 }
@@ -187,35 +184,35 @@ namespace CodeModel.Tests.Unit
             {
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
                     "Level",
                     9
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
                     "AsepriteReader",
                     1
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
                     "AsepriteFile",
                     1
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
                     "AsepriteWriter",
                     0
                 },
 
                 new object[]
                 {
-                    _testDataFactory.readClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
                     "AudioWriter",
                     0
                 }
