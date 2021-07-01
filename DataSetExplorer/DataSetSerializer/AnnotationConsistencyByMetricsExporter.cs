@@ -1,7 +1,6 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.DataSetBuilder.Model;
 using OfficeOpenXml;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,20 +20,20 @@ namespace DataSetExplorer.DataSetSerializer
             _exportPath = exportPath;
         }
 
-        public void ExportAnnotationsFromAnnotator(int annotatorId, List<DataSetInstance> dataSetInstances,
+        public void ExportAnnotationsFromAnnotator(int annotatorId, List<DataSetInstance> instances,
             string fileName)
         {
             InitializeExcelSheet(_singleAnnotatorTemplatePath);
-            PopulateTemplateForAnnotator(annotatorId, dataSetInstances);
-            Serialize(fileName + annotatorId);
+            PopulateTemplateForAnnotator(annotatorId, instances);
+            Serialize(fileName);
         }
 
-        public void ExportAnnotatorsForSeverity(int severity, List<DataSetInstance> dataSetInstances,
+        public void ExportAnnotatorsForSeverity(int severity, List<DataSetInstance> instances,
             string fileName)
         {
             InitializeExcelSheet(_multipleAnnotatorsTemplatePath);
-            PopulateTemplateForSeverity(severity, dataSetInstances);
-            Serialize(fileName + severity);
+            PopulateTemplateForSeverity(severity, instances);
+            Serialize(fileName);
         }
 
         private void InitializeExcelSheet(string templatePath)
@@ -50,7 +49,7 @@ namespace DataSetExplorer.DataSetSerializer
             {
                 var row = 2 + i;
                 _sheet.Cells[row, 1].Value = instances[i].Annotations.First(a => a.Annotator.Id == annotatorId).Severity;
-                PopulateMetrics(instances[i].MetricFeatures, row);
+                PopulateMetrics(instances[i].MetricFeatures, row, 2);
             }
         }
 
@@ -64,20 +63,20 @@ namespace DataSetExplorer.DataSetSerializer
                     if (annotation.Severity == severity)
                     {
                         _sheet.Cells[2 + j, 1].Value = annotation.Annotator.Id;
-                        PopulateMetrics(instance.MetricFeatures, 2 + j);
+                        PopulateMetrics(instance.MetricFeatures, 2 + j, 2);
                         j++;
                     }
                 }
             }
         }
 
-        private void PopulateMetrics(Dictionary<CaDETMetric, double> metrics, int row)
+        private void PopulateMetrics(Dictionary<CaDETMetric, double> metrics, int row, int startColumn)
         {
             var i = 0;
             foreach (var key in metrics.Keys)
             {
-                _sheet.Cells[1, 2 + i].Value = key;
-                _sheet.Cells[row, 2 + i].Value = metrics[key];
+                _sheet.Cells[1, startColumn + i].Value = key;
+                _sheet.Cells[row, startColumn + i].Value = metrics[key];
                 i++;
             }
         }

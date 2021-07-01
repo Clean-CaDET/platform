@@ -1,7 +1,5 @@
-﻿using DataSetExplorer.DataSetBuilder;
-using DataSetExplorer.DataSetBuilder.Model;
+﻿using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
-using DataSetExplorer.DataSetSerializer.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,6 +7,7 @@ using System.Linq;
 using CodeModel;
 using CodeModel.CaDETModel;
 using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.AnnotationConsistencyTests;
 using DataSetExplorer.RepositoryAdapters;
 
 namespace DataSetExplorer
@@ -24,78 +23,59 @@ namespace DataSetExplorer
             //FindInstancesWithAllDisagreeingAnnotationsUseCase();
             //ExportAnnotatedDataSet();
             //CheckAnnotationConsistencyForAnnotator(1);
+            //CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(1);
+            //CheckMetricsSignificanceInAnnotationsForAnnotator(1);
+            CheckMetricsSignificanceBetweenAnnotatorsForSeverity(0);
+        }
+
+        private static void CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int severity)
+        {
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
+            IMetricsSignificanceTester tester = new AnovaTest();
+            var results = tester.TestBetweenAnnotators(severity, instancesGroupedBySmells);
+            foreach (var result in results.Value)
+            {
+                Console.WriteLine(result.Key);
+                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
+            }
+        }
+
+        private static void CheckMetricsSignificanceInAnnotationsForAnnotator(int annotatorId)
+        {
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
+            IMetricsSignificanceTester tester = new AnovaTest();
+            var results = tester.TestForSingleAnnotator(annotatorId, instancesGroupedBySmells);
+            foreach (var result in results.Value)
+            {
+                Console.WriteLine(result.Key);
+                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
+            }
         }
 
         private static void CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
         {
-            var dataGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
-
-            var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
-            var manovaTest = new ManovaTest.ManovaTest();
-
-            var enumerator = dataGroupedBySmells.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                var codeSmellGroup = enumerator.Current;
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-
-                exporter.ExportAnnotatorsForSeverity(severity, codeSmellGroup.ToList(),
-                    "SanityCheck_" + codeSmell + "_Severity_");
-
-                manovaTest.SetupTestArguments(
-                    "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Severity_" + severity + ".xlsx",
-                    codeSmellGroup.First().MetricFeatures.Keys.ToList(), "Annotator");
-                manovaTest.RunTest();
-            }
-        }
-
-        private static ListDictionary GetAnnotatedProjects()
-        {
-            ListDictionary projects = new ListDictionary(); // local repository path, annotations folder path
-            projects.Add("D:/ccadet/annotations/repos/BurningKnight", "D:/ccadet/annotations/annotated/BurningKnight");
-            projects.Add("D:/ccadet/annotations/repos/Core2D", "D:/ccadet/annotations/annotated/Core2d");
-            projects.Add("D:/ccadet/annotations/repos/jellyfin", "D:/ccadet/annotations/annotated/Jellyfin");
-            projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
-            projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
-            projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
-            projects.Add("D:/ccadet/annotations/repos/MonoGame", "D:/ccadet/annotations/annotated/MonoGame");
-            projects.Add("D:/ccadet/annotations/repos/Osu", "D:/ccadet/annotations/annotated/Osu");
-            return projects;
+            var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
+            IAnnotatorsConsistencyTester tester = new ManovaTest();
+            var results = tester.TestConsistencyBetweenAnnotators(severity, instancesGroupedBySmells);
+            results.Value.ToList().ForEach(result => Console.WriteLine(result.Key + "\n" + result.Value));
         }
 
         private static void CheckAnnotationConsistencyForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId);
-
-            var exporter = new AnnotationConsistencyByMetricsExporter("D:/ccadet/annotations/sanity_check/Output/");
-            var manovaTest = new ManovaTest.ManovaTest();
-
-            var enumerator = instancesGroupedBySmells.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                var codeSmellGroup = enumerator.Current;
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                
-                exporter.ExportAnnotationsFromAnnotator(annotatorId, codeSmellGroup.ToList(),
-                    "SanityCheck_" + codeSmell + "_Annotator_");
-
-                manovaTest.SetupTestArguments(
-                    "D:/ccadet/annotations/sanity_check/Output/SanityCheck_" + codeSmell + "_Annotator_" + annotatorId + ".xlsx",
-                    codeSmellGroup.First().MetricFeatures.Keys.ToList(), "Annotation");
-                manovaTest.RunTest();
-            }
+            IAnnotatorsConsistencyTester tester = new ManovaTest();
+            var results = tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
+            results.Value.ToList().ForEach(result => Console.Write(result.Key + "\n" + result.Value));
         }
 
         private static void ExportAnnotatedDataSet()
         {
             var instancesGroupedBySmells = GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
-
+            
             var exporter = new CompleteDataSetExporter("D:/ccadet/annotations/annotated/Output/");
-            var enumerator = instancesGroupedBySmells.GetEnumerator();
-            while (enumerator.MoveNext())
+            foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
-                var codeSmellGroup = enumerator.Current;
-                exporter.Export(codeSmellGroup.ToList(), codeSmellGroup.Key, "DataSet_" + codeSmellGroup.Key);
+                exporter.Export(codeSmellGroup.ToList(), "DataSet_" + codeSmellGroup.Key);
             }
         }
 
@@ -128,7 +108,7 @@ namespace DataSetExplorer
             
             foreach (var annotation in annotatedInstances.SelectMany(i => i.Annotations))
             {
-                    annotation.Annotator = annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
+                annotation.Annotator = annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
             }
         }
 
@@ -160,6 +140,20 @@ namespace DataSetExplorer
         {
             var importer = new ExcelImporter(folder);
             return importer.Import("Clean CaDET");
+        }
+
+        private static ListDictionary GetAnnotatedProjects()
+        {
+            ListDictionary projects = new ListDictionary(); // local repository path, annotations folder path
+            projects.Add("D:/ccadet/annotations/repos/BurningKnight", "D:/ccadet/annotations/annotated/BurningKnight");
+            projects.Add("D:/ccadet/annotations/repos/Core2D", "D:/ccadet/annotations/annotated/Core2d");
+            projects.Add("D:/ccadet/annotations/repos/jellyfin", "D:/ccadet/annotations/annotated/Jellyfin");
+            projects.Add("D:/ccadet/annotations/repos/OpenRA", "D:/ccadet/annotations/annotated/OpenRA");
+            projects.Add("D:/ccadet/annotations/repos/ShareX", "D:/ccadet/annotations/annotated/ShareX");
+            projects.Add("D:/ccadet/annotations/repos/ShopifySharp", "D:/ccadet/annotations/annotated/ShopifySharp");
+            projects.Add("D:/ccadet/annotations/repos/MonoGame", "D:/ccadet/annotations/annotated/MonoGame");
+            projects.Add("D:/ccadet/annotations/repos/Osu", "D:/ccadet/annotations/annotated/Osu");
+            return projects;
         }
     }
 }
