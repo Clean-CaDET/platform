@@ -6,10 +6,10 @@
         public bool IsApplicable { get; }
         public string ReasonForApplicability { get; }
 
-        internal SmellHeuristic(string description, string reason)
+        internal SmellHeuristic(string description, bool isApplicable, string reason)
         {
             Description = description;
-            IsApplicable = true;
+            IsApplicable = isApplicable;
             ReasonForApplicability = reason;
         }
 

@@ -22,6 +22,14 @@ namespace CodeModel.CaDETModel.CodeItems
         {
             var signatureBuilder = new StringBuilder();
             if (Parent != null) signatureBuilder.Append(Parent.FullName).Append(".");
+            signatureBuilder.Append(GetMethodNameWithParamTypes());
+
+            return signatureBuilder.ToString();
+        }
+
+        internal string GetMethodNameWithParamTypes()
+        {
+            StringBuilder signatureBuilder = new StringBuilder();
             signatureBuilder.Append(Name);
             if (Params != null)
             {
@@ -31,6 +39,7 @@ namespace CodeModel.CaDETModel.CodeItems
                     signatureBuilder.Append(Params[i].Type.FullType);
                     if (i < Params.Count - 1) signatureBuilder.Append(", ");
                 }
+
                 signatureBuilder.Append(")");
             }
 

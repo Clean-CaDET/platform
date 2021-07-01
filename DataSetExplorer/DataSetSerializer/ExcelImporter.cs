@@ -116,9 +116,8 @@ namespace DataSetExplorer.DataSetSerializer
             for (var col = StartingHeuristicColumn; col < sheet.Dimension.End.Column; col += 2)
             {
                 if (sheet.Cells[row, col].Text != "Yes" && sheet.Cells[row, col].Text != "No") throw new InvalidOperationException(GetErrorMessage("Yes or No allowed.", sheet, row, col));
-                var isNotApplicable = sheet.Cells[row, col].Text == "No";
-                if (isNotApplicable) continue;
-                heuristics.Add(new SmellHeuristic(sheet.Cells[2, col].Text, sheet.Cells[row, col + 1].Text));
+                var isApplicable = sheet.Cells[row, col].Text == "Yes";
+                heuristics.Add(new SmellHeuristic(sheet.Cells[2, col].Text, isApplicable, sheet.Cells[row, col + 1].Text));
             }
             return heuristics;
         }

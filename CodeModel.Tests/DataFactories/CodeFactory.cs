@@ -4,6 +4,11 @@ namespace CodeModel.Tests.DataFactories
 {
     public class CodeFactory
     {
+        public IEnumerable<string> ReadClassFromFile(string path)
+        {
+            return new[] { System.IO.File.ReadAllText(path) };
+        }
+
         public IEnumerable<string> GetEffectiveLinesOfCodeTest()
         {
             return new[]
@@ -624,10 +629,9 @@ namespace CodeModel.Tests.DataFactories
             };
         }
 
-        public IEnumerable<string> GetCohesionClasses()
+        public string GetCohesionClasses()
         {
-            return new[]
-            {
+            return
                 @"
             using System.Collections.Generic;
             namespace DoctorApp.Model.Data.DateR
@@ -648,43 +652,7 @@ namespace CodeModel.Tests.DataFactories
                         return !(From > timeSpan.To || To < timeSpan.From);
                     }
                 }
-            }",
-                @"
-            using System.Collections.Generic;
-            using DoctorApp.Model.Data.DateR;
-            namespace DoctorApp.Model.Data
-            {
-                public class Doctor
-                {
-                    public string Test;
-                    public string Name { get; set; }
-                    public string Email { get; set; }
-                    public List<DateRange> HolidayDates { get; set; }
-
-                    public Doctor(string name, string email)
-                    {
-                        Name = name;
-                        Email = email;
-                        HolidayDates = new List<DateRange>();
-                    }
-
-                    public void ProcessTest()
-                    {
-                        Test = null;
-                    }
-
-                    public string GetTwoNames()
-                    {
-                        return Name + Name;
-                    }
-
-                    public string GetThreeEmails()
-                    {
-                        return Email + Email + Email;
-                    }
-                }
-            }"
-            };
+            }";
         }
 
         public IEnumerable<string> GetClassesWithHierarchy()
@@ -761,6 +729,48 @@ namespace CodeModel.Tests.DataFactories
                     IEnumerator IEnumerable.GetEnumerator()
                     {
                         return GetEnumerator();
+                    }
+                }
+            }"
+            };
+        }
+
+        public IEnumerable<string> GetCouplingClasses()
+        {
+            return new[]
+            {
+                @"
+            namespace Test.Data
+            {
+                public class Test1
+                {
+                    public int _param1 { get; set; }
+                    public int _param2 { get; set; }
+
+                    public Test1(int param1, int param2)
+                    {
+                        _param1 = param1;
+                        _param2 = param2;
+                    }
+                }
+            }",
+                @"
+            namespace Test.Data
+            {
+                public class Test2
+                {
+                    public Test1 _test;
+                }
+            }",
+                @"
+            namespace Test.Data
+            {
+                public class Test3
+                {
+                    public Test2 _test2;
+
+                    public Test1 method(Test1 test){
+                        return test;
                     }
                 }
             }"

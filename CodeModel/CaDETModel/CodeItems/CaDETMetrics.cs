@@ -15,6 +15,16 @@
         LCOM,
 
         /// <summary>
+        /// LCOM: Lack of cohesion of methods
+        /// </summary>
+        LCOM3,
+
+        /// <summary>
+        /// LCOM: Lack of cohesion of methods
+        /// </summary>
+        LCOM4,
+
+        /// <summary>
         /// NMD: Number of methods declared
         /// </summary>
         NMD,
@@ -38,6 +48,11 @@
         /// ATFD: Access to foreign data
         /// </summary>
         ATFD,
+
+        /// <summary>
+        /// ATFD: Access to foreign data directly
+        /// </summary>
+        ATFD_10,
 
         /// <summary>
         /// TCC: Tight class cohesion
@@ -73,6 +88,16 @@
         /// NOPF: Number of protected fields
         /// </summary>
         NOPF,
+
+        /// <summary>
+        /// DIT: Depth inheritance hierarchy
+        /// </summary>
+        DIT,
+
+        /// <summary>
+        /// DCC: Direct class coupling
+        /// </summary>
+        DCC,
 
         /// <summary>
         /// CMNB: Max nested blocks from all class members

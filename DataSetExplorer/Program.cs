@@ -112,14 +112,6 @@ namespace DataSetExplorer
             }
         }
 
-        private static List<Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>> JoinAnnotationsAndMetrics(List<DataSetInstance> dataSetInstances,
-            Dictionary<string, Dictionary<CaDETMetric, double>> datasetInstancesMetrics)
-        {
-            return dataSetInstances.Select(i => 
-                new Tuple<DataSetInstance, Dictionary<CaDETMetric, double>>(i, datasetInstancesMetrics[i.CodeSnippetId]))
-                .ToList();
-        }
-
         private static List<DataSetInstance> FillInstancesWithMetrics(List<DataSetInstance> annotatedInstances, CaDETProject project)
         {
             return annotatedInstances.Select(i => { 
