@@ -75,7 +75,7 @@ namespace DataSetExplorer
             var exporter = new CompleteDataSetExporter("D:/ccadet/annotations/annotated/Output/");
             foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
-                exporter.Export(codeSmellGroup.ToList(), "DataSet_" + codeSmellGroup.Key);
+                exporter.Export(codeSmellGroup.ToList(), codeSmellGroup.Key, "DataSet_" + codeSmellGroup.Key);
             }
         }
 
