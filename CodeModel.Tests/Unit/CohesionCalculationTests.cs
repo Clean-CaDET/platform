@@ -135,6 +135,13 @@ namespace CodeModel.Tests.Unit
                     _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
                     "AudioWriter",
                     0
+                },
+
+                new object[]
+                {
+                    _testDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/NetXorEncryption.txt"),
+                    "NetXorEncryption",
+                    1
                 }
             };
 

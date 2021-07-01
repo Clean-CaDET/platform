@@ -173,7 +173,9 @@ namespace CodeModel.CodeParsers.CSharp
             double NP = (N * (N - 1)) / 2;
             if (NP == 0) return -1;
 
-            return Math.Round(CountMethodPairsThatShareAccessToAFieldOrAccessor(parsedClass.Members) / NP, 2);
+            var classMethods = parsedClass.Members.FindAll(m => m.Type.Equals(CaDETMemberType.Method));
+
+            return Math.Round(CountMethodPairsThatShareAccessToAFieldOrAccessor(classMethods) / NP, 2);
         }
 
         private static int CountMethodPairsThatShareAccessToAFieldOrAccessor(List<CaDETMember> classMethods)
