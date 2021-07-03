@@ -24,6 +24,7 @@ using SmartTutor.ProgressModel.Submissions.Repository;
 using SmartTutor.QualityAnalysis;
 using SmartTutor.QualityAnalysis.Repository;
 using System;
+using System.IO;
 
 namespace SmartTutor
 {
@@ -93,8 +94,8 @@ namespace SmartTutor
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = Configuration["Jwt:Authority"];
-                options.Audience = Configuration["Jwt:Audience"];
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY") ?? "http://localhost:8080/auth/realms/master";
+                options.Audience = Environment.GetEnvironmentVariable("AUDIENCE") ?? "demo-app";
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.Events = new JwtBearerEvents
@@ -140,13 +141,24 @@ namespace SmartTutor
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
+        public string GetSecret(string secretName)
+        {
+            string secretPath = Environment.GetEnvironmentVariable($"{secretName}_FILE");
+            if (File.Exists(secretPath))
+            {
+                return File.ReadAllText(secretPath);
+            } else {
+                return Environment.GetEnvironmentVariable(secretName);
+            }
+        }
+
         private string CreateConnectionStringFromEnvironment()
         {
             string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
-            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "smart-tutor-db";
-            string user = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "postgres";
-            string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "super";
+            string database = GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
+            string user = GetSecret("DATABASE_USERNAME") ?? "postgres";
+            string password = GetSecret("DATABASE_PASSWORD") ?? "super";
             string integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             string pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
