@@ -29,7 +29,6 @@ namespace DataSetExplorer
             {
                 return Result.Fail(e.ToString());
             }
-            
         }
     }
 }
