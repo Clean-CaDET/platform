@@ -34,7 +34,7 @@ namespace DataSetExplorer
             var dataSet = CreateDataSetFromRepository(projectAndCommitUrl, gitFolderPath);
             var excelFileName = ExportToExcel(projectName, columnModel, dataSet);
             
-            return Result.Ok(excelFileName);
+            return Result.Ok("Data set created: " + excelFileName);
         }
 
         private static DataSet CreateDataSetFromRepository(string projectAndCommitUrl, string projectPath)
