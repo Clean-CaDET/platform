@@ -1,25 +1,35 @@
 ﻿using DataSetExplorer.DataSetSerializer;
+using FluentResults;
+using System;
 using System.Linq;
 
 namespace DataSetExplorer
 {
-    class DataSetExportationService : IDataSetExporter
+    class DataSetExportationService : IDataSetExporterService
     {
-        private IFullDataSetBuilder _fullDataSetBuilder;
+        private FullDataSetFactory _fullDataSetFactory;
 
-        public DataSetExportationService(IFullDataSetBuilder fullDataSetBuilder)
+        public DataSetExportationService(FullDataSetFactory fullDataSetFactory)
         {
-            _fullDataSetBuilder = fullDataSetBuilder;
+            _fullDataSetFactory = fullDataSetFactory;
         }
 
-        public void Export(string outputPath)
+        public Result<string> Export(string outputPath)
         {
-            var instancesGroupedBySmells = _fullDataSetBuilder.GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
-            var exporter = new CompleteDataSetExporter(outputPath);
-            foreach (var codeSmellGroup in instancesGroupedBySmells)
+            try
             {
-                exporter.Export(codeSmellGroup.ToList(), codeSmellGroup.Key, "DataSet_" + codeSmellGroup.Key);
+                var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
+                var exporter = new CompleteDataSetExporter(outputPath);
+                foreach (var codeSmellGroup in instancesGroupedBySmells)
+                {
+                    exporter.Export(codeSmellGroup.ToList(), codeSmellGroup.Key, "DataSet_" + codeSmellGroup.Key);
+                }
+                return Result.Ok("Data set exported: " + outputPath);
+            } catch (Exception e)
+            {
+                return Result.Fail(e.ToString());
             }
+            
         }
     }
 }

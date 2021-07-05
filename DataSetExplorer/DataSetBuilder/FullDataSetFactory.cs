@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DataSetExplorer
 {
-    class FullDataSetBuilderService : IFullDataSetBuilder
+    class FullDataSetFactory
     {
         public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(int? annotatorId)
         {
@@ -23,7 +23,7 @@ namespace DataSetExplorer
                 var importer = new ExcelImporter(projects[key].ToString());
                 var annotatedInstances = importer.Import("Clean CaDET").GetAllInstances();
 
-                LoadAnnotators(ref annotatedInstances);
+                LoadAnnotators(annotatedInstances);
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
                 allAnnotatedInstances.AddRange(FillInstancesWithMetrics(annotatedInstances, project));
             }
@@ -52,7 +52,7 @@ namespace DataSetExplorer
             return projects;
         }
 
-        private void LoadAnnotators(ref List<DataSetInstance> annotatedInstances)
+        private void LoadAnnotators(List<DataSetInstance> annotatedInstances)
         {
             List<Annotator> annotators = new List<Annotator>()
             {
