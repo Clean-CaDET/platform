@@ -1,5 +1,6 @@
 ﻿using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.RepositoryAdapters;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,7 +10,7 @@ namespace DataSetExplorer
 {
     class Program
     {
-        private static IDataSetAnalyzer _dataSetAnalysisService = new DataSetAnalysisService();
+        private static IDataSetAnalyzerService _dataSetAnalysisService = new DataSetAnalysisService();
         
         static void Main(string[] args)
         {
@@ -51,7 +52,7 @@ namespace DataSetExplorer
         private static void CreateDataSet()
         {
             string outputPath = GetAnswerOnQuestion("Enter output folder path: ");
-            IDataSetCreator _dataSetCreationService = new DataSetCreationService(outputPath, new GitCodeRepository());
+            IDataSetCreatorService _dataSetCreationService = new DataSetCreationService(outputPath, new GitCodeRepository());
 
             var projects = GetProjectsForDataSet();
             foreach(var projectName in projects.Keys)
@@ -105,10 +106,10 @@ namespace DataSetExplorer
                 switch (chosenOption)
                 {
                     case "1":
-                        _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotationUseCase(dataSetPath, outputPath);
+                        _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation(dataSetPath, outputPath);
                         break;
                     case "2":
-                        _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotationsUseCase(dataSetPath, outputPath);
+                        _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations(dataSetPath, outputPath);
                         break;
                     case "x":
                         break;
@@ -123,7 +124,7 @@ namespace DataSetExplorer
         {
             var projects = GetAnnotatedProjects();
             var annotators = GetAnnotators();
-            IDataSetExporter dataSetExportationService = new DataSetExportationService(new FullDataSetBuilderService(projects, annotators));
+            IDataSetExporterService dataSetExportationService = new DataSetExportationService(new FullDataSetFactory(projects, annotators));
 
             string outputPath = GetAnswerOnQuestion("Enter output folder path: ");
             dataSetExportationService.Export(outputPath);
@@ -167,7 +168,7 @@ namespace DataSetExplorer
             var projects = GetAnnotatedProjects();
             var annotators = GetAnnotators();
 
-            IAnnotationConsistencyChecker annotationConsistencyService = new AnnotationConsistencyService(new FullDataSetBuilderService(projects, annotators));
+            IAnnotationConsistencyCheckerService annotationConsistencyService = new AnnotationConsistencyService(new FullDataSetFactory(projects, annotators));
 
             string chosenOption;
             do

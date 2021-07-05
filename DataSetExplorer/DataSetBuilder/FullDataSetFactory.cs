@@ -8,12 +8,12 @@ using System.Linq;
 
 namespace DataSetExplorer
 {
-    class FullDataSetBuilderService : IFullDataSetBuilder
+    class FullDataSetFactory
     {
         private ListDictionary _projects;
         private List<Annotator> _annotators;
 
-        public FullDataSetBuilderService(ListDictionary projects, List<Annotator> annotators)
+        public FullDataSetFactory(ListDictionary projects, List<Annotator> annotators)
         {
             _projects = projects;
             _annotators = annotators;
@@ -31,7 +31,7 @@ namespace DataSetExplorer
                 var importer = new ExcelImporter(_projects[key].ToString());
                 var annotatedInstances = importer.Import("Clean CaDET").GetAllInstances();
 
-                LoadAnnotators(ref annotatedInstances);
+                LoadAnnotators(annotatedInstances);
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
                 allAnnotatedInstances.AddRange(FillInstancesWithMetrics(annotatedInstances, project));
             }
@@ -46,7 +46,7 @@ namespace DataSetExplorer
             }).ToList();
         }
 
-        private void LoadAnnotators(ref List<DataSetInstance> annotatedInstances)
+        private void LoadAnnotators(List<DataSetInstance> annotatedInstances)
         {
             foreach (var annotation in annotatedInstances.SelectMany(i => i.Annotations))
             {
