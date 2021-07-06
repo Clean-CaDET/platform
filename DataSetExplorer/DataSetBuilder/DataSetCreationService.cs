@@ -9,7 +9,7 @@ using System.IO;
 
 namespace DataSetExplorer
 {
-    public class DataSetCreationService : IDataSetCreator
+    public class DataSetCreationService : IDataSetCreationService
     {
         private readonly ICodeRepository _codeRepository;
         private readonly string _basePath;
