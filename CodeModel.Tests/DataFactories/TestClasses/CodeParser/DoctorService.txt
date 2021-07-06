@@ -1,0 +1,44 @@
+﻿using DoctorApp.Model.Data;
+using DoctorApp.Model.Data.DateR;
+using System;
+using System.Collections.Generic;
+namespace DoctorApp.Model
+{
+    public class DoctorService
+    {
+        public Doctor TestDoc { get; set; }
+        private List<Doctor> _doctors;
+        public DateRange DateRangeTest()
+        {
+            return null;
+        }
+        public Doctor FindAvailableDoctor(DateRange timeSpan)
+        {
+            foreach (Doctor d in _doctors)
+            {
+                foreach (DateRange holiday in d.HolidayDates)
+                {
+                    d.Test = null;
+                    if (!holiday.OverlapsWith(timeSpan)) return d;
+                    LogChecked(33, null);
+                }
+            }
+            return null;
+        }
+        private int LogChecked(int testData, Doctor beljko)
+        {
+            _doctors.Add(new Doctor("testName", "testMail"));
+            DateTime test1 = TestDoc.TestProp.From;
+            DateTime test = _doctors[0].HolidayDates[0].From;
+            var a = TestDoc.Name;
+            var b = TestDoc.TestProp;
+            var c = b.To;
+            var temp1 = new Doctor("name2", "mail2");
+            temp1.Test = null;
+            var temp2 = beljko.TestDR;
+
+            var test2 = FindAvailableDoctor(temp2).TestFunction().OverlapsWith(temp2);
+            return testData;
+        }
+    }
+}

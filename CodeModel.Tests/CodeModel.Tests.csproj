@@ -23,11 +23,4 @@
   <ItemGroup>
     <ProjectReference Include="..\CodeModel\CodeModel.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="DataFactories\TestClasses\SmellyClasses\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataFactories\TestClasses\SmellyClasses\" />
-  </ItemGroup>
 </Project>

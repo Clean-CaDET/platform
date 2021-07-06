@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace CodeModel.Tests.Unit
+namespace CodeModel.Tests.Unit.CaDETMetrics
 {
     public class MetricCalculationTests
     {
@@ -16,12 +16,12 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetDoctorClassText()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/Level.txt")).Classes;
 
-            var doctorClass = classes.First();
-            doctorClass.Metrics[CaDETMetric.CLOC].ShouldBe(22);
-            doctorClass.FindMember("Email").Metrics[CaDETMetric.MLOC].ShouldBe(1);
-            doctorClass.FindMember("IsAvailable").Metrics[CaDETMetric.MLOC].ShouldBe(8);
+            var c = classes.First();
+            c.Metrics[CaDETMetric.CLOC].ShouldBe(1850);
+            c.FindMember("SetBiome").Metrics[CaDETMetric.MLOC].ShouldBe(19);
+            c.FindMember("Init").Metrics[CaDETMetric.MLOC].ShouldBe(29);
         }
 
         [Fact]
@@ -29,10 +29,9 @@ namespace CodeModel.Tests.Unit
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetGitAdapterClassText()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/Level.txt")).Classes;
 
-            var gitClass = classes.First();
-            gitClass.Metrics[CaDETMetric.WMC].ShouldBe(17);
+            classes.First().Metrics[CaDETMetric.WMC].ShouldBe(414);
         }
 
 
@@ -167,35 +166,35 @@ namespace CodeModel.Tests.Unit
             {
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/Level.txt"),
                     "Level",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AsepriteReader.txt"),
                     "AsepriteReader",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AsepriteFile.txt"),
                     "AsepriteFile",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AsepriteWriter.txt"),
                     "AsepriteWriter",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AudioWriter.txt"),
                     "AudioWriter",
                     0
                 }
@@ -219,35 +218,35 @@ namespace CodeModel.Tests.Unit
             {
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/Level.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/Level.txt"),
                     "Level",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteReader.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AsepriteReader.txt"),
                     "AsepriteReader",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteFile.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AsepriteFile.txt"),
                     "AsepriteFile",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AsepriteWriter.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AsepriteWriter.txt"),
                     "AsepriteWriter",
                     0
                 },
 
                 new object[]
                 {
-                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/SmellyClasses/AudioWriter.txt"),
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/AudioWriter.txt"),
                     "AudioWriter",
                     0
                 }

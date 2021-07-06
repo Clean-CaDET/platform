@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace CodeModel.Tests.DataFactories
 {
@@ -6,7 +8,12 @@ namespace CodeModel.Tests.DataFactories
     {
         public IEnumerable<string> ReadClassFromFile(string path)
         {
-            return new[] { System.IO.File.ReadAllText(path) };
+            return new[] { File.ReadAllText(path) };
+        }
+
+        public IEnumerable<string> GetMultipleClassTexts()
+        {
+            return Directory.GetFiles("../../../DataFactories/TestClasses/CodeParser/").Select(File.ReadAllText);
         }
 
         public IEnumerable<string> GetEffectiveLinesOfCodeTest()
@@ -59,40 +66,6 @@ namespace CodeModel.Tests.DataFactories
             }"
             };
         }
-        public IEnumerable<string> GetDoctorClassText()
-        {
-            return new[]
-            {
-                @"
-            using System.Collections.Generic;
-            namespace DoctorApp.Model.Data
-            {
-                public class Doctor
-                {
-                    public string Name { get; set; }
-                    public string Email { get; set; }
-                    public List<DateRange> HolidayDates { get; set; }
-
-                    public Doctor(string name, string email)
-                    {
-                        Name = name;
-                        Email = email;
-                        HolidayDates = new List<DateRange>();
-                    }
-
-                    internal bool IsAvailable(DateRange timeSpan)
-                    {
-                        foreach (DateRange holiday in HolidayDates)
-                        {
-                            if (holiday.OverlapsWith(timeSpan)) return false;
-                        }
-                        return true;
-                    }
-                }
-            }"
-            };
-        }
-
         public IEnumerable<string> GetGitAdapterClassText()
         {
             return new[]
@@ -383,278 +356,6 @@ namespace CodeModel.Tests.DataFactories
             };
         }
 
-        public IEnumerable<string> GetTCCMultipleClassTexts()
-        {
-            return new[]
-            {
-                @"
-            using System.Collections.Generic;
-            namespace NDCApp.Model.Data
-            {
-                public class Class6
-                {
-                    private int a1;
-                    private int a2;
-                    private int a3;
-                    private int a4;
-                   
- 
-                    internal bool m1IsEqual()
-                    {
-                        if((a1 == a2)){
-                             return true;
-                        }
-                        return false;
-                    }
-                    internal bool m2IsEqual()
-                    {
-                        if((a1 == a3)){
-                             return true;
-                        }
-                        return false;
-                    }
-                    internal bool m3IsEqual()
-                    {
-                        if((a3 == a4)){
-                             return true;
-                        }
-                        return false;
-                    }
-   
-                    internal bool m4IsEqual()
-                    {          
-                        if((a2 == a4)){
-                             return true;
-                        }
-                        return false;
-                    }
-                }
-            }",
-                @"
-            using System.Collections.Generic;
-            namespace NDCApp.Model.Data
-            {
-                public class Class7
-                {
-                    private int a1;
-                    private int a2;
-                    private int a3;
-                    private int a4;
-                   
- 
-                    internal bool m1IsEqual()
-                    {
-                        if((a1 == 5)){
-                             return true;
-                        }
-                        return false;
-                    }
- 
-                    internal bool m2IsEqualM1()
-                    {
-                        if((a1 == 6)){
-                             return true;
-                        }
-                        return false;
-                    }
- 
-                    internal bool m3IsEqualm3()
-                    {
-                        if((a1 == 7)){
-                             return true;
-                        }
-                        return false;
-                    }
-   
-                    internal bool IsEqualm4()
-                    {          
-                        return false;
-                    }
-                }
-            }",
-                 @"
-            using System.Collections.Generic;
-            namespace NDCApp.Model.Data
-            {
-                public class Class8
-                {
-                    private int a1;
-                    private int a2;
-                    private int a3;
-                    private int a4;
-                   
- 
-                    internal bool m1IsEqual()
-                    {
-                        if((a1 == a2 == a3)){
-                             return true;
-                        }
-                        return false;
-                    }
- 
-                    internal bool m2IsEqualM1()
-                    {
-                        if((a1 == a2 == a3)){
-                             return true;
-                        }
-                        return false;
-                    }
- 
-                    internal bool m3IsEqualm3()
-                    {
-                        if((a1 == a2 == a3)){
-                             return true;
-                        }
-                        return false;
-                    }
-   
-                    internal bool IsEqualm4()
-                    {          
-                        return false;
-                    }
-                }
-            }"
-            };
-        }
-
-
-
-
-
-        public IEnumerable<string> GetMultipleClassTexts()
-        {
-            return new[]
-            {
-                @"
-            using System.Collections.Generic;
-            namespace DoctorApp.Model.Data.DateR
-            {
-                public class DateRange
-                {
-                    public int NumOfDays;
-                    public DateTime From { get; set; }
-                    public DateTime To { get; set; }
-                    private Dictionary<Doctor, List<Dictionary<string, Dictionary<int, DoctorService[]>>>> testDictionary;
-
-                    public DateRange(DateTime from, DateTime to)
-                    {
-                        From = from;
-                        To = to;
-                        if(To.Equals(From)) return;
-                    }
-                    public bool OverlapsWith(DateRange timeSpan)
-                    {
-                        return !(From > timeSpan.To || To < timeSpan.From);
-                    }
-                }
-            }",
-                @"
-            using System.Collections.Generic;
-            using DoctorApp.Model.Data.DateR;
-            namespace DoctorApp.Model.Data
-            {
-                public class Doctor
-                {
-                    public DateRange TestDR;
-                    public string Test;
-                    public string Name { get; set; }
-                    public string Email { get; set; }
-                    public DateRange TestProp { get; set;}
-                    public List<DateRange> HolidayDates { get; set; }
-
-                    public Doctor(string name, string email)
-                    {
-                        Name = name;
-                        Email = email;
-                        HolidayDates = new List<DateRange>();
-                        HolidayDates.Add(new DateTime(), new DateTime());
-                        TestDR = new DateRange(new DateTime(), new DateTime());
-                    }
-
-                    public DateRange TestFunction() {
-                        Doctor dr = new Doctor();
-                        DateRange dateR = new DateRange();
-                        return TestProp;
-                    }
-
-                    public DateRange TestFieldFunction() {
-                        return TestDR;
-                    }
-                }
-            }",
-                @"
-            using System.Collections.Generic;
-            using DoctorApp.Model.Data.DateR;
-            using DoctorApp.Model.Data;
-            namespace DoctorApp.Model
-            {
-                public class DoctorService
-                {
-                    public Doctor TestDoc {get;set;}
-                    private List<Doctor> _doctors;
-                    public DateRange DateRangeTest()
-                    {
-                        return null;
-                    }
-                    public Doctor FindAvailableDoctor(DateRange timeSpan)
-                    {
-                        foreach (Doctor d in _doctors)
-                        {
-                            foreach(DateRange holiday in d.HolidayDates)
-                            {
-                                d.Test = null;
-                                if (!holiday.OverlapsWith(timeSpan)) return d;
-                                LogChecked(33);
-                            }
-                        }
-                        return null;
-                    }
-                    private int LogChecked(int testData, Doctor beljko)
-                    {
-                        _doctors.Add(new Doctor());
-                        DateTime test1 = TestDoc.TestProp.From;
-                        DateTime test = _doctors[0].HolidayDates[0].From;
-                        var a = TestDoc.Name;
-                        var b = TestDoc.TestProp;
-                        var c = b.To;
-                        var temp1 = new Doctor();
-                        temp1.Test = null;
-                        var temp2 = beljko.TestDR.NumOfDays;
-                        
-                        var test2 = FindAvailableDoctor(temp2).TestFunction().OverlapsWith(temp2);
-                        return testData;
-                    }
-                }
-            }"
-            };
-        }
-
-        public string GetCohesionClasses()
-        {
-            return
-                @"
-            using System.Collections.Generic;
-            namespace DoctorApp.Model.Data.DateR
-            {
-                public class DateRange
-                {
-                    public DateTime From { get; set; }
-                    public DateTime To { get; set; }
-
-                    public DateRange(DateTime from, DateTime to)
-                    {
-                        From = from;
-                        To = to;
-                        if(To.Equals(From)) return;
-                    }
-                    public bool OverlapsWith(DateRange timeSpan)
-                    {
-                        return !(From > timeSpan.To || To < timeSpan.From);
-                    }
-                }
-            }";
-        }
-
         public IEnumerable<string> GetClassesWithHierarchy()
         {
             return new[]
@@ -729,48 +430,6 @@ namespace CodeModel.Tests.DataFactories
                     IEnumerator IEnumerable.GetEnumerator()
                     {
                         return GetEnumerator();
-                    }
-                }
-            }"
-            };
-        }
-
-        public IEnumerable<string> GetCouplingClasses()
-        {
-            return new[]
-            {
-                @"
-            namespace Test.Data
-            {
-                public class Test1
-                {
-                    public int _param1 { get; set; }
-                    public int _param2 { get; set; }
-
-                    public Test1(int param1, int param2)
-                    {
-                        _param1 = param1;
-                        _param2 = param2;
-                    }
-                }
-            }",
-                @"
-            namespace Test.Data
-            {
-                public class Test2
-                {
-                    public Test1 _test;
-                }
-            }",
-                @"
-            namespace Test.Data
-            {
-                public class Test3
-                {
-                    public Test2 _test2;
-
-                    public Test1 method(Test1 test){
-                        return test;
                     }
                 }
             }"
@@ -1045,5 +704,6 @@ namespace CodeModel.Tests.DataFactories
                 15
             }
         };
+
     }
 }
