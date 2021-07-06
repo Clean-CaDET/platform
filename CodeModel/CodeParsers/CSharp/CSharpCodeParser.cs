@@ -88,14 +88,11 @@ namespace CodeModel.CodeParsers.CSharp
         private CaDETClass ParseClass(SemanticModel semanticModel, ClassDeclarationSyntax node)
         {
             var symbol = semanticModel.GetDeclaredSymbol(node);
-            var parsedClass = new CaDETClass
+            var parsedClass = new CaDETClass(symbol.Name, symbol.ToDisplayString(), node.ToString())
             {
-                Name = symbol.Name,
-                FullName = symbol.ToDisplayString(),
-                SourceCode = node.ToString()
+                Modifiers = GetModifiers(node),
+                Parent = new CaDETClass(symbol.BaseType.ToString())
             };
-            parsedClass.Modifiers = GetModifiers(node);
-            parsedClass.Parent = new CaDETClass { Name = symbol.BaseType.ToString() };
             parsedClass.Fields = ParseFields(node.Members, parsedClass, semanticModel);
             parsedClass.Members = ParseMethods(node.Members, parsedClass, semanticModel);
             return parsedClass;
@@ -146,7 +143,15 @@ namespace CodeModel.CodeParsers.CSharp
                     //Skips members with partial keyword.
                 }
             }
-            _memberBuilders.Add(parent, classMemberBuilders);
+
+            try
+            {
+                _memberBuilders.Add(parent, classMemberBuilders);
+            }
+            catch (ArgumentException e)
+            {
+                throw new NonUniqueFullNameException(e.Message);
+            }
         }
 
         private static void ValidateNoPartialModifier(MemberDeclarationSyntax member)
@@ -160,11 +165,11 @@ namespace CodeModel.CodeParsers.CSharp
             }
         }
 
-        private List<CaDETModifier> GetModifiers(MemberDeclarationSyntax member)
+        private static List<CaDETModifier> GetModifiers(MemberDeclarationSyntax member)
         {
             return member.Modifiers.Select(modifier => new CaDETModifier(modifier.ValueText)).ToList();
         }
-        private void ValidateUniqueFullNameForNonPartial(List<CaDETClass> parsedClasses)
+        private static void ValidateUniqueFullNameForNonPartial(List<CaDETClass> parsedClasses)
         {
             var nonUniqueFullNameClasses = new List<CaDETClass>();
             for (int i = 0; i < parsedClasses.Count - 1; i++)
@@ -191,7 +196,13 @@ namespace CodeModel.CodeParsers.CSharp
             foreach (var c in classes)
             {
                 c.Parent = LinkParent(classes, c.Parent);
-                c.OuterClass = LinkOuterClass(classes, c.ContainerName);
+                var outerClass = LinkOuterClass(classes, c.ContainerName);
+                if (outerClass != null)
+                {
+                    outerClass.InnerClasses.Add(c);
+                    c.OuterClass = outerClass;
+                }
+
                 c.Fields = LinkFields(classes, c.Fields);
                 c.Members = LinkMembers(classes, c.Members);
                 foreach (var memberBuilder in _memberBuilders[c])
@@ -202,12 +213,12 @@ namespace CodeModel.CodeParsers.CSharp
             return classes;
         }
 
-        private CaDETClass LinkParent(List<CaDETClass> classes, CaDETClass parent)
+        private static CaDETClass LinkParent(List<CaDETClass> classes, CaDETClass parent)
         {
             if (parent.Name.Equals("object")) return null;
             return classes.FirstOrDefault(c => c.FullName.Equals(parent.Name));
         }
-        private CaDETClass LinkOuterClass(List<CaDETClass> classes, string containerName)
+        private static CaDETClass LinkOuterClass(List<CaDETClass> classes, string containerName)
         {
             return classes.FirstOrDefault(c => c.FullName.Equals(containerName));
         }

@@ -11,7 +11,7 @@ namespace CodeModel.CodeParsers.CSharp
         //TODO: Currently we see feature envy for CaDETClass.
         internal Dictionary<CaDETMetric, double> CalculateClassMetrics(CaDETClass parsedClass)
         {
-            return new Dictionary<CaDETMetric, double>
+            return new()
             {
                 [CaDETMetric.CLOC] = GetLinesOfCode(parsedClass.SourceCode),
                 [CaDETMetric.NMD] = GetNumberOfMethodsDeclared(parsedClass),
@@ -35,10 +35,11 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.DIT] = CountInheritanceLevel(parsedClass),
                 [CaDETMetric.DCC] = CountClassCoupling(parsedClass),
                 [CaDETMetric.ATFD_10] = GetAccessToForeignDataDirectly(parsedClass),
+                [CaDETMetric.NIC] = CountInnerClasses(parsedClass)
             };
         }
 
-        public int GetLinesOfCode(string code)
+        public static int GetLinesOfCode(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
         }
@@ -47,7 +48,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// ATFD: Access To Foreign Data
         /// DOI: 10.1109/ESEM.2009.5314231
         /// </summary>
-        private int GetAccessToForeignData(CaDETClass parsedClass)
+        private static int GetAccessToForeignData(CaDETClass parsedClass)
         {
             ISet<CaDETField> accessedExternalFields = new HashSet<CaDETField>();
             ISet<CaDETMember> accessedExternalAccessors = new HashSet<CaDETMember>();
@@ -65,7 +66,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// ATFD: Access To Foreign Data Directly
         /// DOI: 10.1145/1852786.1852797
         /// </summary>
-        private double GetAccessToForeignDataDirectly(CaDETClass parsedClass)
+        private static double GetAccessToForeignDataDirectly(CaDETClass parsedClass)
         {
             ISet<CaDETField> accessedExternalFields = new HashSet<CaDETField>();
 
@@ -77,7 +78,7 @@ namespace CodeModel.CodeParsers.CSharp
             return accessedExternalFields.Count;
         }
 
-        private double GetLackOfCohesionOfMethods(CaDETClass parsedClass)
+        private static double GetLackOfCohesionOfMethods(CaDETClass parsedClass)
         {
             //TODO: Will need to reexamine the way we look at accessors and fields
             double maxCohesion = (GetNumberOfAttributesDefined(parsedClass)) * GetNumberOfMethodsDeclared(parsedClass);
@@ -95,7 +96,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// LCOM - Lack of Cohesion of Methods
         /// Article: Chidamber and Kemerer, 1991, "Towards a Metric Suite for Object-Oriented Design", Proc. OOPSLA'91, Sigplan Notices, 26(11), 197-211
         /// </summary> 
-        private double GetLackOfCohesionOfMethods3(CaDETClass parsedClass)
+        private static double GetLackOfCohesionOfMethods3(CaDETClass parsedClass)
         {
             var numberOfAttributes = GetNumberOfAttributesDefined(parsedClass);
             var numberOfMethods = GetNumberOfMethodsDeclared(parsedClass);
@@ -115,7 +116,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// LCOM - Lack of Cohesion of Methods
         /// DOI: 10.1145/2723742.2723753
         /// </summary>
-        private double GetLackOfCohesionOfMethods4(CaDETClass parsedClass)
+        private static double GetLackOfCohesionOfMethods4(CaDETClass parsedClass)
         {
             var methods = parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)).ToList();
 
@@ -125,7 +126,7 @@ namespace CodeModel.CodeParsers.CSharp
             return numberOfMethodsThatAccessOwnFieldsOrMethods - numberOfMethodsThatShareAccessToFieldOrAccessor;
         }
 
-        private int CountNumberOfMethodsThatAccessToOwnFieldsOrMethods(CaDETClass parsedClass, List<CaDETMember> methods)
+        private static int CountNumberOfMethodsThatAccessToOwnFieldsOrMethods(CaDETClass parsedClass, List<CaDETMember> methods)
         {
             int counter = 0;
             foreach (var method in methods)
@@ -166,7 +167,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// TCC - Tight Class Cohesion
         /// DOI: 10.1145/223427.211856
         /// </summary>
-        private double GetTightClassCohesion(CaDETClass parsedClass)
+        private static double GetTightClassCohesion(CaDETClass parsedClass)
         {
             int N = GetNumberOfMethodsDeclared(parsedClass);
            
@@ -199,7 +200,7 @@ namespace CodeModel.CodeParsers.CSharp
             return methodPairsThatShareAccessToAFieldOrAccessor;
         }
 
-        private int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
+        private static int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
         {
             int counter = method.AccessedFields.Count(field => Enumerable.Contains(parsedClass.Fields, field));
             counter += method.AccessedAccessors.Count(accessor => Enumerable.Contains(parsedClass.Members, accessor));
@@ -211,62 +212,62 @@ namespace CodeModel.CodeParsers.CSharp
         /// WMC - Weighted Method Per Class
         /// DOI: 10.1109/32.295895
         /// </summary>
-        private double GetWeightedMethodPerClass(CaDETClass parsedClass)
+        private static double GetWeightedMethodPerClass(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics[CaDETMetric.CYCLO]);
         }
         
-        private int GetNumberOfAttributesDefined(CaDETClass parsedClass)
+        private static int GetNumberOfAttributesDefined(CaDETClass parsedClass)
         {
             //TODO: Probably should expand to include simple accessors that do not have a related field.
             //TODO: It is C# specific, but this is the CSSharpMetricCalculator
             return parsedClass.Fields.Count + parsedClass.Members.Count(m => m.IsFieldDefiningAccessor());
         }
 
-        private int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
+        private static int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
         {
             return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method));
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private double CountReturnStatements(CaDETClass parsedClass)
+        private static double CountReturnStatements(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics[CaDETMetric.MNOR]);
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private double CountLoops(CaDETClass parsedClass)
+        private static double CountLoops(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics[CaDETMetric.MNOL]);
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private double CountComparisonOperators(CaDETClass parsedClass)
+        private static double CountComparisonOperators(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics[CaDETMetric.MNOC]);
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private double CountNumberOfAssignments(CaDETClass parsedClass)
+        private static double CountNumberOfAssignments(CaDETClass parsedClass)
         {
             return parsedClass.Members.Sum(method => method.Metrics[CaDETMetric.MNOA]);
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfPrivateMethods(CaDETClass parsedClass)
+        private static int CountNumberOfPrivateMethods(CaDETClass parsedClass)
         {
             return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method) &&
                                                        method.Modifiers.Any(m => m.Value == CaDETModifierValue.Private));
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfProtectedFields(CaDETClass parsedClass)
+        private static int CountNumberOfProtectedFields(CaDETClass parsedClass)
         {
             return parsedClass.Fields.Count(field => field.Modifiers.Any(f => f.Value == CaDETModifierValue.Protected));
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private double CountMaxNestedBlocks(CaDETClass parsedClass)
+        private static double CountMaxNestedBlocks(CaDETClass parsedClass)
         {
             if (!parsedClass.Members.Any())
             {
@@ -275,7 +276,7 @@ namespace CodeModel.CodeParsers.CSharp
             return parsedClass.Members.Max(method => method.Metrics[CaDETMetric.MMNB]);
         }
 
-        private int CountUniqueMethodInvocations(CaDETClass parsedClass)
+        private static int CountUniqueMethodInvocations(CaDETClass parsedClass)
         {
             var invokedMethods = new HashSet<CaDETMember>();
             foreach (var member in parsedClass.Members)
@@ -286,7 +287,7 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountDependencies(CaDETClass parsedClass)
+        private static int CountDependencies(CaDETClass parsedClass)
         {
             List<CaDETClass> allDependencies = new List<CaDETClass>();
             allDependencies.AddRange(parsedClass.GetFieldLinkedTypes().Distinct());
@@ -297,7 +298,7 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         //Implementation based on http://www.theijes.com/papers/v5-i6/C05014019.pdf
-        private int CountClassCoupling(CaDETClass parsedClass)
+        private static int CountClassCoupling(CaDETClass parsedClass)
         {
             List<CaDETClass> allDependencies = new List<CaDETClass>();
             allDependencies.AddRange(parsedClass.GetFieldLinkedTypes().Where(c => c.FullName != parsedClass.FullName).Distinct());
@@ -310,7 +311,7 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         //Implementation based on https://objectscriptquality.com/docs/metrics/depth-inheritance-tree
-        private int CountInheritanceLevel(CaDETClass parsedClass)
+        private static int CountInheritanceLevel(CaDETClass parsedClass)
         {
             CaDETClass parent = parsedClass.Parent;
             if (parent == null)
@@ -319,6 +320,11 @@ namespace CodeModel.CodeParsers.CSharp
             }
 
             return 1 + CountInheritanceLevel(parent);
+        }
+
+        private static double CountInnerClasses(CaDETClass parsedClass)
+        {
+            return parsedClass.InnerClasses.Count;
         }
     }
 }

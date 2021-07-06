@@ -114,6 +114,11 @@
         /// </summary>
         CBO,
 
+        /// <summary>
+        /// NIC: Number of inner classes
+        /// </summary>
+        NIC,
+
         #endregion
 
         #region MemberMetrics

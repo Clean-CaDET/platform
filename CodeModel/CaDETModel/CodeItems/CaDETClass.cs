@@ -6,8 +6,8 @@ namespace CodeModel.CaDETModel.CodeItems
 {
     public class CaDETClass
     {
-        public string Name { get; internal set; }
-        public string FullName { get; set; }
+        public string Name { get; }
+        public string FullName { get; }
 
         public string ContainerName
         {
@@ -18,14 +18,27 @@ namespace CodeModel.CaDETModel.CodeItems
             }
         }
 
-        public string SourceCode { get; internal set; }
+        public string SourceCode { get; }
         public CaDETClass Parent { get; internal set; }
         public CaDETClass OuterClass { get; internal set; }
+        public ISet<CaDETClass> InnerClasses { get; }
         public bool IsInnerClass => OuterClass != null;
         public List<CaDETModifier> Modifiers { get; internal set; }
         public List<CaDETMember> Members { get; internal set; }
         public List<CaDETField> Fields { get; internal set; }
         public Dictionary<CaDETMetric, double> Metrics { get; set; }
+
+        public CaDETClass(string name)
+        {
+            Name = name;
+            InnerClasses = new HashSet<CaDETClass>();
+        }
+
+        public CaDETClass(string name, string fullName, string sourceCode): this(name)
+        {
+            FullName = fullName;
+            SourceCode = sourceCode;
+        }
 
         public List<CaDETClass> GetFieldLinkedTypes()
         {
@@ -34,20 +47,20 @@ namespace CodeModel.CaDETModel.CodeItems
 
         public List<CaDETClass> GetMethodLinkedReturnTypes()
         {
-            return Members.Where(m => !(m.Type is CaDETMemberType.Constructor))
+            return Members.Where(m => m.Type is not CaDETMemberType.Constructor)
                 .SelectMany(m => m.GetLinkedReturnTypes()).ToList();
         }
 
         public List<CaDETClass> GetMethodLinkedVariableTypes()
         {
-            return Members.Where(m=> !(m.Type is CaDETMemberType.Property))
+            return Members.Where(m=> m.Type is not CaDETMemberType.Property)
                 .SelectMany(m => m.Variables)
                 .SelectMany(v => v.GetLinkedTypes()).ToList();
         }
 
         public List<CaDETClass> GetMethodLinkedParameterTypes()
         {
-            List<CaDETParameter> parameters = Members.SelectMany(m => m.Params).ToList();
+            var parameters = Members.SelectMany(m => m.Params).ToList();
             return parameters.Select(p => p.Type)
                    .Where(v => v.LinkedTypes != null)
                    .SelectMany(v => v.LinkedTypes).ToList();
@@ -55,7 +68,7 @@ namespace CodeModel.CaDETModel.CodeItems
 
         public List<CaDETClass> GetMethodInvocationsTypes()
         {
-            List<CaDETMember> invokedMethods = Members.SelectMany(m => m.InvokedMethods).ToList();
+            var invokedMethods = Members.SelectMany(m => m.InvokedMethods).ToList();
             return invokedMethods.Select(m => m.Parent).ToList();
         }
 
@@ -103,7 +116,7 @@ namespace CodeModel.CaDETModel.CodeItems
         }
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return FullName.GetHashCode();
         }
 
         public override string ToString()
