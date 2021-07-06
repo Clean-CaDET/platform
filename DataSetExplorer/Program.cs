@@ -1,4 +1,5 @@
-﻿using DataSetExplorer.RepositoryAdapters;
+﻿using DataSetExplorer.ConsoleApp;
+using DataSetExplorer.RepositoryAdapters;
 
 namespace DataSetExplorer
 {
@@ -11,9 +12,8 @@ namespace DataSetExplorer
 
         private static void CreateConsoleUI()
         {
-            new ConsoleUI(new DataSetAnalysisService(), 
+            new ConsoleAppMainMenu(
                 new DataSetExportationService(new FullDataSetFactory()),
-                new AnnotationConsistencyService(new FullDataSetFactory()),
                 new DataSetCreationService(new GitCodeRepository()))
                 .Run();
         }
