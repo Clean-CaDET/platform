@@ -2,7 +2,7 @@
 
 namespace DataSetExplorer
 {
-    public interface IDataSetExporterService
+    public interface IDataSetExportationService
     {
         public Result<string> Export(string outputPath);
     }

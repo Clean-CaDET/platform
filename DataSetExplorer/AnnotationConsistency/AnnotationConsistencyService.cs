@@ -1,10 +1,11 @@
 ﻿using DataSetExplorer.AnnotationConsistencyTests;
 using FluentResults;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace DataSetExplorer
 {
-    class AnnotationConsistencyService : IAnnotationConsistencyCheckerService
+    class AnnotationConsistencyService : IAnnotationConsistencyService
     {
         private FullDataSetFactory _fullDataSetFactory;
 
@@ -13,32 +14,48 @@ namespace DataSetExplorer
             _fullDataSetFactory = fullDataSetFactory;
         }
 
-        public Result<Dictionary<string, Dictionary<string, string>>> CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int severity)
+        public Result<string> CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int severity)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
             IMetricsSignificanceTester tester = new AnovaTest();
-            return tester.TestBetweenAnnotators(severity, instancesGroupedBySmells);
+            var results = tester.TestBetweenAnnotators(severity, instancesGroupedBySmells);
+            foreach (var result in results.Value)
+            {
+                Console.WriteLine(result.Key);
+                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
+            }
+            return Result.Ok();
         }
 
-        public Result<Dictionary<string, Dictionary<string, string>>> CheckMetricsSignificanceInAnnotationsForAnnotator(int annotatorId)
+        public Result<string> CheckMetricsSignificanceInAnnotationsForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(annotatorId);
             IMetricsSignificanceTester tester = new AnovaTest();
-            return tester.TestForSingleAnnotator(annotatorId, instancesGroupedBySmells);   
+            var results = tester.TestForSingleAnnotator(annotatorId, instancesGroupedBySmells);
+            foreach (var result in results.Value)
+            {
+                Console.WriteLine(result.Key);
+                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
+            }
+            return Result.Ok();
         }
 
-        public Result<Dictionary<string, string>> CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
+        public Result<string> CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(annotatorId: null);
             IAnnotatorsConsistencyTester tester = new ManovaTest();
-            return tester.TestConsistencyBetweenAnnotators(severity, instancesGroupedBySmells);   
+            var results = tester.TestConsistencyBetweenAnnotators(severity, instancesGroupedBySmells);
+            results.Value.ToList().ForEach(result => Console.WriteLine(result.Key + "\n" + result.Value));
+            return Result.Ok();
         }
 
-        public Result<Dictionary<string, string>> CheckAnnotationConsistencyForAnnotator(int annotatorId)
+        public Result<string> CheckAnnotationConsistencyForAnnotator(int annotatorId)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(annotatorId);
             IAnnotatorsConsistencyTester tester = new ManovaTest();
-            return tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
+            var results = tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
+            results.Value.ToList().ForEach(result => Console.WriteLine(result.Key + "\n" + result.Value));
+            return Result.Ok();
         }
     }
 }
