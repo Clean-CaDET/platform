@@ -10,28 +10,20 @@ namespace DataSetExplorer
 {
     class FullDataSetFactory
     {
-        private ListDictionary _projects;
-        private List<Annotator> _annotators;
 
-        public FullDataSetFactory(ListDictionary projects, List<Annotator> annotators)
-        {
-            _projects = projects;
-            _annotators = annotators;
-        }
-
-        public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(int? annotatorId)
+        public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(ListDictionary projects, List<Annotator> annotators, int? annotatorId)
         {
             var allAnnotatedInstances = new List<DataSetInstance>();
 
-            foreach (var key in _projects.Keys)
+            foreach (var key in projects.Keys)
             {
                 CodeModelFactory factory = new CodeModelFactory();
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
 
-                var importer = new ExcelImporter(_projects[key].ToString());
+                var importer = new ExcelImporter(projects[key].ToString());
                 var annotatedInstances = importer.Import("Clean CaDET").GetAllInstances();
 
-                LoadAnnotators(annotatedInstances);
+                LoadAnnotators(annotators, annotatedInstances);
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
                 allAnnotatedInstances.AddRange(FillInstancesWithMetrics(annotatedInstances, project));
             }
@@ -46,11 +38,11 @@ namespace DataSetExplorer
             }).ToList();
         }
 
-        private void LoadAnnotators(List<DataSetInstance> annotatedInstances)
+        private void LoadAnnotators(List<Annotator> annotators, List<DataSetInstance> annotatedInstances)
         {
             foreach (var annotation in annotatedInstances.SelectMany(i => i.Annotations))
             {
-                annotation.Annotator = _annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
+                annotation.Annotator = annotators.Find(annotator => annotator.Id.Equals(annotation.Annotator.Id));
             }
         }
     }

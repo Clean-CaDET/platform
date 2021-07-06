@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.RepositoryAdapters;
 using System.Collections.Specialized;
 using System.IO;
 using FluentResults;
@@ -10,11 +9,18 @@ namespace DataSetExplorer
 {
     class ConsoleUI
     {
-        private static IDataSetAnalysisService _dataSetAnalysisService;        
+        private IDataSetAnalysisService _dataSetAnalysisService;
+        private IDataSetExportationService _dataSetExportationService;
+        private IAnnotationConsistencyService _annotationConsistencyService;
+        private IDataSetCreationService _dataSetCreationService;
 
-        public ConsoleUI(IDataSetAnalysisService dataSetAnalysisService)
+        public ConsoleUI(IDataSetAnalysisService dataSetAnalysisService, IDataSetExportationService dataSetExportationService, 
+            IAnnotationConsistencyService annotationConsistencyService, IDataSetCreationService dataSetCreationService)
         {
             _dataSetAnalysisService = dataSetAnalysisService;
+            _dataSetExportationService = dataSetExportationService;
+            _annotationConsistencyService = annotationConsistencyService;
+            _dataSetCreationService = dataSetCreationService;
         }
 
         public void Run()
@@ -30,7 +36,7 @@ namespace DataSetExplorer
             } while (!chosenOption.Equals("x"));
         }
 
-        private static void ProcessChosenOption(string chosenOption)
+        private void ProcessChosenOption(string chosenOption)
         {
             switch (chosenOption)
             {
@@ -54,16 +60,15 @@ namespace DataSetExplorer
             }
         }
 
-        private static void CreateDataSet()
+        private void CreateDataSet()
         {
             string outputPath = GetAnswerOnQuestion("Enter output folder path: ");
-            IDataSetCreationService _dataSetCreationService = new DataSetCreationService(outputPath, new GitCodeRepository());
-
             var projects = GetProjectsForDataSet();
+
             Result<string> result;
             foreach (var projectName in projects.Keys)
             {
-                result = _dataSetCreationService.CreateDataSetSpreadsheet(projectName.ToString(), projects[projectName].ToString());
+                result = _dataSetCreationService.CreateDataSetSpreadsheet(outputPath, projectName.ToString(), projects[projectName].ToString());
                 Console.WriteLine(result.ToString());
             }
         }
@@ -87,7 +92,7 @@ namespace DataSetExplorer
             return projects;
         }
 
-        private static void AnalyzeDataSet()
+        private void AnalyzeDataSet()
         {
             string dataSetPath;
             string outputPath;
@@ -102,7 +107,7 @@ namespace DataSetExplorer
             } while (finishOption.Equals("n"));
         }
 
-        private static void ChooseAnalyzeDataSetOption(string dataSetPath, string outputPath)
+        private void ChooseAnalyzeDataSetOption(string dataSetPath, string outputPath)
         {
             string chosenOption;
             do
@@ -130,14 +135,12 @@ namespace DataSetExplorer
             } while (!chosenOption.Equals("x"));
         }
 
-        private static void ExportDataSet()
+        private void ExportDataSet()
         {
             var projects = GetAnnotatedProjects();
             var annotators = GetAnnotators();
-            IDataSetExportationService dataSetExportationService = new DataSetExportationService(new FullDataSetFactory(projects, annotators));
-
             string outputPath = GetAnswerOnQuestion("Enter output folder path: ");
-            Result<string> result = dataSetExportationService.Export(outputPath);
+            Result<string> result = _dataSetExportationService.Export(projects, annotators, outputPath);
             Console.Write(result.ToString());
         }
 
@@ -174,12 +177,10 @@ namespace DataSetExplorer
             return annotators;
         }
 
-        private static void CheckAnnotationsConsistency()
+        private void CheckAnnotationsConsistency()
         {
             var projects = GetAnnotatedProjects();
             var annotators = GetAnnotators();
-
-            IAnnotationConsistencyService annotationConsistencyService = new AnnotationConsistencyService(new FullDataSetFactory(projects, annotators));
 
             string chosenOption;
             do
@@ -191,19 +192,19 @@ namespace DataSetExplorer
                 {
                     case "1":
                         var annotatorId = GetId("Annotator");
-                        if (annotatorId.HasValue) annotationConsistencyService.CheckAnnotationConsistencyForAnnotator(annotatorId.Value);
+                        if (annotatorId.HasValue) _annotationConsistencyService.CheckAnnotationConsistencyForAnnotator(annotatorId.Value, projects, annotators);
                         break;
                     case "2":
                         var severityId = GetId("Severity");
-                        if (severityId.HasValue) annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(severityId.Value);
+                        if (severityId.HasValue) _annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(severityId.Value, projects, annotators);
                         break;
                     case "3":
                         annotatorId = GetId("Annotator");
-                        if (annotatorId.HasValue) annotationConsistencyService.CheckMetricsSignificanceInAnnotationsForAnnotator(annotatorId.Value);
+                        if (annotatorId.HasValue) _annotationConsistencyService.CheckMetricsSignificanceInAnnotationsForAnnotator(annotatorId.Value, projects, annotators);
                         break;
                     case "4":
                         severityId = GetId("Severity");
-                        if (severityId.HasValue) annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(severityId.Value);
+                        if (severityId.HasValue) _annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(severityId.Value, projects, annotators);
                         break;
                     case "x":
                         break;
