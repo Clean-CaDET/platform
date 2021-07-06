@@ -5,15 +5,14 @@ using DataSetExplorer.RepositoryAdapters;
 using System.Collections.Specialized;
 using System.IO;
 using FluentResults;
-using System.Linq;
 
 namespace DataSetExplorer
 {
     class ConsoleUI
     {
-        private static IDataSetAnalyzerService _dataSetAnalysisService;        
+        private static IDataSetAnalysisService _dataSetAnalysisService;        
 
-        public ConsoleUI(IDataSetAnalyzerService dataSetAnalysisService)
+        public ConsoleUI(IDataSetAnalysisService dataSetAnalysisService)
         {
             _dataSetAnalysisService = dataSetAnalysisService;
         }
@@ -58,7 +57,7 @@ namespace DataSetExplorer
         private static void CreateDataSet()
         {
             string outputPath = GetAnswerOnQuestion("Enter output folder path: ");
-            IDataSetCreatorService _dataSetCreationService = new DataSetCreationService(outputPath, new GitCodeRepository());
+            IDataSetCreationService _dataSetCreationService = new DataSetCreationService(outputPath, new GitCodeRepository());
 
             var projects = GetProjectsForDataSet();
             Result<string> result;
@@ -135,7 +134,7 @@ namespace DataSetExplorer
         {
             var projects = GetAnnotatedProjects();
             var annotators = GetAnnotators();
-            IDataSetExporterService dataSetExportationService = new DataSetExportationService(new FullDataSetFactory(projects, annotators));
+            IDataSetExportationService dataSetExportationService = new DataSetExportationService(new FullDataSetFactory(projects, annotators));
 
             string outputPath = GetAnswerOnQuestion("Enter output folder path: ");
             Result<string> result = dataSetExportationService.Export(outputPath);
@@ -180,7 +179,7 @@ namespace DataSetExplorer
             var projects = GetAnnotatedProjects();
             var annotators = GetAnnotators();
 
-            IAnnotationConsistencyCheckerService annotationConsistencyService = new AnnotationConsistencyService(new FullDataSetFactory(projects, annotators));
+            IAnnotationConsistencyService annotationConsistencyService = new AnnotationConsistencyService(new FullDataSetFactory(projects, annotators));
 
             string chosenOption;
             do
@@ -188,49 +187,23 @@ namespace DataSetExplorer
                 WriteAnnotationsConsistencyOptions();
                 chosenOption = GetAnswerOnQuestion("Your option: ");
 
-                Result<Dictionary<string, string>> consistencyResult;
-                Result<Dictionary<string, Dictionary<string, string>>> significanceResult;
                 switch (chosenOption)
                 {
                     case "1":
                         var annotatorId = GetId("Annotator");
-                        if (annotatorId.HasValue)
-                        {
-                            consistencyResult = annotationConsistencyService.CheckAnnotationConsistencyForAnnotator(annotatorId.Value);
-                            consistencyResult.Value.ToList().ForEach(result => Console.WriteLine(result.Key + "\n" + result.Value));
-                        }
+                        if (annotatorId.HasValue) annotationConsistencyService.CheckAnnotationConsistencyForAnnotator(annotatorId.Value);
                         break;
                     case "2":
                         var severityId = GetId("Severity");
-                        if (severityId.HasValue)
-                        {
-                            consistencyResult = annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(severityId.Value);
-                            consistencyResult.Value.ToList().ForEach(result => Console.WriteLine(result.Key + "\n" + result.Value));
-                        }
+                        if (severityId.HasValue) annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(severityId.Value);
                         break;
                     case "3":
                         annotatorId = GetId("Annotator");
-                        if (annotatorId.HasValue)
-                        {
-                            significanceResult = annotationConsistencyService.CheckMetricsSignificanceInAnnotationsForAnnotator(annotatorId.Value);
-                            foreach (var result in significanceResult.Value)
-                            {
-                                Console.WriteLine(result.Key);
-                                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
-                            }
-                        }
+                        if (annotatorId.HasValue) annotationConsistencyService.CheckMetricsSignificanceInAnnotationsForAnnotator(annotatorId.Value);
                         break;
                     case "4":
                         severityId = GetId("Severity");
-                        if (severityId.HasValue)
-                        {
-                            significanceResult = annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(severityId.Value);
-                            foreach (var result in significanceResult.Value)
-                            {
-                                Console.WriteLine(result.Key);
-                                result.Value.ToList().ForEach(pair => Console.WriteLine(pair.Key + "\n" + pair.Value));
-                            }
-                        }
+                        if (severityId.HasValue) annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(severityId.Value);
                         break;
                     case "x":
                         break;

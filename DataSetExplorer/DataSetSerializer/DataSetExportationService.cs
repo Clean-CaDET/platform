@@ -1,11 +1,12 @@
 ﻿using DataSetExplorer.DataSetSerializer;
 using FluentResults;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace DataSetExplorer
 {
-    class DataSetExportationService : IDataSetExporterService
+    class DataSetExportationService : IDataSetExportationService
     {
         private FullDataSetFactory _fullDataSetFactory;
 
@@ -25,7 +26,7 @@ namespace DataSetExplorer
                     exporter.Export(codeSmellGroup.ToList(), codeSmellGroup.Key, "DataSet_" + codeSmellGroup.Key);
                 }
                 return Result.Ok("Data set exported: " + outputPath);
-            } catch (Exception e)
+            } catch (IOException e)
             {
                 return Result.Fail(e.ToString());
             }

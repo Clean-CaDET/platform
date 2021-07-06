@@ -2,10 +2,11 @@
 using DataSetExplorer.DataSetSerializer;
 using FluentResults;
 using System;
+using System.IO;
 
 namespace DataSetExplorer
 {
-    class DataSetAnalysisService : IDataSetAnalyzerService
+    class DataSetAnalysisService : IDataSetAnalysisService
     {
         public Result<string> FindInstancesWithAllDisagreeingAnnotations(string dataSetPath, string outputPath)
         {
@@ -15,7 +16,7 @@ namespace DataSetExplorer
                 var exporter = new TextFileExporter(outputPath);
                 exporter.ExportInstancesWithAnnotatorId(dataset.GetInstancesWithAllDisagreeingAnnotations());
                 return Result.Ok("Instances with disagreeing annotations exported: " + outputPath);
-            } catch (Exception e)
+            } catch (IOException e)
             {
                 return Result.Fail(e.ToString());
             }
@@ -29,7 +30,7 @@ namespace DataSetExplorer
                 var exporter = new TextFileExporter(outputPath);
                 exporter.ExportInstancesWithAnnotatorId(dataset.GetInsufficientlyAnnotatedInstances());
                 return Result.Ok("Instances requiring additional annotation exported: " + outputPath);
-            } catch (Exception e)
+            } catch (IOException e)
             {
                 return Result.Fail(e.ToString());
             }
