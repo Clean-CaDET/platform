@@ -16,6 +16,7 @@ namespace CodeModel.CodeParsers.CSharp
             return new Dictionary<CaDETMetric, double>
             {
                 [CaDETMetric.CYCLO] = CalculateCyclomaticComplexity(member),
+                [CaDETMetric.CYCLO_SWITCH] = CalculateCyclomaticComplexityWithoutCases(member),
                 [CaDETMetric.MLOC] = CountLinesOfText(member.ToString()),
                 [CaDETMetric.MELOC] = GetEffectiveLinesOfCode(member),
                 [CaDETMetric.NOP] = GetNumberOfParameters(method),
@@ -110,6 +111,7 @@ namespace CodeModel.CodeParsers.CSharp
             count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<CaseSwitchLabelSyntax>().Count();
+            count += method.DescendantNodes().OfType<CasePatternSwitchLabelSyntax>().Count();
             count += method.DescendantNodes().OfType<DefaultSwitchLabelSyntax>().Count();
             count += method.DescendantNodes().OfType<ContinueStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<GotoStatementSyntax>().Count();
@@ -120,6 +122,25 @@ namespace CodeModel.CodeParsers.CSharp
             count += CountLogicalOperators(method, "||");
             count += CountLogicalOperators(method, "??");
             
+            return count + 1;
+        }
+
+        private int CalculateCyclomaticComplexityWithoutCases(MemberDeclarationSyntax method)
+        {
+             int count = method.DescendantNodes().OfType<IfStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<SwitchStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ContinueStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<GotoStatementSyntax>().Count();
+            count += method.DescendantNodes().OfType<ConditionalExpressionSyntax>().Count();
+            count += method.DescendantNodes().OfType<CatchClauseSyntax>().Count();
+
+            count += CountLogicalOperators(method, "&&");
+            count += CountLogicalOperators(method, "||");
+            count += CountLogicalOperators(method, "??");
+
             return count + 1;
         }
 

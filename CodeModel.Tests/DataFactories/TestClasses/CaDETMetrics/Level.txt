@@ -1223,7 +1223,7 @@ namespace BurningKnight.level {
 							
 							if (tl == Tile.Crack) {
 								a = (IsInside(index + 1) && Get(index + 1) == Tile.WallA) ||
-								    (IsInside(index + width) && Get(index + width) == Tile.WallA);
+								    (IsInside(index + width) ConditionalExpressionSyntax Get(index + width) == Tile.WallA);
 							}
 
 							var tileset = (MatrixLeak[index] ? MatrixTileset : Tileset);
