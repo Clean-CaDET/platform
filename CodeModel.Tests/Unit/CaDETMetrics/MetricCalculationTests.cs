@@ -266,18 +266,55 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
             service.Metrics[CaDETMetric.RFC].ShouldBe(4);
         }
 
-        [Fact]
-        public void Calculates_method_cyclomatic_complexity()
+        [Theory]
+        [MemberData(nameof(CYCLOTest))]
+        public void Calculates_method_cyclomatic_complexity(IEnumerable<string> classCode, string className, string methodName, double cycloMetric)
         {
             CodeModelFactory factory = new CodeModelFactory();
 
-            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetGitAdapterClassText()).Classes;
+            var classToEvaluate = factory.CreateProject(classCode).Classes.Find(c => c.Name.Equals(className));
 
-            var gitClass = classes.First();
-
-            gitClass.FindMember("CheckoutCommit").Metrics[CaDETMetric.CYCLO].ShouldBe(2);
-            gitClass.FindMember("ParseDocuments").Metrics[CaDETMetric.CYCLO].ShouldBe(4);
+            var methodToEvaluate = classToEvaluate.Members.Find(m => m.Name.Equals(methodName));
+            methodToEvaluate.Metrics[CaDETMetric.CYCLO].ShouldBe(cycloMetric);
         }
+
+        public static IEnumerable<object[]> CYCLOTest =>
+
+            new List<object[]>
+            {
+                new object[]
+                {
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/ToSingleParameter.txt"),
+                    "Parameterizable",
+                    "ToSingleParameter",
+                    10
+                },
+            };
+
+        [Theory]
+        [MemberData(nameof(CYCLO_SWITCHTest))]
+        public void Calculates_method_cyclomatic_complexity_without_cases(IEnumerable<string> classCode, string className, string methodName, double cycloMetric)
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            var classToEvaluate = factory.CreateProject(classCode).Classes.Find(c => c.Name.Equals(className));
+
+            var methodToEvaluate = classToEvaluate.Members.Find(m => m.Name.Equals(methodName));
+            methodToEvaluate.Metrics[CaDETMetric.CYCLO_SWITCH].ShouldBe(cycloMetric);
+        }
+
+        public static IEnumerable<object[]> CYCLO_SWITCHTest =>
+
+            new List<object[]>
+            {
+                new object[]
+                {
+                    TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/ToSingleParameter.txt"),
+                    "Parameterizable",
+                    "ToSingleParameter",
+                    7
+                },
+            };
 
         [Fact]
         public void Calculates_member_effective_lines_of_code()

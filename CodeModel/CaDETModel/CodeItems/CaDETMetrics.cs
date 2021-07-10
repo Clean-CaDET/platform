@@ -136,6 +136,13 @@
         CYCLO,
 
         /// <summary>
+        /// CYCLO - Cyclomatic complexity
+        ///
+        /// This metric doesn't count every case label, only switch label
+        /// </summary>
+        CYCLO_SWITCH,
+
+        /// <summary>
         /// MLOC: Lines of code in a method
         /// </summary>
         MLOC,
