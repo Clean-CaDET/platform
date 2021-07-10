@@ -13,8 +13,8 @@ namespace DataSetExplorer.ConsoleApp
 
         internal void CheckAnnotationsConsistency()
         {
-            var projects = ConsoleIO.GetAnnotatedProjects();
-            var annotators = ConsoleIO.GetAnnotators();
+            var projects = DataSetIO.GetProjects("local repo folder and annotations folder");
+            var annotators = DataSetIO.GetAnnotators();
 
             string chosenOption;
             do

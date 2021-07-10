@@ -12,7 +12,7 @@ namespace DataSetExplorer
 
         private static void CreateConsoleUI()
         {
-            new ConsoleAppMainMenu(
+            new MainMenu(
                 new DataSetExportationService(new FullDataSetFactory()),
                 new DataSetCreationService(new GitCodeRepository()))
                 .Run();

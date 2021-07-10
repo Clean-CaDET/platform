@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Specialized;
 using FluentResults;
 
 namespace DataSetExplorer.ConsoleApp
 {
-    class ConsoleAppMainMenu
+    class MainMenu
     {
         private readonly IDataSetExportationService _dataSetExportationService;
         private readonly IDataSetCreationService _dataSetCreationService;
 
-        internal ConsoleAppMainMenu(IDataSetExportationService dataSetExportationService, IDataSetCreationService dataSetCreationService)
+        internal MainMenu(IDataSetExportationService dataSetExportationService, IDataSetCreationService dataSetCreationService)
         {
             _dataSetExportationService = dataSetExportationService;
             _dataSetCreationService = dataSetCreationService;
@@ -55,7 +54,7 @@ namespace DataSetExplorer.ConsoleApp
         private void CreateDataSet()
         {
             string outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
-            var projects = GetProjectsForDataSet();
+            var projects = DataSetIO.GetProjects("project name and project/commit URL");
 
             Result<string> result;
             foreach (var projectName in projects.Keys)
@@ -65,29 +64,10 @@ namespace DataSetExplorer.ConsoleApp
             }
         }
 
-        private static ListDictionary GetProjectsForDataSet()
-        {
-            ListDictionary projects = new ListDictionary();
-            string projectName;
-            string projectAndCommitUrl;
-            string finishOption;
-
-            Console.WriteLine("\nProjects for data set:");
-            do
-            {
-                projectName = ConsoleIO.GetAnswerOnQuestion("Enter project name: ");
-                projectAndCommitUrl = ConsoleIO.GetAnswerOnQuestion("Enter project and commit URL: ");
-                projects.Add(projectName, projectAndCommitUrl);
-                finishOption = ConsoleIO.GetAnswerOnQuestion("Finished? (y/n): ");
-            } while (finishOption.Equals("n"));
-
-            return projects;
-        }
-
         private void ExportDataSet()
         {
-            var projects = ConsoleIO.GetAnnotatedProjects();
-            var annotators = ConsoleIO.GetAnnotators();
+            var projects = DataSetIO.GetProjects("local repo folder and annotations folder");
+            var annotators = DataSetIO.GetAnnotators();
             string outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
             Result<string> result = _dataSetExportationService.Export(projects, annotators, outputPath);
             Console.Write(result.ToString());
