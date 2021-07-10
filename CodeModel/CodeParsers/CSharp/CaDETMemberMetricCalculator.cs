@@ -13,7 +13,7 @@ namespace CodeModel.CodeParsers.CSharp
     {
         internal Dictionary<CaDETMetric, double> CalculateMemberMetrics(MemberDeclarationSyntax member, CaDETMember method)
         {
-            return new Dictionary<CaDETMetric, double>
+            return new()
             {
                 [CaDETMetric.CYCLO] = CalculateCyclomaticComplexity(member),
                 [CaDETMetric.MLOC] = CountLinesOfText(member.ToString()),
@@ -38,10 +38,10 @@ namespace CodeModel.CodeParsers.CSharp
         /// <summary>
         /// DOI: 10.1109/MALTESQUE.2017.7882011
         /// </summary>
-        private int GetEffectiveLinesOfCode(MemberDeclarationSyntax member)
+        private static int GetEffectiveLinesOfCode(CSharpSyntaxNode node)
         {
             //string[] allLines = member.ToString().Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
-            string allCode = RemoveCommentsFromCode(member);
+            string allCode = RemoveCommentsFromCode(node);
             
             var allLines = allCode.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             int blankLines = CountBlankLines(allLines);
@@ -51,11 +51,11 @@ namespace CodeModel.CodeParsers.CSharp
             return  allLines.Length - (blankLines + headerLines + openAndClosingBracketLines);
         }
 
-        private string RemoveCommentsFromCode(CSharpSyntaxNode member)
+        private static string RemoveCommentsFromCode(CSharpSyntaxNode node)
         {
-            if (member == null) return ""; // when removing comments from the method body, the body can be empty
-            var allCode = member.ToString();
-            var allComments = member.DescendantTrivia().Where(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia) || t.IsKind(SyntaxKind.MultiLineCommentTrivia));
+            if (node == null) return ""; // when removing comments from the method body, the body can be empty
+            var allCode = node.ToString();
+            var allComments = node.DescendantTrivia().Where(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia) || t.IsKind(SyntaxKind.MultiLineCommentTrivia));
             foreach (var comment in allComments)
             {
                 allCode = allCode.Replace(comment.ToFullString(), "");
@@ -64,7 +64,7 @@ namespace CodeModel.CodeParsers.CSharp
         }
         
 
-        private int CountHeaderLines(string[] allLines)
+        private static int CountHeaderLines(string[] allLines)
         {
             int counter = 0;
             foreach (var line in allLines)
@@ -76,7 +76,7 @@ namespace CodeModel.CodeParsers.CSharp
             return counter;
         }
 
-        private int CountBlankLines(string[] allLines)
+        private static int CountBlankLines(string[] allLines)
         {
             return allLines.Select(t => t.Trim()).Count(line => line == "");
         }
@@ -84,7 +84,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// <summary>
         /// DOI: 10.1002/smr.2255
         /// </summary>
-        private int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
+        private static int GetNumberOfLocalVariables(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<VariableDeclarationSyntax>().Count();
         }
@@ -92,20 +92,20 @@ namespace CodeModel.CodeParsers.CSharp
         /// <summary>
         /// DOI: 10.1002/smr.2255
         /// </summary>
-        private int GetNumberOfParameters(CaDETMember method)
+        private static int GetNumberOfParameters(CaDETMember method)
         {
             return method.Params.Count;
         }
 
-        public int CountLinesOfText(string code)
+        private static int CountLinesOfText(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
         }
 
-        private int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
+        private static int CalculateCyclomaticComplexity(MemberDeclarationSyntax method)
         {
             //Defined based on https://www.ndepend.com/docs/code-metrics#CC
-            int count = method.DescendantNodes().OfType<IfStatementSyntax>().Count();
+            var count = method.DescendantNodes().OfType<IfStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<WhileStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
@@ -123,14 +123,14 @@ namespace CodeModel.CodeParsers.CSharp
             return count + 1;
         }
 
-        private int CountLogicalOperators(MemberDeclarationSyntax method, string pattern)
+        private static int CountLogicalOperators(MemberDeclarationSyntax method, string pattern)
         {
             var comments = method.DescendantTrivia();
             int commentOperatorCount = comments.Sum(comment => CountOccurrences(comment.ToString(), pattern));
             return CountOccurrences(method.ToString(), pattern) - commentOperatorCount;
         }
 
-        private int CountOccurrences(string text, string pattern)
+        private static int CountOccurrences(string text, string pattern)
         {
             var count = 0;
             var i = 0;
@@ -143,13 +143,13 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountTryCatchBlocks(MemberDeclarationSyntax method)
+        private static int CountTryCatchBlocks(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<TryStatementSyntax>().Count();
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountLoops(MemberDeclarationSyntax method)
+        private static int CountLoops(MemberDeclarationSyntax method)
         {
             int count = method.DescendantNodes().OfType<ForEachStatementSyntax>().Count();
             count += method.DescendantNodes().OfType<ForStatementSyntax>().Count();
@@ -159,13 +159,13 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountReturnStatements(MemberDeclarationSyntax method)
+        private static int CountReturnStatements(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<ReturnStatementSyntax>().Count();
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountComparisonOperators(MemberDeclarationSyntax method)
+        private static int CountComparisonOperators(MemberDeclarationSyntax method)
         {
             int count = method.DescendantNodes().OfType<AssignmentExpressionSyntax>()
                 .Count(n => n.IsKind(SyntaxKind.CoalesceAssignmentExpression));
@@ -181,32 +181,32 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfAssignments(MemberDeclarationSyntax method)
+        private static int CountNumberOfAssignments(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<AssignmentExpressionSyntax>().Count();
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfNumericLiterals(MemberDeclarationSyntax method)
+        private static int CountNumberOfNumericLiterals(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LiteralExpressionSyntax>().Count(n => n.IsKind(SyntaxKind.NumericLiteralExpression));
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfStringLiterals(MemberDeclarationSyntax method)
+        private static int CountNumberOfStringLiterals(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LiteralExpressionSyntax>().Count(n => n.IsKind(SyntaxKind.StringLiteralExpression));
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfMathOperations(MemberDeclarationSyntax method)
+        private static int CountNumberOfMathOperations(MemberDeclarationSyntax method)
         {
             int count = CountBinaryExpressions(method);
             count += CountUnaryExpressions(method);
             return count;
         }
 
-        private int CountBinaryExpressions(MemberDeclarationSyntax method)
+        private static int CountBinaryExpressions(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<BinaryExpressionSyntax>()
                 .Count(n => n.IsKind(SyntaxKind.AddExpression) ||
@@ -218,7 +218,7 @@ namespace CodeModel.CodeParsers.CSharp
                             n.IsKind(SyntaxKind.RightShiftExpression));
         }
 
-        private int CountUnaryExpressions(MemberDeclarationSyntax method)
+        private static int CountUnaryExpressions(MemberDeclarationSyntax method)
         {
             int count = method.DescendantNodes().OfType<PrefixUnaryExpressionSyntax>()
                 .Count(n => n.IsKind(SyntaxKind.PreIncrementExpression) ||
@@ -232,20 +232,20 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfParenthesizedExpressions(MemberDeclarationSyntax method)
+        private static int CountNumberOfParenthesizedExpressions(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<ExpressionSyntax>()
                 .Count(n => n.IsKind(SyntaxKind.ParenthesizedExpression));
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfLambdaExpressions(MemberDeclarationSyntax method)
+        private static int CountNumberOfLambdaExpressions(MemberDeclarationSyntax method)
         {
             return method.DescendantNodes().OfType<LambdaExpressionSyntax>().Count();
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountMaxNestedBlocks(MemberDeclarationSyntax method)
+        private static int CountMaxNestedBlocks(MemberDeclarationSyntax method)
         {
             var blocks = method.DescendantNodes().OfType<BlockSyntax>().ToList();
 
@@ -260,7 +260,7 @@ namespace CodeModel.CodeParsers.CSharp
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck
-        private int CountNumberOfUniqueWords(MemberDeclarationSyntax method)
+        private static int CountNumberOfUniqueWords(MemberDeclarationSyntax method)
         {
             if (!method.Kind().Equals(SyntaxKind.MethodDeclaration)) return 0;
 
@@ -273,12 +273,12 @@ namespace CodeModel.CodeParsers.CSharp
             return words.Distinct().Count();
         }
 
-        private List<string> GetWords(string methodBody)
+        private static List<string> GetWords(string methodBody)
         {
             return Regex.Split(methodBody, "[\\s+]").Select(word => word.Trim()).ToList();
         }
 
-        private string RemoveSymbols(string words)
+        private static string RemoveSymbols(string words)
         {
             return words
                 .Replace("(", " ")
@@ -305,7 +305,7 @@ namespace CodeModel.CodeParsers.CSharp
                 .Replace("?", " ");
         }
 
-        private List<string> FilterWords(List<string> words)
+        private static List<string> FilterWords(List<string> words)
         {
             return words = words.Where(word => !string.IsNullOrEmpty(word))
                 .Where(word => !Regex.IsMatch(word, "[0-9]+"))
@@ -313,7 +313,7 @@ namespace CodeModel.CodeParsers.CSharp
                 .ToList();
         }
 
-        private List<string> BreakWords(List<string> words)
+        private static List<string> BreakWords(List<string> words)
         {
             List<string> individualWords = new List<string>();
             foreach (string word in words)
@@ -325,7 +325,7 @@ namespace CodeModel.CodeParsers.CSharp
             return individualWords;
         }
 
-        private List<string> GetCamelCaseWords(List<string> words)
+        private static List<string> GetCamelCaseWords(List<string> words)
         {
             List<string> camelCaseWords = new List<string>();
             foreach (string word in words)
@@ -342,7 +342,7 @@ namespace CodeModel.CodeParsers.CSharp
             return camelCaseWords;
         }
 
-        private List<string> GetKeywords()
+        private static List<string> GetKeywords()
         {
             List<string> keywords = new List<string>();
             keywords.Add("abstract");
