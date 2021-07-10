@@ -10,6 +10,11 @@
         CLOC,
 
         /// <summary>
+        /// CELOC: Effective lines of code of a class
+        /// </summary>
+        CELOC,
+
+        /// <summary>
         /// LCOM: Lack of cohesion of methods
         /// </summary>
         LCOM,

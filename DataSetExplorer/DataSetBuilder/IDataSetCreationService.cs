@@ -5,7 +5,7 @@ namespace DataSetExplorer
 {
     public interface IDataSetCreationService
     {
-        public Result<string> CreateDataSetSpreadsheet(string projectName, string projectAndCommitUrl);
-        public Result<string> CreateDataSetSpreadsheet(string projectName, string projectAndCommitUrl, NewSpreadSheetColumnModel columnModel);
+        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl);
+        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl, NewSpreadSheetColumnModel columnModel);
     }
 }

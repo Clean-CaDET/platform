@@ -14,6 +14,7 @@ namespace CodeModel.CodeParsers.CSharp
             return new()
             {
                 [CaDETMetric.CLOC] = GetLinesOfCode(parsedClass.SourceCode),
+                [CaDETMetric.CELOC] = GetEffectiveLinesOfCode(parsedClass),
                 [CaDETMetric.NMD] = GetNumberOfMethodsDeclared(parsedClass),
                 [CaDETMetric.NAD] = GetNumberOfAttributesDefined(parsedClass),
                 [CaDETMetric.NMD_NAD] = GetNumberOfMethodsDeclared(parsedClass) + GetNumberOfAttributesDefined(parsedClass),
@@ -42,6 +43,14 @@ namespace CodeModel.CodeParsers.CSharp
         public static int GetLinesOfCode(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
+        }
+
+        /// <summary>
+        /// A naive implementation of ELOC that sums the ELOC of the class's members.
+        /// </summary>
+        private static double GetEffectiveLinesOfCode(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Sum(m => m.Metrics[CaDETMetric.MELOC]);
         }
 
         /// <summary>
