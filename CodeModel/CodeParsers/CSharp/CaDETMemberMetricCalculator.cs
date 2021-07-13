@@ -49,7 +49,7 @@ namespace CodeModel.CodeParsers.CSharp
             int headerLines = CountHeaderLines(allLines);
             int openAndClosingBracketLines = 2;
             
-            return  allLines.Length - (blankLines + headerLines + openAndClosingBracketLines);
+            return Math.Max(allLines.Length - (blankLines + headerLines + openAndClosingBracketLines), 1);
         }
 
         private static string RemoveCommentsFromCode(CSharpSyntaxNode node)
