@@ -19,6 +19,7 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NAD] = GetNumberOfAttributesDefined(parsedClass),
                 [CaDETMetric.NMD_NAD] = GetNumberOfMethodsDeclared(parsedClass) + GetNumberOfAttributesDefined(parsedClass),
                 [CaDETMetric.WMC] = GetWeightedMethodPerClass(parsedClass),
+                [CaDETMetric.WMC_NO_CASE] = GetWeightedMethodPerClassWithoutCase(parsedClass),
                 [CaDETMetric.LCOM] = GetLackOfCohesionOfMethods(parsedClass),
                 [CaDETMetric.LCOM3] = GetLackOfCohesionOfMethods3(parsedClass),
                 [CaDETMetric.LCOM4] = GetLackOfCohesionOfMethods4(parsedClass),
@@ -40,7 +41,7 @@ namespace CodeModel.CodeParsers.CSharp
             };
         }
 
-        public static int GetLinesOfCode(string code)
+        private static int GetLinesOfCode(string code)
         {
             return code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
         }
@@ -225,7 +226,16 @@ namespace CodeModel.CodeParsers.CSharp
         {
             return parsedClass.Members.Sum(method => method.Metrics[CaDETMetric.CYCLO]);
         }
-        
+
+        /// <summary>
+        /// WMC - Weighted Method Per Class
+        /// DOI: 10.1109/32.295895, but using a different cyclo metric.
+        /// </summary>
+        private double GetWeightedMethodPerClassWithoutCase(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Sum(method => method.Metrics[CaDETMetric.CYCLO_SWITCH]);
+        }
+
         private static int GetNumberOfAttributesDefined(CaDETClass parsedClass)
         {
             //TODO: Probably should expand to include simple accessors that do not have a related field.

@@ -50,6 +50,11 @@
         WMC,
 
         /// <summary>
+        /// WMC: Weighted methods per class, relying on Cyclomatic complexity that doesn't count Cases
+        /// </summary>
+        WMC_NO_CASE,
+
+        /// <summary>
         /// ATFD: Access to foreign data
         /// </summary>
         ATFD,
