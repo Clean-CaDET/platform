@@ -31,6 +31,10 @@ DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
 DELETE FROM public."Courses";
 
+DELETE FROM public."Teachers";
+DELETE FROM public."Subscriptions";
+DELETE FROM public."SubscriptionPlans";
+
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
 	VALUES (1, 'SU-1-2021', 1, 2, 3, 4, 'C:/Smart-Tutor/1/Workspace');

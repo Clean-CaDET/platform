@@ -21,4 +21,8 @@
     <ProjectReference Include="..\CodeModel\CodeModel.csproj" />
     <ProjectReference Include="..\SmellDetector\SmellDetector.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ContentModel\DTOs" />
+  </ItemGroup>
 </Project>
