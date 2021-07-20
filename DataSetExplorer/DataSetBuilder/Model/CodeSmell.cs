@@ -11,7 +11,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Validate();
         }
 
-        public string Value { get; }
+        private CodeSmell()
+        {
+        }
+
+        public int Id { get; private set; }
+        public string Value { get; private set; }
 
         public void Validate()
         {
