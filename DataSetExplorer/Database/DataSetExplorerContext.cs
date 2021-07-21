@@ -9,43 +9,19 @@ namespace DataSetExplorer.Database
 {
     public class DataSetExplorerContext : DbContext
     {
+        public DbSet<Annotator> Annotators { get; set; }
+        public DbSet<CodeSmell> CodeSmells { get; set; }
+        public DbSet<SmellHeuristic> SmellHeuristics { get; set; }
+        public DbSet<DataSetAnnotation> DataSetAnnotations { get; set; }
+        public DbSet<DataSetInstance> DataSetInstances { get; set; }
+        public DbSet<DataSet> DataSets { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Annotator>().ToTable("Annotators");
-            modelBuilder.Entity<CodeSmell>().ToTable("CodeSmells");
-            modelBuilder.Entity<SmellHeuristic>().ToTable("SmellHeuristics");
-            
-            ConfigureDataSetAnnotations(modelBuilder);
-            ConfigureDataSet(modelBuilder);
-        }
-
-        private static void ConfigureDataSetAnnotations(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<DataSetAnnotation>().ToTable("DataSetAnnotations");
-            
-            modelBuilder.Entity<DataSetAnnotation>()
-                .HasOne(a => a.Annotator);
-            modelBuilder.Entity<DataSetAnnotation>()
-                .HasOne(a => a.InstanceSmell);
-            modelBuilder.Entity<DataSetAnnotation>()
-                .HasMany(a => a.ApplicableHeuristics);
-        }
-
-        private static void ConfigureDataSet(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<DataSetInstance>().ToTable("DataSetInstances");
-
-            modelBuilder.Entity<DataSetInstance>()
-                .HasMany(i => i.Annotations);
-
-            modelBuilder.Entity<DataSet>().ToTable("DataSets");
-
-            modelBuilder.Entity<DataSet>()
-                .HasMany(s => s._instances);
+            modelBuilder.Entity<DataSetInstance>().Ignore(i => i.MetricFeatures);
         }
     }
 }

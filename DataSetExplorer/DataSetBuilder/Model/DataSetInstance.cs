@@ -14,7 +14,6 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public string ProjectLink { get; private set; }
         public SnippetType Type { get; private set; }
         public ISet<DataSetAnnotation> Annotations { get; private set; }
-        [NotMapped]
         public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
 
         internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
