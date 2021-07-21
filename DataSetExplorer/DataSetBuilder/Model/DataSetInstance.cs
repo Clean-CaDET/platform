@@ -1,17 +1,19 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
 {
     public class DataSetInstance
     {
-        public string CodeSnippetId { get; }
-        public string Link { get; }
-        public string ProjectLink { get; }
-        public SnippetType Type { get; }
-        public ISet<DataSetAnnotation> Annotations { get; }
+        public int Id { get; private set; }
+        public string CodeSnippetId { get; private set; }
+        public string Link { get; private set; }
+        public string ProjectLink { get; private set; }
+        public SnippetType Type { get; private set; }
+        public ISet<DataSetAnnotation> Annotations { get; private set; }
         public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
 
         internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
@@ -25,6 +27,10 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Annotations = new HashSet<DataSetAnnotation>();
             MetricFeatures = metricFeatures;
             Validate();
+        }
+
+        private DataSetInstance()
+        {
         }
 
         private void Validate()

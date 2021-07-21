@@ -1,5 +1,8 @@
 ﻿using DataSetExplorer.ConsoleApp;
+using DataSetExplorer.Database;
 using DataSetExplorer.RepositoryAdapters;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace DataSetExplorer
 {
@@ -7,7 +10,7 @@ namespace DataSetExplorer
     {
         static void Main(string[] args)
         {
-            CreateConsoleUI();
+            CreateHostBuilder(args).Build().Run();
         }
 
         private static void CreateConsoleUI()
@@ -17,5 +20,12 @@ namespace DataSetExplorer
                 new DataSetCreationService(new GitCodeRepository()))
                 .Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

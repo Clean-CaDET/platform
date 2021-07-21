@@ -4,9 +4,9 @@ namespace DataSetExplorer.DataSetBuilder.Model
 {
     public class Annotator
     {
-        public int Id { get; }
-        public int YearsOfExperience { get; }
-        public int Ranking { get; }
+        public int Id { get; private set; }
+        public int YearsOfExperience { get; private set; }
+        public int Ranking { get; private set; }
 
         public Annotator(int id)
         {

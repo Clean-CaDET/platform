@@ -5,9 +5,10 @@ namespace DataSetExplorer.DataSetBuilder.Model
 {
     public class DataSetAnnotation
     {
-        public CodeSmell InstanceSmell { get; }
-        public int Severity { get; }
-        public List<SmellHeuristic> ApplicableHeuristics { get; }
+        public int Id { get; private set; }
+        public CodeSmell InstanceSmell { get; private set; }
+        public int Severity { get; private set; }
+        public List<SmellHeuristic> ApplicableHeuristics { get; private set; }
         public Annotator Annotator { get; set; }
 
         public DataSetAnnotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
@@ -17,6 +18,10 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Annotator = annotator;
             ApplicableHeuristics = applicableHeuristics;
             Validate();
+        }
+
+        private DataSetAnnotation()
+        {
         }
 
         private void Validate()
