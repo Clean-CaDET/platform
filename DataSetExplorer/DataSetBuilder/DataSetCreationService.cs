@@ -1,5 +1,6 @@
 ﻿using DataSetExplorer.DataSetBuilder;
 using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using DataSetExplorer.DataSetSerializer.ViewModel;
 using DataSetExplorer.RepositoryAdapters;
@@ -12,27 +13,28 @@ namespace DataSetExplorer
     public class DataSetCreationService : IDataSetCreationService
     {
         private readonly ICodeRepository _codeRepository;
+        private readonly IDataSetRepository _dataSetRepository;
 
-        public DataSetCreationService(ICodeRepository codeRepository)
+        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository)
         {
             _codeRepository = codeRepository;
+            _dataSetRepository = dataSetRepository;
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl)
+        public DataSet CreateDataSet(string basePath, string projectName, string projectAndCommitUrl)
         {
-            return CreateDataSetSpreadsheet(basePath, projectName, projectAndCommitUrl, new NewSpreadSheetColumnModel());
-        }
-
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl, NewSpreadSheetColumnModel columnModel)
-        {
-            //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
             var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
             _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
-            
             var dataSet = CreateDataSetFromRepository(projectAndCommitUrl, gitFolderPath);
+            _dataSetRepository.Create(dataSet);
+            return dataSet;
+        }
+
+        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)
+        {
+            //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
             var excelFileName = ExportToExcel(basePath, projectName, columnModel, dataSet);
-            
-            return Result.Ok("Data set created: " + excelFileName);
+            return Result.Ok("Data set exported to " + excelFileName);
         }
 
         private static DataSet CreateDataSetFromRepository(string projectAndCommitUrl, string projectPath)

@@ -7,12 +7,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
     {
         public int Id { get; private set; }
         public string Url { get; }
-        internal readonly HashSet<DataSetInstance> _instances;
+        public HashSet<DataSetInstance> Instances { get; private set; }
 
         internal DataSet(string dataSetUrl)
         {
             Url = dataSetUrl;
-            _instances = new HashSet<DataSetInstance>();
+            Instances = new HashSet<DataSetInstance>();
         }
 
         private DataSet()
@@ -23,38 +23,34 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
             foreach (var instance in instances)
             {
-                if (_instances.TryGetValue(instance, out var existingInstance))
+                if (Instances.TryGetValue(instance, out var existingInstance))
                 {
                     existingInstance.AddAnnotations(instance);
                 } else
                 {
-                    _instances.Add(instance);
+                    Instances.Add(instance);
                 }
             }
         }
 
         public List<DataSetInstance> GetInstancesOfType(SnippetType type)
         {
-            return _instances.Where(i => i.Type.Equals(type)).ToList();
+            return Instances.Where(i => i.Type.Equals(type)).ToList();
         }
 
         public List<DataSetInstance> GetInsufficientlyAnnotatedInstances()
         {
-            var instances = new List<DataSetInstance>();
-
-            instances.AddRange(_instances.Where(i => !i.IsSufficientlyAnnotated()));
-            
-            return instances;
+            return Instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
         }
 
         public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
         {
-            return _instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+            return Instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
         }
 
         public List<DataSetInstance> GetAllInstances()
         {
-            return _instances.ToList();
+            return Instances.ToList();
         }
     }
 }

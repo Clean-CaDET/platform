@@ -13,14 +13,6 @@ namespace DataSetExplorer
             CreateHostBuilder(args).Build().Run();
         }
 
-        private static void CreateConsoleUI()
-        {
-            new MainMenu(
-                new DataSetExportationService(new FullDataSetFactory()),
-                new DataSetCreationService(new GitCodeRepository()))
-                .Run();
-        }
-
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

@@ -1,4 +1,5 @@
 ﻿using DataSetExplorer.Database;
+using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.RepositoryAdapters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,6 +20,9 @@ namespace DataSetExplorer
             services.AddControllers();
             services.AddDbContext<DataSetExplorerContext>(opt =>
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
+            services.AddScoped<IDataSetCreationService, DataSetCreationService>();
+            services.AddScoped<ICodeRepository, GitCodeRepository>();
+            services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
