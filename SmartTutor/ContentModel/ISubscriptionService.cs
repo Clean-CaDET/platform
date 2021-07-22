@@ -1,12 +1,20 @@
-﻿using SmartTutor.ContentModel.Subscriptions;
+﻿
+using SmartTutor.ContentModel.DTOs;
+using SmartTutor.ContentModel.Lectures;
+using SmartTutor.ContentModel.Subscriptions;
 
 namespace SmartTutor.ContentModel
 {
     public interface ISubscriptionService
     {
-        void SubscribeTeacher(Teacher teacher, Subscription subscription);
-        //void MakeCourse(Teacher teacher, Course course);
-        /*//TODO too many params (logic in other service?)
-        void AddLectureToCourse(Teacher teacher, Course course, Lecture lecture);*/
+        void SubscribeTeacher(SubscriptionDto dto);
+        bool CanAddLecture(int teacherId);
+        bool CanAddCourse(int teacherId);
+
+        void IncrementNumberOfLectures(int teacherId);
+
+        void IncrementNumberOfCourses(int teacherId);
+
+        void AddCourseToTeacher(int teacherId, Course course);
     }
 }

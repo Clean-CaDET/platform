@@ -9,7 +9,15 @@ namespace SmartTutor.ContentModel.Subscriptions
         public DateTime Start { get; private set; }
         public DateTime End { get; private set; }
         
-        public IndividualPlanUsage PlanUsage { get; private set; }
+        public IndividualPlanUsage PlanUsage { get;  set; }
+
+        public Subscription(int teacherId, DateTime start, DateTime end,IndividualPlanUsage  individualPlanUsage)
+        {
+            TeacherId = teacherId;
+            Start = start;
+            End = end;
+            PlanUsage = individualPlanUsage;
+        }
 
         public bool IsValid()
         {

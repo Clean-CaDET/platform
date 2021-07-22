@@ -5,6 +5,8 @@ using SmartTutor.ContentModel;
 using SmartTutor.Controllers.Content.DTOs;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel.DTOs;
+using SmartTutor.ContentModel.Exceptions;
 
 namespace SmartTutor.Controllers.Content
 {
@@ -26,6 +28,34 @@ namespace SmartTutor.Controllers.Content
         {
             var lectures = _contentService.GetLectures();
             return Ok(lectures.Select(l => _mapper.Map<LectureDTO>(l)).ToList());
+        }
+
+        [HttpPost]
+        public ActionResult<string> CreateCourse([FromBody] CreateCourseDto dto)
+        {
+            try
+            {
+                _contentService.CreateCourse(dto);
+                return Ok("Course is created!");
+            }
+            catch (Exception e)
+            {
+                return Problem("Sorry, there has been an problem on server side.");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult<string> CreateLecture([FromBody] CreateLectureDto dto)
+        {
+            try
+            {
+                _contentService.CreateLecture(dto);
+                return Ok("Lecture is created!");
+            }
+            catch (Exception e)
+            {
+                return Problem("Sorry, there has been an problem on server side.");
+            }
         }
     }
 }

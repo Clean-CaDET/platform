@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ProgressModel.Submissions;
 
 namespace SmartTutor.ContentModel.Subscriptions
@@ -7,6 +8,7 @@ namespace SmartTutor.ContentModel.Subscriptions
     {
         public int Id { get; private set; }
         public List<Subscription> Subscriptions { get; private set; }
+        public List<Course> Courses { get; private set; }
         
         public Subscription GetActiveSubscription()
         {
@@ -17,5 +19,11 @@ namespace SmartTutor.ContentModel.Subscriptions
         {
             Subscriptions.Add(subscription);
         }
+        
+        public void AddCourse(Course course)
+        {
+            Courses.Add(course);
+        }
+        
     }
 }

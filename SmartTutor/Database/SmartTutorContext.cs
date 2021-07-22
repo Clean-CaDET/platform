@@ -55,8 +55,8 @@ namespace SmartTutor.Database
         #region Subscription Model
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
-
+        public DbSet<IndividualPlanUsage> IndividualPlanUsages { get; set; }
+        public DbSet<IndividualPlan> IndividualPlans { get; set; }
 
         #endregion
         public DbSet<Learner> Learners { get; set; }
