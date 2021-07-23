@@ -13,22 +13,25 @@ namespace SmartTutor.ContentModel.Subscriptions.Repository
             _dbContext = dbContext;
         }
 
-        public void SaveOrUpdateSubscription(Subscription subscription)
+        public Subscription SaveOrUpdateSubscription(Subscription subscription)
         {
-            _dbContext.Subscriptions.Attach(subscription);
+            var s = _dbContext.Subscriptions.Attach(subscription).Entity;
             _dbContext.SaveChanges();
+            return s;
         }
 
-        public void SaveOrUpdateTeacher(Teacher teacher)
+        public Teacher SaveOrUpdateTeacher(Teacher teacher)
         {
-            _dbContext.Teachers.Attach(teacher);
+            var t = _dbContext.Teachers.Attach(teacher).Entity;
             _dbContext.SaveChanges();
+            return t;
         }
 
-        public void SaveOrUpdatePlanUsage(IndividualPlanUsage individualPlanUsage)
+        public IndividualPlanUsage SaveOrUpdatePlanUsage(IndividualPlanUsage individualPlanUsage)
         {
-            _dbContext.IndividualPlanUsages.Attach(individualPlanUsage);
+            var i = _dbContext.IndividualPlanUsages.Attach(individualPlanUsage).Entity;
             _dbContext.SaveChanges();
+            return i;
         }
 
         public Teacher GetTeacher(int id)
@@ -39,6 +42,11 @@ namespace SmartTutor.ContentModel.Subscriptions.Repository
         public IndividualPlan GetIndividualPlan(int id)
         {
             return _dbContext.IndividualPlans.FirstOrDefault(plan => plan.Id.Equals(id));
+        }
+
+        public IndividualPlanUsage GetIndividualPlanUsage(int id)
+        {
+            return _dbContext.IndividualPlanUsages.FirstOrDefault(plan => plan.Id.Equals(id));
         }
     }
 }

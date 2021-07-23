@@ -27,6 +27,7 @@ namespace SmartTutor.ContentModel.Lectures
 
         public void AddLecture(Lecture lecture)
         {
+            if (Lectures == null) Lectures = new List<Lecture>();
             Lectures.Add(lecture);
         }
     }

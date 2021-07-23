@@ -1,45 +1,42 @@
-﻿namespace SmartTutor.ContentModel.Subscriptions
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SmartTutor.ContentModel.Subscriptions
 {
     public class IndividualPlanUsage
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
-        public IndividualPlan Plan { get; protected set; }
-
+        public int IndividualPlanId { get; protected set; }
         public int NumberOfUsersUsed { get; protected set; }
         public int NumberOfCoursesUsed { get; private set; }
         public int NumberOfLecturesUsed { get; private set; }
 
-        public IndividualPlanUsage(IndividualPlan plan, int numberOfUsersUsed, int numberOfCoursesUsed, int numberOfLecturesUsed)
+        public IndividualPlanUsage(int id, int individualPlanId, int numberOfUsersUsed, int numberOfCoursesUsed, int numberOfLecturesUsed)
         {
-            Plan = plan;
+            Id = id;
+            IndividualPlanId = individualPlanId;
             NumberOfUsersUsed = numberOfUsersUsed;
             NumberOfCoursesUsed = numberOfCoursesUsed;
             NumberOfLecturesUsed = numberOfLecturesUsed;
         }
         
-        public IndividualPlanUsage(IndividualPlan plan)
+        public IndividualPlanUsage(int id, int individualPlanId)
         {
-            Plan = plan;
+            Id = id;
+            IndividualPlanId = individualPlanId;
             NumberOfUsersUsed = 1;
             NumberOfCoursesUsed = 0;
             NumberOfLecturesUsed = 0;
         }
 
-        public int NumberOfUserLeft()
+        public IndividualPlanUsage(int individualPlanId)
         {
-            return Plan.NumberOfUsers - NumberOfUsersUsed;
+            IndividualPlanId = individualPlanId;
+            NumberOfUsersUsed = 1;
+            NumberOfCoursesUsed = 0;
+            NumberOfLecturesUsed = 0;
         }
 
-        public int NumberOfCoursesLeft()
-        {
-            return Plan.NumberOfCourses - NumberOfCoursesUsed;
-        }
-
-        public int NumberOfLecturesLeft()
-        {
-            return Plan.NumberOfLectures - NumberOfLecturesUsed;
-        }
-        
         public void IncrementNumberOfUsedLectures()
         {
             NumberOfLecturesUsed++;

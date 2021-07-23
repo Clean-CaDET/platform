@@ -9,6 +9,10 @@ using SmartTutor.ProgressModel;
 using SmartTutor.ProgressModel.Progress;
 using System.Collections.Generic;
 using System.Linq;
+using SmartTutor.ContentModel;
+using SmartTutor.ContentModel.DTOs;
+using SmartTutor.Controllers.Content;
+using SmartTutor.Database;
 using Xunit;
 
 namespace SmartTutor.Tests.Integration
@@ -98,5 +102,69 @@ namespace SmartTutor.Tests.Integration
                 }
             };
         }
+        
+        [Theory]
+        [MemberData(nameof(Courses))]
+        public void Creates_course_successfully(CreateCourseDto createCourseDto, bool expectedCorrectness)
+        {
+            using var scope = _factory.Services.CreateScope();
+            var controller = new ContentController(_factory.Services.GetRequiredService<IMapper>(),scope.ServiceProvider.GetRequiredService<IContentService>());
+            var dbContext = scope.ServiceProvider.GetRequiredService<SmartTutorContext>();
+            controller.CreateCourse(createCourseDto);
+            var isCourseCreated = dbContext.Courses.ToList().Any(course => course.Id>2 && course.Name.Equals(createCourseDto.CourseName));
+            isCourseCreated.ShouldBe(expectedCorrectness);
+        }
+
+        public static IEnumerable<object[]> Courses() => new List<object[]>
+        {
+            new object[]
+            {
+                new CreateCourseDto()
+                {
+                    TeacherId = 1, CourseName = "Math"
+                },
+                true
+            },
+            new object[]
+            {
+                new CreateCourseDto
+                {
+                    TeacherId = 3, CourseName = "Data science"
+                },
+                false
+            }
+        };
+        
+        [Theory]
+        [MemberData(nameof(Lectures))]
+        public void Creates_lecture_successfully(CreateLectureDto createLectureDto, bool expectedCorrectness)
+        {
+            using var scope = _factory.Services.CreateScope();
+            var controller = new ContentController(_factory.Services.GetRequiredService<IMapper>(),scope.ServiceProvider.GetRequiredService<IContentService>());
+            var dbContext = scope.ServiceProvider.GetRequiredService<SmartTutorContext>();
+            controller.CreateLecture(createLectureDto);
+            var isCourseCreated = dbContext.Lectures.ToList().Any(lecture => lecture.CourseId.Equals(createLectureDto.CourseId) && lecture.Description.Equals(createLectureDto.LectureDescription) && lecture.Name.Equals(createLectureDto.LectureName));
+            isCourseCreated.ShouldBe(expectedCorrectness);
+        }
+
+        public static IEnumerable<object[]> Lectures() => new List<object[]>
+        {
+            new object[]
+            {
+                new CreateLectureDto()
+                {
+                    TeacherId = 1, CourseId = 1, LectureDescription = "Interesting", LectureName = "Basics"
+                },
+                true
+            },
+            new object[]
+            {
+                new CreateLectureDto()
+                {
+                    TeacherId = 3, CourseId = 1, LectureDescription = "Example", LectureName = "Example"
+                },
+                false
+            }
+        };
     }
 }

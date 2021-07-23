@@ -1,6 +1,4 @@
 ﻿using System;
-using AutoMapper;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.DTOs;
@@ -13,12 +11,10 @@ namespace SmartTutor.Controllers.Content
     public class SubscriptionController:ControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;
-        private readonly IMapper _mapper;
 
-        public SubscriptionController(ISubscriptionService subscriptionService, IMapper mapper)
+        public SubscriptionController(ISubscriptionService subscriptionService)
         {
             _subscriptionService = subscriptionService;
-            _mapper = mapper;
         }
         
         [HttpPost]

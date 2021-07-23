@@ -26,6 +26,7 @@ using SmartTutor.QualityAnalysis.Repository;
 using System;
 using Microsoft.Net.Http.Headers;
 using System.IO;
+using SmartTutor.ContentModel.Subscriptions.Repository;
 
 namespace SmartTutor
 {
@@ -68,13 +69,17 @@ namespace SmartTutor
             services.AddScoped<IContentService, ContentService>();
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
+            services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 
             services.AddScoped<IProgressService, ProgressService>();
             services.AddScoped<IProgressRepository, ProgressDatabaseRepository>();
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<ISubmissionRepository, SubmissionDatabaseRepository>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IContentService, ContentService>();
             services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
+            
 
             services.AddScoped<ILearnerService, LearnerService>();
             services.Configure<WorkspaceOptions>(Configuration.GetSection(WorkspaceOptions.ConfigKey));

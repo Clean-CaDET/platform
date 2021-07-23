@@ -11,9 +11,7 @@ namespace SmartTutor.ContentModel.Lectures.Repository
         List<KnowledgeNode> GetKnowledgeNodes(int id);
         KnowledgeNode GetKnowledgeNodeWithSummaries(int id);
         KnowledgeNode GetKnowledgeNodeBySummary(int id);
-
-        void SaveOrUpdateCourse(Course course);
-        void SaveOrUpdateLecture(Lecture lecture);
-
+        Course SaveOrUpdateCourse(Course course);
+        Lecture SaveOrUpdateLecture(Lecture lecture);
     }
 }

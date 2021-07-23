@@ -33,7 +33,25 @@ DELETE FROM public."Courses";
 
 DELETE FROM public."Teachers";
 DELETE FROM public."Subscriptions";
-DELETE FROM public."SubscriptionPlans";
+DELETE FROM public."IndividualPlanUsages";
+DELETE FROM public."IndividualPlans";
+
+INSERT INTO public."Teachers"(
+    "Id")
+    VALUES (1);
+INSERT INTO public."Subscriptions"(
+    "Id", "TeacherId", "Start", "End")
+    VALUES (1, 1, 'SU-1-2021', 'SU-1-2031');
+INSERT INTO public."IndividualPlans"(
+    "Id", "NumberOfUsers", "NumberOfCourses", "NumberOfLectures")
+    VALUES (1, 1, 3, 3);
+INSERT INTO public."IndividualPlans"(
+    "Id", "NumberOfUsers", "NumberOfCourses", "NumberOfLectures")
+VALUES (2, 1, 0, 0);
+INSERT INTO public."IndividualPlanUsages"(
+    "Id", "IndividualPlanId", "NumberOfUsersUsed", "NumberOfCoursesUsed", "NumberOfLecturesUsed")
+VALUES (1, 1, 0, 0, 0);
+
 
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
@@ -46,8 +64,8 @@ INSERT INTO public."Learners"(
 	VALUES (3, 'SU-3-2021', 1, 4, 3, 2, 'C:/Smart-Tutor/3/Workspace');
 
 INSERT INTO public."Courses"(
-	"Id")
-	VALUES (1);
+	"Id", "TeacherId")
+	VALUES (1, 1);
 
 INSERT INTO public."CourseEnrollment"(
 	"Id", "CourseId", "LearnerId")

@@ -2,12 +2,11 @@
 {
     public interface ISubscriptionRepository
     {
-        void SaveOrUpdateSubscription(Subscription subscription);
-        void SaveOrUpdateTeacher(Teacher teacher);
-        void SaveOrUpdatePlanUsage(IndividualPlanUsage individualPlanUsage);
-
-
+        Subscription SaveOrUpdateSubscription(Subscription subscription);
+        Teacher SaveOrUpdateTeacher(Teacher teacher);
+        IndividualPlanUsage SaveOrUpdatePlanUsage(IndividualPlanUsage individualPlanUsage);
         Teacher GetTeacher(int id);
         IndividualPlan GetIndividualPlan(int id);
+        IndividualPlanUsage GetIndividualPlanUsage(int id);
     }
 }

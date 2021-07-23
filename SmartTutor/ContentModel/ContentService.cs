@@ -1,3 +1,4 @@
+using System;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace SmartTutor.ContentModel
         {
             if (!_subscriptionService.CanAddCourse(dto.TeacherId)) throw new NotEnoughResourcesException();
             var course = new Course(dto.CourseName);
-            _lectureRepository.SaveOrUpdateCourse(course);
+            course = _lectureRepository.SaveOrUpdateCourse(course);
             _subscriptionService.AddCourseToTeacher(dto.TeacherId, course);
             _subscriptionService.IncrementNumberOfCourses(dto.TeacherId);
         }
@@ -36,8 +37,8 @@ namespace SmartTutor.ContentModel
             if (!_subscriptionService.CanAddLecture(dto.TeacherId)) throw new NotEnoughResourcesException();
             var lecture = new Lecture(dto.CourseId, dto.LectureName, dto.LectureDescription);
             var course = _lectureRepository.GetCourse(dto.CourseId);
+            lecture = _lectureRepository.SaveOrUpdateLecture(lecture);
             course.AddLecture(lecture);
-            _lectureRepository.SaveOrUpdateLecture(lecture);
             _lectureRepository.SaveOrUpdateCourse(course);
             _subscriptionService.IncrementNumberOfLectures(dto.TeacherId);
         }

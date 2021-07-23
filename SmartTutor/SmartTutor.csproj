@@ -23,19 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\SmartTutorContextModelSnapshot.cs" />
-    <Compile Remove="Migrations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="Migrations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Migrations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Migrations\**" />
+    <Folder Include="ContentModel\DTOs" />
   </ItemGroup>
 </Project>

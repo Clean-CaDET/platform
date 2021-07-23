@@ -57,16 +57,18 @@ namespace SmartTutor.ContentModel.Lectures.Repository
             return learningObjectSummary?.KnowledgeNode;
         }
 
-        public void SaveOrUpdateCourse(Course course)
+        public Course SaveOrUpdateCourse(Course course)
         {
-            _dbContext.Courses.Attach(course);
+            var c = _dbContext.Courses.Attach(course).Entity;
             _dbContext.SaveChanges();
+            return c;
         }
 
-        public void SaveOrUpdateLecture(Lecture lecture)
+        public Lecture SaveOrUpdateLecture(Lecture lecture)
         {
-            _dbContext.Lectures.Attach(lecture);
+            var l = _dbContext.Lectures.Attach(lecture).Entity;
             _dbContext.SaveChanges();
+            return l;
         }
     }
 }
