@@ -8,5 +8,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
     public interface IDataSetRepository
     {
         public void Create(DataSet dataSet);
+        public DataSet GetDataSet(int id);
     }
 }

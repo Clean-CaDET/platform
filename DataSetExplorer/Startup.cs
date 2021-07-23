@@ -28,6 +28,8 @@ namespace DataSetExplorer
 
             services.AddScoped<IDataSetInstanceService, DataSetInstanceService>();
             services.AddScoped<IDataSetInstanceRepository, DataSetInstanceDatabaseRepository>();
+
+            services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

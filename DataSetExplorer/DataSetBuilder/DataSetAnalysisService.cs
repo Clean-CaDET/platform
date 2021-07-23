@@ -1,45 +1,40 @@
 ﻿using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSetBuilder.Model.Exceptions;
+using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using FluentResults;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DataSetExplorer
 {
-    class DataSetAnalysisService : IDataSetAnalysisService
+    public class DataSetAnalysisService : IDataSetAnalysisService
     {
-        public Result<string> FindInstancesWithAllDisagreeingAnnotations(string dataSetPath, string outputPath)
+        private readonly IDataSetRepository _dataSetRepository;
+
+        public DataSetAnalysisService(IDataSetRepository dataSetRepository)
         {
-            try
-            {
-                var dataset = LoadDataSet(dataSetPath);
-                var exporter = new TextFileExporter(outputPath);
-                exporter.ExportInstancesWithAnnotatorId(dataset.GetInstancesWithAllDisagreeingAnnotations());
-                return Result.Ok("Instances with disagreeing annotations exported: " + outputPath);
-            } catch (IOException e)
-            {
-                return Result.Fail(e.ToString());
-            }
+            _dataSetRepository = dataSetRepository;
         }
 
-        public Result<string> FindInstancesRequiringAdditionalAnnotation(string dataSetPath, string outputPath)
+        public List<DataSetInstance> FindInstancesWithAllDisagreeingAnnotations(int dataSetId)
         {
-            try
-            {
-                var dataset = LoadDataSet(dataSetPath);
-                var exporter = new TextFileExporter(outputPath);
-                exporter.ExportInstancesWithAnnotatorId(dataset.GetInsufficientlyAnnotatedInstances());
-                return Result.Ok("Instances requiring additional annotation exported: " + outputPath);
-            } catch (IOException e)
-            {
-                return Result.Fail(e.ToString());
-            }
+            var dataset = LoadDataSet(dataSetId);
+            return dataset.GetInstancesWithAllDisagreeingAnnotations();
         }
 
-        private DataSet LoadDataSet(string folder)
+        public List<DataSetInstance> FindInstancesRequiringAdditionalAnnotation(int dataSetId)
         {
-            var importer = new ExcelImporter(folder);
-            return importer.Import("Clean CaDET");
+            var dataset = LoadDataSet(dataSetId);
+            return dataset.GetInsufficientlyAnnotatedInstances();
+        }
+
+        private DataSet LoadDataSet(int dataSetId)
+        {
+            var dataset = _dataSetRepository.GetDataSet(dataSetId);
+            if (dataset == default) throw new DataSetWithIdNotFound(dataSetId);
+            return dataset;
         }
     }
 }

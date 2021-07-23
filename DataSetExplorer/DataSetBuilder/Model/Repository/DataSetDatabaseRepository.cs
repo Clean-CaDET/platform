@@ -1,4 +1,5 @@
 ﻿using DataSetExplorer.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,11 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         {
             _dbContext.Add(dataSet);
             _dbContext.SaveChanges();
+        }
+
+        public DataSet GetDataSet(int id)
+        {
+            return _dbContext.DataSets.Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator).FirstOrDefault(s => s.Id == id);
         }
     }
 }

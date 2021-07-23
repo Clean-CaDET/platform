@@ -31,9 +31,6 @@ namespace DataSetExplorer.ConsoleApp
         {
             switch (chosenOption)
             {
-                case "2":
-                    new DataSetAnalysisSubmenu(new DataSetAnalysisService()).AnalyzeDataSet();
-                    break;
                 case "3":
                     ExportDataSet();
                     break;

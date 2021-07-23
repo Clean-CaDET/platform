@@ -6,7 +6,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
     public class DataSet
     {
         public int Id { get; private set; }
-        public string Url { get; }
+        public string Url { get; private set; }
         public HashSet<DataSetInstance> Instances { get; private set; }
 
         internal DataSet(string dataSetUrl)
