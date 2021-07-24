@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using SmartTutor.ContentModel.Lectures;
 
 namespace SmartTutor.ContentModel.Subscriptions
-
-{
+{ 
     public class Teacher
-    {
+    { 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
         public List<Subscription> Subscriptions { get; private set; }

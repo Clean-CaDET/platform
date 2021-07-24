@@ -80,7 +80,6 @@ namespace SmartTutor
             services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IFeedbackRepository, FeedbackDatabaseRepository>();
             
-
             services.AddScoped<ILearnerService, LearnerService>();
             services.Configure<WorkspaceOptions>(Configuration.GetSection(WorkspaceOptions.ConfigKey));
             services.AddScoped<IWorkspaceCreator, NoWorkspaceCreator>();

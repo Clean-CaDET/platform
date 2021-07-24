@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.DTOs;
-using SmartTutor.ContentModel.Exceptions;
-using SmartTutor.ContentModel.Subscriptions;
 using SmartTutor.Controllers.Content;
 using SmartTutor.Database;
 using Xunit;
@@ -64,6 +61,5 @@ namespace SmartTutor.Tests.Integration
                 true
             }
         };
-
     }
 }
