@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using SmartTutor.Controllers.Learners;
 using SmartTutor.Controllers.Learners.DTOs;
+using SmartTutor.Keycloak;
 using SmartTutor.LearnerModel;
 using Xunit;
 
@@ -23,11 +24,12 @@ namespace SmartTutor.Tests.Integration
         {
             using var scope = _factory.Services.CreateScope();
             var controller = new LearnerController(_factory.Services.GetRequiredService<IMapper>(),
-                scope.ServiceProvider.GetRequiredService<ILearnerService>());
+                scope.ServiceProvider.GetRequiredService<ILearnerService>(),
+                scope.ServiceProvider.GetRequiredService<IKeycloakService>());
             var loginSubmission = new LoginDTO {StudentIndex = "SU-1-2021"};
 
-            var learner = ((OkObjectResult)controller.Login(loginSubmission).Result).Value as LearnerDTO;
-            
+            var learner = ((OkObjectResult) controller.Login(loginSubmission).Result).Value as LearnerDTO;
+
             learner.Id.ShouldBe(1);
         }
 
@@ -36,10 +38,11 @@ namespace SmartTutor.Tests.Integration
         {
             using var scope = _factory.Services.CreateScope();
             var controller = new LearnerController(_factory.Services.GetRequiredService<IMapper>(),
-                scope.ServiceProvider.GetRequiredService<ILearnerService>());
-            var loginSubmission = new LoginDTO { StudentIndex = "SA-1-2021" };
+                scope.ServiceProvider.GetRequiredService<ILearnerService>(),
+                scope.ServiceProvider.GetRequiredService<IKeycloakService>());
+            var loginSubmission = new LoginDTO {StudentIndex = "SA-1-2021"};
 
-            var code = ((NotFoundObjectResult)controller.Login(loginSubmission).Result).StatusCode;
+            var code = ((NotFoundObjectResult) controller.Login(loginSubmission).Result).StatusCode;
 
             code.ShouldBe(404);
         }
