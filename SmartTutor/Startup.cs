@@ -42,9 +42,6 @@ namespace SmartTutor
 
         private const string CorsPolicy = "_corsPolicy";
 
-        private readonly string _corsOrigins =
-            Environment.GetEnvironmentVariable("CORS_ORIGINS") ?? "http://localhost:4200";
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
@@ -59,7 +56,7 @@ namespace SmartTutor
                 options.AddPolicy(name: CorsPolicy,
                     builder =>
                     {
-                        builder.WithOrigins(_corsOrigins)
+                        builder.WithOrigins(GetSecret("CORS_ORIGINS") ?? "http://localhost:4200")
                             .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization, "access_token")
                             .WithMethods("GET", "PUT", "POST", "DELETE", "OPTIONS");
                     });
