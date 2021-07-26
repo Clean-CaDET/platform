@@ -86,8 +86,11 @@ namespace SmartTutor
             services.AddScoped<ICodeQualityAnalyzer, CaDETQualityAnalyzer>();
             services.AddScoped<IAdviceRepository, AdviceDatabaseRepository>();
 
-            AuthenticationConfig(services);
-            AuthorizationConfig(services);
+            if (bool.Parse(Environment.GetEnvironmentVariable("KEYCLOAK_ON") ?? "false"))
+            {
+                AuthenticationConfig(services);
+                AuthorizationConfig(services);
+            }
         }
 
         private static void AuthorizationConfig(IServiceCollection services)
