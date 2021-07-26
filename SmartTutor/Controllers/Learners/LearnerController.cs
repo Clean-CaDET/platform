@@ -1,6 +1,8 @@
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.Controllers.Learners.DTOs;
+using SmartTutor.Keycloak;
 using SmartTutor.LearnerModel;
 using SmartTutor.LearnerModel.Exceptions;
 using SmartTutor.LearnerModel.Learners;
@@ -13,17 +15,20 @@ namespace SmartTutor.Controllers.Learners
     {
         private readonly IMapper _mapper;
         private readonly ILearnerService _learnerService;
+        private readonly IKeycloakService _keycloakService;
 
-        public LearnerController(IMapper mapper, ILearnerService learnerService)
+        public LearnerController(IMapper mapper, ILearnerService learnerService, IKeycloakService keycloakService)
         {
             _mapper = mapper;
             _learnerService = learnerService;
+            _keycloakService = keycloakService;
         }
 
         [HttpPost("register")]
-        public ActionResult<LearnerDTO> Register([FromBody] LearnerDTO learner)
+        public async Task<ActionResult<LearnerDTO>> Register([FromBody] LearnerDTO learnerDto)
         {
-            var registeredLearner = _learnerService.Register(_mapper.Map<Learner>(learner));
+            var learner = await _keycloakService.Register(_mapper.Map<Learner>(learnerDto));
+            var registeredLearner = _learnerService.Register(learner);
             return Ok(_mapper.Map<LearnerDTO>(registeredLearner));
         }
 

@@ -24,6 +24,7 @@ using SmartTutor.ProgressModel.Submissions.Repository;
 using SmartTutor.QualityAnalysis;
 using SmartTutor.QualityAnalysis.Repository;
 using System;
+using SmartTutor.Keycloak;
 using Microsoft.Net.Http.Headers;
 using System.IO;
 
@@ -85,6 +86,8 @@ namespace SmartTutor
 
             services.AddScoped<ICodeQualityAnalyzer, CaDETQualityAnalyzer>();
             services.AddScoped<IAdviceRepository, AdviceDatabaseRepository>();
+            
+            services.AddScoped<IKeycloakService, KeycloakService>();
 
             if (!bool.Parse(Environment.GetEnvironmentVariable("KEYCLOAK_ON") ?? "false")) return;
             AuthenticationConfig(services);
@@ -95,8 +98,10 @@ namespace SmartTutor
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("testPolicy", policy =>
-                    policy.Requirements.Add(new KeycloakRole("Administrator")));
+                options.AddPolicy("learnerPolicy", policy =>
+                    policy.Requirements.Add(new KeycloakRole("Learner")));
+                options.AddPolicy("professorPolicy", policy =>
+                    policy.Requirements.Add(new KeycloakRole("Professor")));
             });
             services.AddSingleton<IAuthorizationHandler, KeycloakRoleHandler>();
         }
