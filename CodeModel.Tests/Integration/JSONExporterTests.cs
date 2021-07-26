@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using CodeModel.Exporters;
+﻿using CodeModel.Serialization;
 using CodeModel.Tests.DataFactories;
 using Shouldly;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace CodeModel.Tests.Integration
@@ -14,13 +14,13 @@ namespace CodeModel.Tests.Integration
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void Saves_class_to_json(IEnumerable<string> sourceCode, string jsonPath)
+        public void Saves_class_cohesion_graph_to_json(IEnumerable<string> sourceCode, string jsonPath)
         {
-            var exporter = new JSONExporter();
+            var exporter = new ClassCohesionGraphExporter();
             var project = new CodeModelFactory().CreateProject(sourceCode);
             var actualClass = project.Classes.First();
 
-            exporter.ExportClassCohesionGraph(actualClass, jsonPath);
+            exporter.ExportJSON(actualClass, jsonPath);
 
             File.Exists(jsonPath).ShouldBeTrue();
         }

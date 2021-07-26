@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace CodeModel.Exporters
+namespace CodeModel.Serialization
 {
-    public class JSONExporter
+    public class ClassCohesionGraphExporter
     {
-        public void ExportClassCohesionGraph(CaDETClass caDetClass, string filePath)
+        public void ExportJSON(CaDETClass caDetClass, string filePath)
         {
             var graph = GetClassCohesionGraph(caDetClass);
             SaveToJSON(graph, filePath);
