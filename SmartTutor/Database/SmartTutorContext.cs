@@ -18,13 +18,16 @@ namespace SmartTutor.Database
     public class SmartTutorContext : DbContext
     {
         #region Courses
+
         public DbSet<Lecture> Lectures { get; set; }
         public DbSet<KnowledgeNode> KnowledgeNodes { get; set; }
         public DbSet<LearningObjectSummary> LearningObjectSummaries { get; set; }
         public DbSet<Course> Courses { get; set; }
+
         #endregion
 
         #region Learning Objects
+
         public DbSet<LearningObject> LearningObjects { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Text> Texts { get; set; }
@@ -40,16 +43,20 @@ namespace SmartTutor.Database
         public DbSet<BasicNameChecker> BasicNameCheckers { get; set; }
         public DbSet<MetricRangeRule> MetricRangeRules { get; set; }
         public DbSet<ChallengeHint> ChallengeHints { get; set; }
+
         #endregion
 
         #region Progress Model
+
         public DbSet<NodeProgress> NodeProgresses { get; set; }
         public DbSet<ArrangeTaskSubmission> ArrangeTaskSubmissions { get; set; }
         public DbSet<ArrangeTaskContainerSubmission> ArrangeTaskContainerSubmissions { get; set; }
         public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
         public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
+
         #endregion
+
         public DbSet<Learner> Learners { get; set; }
         public DbSet<IssueAdvice> Advice { get; set; }
 
@@ -64,7 +71,7 @@ namespace SmartTutor.Database
             modelBuilder.Entity<Video>().ToTable("Videos");
             modelBuilder.Entity<Question>().ToTable("Questions");
             modelBuilder.Entity<ArrangeTask>().ToTable("ArrangeTasks");
-            
+
             ConfigureChallenge(modelBuilder);
 
             modelBuilder.Entity<Learner>()
@@ -74,6 +81,10 @@ namespace SmartTutor.Database
             modelBuilder.Entity<IssueAdvice>()
                 .HasMany(a => a.Summaries)
                 .WithMany("Advice");
+
+            modelBuilder.Entity<KnowledgeNode>()
+                .HasMany(kn => kn.Prerequisites)
+                .WithMany("PrerequisiteOf");
         }
 
         private static void ConfigureChallenge(ModelBuilder modelBuilder)

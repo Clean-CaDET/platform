@@ -1,3 +1,4 @@
+using System;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.InstructorModel.Instructors;
@@ -43,8 +44,10 @@ namespace SmartTutor.ProgressModel
 
             if (learnerId == null)
             {
-                return new NodeProgress(
-                    0, 0, knowledgeNode, NodeStatus.Unlocked, _instructor.GatherDefaultLearningObjects(knowledgeNode.LearningObjectSummaries));
+                // TODO: learner id is always null
+                learnerId = 1;
+                // return new NodeProgress(
+                //     0, 0, knowledgeNode, NodeStatus.Unlocked, _instructor.GatherDefaultLearningObjects(knowledgeNode.LearningObjectSummaries));
             }
 
             return BuildNodeForLearner(knowledgeNode, (int) learnerId);

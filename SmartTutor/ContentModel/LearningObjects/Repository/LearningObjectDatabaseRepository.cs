@@ -97,5 +97,10 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         {
             return _dbContext.LearningObjectSummaries.FirstOrDefault(los => los.Id == summaryId);
         }
+        
+        public Question GetQuestionForSummary(int summaryId)
+        {
+            return _dbContext.Questions.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
+        }
     }
 }
