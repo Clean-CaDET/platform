@@ -15,14 +15,15 @@ namespace SmartTutor.Keycloak
             Environment.GetEnvironmentVariable("KEYCLOAK_LOGIN_PATH") ??
             "http://localhost:8080/auth/realms/master/protocol/openid-connect/token";
 
-        private readonly string _registerUserPath =
-            Environment.GetEnvironmentVariable("KEYCLOAK_LOGIN_PATH") ??
+        private readonly string _registerPath =
+            Environment.GetEnvironmentVariable("KEYCLOAK_REGISTER_PATH") ??
             "http://localhost:8080/auth/admin/realms/master/users";
 
         private readonly string _allUsersPath =
             Environment.GetEnvironmentVariable("KEYCLOAK_ALL_USERS_PATH") ??
             "http://localhost:8080/auth/admin/realms/master/users";
 
+        //TODO: Take admin credentials from docker secret.
         private readonly string _adminUsername =
             Environment.GetEnvironmentVariable("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
 
@@ -33,8 +34,9 @@ namespace SmartTutor.Keycloak
         {
             var httpClient = new HttpClient();
             var request = new HttpRequestMessage(new HttpMethod("POST"),
-                _registerUserPath);
+                _registerPath);
 
+            //TODO: Take password from Learner this is just POC.
             request.Headers.TryAddWithoutValidation("Authorization", "bearer " + await AuthenticateAdmin());
             request.Content = new StringContent(
                 $"{{\"enabled\":\"true\", \"username\":\"{learner.StudentIndex}\",\"credentials\":[{{\"type\":\"password\",\"value\":\"123\",\"temporary\":false}}]}}}}");
@@ -83,10 +85,10 @@ namespace SmartTutor.Keycloak
 
         private async Task<Learner> SetIamIdToLearner(Learner learner)
         {
-            var list = JsonConvert.DeserializeObject<List<KeycloakLearner>>(await GetAllUsers());
-            foreach (var s in list.Where(s => s.Username.Equals(learner.StudentIndex)))
+            var keycloakUsers = JsonConvert.DeserializeObject<List<KeycloakLearner>>(await GetAllUsers());
+            foreach (var user in keycloakUsers.Where(s => s.Username.Equals(learner.StudentIndex)))
             {
-                learner.IamId = s.Id;
+                learner.IamId = user.Id;
             }
 
             return learner;

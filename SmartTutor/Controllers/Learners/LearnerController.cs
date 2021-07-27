@@ -27,6 +27,7 @@ namespace SmartTutor.Controllers.Learners
         [HttpPost("register")]
         public async Task<ActionResult<LearnerDTO>> Register([FromBody] LearnerDTO learnerDto)
         {
+            //TODO: Check if Keycloak is on before calling this method.
             var learner = await _keycloakService.Register(_mapper.Map<Learner>(learnerDto));
             var registeredLearner = _learnerService.Register(learner);
             return Ok(_mapper.Map<LearnerDTO>(registeredLearner));
