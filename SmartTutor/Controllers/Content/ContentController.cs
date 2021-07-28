@@ -1,16 +1,15 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.Controllers.Content.DTOs;
 using System.Collections.Generic;
 using System.Linq;
-using SmartTutor.ContentModel.DTOs;
 using SmartTutor.ContentModel.Exceptions;
+using SmartTutor.ContentModel.Lectures;
 
 namespace SmartTutor.Controllers.Content
 {
-    [Route("api/lectures/")]
+    [Route("api/content/")]
     [ApiController]
     public class ContentController : ControllerBase
     {
@@ -30,32 +29,46 @@ namespace SmartTutor.Controllers.Content
             return Ok(lectures.Select(l => _mapper.Map<LectureDTO>(l)).ToList());
         }
 
-        [HttpPost]
+        [HttpPost("course")]
         public ActionResult<string> CreateCourse([FromBody] CreateCourseDto dto)
         {
             try
             {
-                _contentService.CreateCourse(dto);
+                _contentService.CreateCourse(_mapper.Map<Course>(dto.Course), dto.TeacherId);
                 return Ok("Course is created!");
             }
-            catch (Exception e)
+            catch (NotEnoughResourcesException e)
             {
-                return Problem("Sorry, there has been an problem on server side.");
+                return BadRequest(e.Message);
             }
         }
 
-        [HttpPost]
+        [HttpPost("lecture")]
         public ActionResult<string> CreateLecture([FromBody] CreateLectureDto dto)
         {
             try
             {
-                _contentService.CreateLecture(dto);
+                _contentService.CreateLecture(_mapper.Map<Lecture>(dto.Lecture), dto.TeacherId);
                 return Ok("Lecture is created!");
             }
-            catch (Exception e)
+            catch (NotEnoughResourcesException e)
             {
-                return Problem("Sorry, there has been an problem on server side.");
+                return BadRequest(e.Message);
             }
+        }
+
+        [HttpGet("lecture/teacher/{id}")]
+        public ActionResult<List<CreateLectureDto>> GetLecturesByTeachersId([FromRoute] int id)
+        {
+            var dtos = _contentService.GetLecturesByTeachersId(id);
+            return Ok(dtos);
+        }
+
+        [HttpGet("course/teacher/{id}")]
+        public ActionResult<List<CreateCourseDto>> GetCoursesByTeachersId([FromRoute] int id)
+        {
+            var dtos = _contentService.GetCoursesByTeachersId(id);
+            return Ok(dtos);
         }
     }
 }

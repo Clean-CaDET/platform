@@ -2,8 +2,8 @@ using System;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using System.Collections.Generic;
-using SmartTutor.ContentModel.DTOs;
 using SmartTutor.ContentModel.Exceptions;
+using SmartTutor.Controllers.Content.DTOs;
 
 namespace SmartTutor.ContentModel
 {
@@ -23,24 +23,48 @@ namespace SmartTutor.ContentModel
             return _lectureRepository.GetLectures();
         }
 
-        public void CreateCourse(CreateCourseDto dto)
+        public void CreateCourse(Course course, int teacherId)
         {
-            if (!_subscriptionService.CanAddCourse(dto.TeacherId)) throw new NotEnoughResourcesException();
-            var course = new Course(dto.CourseName);
+            if (!_subscriptionService.CanAddCourse(teacherId)) throw new NotEnoughResourcesException();
             course = _lectureRepository.SaveOrUpdateCourse(course);
-            _subscriptionService.AddCourseToTeacher(dto.TeacherId, course);
-            _subscriptionService.IncrementNumberOfCourses(dto.TeacherId);
+            _subscriptionService.AddCourseToTeacher(teacherId, course);
         }
 
-        public void CreateLecture(CreateLectureDto dto)
+        public void CreateLecture(Lecture lecture, int teacherId)
         {
-            if (!_subscriptionService.CanAddLecture(dto.TeacherId)) throw new NotEnoughResourcesException();
-            var lecture = new Lecture(dto.CourseId, dto.LectureName, dto.LectureDescription);
-            var course = _lectureRepository.GetCourse(dto.CourseId);
+            if (!_subscriptionService.CanAddLecture(teacherId)) throw new NotEnoughResourcesException();
+            var course = _lectureRepository.GetCourse(lecture.CourseId);
             lecture = _lectureRepository.SaveOrUpdateLecture(lecture);
             course.AddLecture(lecture);
             _lectureRepository.SaveOrUpdateCourse(course);
-            _subscriptionService.IncrementNumberOfLectures(dto.TeacherId);
+            _subscriptionService.IncrementNumberOfLectures(teacherId);
+        }
+
+        public List<LectureDTO> GetLecturesByTeachersId(int id)
+        {
+            List<Lecture> lectures = _lectureRepository.GetLecturesByTeachersId(id);
+            var dtos = new List<LectureDTO>();
+            foreach (var lecture in lectures)
+            {
+                dtos.Add(new LectureDTO()
+                {
+                    CourseId = lecture.CourseId, Id = lecture.Id, Description = lecture.Description, Name = lecture.Name
+                });
+            }
+
+            return dtos;
+        }
+
+        public List<CourseDto> GetCoursesByTeachersId(int id)
+        {
+            List<Course> courses = _lectureRepository.GetCoursesByTeachersId(id);
+            var dtos = new List<CourseDto>();
+            foreach (var course in courses)
+            {
+                dtos.Add(new CourseDto() {Name = course.Name, Id = course.Id});
+            }
+
+            return dtos;
         }
     }
 }

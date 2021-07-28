@@ -1,33 +1,28 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartTutor.ContentModel.Subscriptions
 {
     public class Subscription
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; private set; }
-        public int TeacherId { get; private set; }
-        public DateTime Start { get; private set; }
-        public DateTime End { get; private set; }
-        
-        public int PlanUsageId { get;  set; }
+        public int Id { get; set; }
+        public int TeacherId { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
 
-        public Subscription(int teacherId, DateTime start, DateTime end,int  individualPlanUsage)
+        public int IndividualPlanUsageId { get; set; }
+
+        public Subscription(int teacherId, DateTime start, DateTime end, int individualPlanUsageId) : this(0, teacherId,
+            start, end, individualPlanUsageId)
         {
-            TeacherId = teacherId;
-            Start = start;
-            End = end;
-            PlanUsageId = individualPlanUsage;
         }
 
-        public Subscription(int id, int teacherId, DateTime start, DateTime end, int planUsageId)
+        public Subscription(int id, int teacherId, DateTime start, DateTime end, int individualPlanUsageId)
         {
             Id = id;
             TeacherId = teacherId;
             Start = start;
             End = end;
-            PlanUsageId = planUsageId;
+            IndividualPlanUsageId = individualPlanUsageId;
         }
 
         public bool IsValid()

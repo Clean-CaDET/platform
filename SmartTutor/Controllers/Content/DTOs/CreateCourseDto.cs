@@ -1,9 +1,9 @@
-﻿namespace SmartTutor.ContentModel.DTOs
+﻿namespace SmartTutor.Controllers.Content.DTOs
 {
     public class CreateCourseDto
     {
+        public CourseDto Course { get; set; }
         public int TeacherId { get; set; }
-        public string CourseName { get; set; }
 
         public CreateCourseDto()
         {

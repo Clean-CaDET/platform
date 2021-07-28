@@ -1,17 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace SmartTutor.ContentModel.Subscriptions
+﻿namespace SmartTutor.ContentModel.Subscriptions
 {
     public class IndividualPlanUsage
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; private set; }
-        public int IndividualPlanId { get; protected set; }
-        public int NumberOfUsersUsed { get; protected set; }
+        public int IndividualPlanId { get; private set; }
+        public int NumberOfUsersUsed { get; private set; }
         public int NumberOfCoursesUsed { get; private set; }
         public int NumberOfLecturesUsed { get; private set; }
 
-        public IndividualPlanUsage(int id, int individualPlanId, int numberOfUsersUsed, int numberOfCoursesUsed, int numberOfLecturesUsed)
+        private IndividualPlanUsage(int id, int individualPlanId, int numberOfUsersUsed = 1,
+            int numberOfCoursesUsed = 0,
+            int numberOfLecturesUsed = 0)
         {
             Id = id;
             IndividualPlanId = individualPlanId;
@@ -19,29 +18,17 @@ namespace SmartTutor.ContentModel.Subscriptions
             NumberOfCoursesUsed = numberOfCoursesUsed;
             NumberOfLecturesUsed = numberOfLecturesUsed;
         }
-        
-        public IndividualPlanUsage(int id, int individualPlanId)
-        {
-            Id = id;
-            IndividualPlanId = individualPlanId;
-            NumberOfUsersUsed = 1;
-            NumberOfCoursesUsed = 0;
-            NumberOfLecturesUsed = 0;
-        }
 
-        public IndividualPlanUsage(int individualPlanId)
+        public IndividualPlanUsage(int individualPlanId) : this
+            (0, individualPlanId, 1, 0, 0)
         {
-            IndividualPlanId = individualPlanId;
-            NumberOfUsersUsed = 1;
-            NumberOfCoursesUsed = 0;
-            NumberOfLecturesUsed = 0;
         }
 
         public void IncrementNumberOfUsedLectures()
         {
             NumberOfLecturesUsed++;
         }
-        
+
         public void IncrementNumberOfUsedCourses()
         {
             NumberOfCoursesUsed++;

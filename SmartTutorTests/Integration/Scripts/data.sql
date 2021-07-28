@@ -45,17 +45,17 @@ INSERT INTO public."Teachers"(
     "Id")
 VALUES (3);
 INSERT INTO public."Subscriptions"(
-    "Id", "TeacherId", "Start", "End", "PlanUsageId")
+    "Id", "TeacherId", "Start", "End", "IndividualPlanUsageId")
 VALUES (1, 1, '2017-10-01 21:58:58.508', '2037-10-01 21:58:58.508', 1);
 INSERT INTO public."Subscriptions"(
-    "Id", "TeacherId", "Start", "End", "PlanUsageId")
+    "Id", "TeacherId", "Start", "End", "IndividualPlanUsageId")
 VALUES (2, 3, '2017-10-01 21:58:58.508', '2037-10-01 21:58:58.508', 2);
 INSERT INTO public."IndividualPlans"(
-    "Id", "NumberOfUsers", "NumberOfCourses", "NumberOfLectures")
-VALUES (1, 1, 3, 3);
+    "Id", "NumberOfUsers", "NumberOfCourses", "NumberOfLectures", "Duration")
+VALUES (1, 1, 3, 3, '30 days');
 INSERT INTO public."IndividualPlans"(
-    "Id", "NumberOfUsers", "NumberOfCourses", "NumberOfLectures")
-VALUES (2, 1, 0, 0);
+    "Id", "NumberOfUsers", "NumberOfCourses", "NumberOfLectures", "Duration")
+VALUES (2, 1, 0, 0, '30 days');
 INSERT INTO public."IndividualPlanUsages"(
     "Id", "IndividualPlanId", "NumberOfUsersUsed", "NumberOfCoursesUsed", "NumberOfLecturesUsed")
 VALUES (1, 1, 0, 0, 0);
@@ -77,11 +77,11 @@ INSERT INTO public."Learners"(
     VALUES (4, 'SU-4-2021', 1, 4, 3, 2, 'C:/Smart-Tutor/3/Workspace');
 
 INSERT INTO public."Courses"(
-    "Id", "TeacherId")
-VALUES (1, 1);
+    "Id", "TeacherId", "Name")
+VALUES (1, 1, 'Course1');
 INSERT INTO public."Courses"(
-    "Id")
-    VALUES (2);
+    "Id", "Name")
+    VALUES (2, 'Course2');
 
 
 INSERT INTO public."CourseEnrollment"(

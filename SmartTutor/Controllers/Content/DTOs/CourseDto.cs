@@ -2,12 +2,14 @@
 
 namespace SmartTutor.Controllers.Content.DTOs
 {
-    public class LectureDTO
+    public class CourseDto
     {
         public int Id { get; set; }
+        public List<LectureDTO> Lectures { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public int CourseId { get; set; }
-        public List<int> KnowledgeNodeIds { get; set; }
+
+        public CourseDto()
+        {
+        }
     }
 }

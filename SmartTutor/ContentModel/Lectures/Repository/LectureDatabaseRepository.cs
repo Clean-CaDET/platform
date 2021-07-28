@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SmartTutor.Database;
@@ -69,6 +70,27 @@ namespace SmartTutor.ContentModel.Lectures.Repository
             var l = _dbContext.Lectures.Attach(lecture).Entity;
             _dbContext.SaveChanges();
             return l;
+        }
+
+        public List<Lecture> GetLecturesByTeachersId(int id)
+        {
+            var teacher = _dbContext.Teachers.Where(teacher1 => teacher1.Id == id).Include(teacher1 => teacher1.Courses)
+                .First();
+            List<Lecture> lectures = new List<Lecture>();
+            foreach (var teacherCourse in teacher.Courses)
+            {
+                List<Lecture> courseLectures = _dbContext.Lectures
+                    .Where(lecture => lecture.CourseId.Equals(teacherCourse.Id)).ToList();
+                lectures.AddRange(courseLectures);
+            }
+
+            return lectures;
+        }
+
+        public List<Course> GetCoursesByTeachersId(int id)
+        {
+            var teacher = _dbContext.Teachers.Where(t => t.Id == id).Include(t => t.Courses).First();
+            return teacher?.Courses;
         }
     }
 }

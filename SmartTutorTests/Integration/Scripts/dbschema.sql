@@ -39,6 +39,7 @@ CREATE TABLE "IndividualPlans" (
     "NumberOfUsers" integer NOT NULL,
     "NumberOfCourses" integer NOT NULL,
     "NumberOfLectures" integer NOT NULL,
+    "Duration" interval NOT NULL,
     CONSTRAINT "PK_IndividualPlans" PRIMARY KEY ("Id")
 );
 
@@ -125,7 +126,7 @@ CREATE TABLE "Subscriptions" (
     "TeacherId" integer NOT NULL,
     "Start" timestamp without time zone NOT NULL,
     "End" timestamp without time zone NOT NULL,
-    "PlanUsageId" integer NOT NULL,
+    "IndividualPlanUsageId" integer NOT NULL,
     CONSTRAINT "PK_Subscriptions" PRIMARY KEY ("Id"),
     CONSTRAINT "FK_Subscriptions_Teachers_TeacherId" FOREIGN KEY ("TeacherId") REFERENCES "Teachers" ("Id") ON DELETE CASCADE
 );
