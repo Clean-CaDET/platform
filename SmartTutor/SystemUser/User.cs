@@ -1,6 +1,6 @@
-﻿namespace SmartTutor.Keycloak
+﻿namespace SmartTutor.SystemUser
 {
-    public class KeycloakLearner
+    public class User
     {
         public string Id { get; set; }
         public string Username { get; set; }
