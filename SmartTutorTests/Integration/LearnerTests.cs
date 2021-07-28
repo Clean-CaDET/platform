@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using SmartTutor.Controllers.Learners;
 using SmartTutor.Controllers.Learners.DTOs;
-using SmartTutor.Keycloak;
 using SmartTutor.LearnerModel;
+using SmartTutor.SystemUser;
 using Xunit;
 
 namespace SmartTutor.Tests.Integration
@@ -25,7 +25,7 @@ namespace SmartTutor.Tests.Integration
             using var scope = _factory.Services.CreateScope();
             var controller = new LearnerController(_factory.Services.GetRequiredService<IMapper>(),
                 scope.ServiceProvider.GetRequiredService<ILearnerService>(),
-                scope.ServiceProvider.GetRequiredService<IKeycloakService>());
+                scope.ServiceProvider.GetRequiredService<IAuthProvider>());
             var loginSubmission = new LoginDTO {StudentIndex = "SU-1-2021"};
 
             var learner = ((OkObjectResult) controller.Login(loginSubmission).Result).Value as LearnerDTO;
@@ -39,7 +39,7 @@ namespace SmartTutor.Tests.Integration
             using var scope = _factory.Services.CreateScope();
             var controller = new LearnerController(_factory.Services.GetRequiredService<IMapper>(),
                 scope.ServiceProvider.GetRequiredService<ILearnerService>(),
-                scope.ServiceProvider.GetRequiredService<IKeycloakService>());
+                scope.ServiceProvider.GetRequiredService<IAuthProvider>());
             var loginSubmission = new LoginDTO {StudentIndex = "SA-1-2021"};
 
             var code = ((NotFoundObjectResult) controller.Login(loginSubmission).Result).StatusCode;

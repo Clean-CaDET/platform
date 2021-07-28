@@ -4,12 +4,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using  System.Text.Json;
 using SmartTutor.LearnerModel.Learners;
 
-namespace SmartTutor.Keycloak
+namespace SmartTutor.SystemUser.Keycloak
 {
-      public class KeycloakService : IKeycloakService
+      public class KeycloakAuthProvider : IAuthProvider
     {
         private readonly string _loginPath =
             Environment.GetEnvironmentVariable("KEYCLOAK_LOGIN_PATH") ??
@@ -85,7 +85,7 @@ namespace SmartTutor.Keycloak
 
         private async Task<Learner> SetIamIdToLearner(Learner learner)
         {
-            var keycloakUsers = JsonConvert.DeserializeObject<List<KeycloakLearner>>(await GetAllUsers());
+            var keycloakUsers = JsonSerializer.Deserialize<List<User>>(await GetAllUsers());
             foreach (var user in keycloakUsers.Where(s => s.Username.Equals(learner.StudentIndex)))
             {
                 learner.IamId = user.Id;
