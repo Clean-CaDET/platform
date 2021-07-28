@@ -97,10 +97,17 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         {
             return _dbContext.LearningObjectSummaries.FirstOrDefault(los => los.Id == summaryId);
         }
-        
+
         public Question GetQuestionForSummary(int summaryId)
         {
-            return _dbContext.Questions.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
+            return _dbContext.Questions.Where(lo => lo.LearningObjectSummaryId == summaryId)
+                .Include(lo => lo.PossibleAnswers).FirstOrDefault();
+        }
+
+        public List<Question> GetQuestionsForSummary(int summaryId)
+        {
+            return _dbContext.Questions.Where(lo => lo.LearningObjectSummaryId == summaryId)
+                .Include(lo => lo.PossibleAnswers).ToList();
         }
     }
 }

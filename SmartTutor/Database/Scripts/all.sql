@@ -5,7 +5,8 @@ DELETE FROM public."ArrangeTaskContainerSubmissions";
 DELETE FROM public."ArrangeTaskSubmissions";
 DELETE FROM public."ChallengeSubmissions";
 DELETE FROM public."QuestionSubmissions";
-DELETE FROM public."NodeProgresses";
+-- TODO: Learning objects reference Node Progress so the following line had to be moved
+-- DELETE FROM public."NodeProgresses";
 DELETE FROM public."LearningObjectFeedback";
 
 DELETE FROM public."CourseEnrollment";
@@ -27,6 +28,8 @@ DELETE FROM public."ArrangeTaskContainers";
 DELETE FROM public."ArrangeTasks";
 DELETE FROM public."LearningObjects";
 DELETE FROM public."LearningObjectSummaries";
+-- TODO: Learning objects reference Node Progress so the following line had to be moved here
+DELETE FROM public."NodeProgresses";
 DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
 DELETE FROM public."Courses";
@@ -1243,3 +1246,54 @@ INSERT INTO public."IssueAdviceLearningObjectSummary"(
 INSERT INTO public."IssueAdviceLearningObjectSummary"(
 	"AdviceId", "SummariesId")
 	VALUES (2, 102);
+
+-- TODO: add valid data
+INSERT INTO public."KnowledgeNodeKnowledgeNode"(
+    "PrerequisiteOfId", "PrerequisitesId")
+VALUES (1, 2);
+INSERT INTO public."KnowledgeNodeKnowledgeNode"(
+    "PrerequisiteOfId", "PrerequisitesId")
+VALUES (1, 3);
+INSERT INTO public."KnowledgeNodeKnowledgeNode"(
+    "PrerequisiteOfId", "PrerequisitesId")
+VALUES (1, 4);
+
+INSERT INTO public."LearningObjects"(
+    "Id", "LearningObjectSummaryId", "NodeProgressId")
+VALUES (201, 1, null);
+INSERT INTO public."Questions"(
+    "Id", "Text")
+VALUES (201, 'Question 1');
+INSERT INTO public."QuestionAnswers"(
+    "Id", "QuestionId", "Text", "IsCorrect", "Feedback")
+VALUES (201, 201, 'Answer 1', true, 'Congrats');
+INSERT INTO public."QuestionAnswers"(
+    "Id", "QuestionId", "Text", "IsCorrect", "Feedback")
+VALUES (202, 201, 'Answer 2', false, 'Boo');
+
+
+INSERT INTO public."LearningObjects"(
+    "Id", "LearningObjectSummaryId", "NodeProgressId")
+VALUES (202, 1, null);
+INSERT INTO public."Questions"(
+    "Id", "Text")
+VALUES (202, 'Question 2');
+INSERT INTO public."QuestionAnswers"(
+    "Id", "QuestionId", "Text", "IsCorrect", "Feedback")
+VALUES (203, 202, 'Answer 1', true, 'Congrats');
+INSERT INTO public."QuestionAnswers"(
+    "Id", "QuestionId", "Text", "IsCorrect", "Feedback")
+VALUES (204, 202, 'Answer 2', false, 'Boo');
+
+INSERT INTO public."LearningObjects"(
+    "Id", "LearningObjectSummaryId", "NodeProgressId")
+VALUES (203, 1, null);
+INSERT INTO public."Questions"(
+    "Id", "Text")
+VALUES (203, 'Question 3');
+INSERT INTO public."QuestionAnswers"(
+    "Id", "QuestionId", "Text", "IsCorrect", "Feedback")
+VALUES (205, 203, 'Answer 1', true, 'Congrats');
+INSERT INTO public."QuestionAnswers"(
+    "Id", "QuestionId", "Text", "IsCorrect", "Feedback")
+VALUES (206, 203, 'Answer 2', false, 'Boo');

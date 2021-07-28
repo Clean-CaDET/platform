@@ -56,5 +56,13 @@ namespace SmartTutor.ContentModel.Lectures.Repository
                 .Include(los => los.KnowledgeNode).FirstOrDefault();
             return learningObjectSummary?.KnowledgeNode;
         }
+
+        public KnowledgeNode GetKnowledgeNode(int id)
+        {
+            return _dbContext.KnowledgeNodes.Where(n => n.Id == id)
+                .Include(n => n.Prerequisites)
+                .ThenInclude(p => p.LearningObjectSummaries)
+                .FirstOrDefault();
+        }
     }
 }

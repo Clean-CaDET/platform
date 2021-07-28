@@ -20,5 +20,6 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         LearningObject GetLearningObjectForSummary(int summaryId);
         LearningObjectSummary GetLearningObjectSummary(int summaryId);
         Question GetQuestionForSummary(int summaryId);
+        List<Question> GetQuestionsForSummary(int summaryId);
     }
 }

@@ -6,7 +6,7 @@
         public int LearningObjectSummaryId { get; private set; }
 
         protected LearningObject() {}
-        public LearningObject(int id, int learningObjectSummaryId)
+        protected LearningObject(int id, int learningObjectSummaryId)
         {
             Id = id;
             LearningObjectSummaryId = learningObjectSummaryId;
