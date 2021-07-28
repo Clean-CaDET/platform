@@ -38,6 +38,14 @@ namespace DataSetExplorer.ConsoleApp
                 Result<string> result;
                 switch (chosenOption)
                 {
+                    case "1":
+                        result = _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation(dataSetPath, outputPath);
+                        Console.WriteLine(result.ToString());
+                        break;
+                    case "2":
+                        result = _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations(dataSetPath, outputPath);
+                        Console.WriteLine(result.ToString());
+                        break;
                     case "x":
                         break;
                     default:

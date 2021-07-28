@@ -26,7 +26,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             return _dbContext.Annotators.FirstOrDefault(a => a.Id == id);
         }
 
-        public void AddAnnotation(DataSetInstance instance)
+        public void Update(DataSetInstance instance)
         {
             _dbContext.Update(instance);
             _dbContext.SaveChanges();

@@ -18,6 +18,7 @@ namespace DataSetExplorer
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddDbContext<DataSetExplorerContext>(opt =>
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
@@ -26,7 +27,7 @@ namespace DataSetExplorer
             services.AddScoped<ICodeRepository, GitCodeRepository>();
             services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
 
-            services.AddScoped<IDataSetInstanceService, DataSetInstanceService>();
+            services.AddScoped<IDataSetAnnotationService, DataSetAnnotationService>();
             services.AddScoped<IDataSetInstanceRepository, DataSetInstanceDatabaseRepository>();
 
             services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();

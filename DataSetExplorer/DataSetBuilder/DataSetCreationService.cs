@@ -21,13 +21,17 @@ namespace DataSetExplorer
             _dataSetRepository = dataSetRepository;
         }
 
-        public DataSet CreateDataSet(string basePath, string projectName, string projectAndCommitUrl)
+        public Result<DataSet> CreateDataSetInDatabase(string basePath, string projectName, string projectAndCommitUrl)
         {
-            var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
-            _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
-            var dataSet = CreateDataSetFromRepository(projectAndCommitUrl, gitFolderPath);
+            var dataSet = CreateDataSet(basePath, projectName, projectAndCommitUrl);
             _dataSetRepository.Create(dataSet);
-            return dataSet;
+            return Result.Ok(dataSet);
+        }
+
+        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl)
+        {
+            var dataSet = CreateDataSet(basePath, projectName, projectAndCommitUrl);
+            return CreateDataSetSpreadsheet(basePath, projectName, new NewSpreadSheetColumnModel(), dataSet);
         }
 
         public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)
@@ -35,6 +39,13 @@ namespace DataSetExplorer
             //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
             var excelFileName = ExportToExcel(basePath, projectName, columnModel, dataSet);
             return Result.Ok("Data set exported to " + excelFileName);
+        }
+
+        private DataSet CreateDataSet(string basePath, string projectName, string projectAndCommitUrl)
+        {
+            var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
+            _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
+            return CreateDataSetFromRepository(projectAndCommitUrl, gitFolderPath);
         }
 
         private static DataSet CreateDataSetFromRepository(string projectAndCommitUrl, string projectPath)
@@ -45,6 +56,7 @@ namespace DataSetExplorer
                 .RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
         }
+
         private string ExportToExcel(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)
         {
             var sheetFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "sheets" + Path.DirectorySeparatorChar;

@@ -31,6 +31,12 @@ namespace DataSetExplorer.ConsoleApp
         {
             switch (chosenOption)
             {
+                case "1":
+                    CreateDataSet();
+                    break;
+                case "2":
+                    new DataSetAnalysisSubmenu(new DataSetAnalysisService(null)).AnalyzeDataSet();
+                    break;
                 case "3":
                     ExportDataSet();
                     break;
@@ -42,6 +48,19 @@ namespace DataSetExplorer.ConsoleApp
                 default:
                     ConsoleIO.ChosenOptionErrorMessage(chosenOption);
                     break;
+            }
+        }
+
+        private void CreateDataSet()
+        {
+            string outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
+            var projects = DataSetIO.GetProjects("project name and project/commit URL");
+
+            Result<string> result;
+            foreach (var projectName in projects.Keys)
+            {
+                result = _dataSetCreationService.CreateDataSetSpreadsheet(outputPath, projectName.ToString(), projects[projectName].ToString());
+                Console.WriteLine(result.ToString());
             }
         }
 

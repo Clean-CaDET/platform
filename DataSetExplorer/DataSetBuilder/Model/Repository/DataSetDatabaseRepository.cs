@@ -23,7 +23,10 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 
         public DataSet GetDataSet(int id)
         {
-            return _dbContext.DataSets.Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator).FirstOrDefault(s => s.Id == id);
+            return _dbContext.DataSets
+                .Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .FirstOrDefault(s => s.Id == id);
         }
     }
 }

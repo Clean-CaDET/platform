@@ -10,6 +10,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
     {
         public DataSetInstance GetDataSetInstance(int id);
         public Annotator GetAnnotator(int id);
-        public void AddAnnotation(DataSetInstance instance);
+        public void Update(DataSetInstance instance);
     }
 }

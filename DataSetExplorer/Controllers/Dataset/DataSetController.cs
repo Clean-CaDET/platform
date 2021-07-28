@@ -1,6 +1,5 @@
 ﻿using DataSetExplorer.Controllers.Dataset.DTOs;
 using DataSetExplorer.DataSetBuilder.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,12 +15,10 @@ namespace DataSetExplorer.Controllers.Dataset
         private readonly string _cloneGitPath = "../../ClonedProjects/";
 
         private readonly IDataSetCreationService _dataSetCreationService;
-        private readonly IDataSetAnalysisService _dataSetAnalysisService;
 
-        public DataSetController(IDataSetCreationService creationService, IDataSetAnalysisService analysisService)
+        public DataSetController(IDataSetCreationService creationService)
         {
             _dataSetCreationService = creationService;
-            _dataSetAnalysisService = analysisService;
         }
 
         [HttpPost]
@@ -30,38 +27,11 @@ namespace DataSetExplorer.Controllers.Dataset
             var dataSets = new List<DataSet>();
             foreach (var project in projects)
             {
-                dataSets.Add(_dataSetCreationService.CreateDataSet(_cloneGitPath, project.Name, project.Url));
+                var result = _dataSetCreationService.CreateDataSetInDatabase(_cloneGitPath, project.Name, project.Url);
+                dataSets.Add(result.Value);
             }
             
             return Ok(dataSets);
-        }
-
-        [HttpGet]
-        [Route("requiring-additional-annotation/{dataSetId}")]
-        public IActionResult FindInstancesRequiringAdditionalAnnotation(int dataSetId)
-        {
-            try
-            {
-                return Ok(_dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation(dataSetId));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("disagreeing-annotations/{dataSetId}")]
-        public IActionResult FindInstancesWithAllDisagreeingAnnotations(int dataSetId)
-        {
-            try
-            {
-                return Ok(_dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations(dataSetId));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
         }
     }
 }
