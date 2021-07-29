@@ -49,7 +49,7 @@ namespace DataSetExplorer
 
         public Result<List<DataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(int dataSetId)
         {
-            var dataset = LoadDataSet(dataSetId);
+            var dataset = _dataSetRepository.GetDataSet(dataSetId);
             if (dataset == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
             var instances = dataset.GetInstancesWithAllDisagreeingAnnotations();
             return Result.Ok(instances);
@@ -57,7 +57,7 @@ namespace DataSetExplorer
 
         public Result<List<DataSetInstance>> FindInstancesRequiringAdditionalAnnotation(int dataSetId)
         {
-            var dataset = LoadDataSet(dataSetId);
+            var dataset = _dataSetRepository.GetDataSet(dataSetId);
             if (dataset == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
             var instances = dataset.GetInsufficientlyAnnotatedInstances();
             return Result.Ok(instances);
@@ -67,12 +67,6 @@ namespace DataSetExplorer
         {
             var importer = new ExcelImporter(folder);
             return importer.Import("Clean CaDET");
-        }
-
-        private DataSet LoadDataSet(int dataSetId)
-        {
-            var dataset = _dataSetRepository.GetDataSet(dataSetId);
-            return dataset;
         }
     }
 }

@@ -3,6 +3,6 @@
     public enum DataSetState
     {
         Processing,
-        Created
+        Built
     }
 }

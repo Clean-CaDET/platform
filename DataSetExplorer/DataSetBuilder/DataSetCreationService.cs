@@ -27,17 +27,8 @@ namespace DataSetExplorer
         {
             var initialDataSet = new DataSet(projectAndCommitUrl);
             _dataSetRepository.Create(initialDataSet);
-            new Thread(() => ProcessInitialDataSet(basePath, projectName, projectAndCommitUrl, initialDataSet))
-                .Start();
+            Task.Run(() => ProcessInitialDataSet(basePath, projectName, projectAndCommitUrl, initialDataSet));
             return Result.Ok(initialDataSet);
-        }
-
-        private void ProcessInitialDataSet(string basePath, string projectName, string projectAndCommitUrl, DataSet initialDataSet)
-        {
-            var dataSet = CreateDataSet(basePath, projectName, projectAndCommitUrl);
-            initialDataSet.State = DataSetState.Created;
-            initialDataSet.AddInstances(dataSet.GetAllInstances());
-            _dataSetRepository.Update(initialDataSet);
         }
 
         public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl)
@@ -53,11 +44,10 @@ namespace DataSetExplorer
             return Result.Ok("Data set exported to " + excelFileName);
         }
 
-        public Result<DataSet> GetDataSetIfCreated(int id)
+        public Result<DataSet> GetDataSet(int id)
         {
             var dataSet = _dataSetRepository.GetDataSet(id);
             if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
-            if (dataSet.State != DataSetState.Created) return Result.Fail($"DataSet with id: {id} not yet created.");
             return Result.Ok(dataSet);
         }
 
@@ -75,6 +65,14 @@ namespace DataSetExplorer
             return builder.IncludeMembersWith(10).IncludeClassesWith(3, 5)
                 .RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
+        }
+
+        private void ProcessInitialDataSet(string basePath, string projectName, string projectAndCommitUrl, DataSet initialDataSet)
+        {
+            var dataSet = CreateDataSet(basePath, projectName, projectAndCommitUrl);
+            initialDataSet.AddInstances(dataSet.GetAllInstances());
+            initialDataSet.Processed();
+            _dataSetRepository.Update(initialDataSet);
         }
 
         private string ExportToExcel(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)

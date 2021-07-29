@@ -1,7 +1,7 @@
 ﻿using DataSetExplorer.Controllers.Dataset.DTOs;
 using DataSetExplorer.DataSetBuilder.Model;
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +13,14 @@ namespace DataSetExplorer.Controllers.Dataset
     [ApiController]
     public class DataSetController : ControllerBase
     {
-        private readonly string _cloneGitPath = "../../ClonedProjects/";
+        private readonly string _gitClonePath;
 
         private readonly IDataSetCreationService _dataSetCreationService;
 
-        public DataSetController(IDataSetCreationService creationService)
+        public DataSetController(IDataSetCreationService creationService, IConfiguration configuration)
         {
             _dataSetCreationService = creationService;
+            _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
 
         [HttpPost]
@@ -28,24 +29,18 @@ namespace DataSetExplorer.Controllers.Dataset
             var dataSets = new List<DataSet>();
             foreach (var project in projects)
             {
-                var result = _dataSetCreationService.CreateDataSetInDatabase(_cloneGitPath, project.Name, project.Url);
+                var result = _dataSetCreationService.CreateDataSetInDatabase(_gitClonePath, project.Name, project.Url);
                 dataSets.Add(result.Value);
             }
-            return this.StatusCode(206, dataSets);
+            return Accepted(dataSets);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult IsDataSetCreated(int id)
+        public IActionResult GetDataSet(int id)
         {
-            var result = _dataSetCreationService.GetDataSetIfCreated(id);
-            if (result.IsFailed)
-            {
-                var resultsMessage = result.Reasons[0].Message;
-                if (resultsMessage.Contains("not yet created")) return NoContent();
-                return BadRequest(resultsMessage);
-            }
-
+            var result = _dataSetCreationService.GetDataSet(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
     }

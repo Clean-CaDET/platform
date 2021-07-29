@@ -8,7 +8,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public int Id { get; private set; }
         public string Url { get; private set; }
         public HashSet<DataSetInstance> Instances { get; private set; }
-        public DataSetState State { get; set; }
+        public DataSetState State { get; private set; }
 
         internal DataSet(string dataSetUrl)
         {
@@ -53,6 +53,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public List<DataSetInstance> GetAllInstances()
         {
             return Instances.ToList();
+        }
+
+        public void Processed()
+        {
+            State = DataSetState.Built;
         }
     }
 }
