@@ -1,4 +1,3 @@
-using System;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using SmartTutor.InstructorModel.Instructors;
@@ -60,7 +59,7 @@ namespace SmartTutor.ProgressModel
             );
 
             //TODO: Create learning session and save.
-            _progressRepository.SaveNodeProgress(nodeProgress);
+            if (nodeProgress.Id == 0) _progressRepository.SaveNodeProgress(nodeProgress);
 
             return nodeProgress;
         }

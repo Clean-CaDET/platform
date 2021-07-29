@@ -11,10 +11,10 @@ namespace SmartTutor.ContentModel.Lectures
         public List<LearningObjectSummary> LearningObjectSummaries { get; private set; }
         public List<KnowledgeNode> Prerequisites;
         //TODO: Remove if EF6 supports unidirectional many-to-many
-        private List<KnowledgeNode> PrerequisiteOf { get; set; }
+        // public List<KnowledgeNode> PrerequisiteOf { get; set; }
 
         private KnowledgeNode() {}
-        public KnowledgeNode(int id, List<LearningObjectSummary> summaries, int lectureId): this()
+        public KnowledgeNode(int id, List<LearningObjectSummary> summaries, int lectureId) : this()
         {
             Id = id;
             LearningObjectSummaries = summaries;

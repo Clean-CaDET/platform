@@ -6,7 +6,7 @@ DELETE FROM public."ArrangeTaskSubmissions";
 DELETE FROM public."ChallengeSubmissions";
 DELETE FROM public."QuestionSubmissions";
 -- TODO: Learning objects reference Node Progress so the following line had to be moved
--- DELETE FROM public."NodeProgresses";
+DELETE FROM public."NodeProgresses";
 DELETE FROM public."LearningObjectFeedback";
 
 DELETE FROM public."CourseEnrollment";
@@ -29,7 +29,7 @@ DELETE FROM public."ArrangeTasks";
 DELETE FROM public."LearningObjects";
 DELETE FROM public."LearningObjectSummaries";
 -- TODO: Learning objects reference Node Progress so the following line had to be moved here
-DELETE FROM public."NodeProgresses";
+-- DELETE FROM public."NodeProgresses";
 DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
 DELETE FROM public."Courses";
@@ -1250,17 +1250,17 @@ INSERT INTO public."IssueAdviceLearningObjectSummary"(
 -- TODO: add valid data
 INSERT INTO public."KnowledgeNodeKnowledgeNode"(
     "PrerequisiteOfId", "PrerequisitesId")
-VALUES (1, 2);
+VALUES (2, 1);
 INSERT INTO public."KnowledgeNodeKnowledgeNode"(
     "PrerequisiteOfId", "PrerequisitesId")
-VALUES (1, 3);
+VALUES (3, 1);
 INSERT INTO public."KnowledgeNodeKnowledgeNode"(
     "PrerequisiteOfId", "PrerequisitesId")
-VALUES (1, 4);
+VALUES (4, 1);
 
 INSERT INTO public."LearningObjects"(
-    "Id", "LearningObjectSummaryId", "NodeProgressId")
-VALUES (201, 1, null);
+    "Id", "LearningObjectSummaryId")
+VALUES (201, 1);
 INSERT INTO public."Questions"(
     "Id", "Text")
 VALUES (201, 'Question 1');
@@ -1273,8 +1273,8 @@ VALUES (202, 201, 'Answer 2', false, 'Boo');
 
 
 INSERT INTO public."LearningObjects"(
-    "Id", "LearningObjectSummaryId", "NodeProgressId")
-VALUES (202, 1, null);
+    "Id", "LearningObjectSummaryId")
+VALUES (202, 1);
 INSERT INTO public."Questions"(
     "Id", "Text")
 VALUES (202, 'Question 2');
@@ -1286,8 +1286,8 @@ INSERT INTO public."QuestionAnswers"(
 VALUES (204, 202, 'Answer 2', false, 'Boo');
 
 INSERT INTO public."LearningObjects"(
-    "Id", "LearningObjectSummaryId", "NodeProgressId")
-VALUES (203, 1, null);
+    "Id", "LearningObjectSummaryId")
+VALUES (203, 1);
 INSERT INTO public."Questions"(
     "Id", "Text")
 VALUES (203, 'Question 3');
