@@ -11,5 +11,6 @@ namespace DataSetExplorer.Controllers.Annotation.DTOs
         public int Severity { get; set; }
         public string CodeSmell { get; set; }
         public List<SmellHeuristicDTO> ApplicableHeuristics { get; set; }
+        public int AnnotatorId { get; set; }
     }
 }

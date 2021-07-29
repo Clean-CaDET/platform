@@ -7,6 +7,8 @@ using DataSetExplorer.RepositoryAdapters;
 using FluentResults;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DataSetExplorer
 {
@@ -23,9 +25,19 @@ namespace DataSetExplorer
 
         public Result<DataSet> CreateDataSetInDatabase(string basePath, string projectName, string projectAndCommitUrl)
         {
+            var initialDataSet = new DataSet(projectAndCommitUrl);
+            _dataSetRepository.Create(initialDataSet);
+            new Thread(() => ProcessInitialDataSet(basePath, projectName, projectAndCommitUrl, initialDataSet))
+                .Start();
+            return Result.Ok(initialDataSet);
+        }
+
+        private void ProcessInitialDataSet(string basePath, string projectName, string projectAndCommitUrl, DataSet initialDataSet)
+        {
             var dataSet = CreateDataSet(basePath, projectName, projectAndCommitUrl);
-            _dataSetRepository.Create(dataSet);
-            return Result.Ok(dataSet);
+            initialDataSet.State = DataSetState.Created;
+            initialDataSet.AddInstances(dataSet.GetAllInstances());
+            _dataSetRepository.Update(initialDataSet);
         }
 
         public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl)
@@ -39,6 +51,14 @@ namespace DataSetExplorer
             //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
             var excelFileName = ExportToExcel(basePath, projectName, columnModel, dataSet);
             return Result.Ok("Data set exported to " + excelFileName);
+        }
+
+        public Result<DataSet> GetDataSetIfCreated(int id)
+        {
+            var dataSet = _dataSetRepository.GetDataSet(id);
+            if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
+            if (dataSet.State != DataSetState.Created) return Result.Fail($"DataSet with id: {id} not yet created.");
+            return Result.Ok(dataSet);
         }
 
         private DataSet CreateDataSet(string basePath, string projectName, string projectAndCommitUrl)

@@ -9,5 +9,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
     {
         public void Create(DataSet dataSet);
         public DataSet GetDataSet(int id);
+        public void Update(DataSet dataSet);
     }
 }

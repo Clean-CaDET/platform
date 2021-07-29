@@ -8,11 +8,13 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public int Id { get; private set; }
         public string Url { get; private set; }
         public HashSet<DataSetInstance> Instances { get; private set; }
+        public DataSetState State { get; set; }
 
         internal DataSet(string dataSetUrl)
         {
             Url = dataSetUrl;
             Instances = new HashSet<DataSetInstance>();
+            State = DataSetState.Processing;
         }
 
         private DataSet()

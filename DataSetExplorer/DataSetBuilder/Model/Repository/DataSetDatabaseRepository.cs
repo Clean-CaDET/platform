@@ -1,5 +1,6 @@
 ﻿using DataSetExplorer.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,11 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
     public class DataSetDatabaseRepository : IDataSetRepository
     {
         private readonly DataSetExplorerContext _dbContext;
-        public DataSetDatabaseRepository(DataSetExplorerContext dbContext)
+
+        public DataSetDatabaseRepository(IServiceScopeFactory serviceScopeFactory)
         {
-            _dbContext = dbContext;
+            var scope = serviceScopeFactory.CreateScope();
+            _dbContext = scope.ServiceProvider.GetRequiredService<DataSetExplorerContext>();
         }
 
         public void Create(DataSet dataSet)
@@ -27,6 +30,12 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
                 .Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .FirstOrDefault(s => s.Id == id);
+        }
+
+        public void Update(DataSet dataSet)
+        {
+            _dbContext.Update(dataSet);
+            _dbContext.SaveChanges();
         }
     }
 }

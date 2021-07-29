@@ -33,8 +33,9 @@ namespace DataSetExplorer.Controllers.Annotation
             try 
             {
                 var authHeader = HttpContext.Request.Headers["Authorization"];
+                annotation.AnnotatorId = Int32.Parse(authHeader);
                 var dataSetAnnotation = _mapper.Map<DataSetAnnotation>(annotation);
-                var result = _dataSetAnnotationService.AddDataSetAnnotation(dataSetAnnotation, annotation.DataSetInstanceId, Int32.Parse(authHeader));
+                var result = _dataSetAnnotationService.AddDataSetAnnotation(dataSetAnnotation, annotation.DataSetInstanceId, annotation.AnnotatorId);
                 if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
                 return Ok(new { message = result.Value });
             }
@@ -42,9 +43,9 @@ namespace DataSetExplorer.Controllers.Annotation
             {
                 return BadRequest(new { message = e.Message });
             }
-            catch (AutoMapperMappingException e)
+            catch (ArgumentException e)
             {
-                return BadRequest(new { message = e.InnerException.Message });
+                return BadRequest(new { message = e.Message });
             }
         }
 
@@ -55,7 +56,6 @@ namespace DataSetExplorer.Controllers.Annotation
             var result = _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation(dataSetId);
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
-
         }
 
         [HttpGet]
