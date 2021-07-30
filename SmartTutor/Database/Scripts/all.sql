@@ -1253,10 +1253,10 @@ INSERT INTO public."KnowledgeNodeKnowledgeNode"(
 VALUES (2, 1);
 INSERT INTO public."KnowledgeNodeKnowledgeNode"(
     "PrerequisiteOfId", "PrerequisitesId")
-VALUES (3, 1);
+VALUES (3, 2);
 INSERT INTO public."KnowledgeNodeKnowledgeNode"(
     "PrerequisiteOfId", "PrerequisitesId")
-VALUES (4, 1);
+VALUES (4, 3);
 
 INSERT INTO public."LearningObjects"(
     "Id", "LearningObjectSummaryId")

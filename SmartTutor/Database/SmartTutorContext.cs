@@ -82,14 +82,13 @@ namespace SmartTutor.Database
                 .HasMany(a => a.Summaries)
                 .WithMany("Advice");
 
-            // TODO: fix issues with self-referencing relationship
-            // modelBuilder.Entity<KnowledgeNodePrerequisite>()
-            //     .HasOne(knp => knp.Prerequisite)
-            //     .WithMany();
-
-            // modelBuilder.Entity<KnowledgeNodePrerequisite>()
-            //     .HasOne(knp => knp.KnowledgeNode)
-            //     .WithMany(kn => kn.Prerequisites);
+            modelBuilder.Entity<KnowledgeNode>()
+                .HasMany(kn => kn.Prerequisites)
+                .WithMany(kn => kn.PrerequisiteOf);
+            
+            modelBuilder.Entity<KnowledgeNode>()
+                .HasMany(kn => kn.PrerequisiteOf)
+                .WithMany(kn => kn.Prerequisites);
         }
 
         private static void ConfigureChallenge(ModelBuilder modelBuilder)
