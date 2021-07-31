@@ -31,7 +31,7 @@ namespace SmartTutor.Tests.Integration
             var dbContext = scope.ServiceProvider.GetRequiredService<SmartTutorContext>();
             controller.SubscribeTeacher(createSubscriptionDto);
             var isSubscriptionCreated = dbContext.Subscriptions.ToList().Any(subscription =>
-                subscription.TeacherId.Equals(createSubscriptionDto.Subscription.TeacherId) && subscription.Id >= 2 &&
+                subscription.TeacherId.Equals(createSubscriptionDto.TeacherId) && subscription.Id >= 2 &&
                 subscription.IsValid());
             isSubscriptionCreated.ShouldBe(expectedCorrectness);
         }
@@ -42,7 +42,7 @@ namespace SmartTutor.Tests.Integration
             {
                 new CreateSubscriptionDto
                 {
-                    Subscription = new SubscriptionDto() {TeacherId = 1}, IndividualPlanId = 1
+                    TeacherId = 1, IndividualPlanId = 1
                 },
                 false
             },
@@ -50,7 +50,7 @@ namespace SmartTutor.Tests.Integration
             {
                 new CreateSubscriptionDto
                 {
-                    Subscription = new SubscriptionDto() {TeacherId = 2}, IndividualPlanId = 1
+                    TeacherId = 2, IndividualPlanId = 1
                 },
                 true
             }

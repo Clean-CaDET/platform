@@ -1,4 +1,6 @@
-﻿namespace SmartTutor.ContentModel.Subscriptions.Repository
+﻿using System.Collections.Generic;
+
+namespace SmartTutor.ContentModel.Subscriptions.Repository
 {
     public interface ISubscriptionRepository
     {
@@ -8,5 +10,6 @@
         Teacher GetTeacher(int id);
         IndividualPlan GetIndividualPlan(int id);
         IndividualPlanUsage GetIndividualPlanUsage(int id);
+        List<IndividualPlan> GetAllIndividualPlans();
     }
 }

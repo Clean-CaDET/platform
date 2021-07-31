@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using SmartTutor.ContentModel.Exceptions;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Subscriptions;
 using SmartTutor.ContentModel.Subscriptions.Repository;
+using SmartTutor.Controllers.Content.DTOs;
 
 namespace SmartTutor.ContentModel
 {
@@ -15,19 +17,18 @@ namespace SmartTutor.ContentModel
             _subscriptionRepository = subscriptionRepository;
         }
 
-        public void SubscribeTeacher(Subscription subscription, int individualPlanId)
+        public void SubscribeTeacher(int teacherId, int individualPlanId)
         {
-            var teacher = _subscriptionRepository.GetTeacher(subscription.TeacherId);
+            var teacher = _subscriptionRepository.GetTeacher(teacherId);
 
             if (teacher.GetActiveSubscription() != null)
-                throw new TeacherAlreadySubscribedException(subscription.TeacherId.ToString());
+                throw new TeacherAlreadySubscribedException(teacherId.ToString());
+
             var individualPlanUsage = new IndividualPlanUsage(individualPlanId);
             var individualPlan = _subscriptionRepository.GetIndividualPlan(individualPlanId);
             individualPlanUsage = _subscriptionRepository.SaveOrUpdatePlanUsage(individualPlanUsage);
             var end = GetEndDate(individualPlan);
-            subscription.Start = DateTime.Now;
-            subscription.End = end;
-            subscription.IndividualPlanUsageId = individualPlanUsage.Id;
+            var subscription = new Subscription(teacherId, DateTime.Now, end, individualPlanUsage.Id);
             subscription = _subscriptionRepository.SaveOrUpdateSubscription(subscription);
             teacher.AddSubscription(subscription);
             _subscriptionRepository.SaveOrUpdateTeacher(teacher);
@@ -56,7 +57,9 @@ namespace SmartTutor.ContentModel
 
         public void IncrementNumberOfCourses(int teacherId)
         {
-            _subscriptionRepository.SaveOrUpdatePlanUsage(GetIndividualPlanUsage(teacherId));
+            var planUsage = GetIndividualPlanUsage(teacherId);
+            planUsage.IncrementNumberOfUsedCourses();
+            _subscriptionRepository.SaveOrUpdatePlanUsage(planUsage);
         }
 
         public void AddCourseToTeacher(int teacherId, Course course)
@@ -65,6 +68,19 @@ namespace SmartTutor.ContentModel
             teacher.AddCourse(course);
             _subscriptionRepository.SaveOrUpdateTeacher(teacher);
             IncrementNumberOfCourses(teacherId);
+        }
+
+        public List<IndividualPlanDto> GetIndividualPlans()
+        {
+            var plans = _subscriptionRepository.GetAllIndividualPlans();
+            var dtos = new List<IndividualPlanDto>();
+            foreach (var plan in plans)
+            {
+                dtos.Add(new IndividualPlanDto(plan.Id, plan.NumberOfUsers, plan.NumberOfCourses, plan.NumberOfLectures,
+                    plan.Duration));
+            }
+
+            return dtos;
         }
 
         private IndividualPlanUsage GetIndividualPlanUsage(int teacherId)

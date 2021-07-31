@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SmartTutor.Database;
 
 namespace SmartTutor.ContentModel.Subscriptions.Repository
 {
-    public class SubscriptionRepository:ISubscriptionRepository
+    public class SubscriptionRepository : ISubscriptionRepository
     {
         private readonly SmartTutorContext _dbContext;
 
@@ -36,7 +37,8 @@ namespace SmartTutor.ContentModel.Subscriptions.Repository
 
         public Teacher GetTeacher(int id)
         {
-            return _dbContext.Teachers.Where(teacher => teacher.Id.Equals(id)).Include(teacher => teacher.Subscriptions).FirstOrDefault();
+            return _dbContext.Teachers.Where(teacher => teacher.Id.Equals(id)).Include(teacher => teacher.Subscriptions)
+                .FirstOrDefault();
         }
 
         public IndividualPlan GetIndividualPlan(int id)
@@ -47,6 +49,11 @@ namespace SmartTutor.ContentModel.Subscriptions.Repository
         public IndividualPlanUsage GetIndividualPlanUsage(int id)
         {
             return _dbContext.IndividualPlanUsages.FirstOrDefault(plan => plan.Id.Equals(id));
+        }
+
+        public List<IndividualPlan> GetAllIndividualPlans()
+        {
+            return _dbContext.IndividualPlans.ToList();
         }
     }
 }

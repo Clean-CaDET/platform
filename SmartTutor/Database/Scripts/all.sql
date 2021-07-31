@@ -77,7 +77,7 @@ INSERT INTO public."Learners"(
 
 INSERT INTO public."Courses"(
 	"Id", "TeacherId", "Name")
-	VALUES (1, 1, "Programing");
+	VALUES (1, 1, 'Programing');
 
 INSERT INTO public."CourseEnrollment"(
 	"Id", "CourseId", "LearnerId")

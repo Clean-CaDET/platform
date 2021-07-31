@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.Exceptions;
@@ -25,7 +26,7 @@ namespace SmartTutor.Controllers.Content
         {
             try
             {
-                _subscriptionService.SubscribeTeacher(_mapper.Map<Subscription>(dto.Subscription),
+                _subscriptionService.SubscribeTeacher(dto.TeacherId,
                     dto.IndividualPlanId);
                 return Ok("Teacher successfully subscribed!");
             }
@@ -37,6 +38,13 @@ namespace SmartTutor.Controllers.Content
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpGet("plans")]
+        public ActionResult<List<IndividualPlanDto>> GetIndividualPlans()
+        {
+            List<IndividualPlanDto> dtos = _subscriptionService.GetIndividualPlans();
+            return Ok(dtos);
         }
     }
 }
