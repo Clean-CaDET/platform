@@ -8,11 +8,10 @@ services:
       target: ${GATEWAY_BUILD_TARGET:-gatewayWithFront}
       args:
         - SMART_TUTOR_API_URL=${SMART_TUTOR_FRONT_API_URL}
-        - KEYCLOAK_AUTH_URL=${KEYCLOAK_FRONTEND_URL}
-        - KEYCLOAK_ON=${SMART_TUTOR_FRONT_KEYCLOAK_ON}
-        - KEYCLOAK_REALM=${SMART_TUTOR_FRONT_KEYCLOAK_REALM}
-        - KEYCLOAK_AUDIENCE=${AUDIENCE}
-        - FRONTEND_APP_SRC_URL=${SMART_TUTOR_FRONT_APP_SRC_URL}
+        - KEYCLOAK_ON=${KEYCLOAK_ON}
+        - KEYCLOAK_AUTH_URL=${KEYCLOAK_FRONTEND_URL:-}
+        - KEYCLOAK_REALM=${SMART_TUTOR_FRONT_KEYCLOAK_REALM:-}
+        - KEYCLOAK_AUDIENCE=${AUDIENCE:-}
     restart: on-failure
     networks:
       - public
@@ -21,12 +20,11 @@ services:
       - "${GATEWAY_PUBLISHED_PORT-8080}:8080"
     depends_on:
       - smart-tutor
-      - keycloak
   smart-tutor:
     image: cleancadet/smart-tutor:${SMART_TUTOR_VERSION-latest}
     build:
-      dockerfile: build/smart-tutor/Dockerfile
-      context: ./
+      dockerfile: stacks/build/smart-tutor/Dockerfile
+      context: ../
       target: ${SMART_TUTOR_BUILD_TARGET:-final}
     restart: on-failure
     networks:
@@ -39,26 +37,9 @@ services:
       DATABASE_PASSWORD: ${SMART_TUTOR_DATABASE_PASSWORD}
       DATABASE_USER: ${SMART_TUTOR_DATABASE_USERNAME}
       DATABASE_SCHEMA: ${SMART_TUTOR_DATABASE_SCHEMA}
-      AUTHORITY: ${AUTHORITY}
-      AUDIENCE: ${AUDIENCE}
-    depends_on:
-      - database
-  keycloak:
-    image: jboss/keycloak:${KEYCLOAK_VERSION-13.0.1}
-    restart: on-failure
-    networks:
-      - database
-      - application
-    environment:
-      PROXY_ADDRESS_FORWARDING: ${PROXY_ADDRESS_FORWARDING}
-      KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_FRONTEND_URL}
-      DB_VENDOR: ${KEYCLOAK_DATABASE_VENDOR}
-      DB_ADDR: ${KEYCLOAK_DATABASE_ADDR}
-      DB_DATABASE: ${KEYCLOAK_DATABASE_SCHEMA}
-      DB_USER: ${KEYCLOAK_DATABASE_USER}
-      DB_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
-      KEYCLOAK_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_ON: ${KEYCLOAK_ON}
+      AUTHORITY: ${AUTHORITY:-}
+      AUDIENCE: ${AUDIENCE:-}
     depends_on:
       - database
   database:
@@ -74,9 +55,6 @@ services:
       - type: volume
         source: database-data
         target: /var/lib/postgresql/data
-      - type: bind
-        source: ./config/database-init/keycloak.sql
-        target: /docker-entrypoint-initdb.d/keycloak.sql
       - type: bind
         source: ${SMART_TUTOR_DATA_INGEST_SCRIPT:-../SmartTutor/Database/Scripts/all.sql}
         target: /tmp/smart-tutor-init.sql

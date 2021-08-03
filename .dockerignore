@@ -1,5 +1,12 @@
 LICENSE
-README.md
 .gitignore
-**/bin
-**/obj
+.git
+.idea
+
+**/bin/
+**/obj/
+**/out/
+
+Dockerfile*
+**/*.md
+stacks/
