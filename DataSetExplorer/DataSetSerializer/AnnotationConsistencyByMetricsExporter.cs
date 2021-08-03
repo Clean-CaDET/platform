@@ -9,8 +9,8 @@ namespace DataSetExplorer.DataSetSerializer
 {
     class AnnotationConsistencyByMetricsExporter
     {
-        private readonly string _singleAnnotatorTemplatePath = "../../../DataSetSerializer/Template/Single_Annotator_Consistency_Template.xlsx";
-        private readonly string _multipleAnnotatorsTemplatePath = "../../../DataSetSerializer/Template/Consistency_Between_Annotators_Template.xlsx";
+        private readonly string _singleAnnotatorTemplatePath = "./DataSetSerializer/Template/Single_Annotator_Consistency_Template.xlsx";
+        private readonly string _multipleAnnotatorsTemplatePath = "./DataSetSerializer/Template/Consistency_Between_Annotators_Template.xlsx";
         private readonly string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;

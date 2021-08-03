@@ -10,9 +10,9 @@ namespace DataSetExplorer.DataSetSerializer
 {
     class CompleteDataSetExporter
     {
-        private readonly string _dataSetWithAnnotationsTemplatePath = "../../../DataSetSerializer/Template/Complete_Dataset_With_Annotations_Template.xlsx";
-        private readonly string _dataSetWithHeuristicsTemplatePath = "../../../DataSetSerializer/Template/Complete_Dataset_With_Heuristics_Template.xlsx";
-        private readonly string _dataSetWithMetricsTemplatePath = "../../../DataSetSerializer/Template/Complete_Dataset_With_Metrics_Template.xlsx";
+        private readonly string _dataSetWithAnnotationsTemplatePath = "./DataSetSerializer/Template/Complete_Dataset_With_Annotations_Template.xlsx";
+        private readonly string _dataSetWithHeuristicsTemplatePath = "./DataSetSerializer/Template/Complete_Dataset_With_Heuristics_Template.xlsx";
+        private readonly string _dataSetWithMetricsTemplatePath = "./DataSetSerializer/Template/Complete_Dataset_With_Metrics_Template.xlsx";
         private readonly string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;
