@@ -13,6 +13,7 @@ namespace DataSetExplorer.Controllers.Annotation.Mappers
         public AnnotationProfile()
         {
             CreateMap<DataSetAnnotationDTO, DataSetAnnotation>()
+                .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ConstructUsing(src => new DataSetAnnotation(src.CodeSmell, src.Severity, new Annotator(src.AnnotatorId), CreateHeuristics(src.ApplicableHeuristics)));
         }
 
