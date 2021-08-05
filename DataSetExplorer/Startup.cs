@@ -1,9 +1,12 @@
 ﻿using DataSetExplorer.Database;
+using DataSetExplorer.DataSetBuilder;
+using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.RepositoryAdapters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,11 +17,32 @@ namespace DataSetExplorer
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(Configuration);
+
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers();
+
             services.AddDbContext<DataSetExplorerContext>(opt =>
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
+
+            services.AddScoped<IDataSetCreationService, DataSetCreationService>();
+            services.AddScoped<ICodeRepository, GitCodeRepository>();
+            services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
+
+            services.AddScoped<IDataSetAnnotationService, DataSetAnnotationService>();
+            services.AddScoped<IDataSetInstanceRepository, DataSetInstanceDatabaseRepository>();
+
+            services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

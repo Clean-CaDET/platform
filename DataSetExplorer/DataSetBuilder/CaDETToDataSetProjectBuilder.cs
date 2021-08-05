@@ -26,7 +26,6 @@ namespace DataSetExplorer.DataSetBuilder
         private int _minimumNMD;
         private int _minimumNAD;
 
-
         internal CaDETToDataSetProjectBuilder(string projectAndCommitUrl, string projectName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
             _projectAndCommitUrl = projectAndCommitUrl;

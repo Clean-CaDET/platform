@@ -21,7 +21,6 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Link = link;
             ProjectLink = projectLink;
             Type = type;
-
             
             Annotations = new HashSet<DataSetAnnotation>();
             MetricFeatures = metricFeatures;

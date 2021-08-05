@@ -24,6 +24,8 @@ using SmartTutor.ProgressModel.Submissions.Repository;
 using SmartTutor.QualityAnalysis;
 using SmartTutor.QualityAnalysis.Repository;
 using System;
+using Microsoft.Net.Http.Headers;
+using System.IO;
 
 namespace SmartTutor
 {
@@ -38,6 +40,8 @@ namespace SmartTutor
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Env { get; }
 
+        private const string CorsPolicy = "_corsPolicy";
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
@@ -45,6 +49,17 @@ namespace SmartTutor
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new LearningObjectJsonConverter());
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: CorsPolicy,
+                    builder =>
+                    {
+                        builder.WithOrigins(GetSecret("CORS_ORIGINS") ?? "http://localhost:4200")
+                            .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization, "access_token")
+                            .WithMethods("GET", "PUT", "POST", "DELETE", "OPTIONS");
+                    });
             });
 
             services.AddDbContext<SmartTutorContext>(opt =>
@@ -93,8 +108,8 @@ namespace SmartTutor
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = Configuration["Jwt:Authority"];
-                options.Audience = Configuration["Jwt:Audience"];
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY") ?? "http://localhost:8080/auth/realms/master";
+                options.Audience = Environment.GetEnvironmentVariable("AUDIENCE") ?? "demo-app";
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.Events = new JwtBearerEvents
@@ -110,6 +125,7 @@ namespace SmartTutor
                         {
                             return failedContext.Response.WriteAsync(failedContext.Exception.ToString());
                         }
+
                         return failedContext.Response.WriteAsync("An error occured processing your authentication.");
                     }
                 };
@@ -123,11 +139,7 @@ namespace SmartTutor
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(x => x
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) // allow any origin
-                .AllowCredentials()); // allow credentials
+            app.UseCors(CorsPolicy);
 
             app.UseHttpsRedirection();
 
@@ -140,13 +152,24 @@ namespace SmartTutor
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
+        public string GetSecret(string secretName)
+        {
+            string secretPath = Environment.GetEnvironmentVariable($"{secretName}_FILE");
+            if (File.Exists(secretPath))
+            {
+                return File.ReadAllText(secretPath);
+            } else {
+                return Environment.GetEnvironmentVariable(secretName);
+            }
+        }
+
         private string CreateConnectionStringFromEnvironment()
         {
             string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
-            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "smart-tutor-db";
-            string user = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "postgres";
-            string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "super";
+            string database = GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
+            string user = GetSecret("DATABASE_USERNAME") ?? "postgres";
+            string password = GetSecret("DATABASE_PASSWORD") ?? "super";
             string integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             string pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
