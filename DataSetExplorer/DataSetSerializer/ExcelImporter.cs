@@ -23,19 +23,19 @@ namespace DataSetExplorer.DataSetSerializer
         /// It examines excel documents in the sourceFolder directory and its subdirectories.
         /// The excel documents must be formatted following these guidelines https://github.com/Clean-CaDET/platform/wiki/Dataset-Explorer#building-your-dataset
         /// </summary>
-        /// <param name="dataSetName">Name of the returned dataset.</param>
-        /// <returns>A dataset constructed from one or more excel documents.</returns>
-        public DataSet Import(string dataSetName)
+        /// <param name="projectName">Name of the returned dataset project.</param>
+        /// <returns>A dataset project constructed from one or more excel documents.</returns>
+        public DataSetProject Import(string projectName)
         {
-            var dataSet = new DataSet(dataSetName);
+            var project = new DataSetProject(projectName);
 
             var sheets = GetWorksheets(GetExcelDocuments());
             foreach (var excelWorksheet in sheets)
             {
-                dataSet.AddInstances(ExtractInstances(excelWorksheet));
+                project.AddInstances(ExtractInstances(excelWorksheet));
             }
             
-            return dataSet;
+            return project;
         }
 
         private IEnumerable<ExcelPackage> GetExcelDocuments()

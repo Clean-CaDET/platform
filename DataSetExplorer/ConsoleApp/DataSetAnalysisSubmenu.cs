@@ -12,23 +12,9 @@ namespace DataSetExplorer.ConsoleApp
             _dataSetAnalysisService = dataSetAnalysisService;
         }
 
-        internal void AnalyzeDataSet()
+        public void AnalyzeDataSet()
         {
-            string dataSetPath;
-            string outputPath;
-            string finishOption;
-
-            do
-            {
-                dataSetPath = ConsoleIO.GetAnswerOnQuestion("Enter data set folder path: ");
-                outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
-                ChooseAnalyzeDataSetOption(dataSetPath, outputPath);
-                finishOption = ConsoleIO.GetAnswerOnQuestion("Finished? (y/n): ");
-            } while (finishOption.Equals("n"));
-        }
-
-        private void ChooseAnalyzeDataSetOption(string dataSetPath, string outputPath)
-        {
+            var projects = DataSetIO.GetProjects("annotated project folder path and project output folder path");
             string chosenOption;
             do
             {
@@ -39,11 +25,11 @@ namespace DataSetExplorer.ConsoleApp
                 switch (chosenOption)
                 {
                     case "1":
-                        result = _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation(dataSetPath, outputPath);
+                        result = _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation(projects);
                         Console.WriteLine(result.ToString());
                         break;
                     case "2":
-                        result = _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations(dataSetPath, outputPath);
+                        result = _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations(projects);
                         Console.WriteLine(result.ToString());
                         break;
                     case "x":

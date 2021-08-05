@@ -20,19 +20,22 @@ namespace DataSetExplorer.DataSetSerializer
             _requiredSmells = columnModel.SmellsAndHeuristics;
             _includeMetrics = columnModel.IncludeMetrics;
         }
-        public void Export(DataSet project, string fileName)
+        public void Export(DataSet dataSet, string fileName)
         {
-            var populatedExcel = PopulateTemplate(project);
-            Serialize(fileName, populatedExcel);
+            foreach (var project in dataSet._projects)
+            {
+                var populatedExcel = PopulateTemplate(dataSet, project);
+                Serialize(fileName, project._name, populatedExcel);
+            }
         }
 
-        private ExcelPackage PopulateTemplate(DataSet project)
+        private ExcelPackage PopulateTemplate(DataSet dataSet, DataSetProject project)
         {
-            var template = LoadTemplate(project.Url);
+            var template = LoadTemplate(project._url);
             foreach (var smell in _requiredSmells.GetSmells())
             {
                 var sheet = template.Workbook.Worksheets.First(s => s.Name == smell.Value);
-                var instances = smell.RelevantSnippetType().SelectMany(project.GetInstancesOfType).ToList();
+                var instances = smell.RelevantSnippetType().SelectMany(snippetType => dataSet.GetInstancesOfType(snippetType, project._name)).ToList();
                 PopulateInstances(sheet, instances, smell);
             }
 
@@ -96,9 +99,9 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void Serialize(string fileName, ExcelPackage populatedExcel)
+        private void Serialize(string fileName, string projectName, ExcelPackage populatedExcel)
         {
-            var filePath = _exportPath + fileName + ".xlsx";
+            var filePath = _exportPath + fileName + "_" + projectName + ".xlsx";
             populatedExcel.SaveAs(new FileInfo(filePath));
         }
     }

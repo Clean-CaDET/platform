@@ -5,6 +5,7 @@ using DataSetExplorer.DataSetSerializer.ViewModel;
 using DataSetExplorer.RepositoryAdapters;
 using FluentResults;
 using System;
+using System.Collections.Specialized;
 using System.IO;
 
 namespace DataSetExplorer
@@ -18,27 +19,31 @@ namespace DataSetExplorer
             _codeRepository = codeRepository;
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, ListDictionary projects)
         {
-            return CreateDataSetSpreadsheet(basePath, projectName, projectAndCommitUrl, new NewSpreadSheetColumnModel());
+            return CreateDataSetSpreadsheet(dataSetName, basePath, projects, new NewSpreadSheetColumnModel());
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl, NewSpreadSheetColumnModel columnModel)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, ListDictionary projects, NewSpreadSheetColumnModel columnModel)
         {
             //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
-            var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
-            _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
-            
-            var dataSet = CreateDataSetFromRepository(projectAndCommitUrl, gitFolderPath);
-            var excelFileName = ExportToExcel(basePath, projectName, columnModel, dataSet);
-            
+            var dataSet = new DataSet(dataSetName);
+            foreach(var projectName in projects.Keys)
+            {
+                var gitFolderPath = basePath + projectName.ToString() + Path.DirectorySeparatorChar + "git";
+                _codeRepository.SetupRepository(projects[projectName].ToString(), gitFolderPath);
+                var dataSetProject = CreateDataSetProjectFromRepository(projects[projectName].ToString(), projectName.ToString(), gitFolderPath);
+                dataSet.AddProject(dataSetProject);
+            }
+
+            var excelFileName = ExportToExcel(basePath, dataSetName, columnModel, dataSet);
             return Result.Ok("Data set created: " + excelFileName);
         }
 
-        private static DataSet CreateDataSetFromRepository(string projectAndCommitUrl, string projectPath)
+        private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetBuilder(projectAndCommitUrl, projectPath);
+            var builder = new CaDETToDataSetProjectBuilder(projectAndCommitUrl, projectName, projectPath);
             return builder.IncludeMembersWith(10).IncludeClassesWith(3, 5)
                 .RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();

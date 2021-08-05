@@ -1,11 +1,12 @@
 ﻿using DataSetExplorer.DataSetSerializer.ViewModel;
 using FluentResults;
+using System.Collections.Specialized;
 
 namespace DataSetExplorer
 {
     public interface IDataSetCreationService
     {
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl);
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl, NewSpreadSheetColumnModel columnModel);
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, ListDictionary projects);
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, ListDictionary projects, NewSpreadSheetColumnModel columnModel);
     }
 }

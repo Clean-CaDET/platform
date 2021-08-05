@@ -53,15 +53,12 @@ namespace DataSetExplorer.ConsoleApp
 
         private void CreateDataSet()
         {
+            string dataSetName = ConsoleIO.GetAnswerOnQuestion("Enter data set name: ");
             string outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
             var projects = DataSetIO.GetProjects("project name and project/commit URL");
 
-            Result<string> result;
-            foreach (var projectName in projects.Keys)
-            {
-                result = _dataSetCreationService.CreateDataSetSpreadsheet(outputPath, projectName.ToString(), projects[projectName].ToString());
-                Console.WriteLine(result.ToString());
-            }
+            var result = _dataSetCreationService.CreateDataSetSpreadsheet(dataSetName, outputPath, projects);
+            Console.WriteLine(result.ToString());
         }
 
         private void ExportDataSet()

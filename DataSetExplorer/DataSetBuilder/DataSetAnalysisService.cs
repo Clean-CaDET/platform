@@ -1,45 +1,51 @@
 ﻿using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
 using FluentResults;
-using System;
+using System.Collections.Specialized;
 using System.IO;
 
 namespace DataSetExplorer
 {
     class DataSetAnalysisService : IDataSetAnalysisService
     {
-        public Result<string> FindInstancesWithAllDisagreeingAnnotations(string dataSetPath, string outputPath)
+        public Result<string> FindInstancesWithAllDisagreeingAnnotations(ListDictionary projects)
         {
             try
             {
-                var dataset = LoadDataSet(dataSetPath);
-                var exporter = new TextFileExporter(outputPath);
-                exporter.ExportInstancesWithAnnotatorId(dataset.GetInstancesWithAllDisagreeingAnnotations());
-                return Result.Ok("Instances with disagreeing annotations exported: " + outputPath);
+                foreach (var projectFolderPath in projects.Keys)
+                {
+                    var project = LoadDataSetProject(projectFolderPath.ToString(), projectFolderPath.ToString());
+                    var exporter = new TextFileExporter(projects[projectFolderPath].ToString());
+                    exporter.ExportInstancesWithAnnotatorId(project.GetInstancesWithAllDisagreeingAnnotations());
+                }
+                return Result.Ok("Instances with disagreeing annotations exported.");
             } catch (IOException e)
             {
                 return Result.Fail(e.ToString());
             }
         }
 
-        public Result<string> FindInstancesRequiringAdditionalAnnotation(string dataSetPath, string outputPath)
+        public Result<string> FindInstancesRequiringAdditionalAnnotation(ListDictionary projects)
         {
             try
             {
-                var dataset = LoadDataSet(dataSetPath);
-                var exporter = new TextFileExporter(outputPath);
-                exporter.ExportInstancesWithAnnotatorId(dataset.GetInsufficientlyAnnotatedInstances());
-                return Result.Ok("Instances requiring additional annotation exported: " + outputPath);
+                foreach (var projectFolderPath in projects.Keys)
+                {
+                    var project = LoadDataSetProject(projectFolderPath.ToString(), projectFolderPath.ToString());
+                    var exporter = new TextFileExporter(projects[projectFolderPath].ToString());
+                    exporter.ExportInstancesWithAnnotatorId(project.GetInsufficientlyAnnotatedInstances());
+                }
+                return Result.Ok("Instances requiring additional annotation exported.");
             } catch (IOException e)
             {
                 return Result.Fail(e.ToString());
             }
         }
 
-        private DataSet LoadDataSet(string folder)
+        private DataSetProject LoadDataSetProject(string folder, string projectName)
         {
             var importer = new ExcelImporter(folder);
-            return importer.Import("Clean CaDET");
+            return importer.Import(projectName);
         }
     }
 }

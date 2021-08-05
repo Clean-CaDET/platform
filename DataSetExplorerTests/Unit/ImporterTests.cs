@@ -13,14 +13,16 @@ namespace DataSetExplorer.Tests.Unit
         [Fact]
         public void Imports_data_set_instances_and_annotations()
         {
+            var dataSet = new DataSet("Test");
             ExcelImporter importer = new ExcelImporter(new ExcelFactory().GetTestDataFolder());
-            var dataSet = importer.Import("BurningKnight");
+            var project = importer.Import("BurningKnight");
+            dataSet.AddProject(project);
 
-            var classes = dataSet.GetInstancesOfType(SnippetType.Class);
+            var classes = dataSet.GetInstancesOfType(SnippetType.Class, "BurningKnight");
             classes.Count.ShouldBe(79);
             classes.Count(c => c.Annotations.Count == 3).ShouldBe(79);
             
-            var functions = dataSet.GetInstancesOfType(SnippetType.Function);
+            var functions = dataSet.GetInstancesOfType(SnippetType.Function, "BurningKnight");
             functions.Count.ShouldBe(313);
             functions.Count(c => c.Annotations.Count == 1).ShouldBe(7);
             functions.Count(c => c.Annotations.Count == 2).ShouldBe(10);
@@ -52,9 +54,9 @@ namespace DataSetExplorer.Tests.Unit
         public void Finds_insufficiently_annotated_instances()
         {
             ExcelImporter importer = new ExcelImporter(new ExcelFactory().GetTestDataFolder());
-            var dataSet = importer.Import("BurningKnight");
+            var project = importer.Import("BurningKnight");
 
-            var instances = dataSet.GetInsufficientlyAnnotatedInstances();
+            var instances = project.GetInsufficientlyAnnotatedInstances();
 
             instances.Count.ShouldBe(9);
         }
@@ -63,9 +65,9 @@ namespace DataSetExplorer.Tests.Unit
         public void Finds_instances_with_all_disagreeing_annotations()
         {
             ExcelImporter importer = new ExcelImporter(new ExcelFactory().GetTestDataFolder());
-            var dataSet = importer.Import("BurningKnight");
+            var project = importer.Import("BurningKnight");
 
-            var instances = dataSet.GetInstancesWithAllDisagreeingAnnotations();
+            var instances = project.GetInstancesWithAllDisagreeingAnnotations();
 
             instances.Count.ShouldBe(21);
         }

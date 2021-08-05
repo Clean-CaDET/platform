@@ -14,14 +14,13 @@ namespace DataSetExplorer
         public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(ListDictionary projects, List<Annotator> annotators, int? annotatorId)
         {
             var allAnnotatedInstances = new List<DataSetInstance>();
-
             foreach (var key in projects.Keys)
             {
                 CodeModelFactory factory = new CodeModelFactory();
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
 
                 var importer = new ExcelImporter(projects[key].ToString());
-                var annotatedInstances = importer.Import("Clean CaDET").GetAllInstances();
+                var annotatedInstances = importer.Import(key.ToString())._instances.ToList();
 
                 LoadAnnotators(annotators, annotatedInstances);
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
