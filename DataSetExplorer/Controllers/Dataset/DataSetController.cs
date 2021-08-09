@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace DataSetExplorer.Controllers.Dataset
 {
@@ -23,10 +22,10 @@ namespace DataSetExplorer.Controllers.Dataset
         [HttpPost]
         public IActionResult CreateDataSet([FromBody] List<ProjectDTO> projects) // TODO: Add dataSetName parameter
         {
-            var dataSetProjects = new ListDictionary();
+            var dataSetProjects = new Dictionary<string, string>();
             foreach (var project in projects)
             {
-                dataSetProjects.Add(project.Name, project.Url);
+                dataSetProjects[project.Name] = project.Url;
             }
 
             // TODO: Send dataSetName parameter to CreateDataSetInDatabase method instead of "Clean CaDET"

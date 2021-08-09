@@ -6,7 +6,7 @@ using DataSetExplorer.DataSetSerializer.ViewModel;
 using DataSetExplorer.RepositoryAdapters;
 using FluentResults;
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -23,7 +23,7 @@ namespace DataSetExplorer
             _dataSetRepository = dataSetRepository;
         }
 
-        public Result<DataSet> CreateDataSetInDatabase(string dataSetName, string basePath, ListDictionary projects)
+        public Result<DataSet> CreateDataSetInDatabase(string dataSetName, string basePath, IDictionary<string, string> projects)
         {
             var initialDataSet = new DataSet(dataSetName);
             _dataSetRepository.Create(initialDataSet);
@@ -31,20 +31,20 @@ namespace DataSetExplorer
             return Result.Ok(initialDataSet);
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, ListDictionary projects)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects)
         {
             return CreateDataSetSpreadsheet(dataSetName, basePath, projects, new NewSpreadSheetColumnModel());
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, ListDictionary projects, NewSpreadSheetColumnModel columnModel)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, NewSpreadSheetColumnModel columnModel)
         {
             //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
             var dataSet = new DataSet(dataSetName);
             foreach(var projectName in projects.Keys)
             {
-                var gitFolderPath = basePath + projectName.ToString() + Path.DirectorySeparatorChar + "git";
-                _codeRepository.SetupRepository(projects[projectName].ToString(), gitFolderPath);
-                var dataSetProject = CreateDataSetProjectFromRepository(projects[projectName].ToString(), projectName.ToString(), gitFolderPath);
+                var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
+                _codeRepository.SetupRepository(projects[projectName], gitFolderPath);
+                var dataSetProject = CreateDataSetProjectFromRepository(projects[projectName], projectName, gitFolderPath);
                 dataSet.AddProject(dataSetProject);
             }
 
@@ -75,14 +75,14 @@ namespace DataSetExplorer
                 .SetProjectExtractionPercentile(10).Build();
         }
 
-        private void ProcessInitialDataSet(string basePath, ListDictionary projects, DataSet initialDataSet)
+        private void ProcessInitialDataSet(string basePath, IDictionary<string, string> projects, DataSet initialDataSet)
         {
             foreach (var projectName in projects.Keys)
             {
-                var project = CreateDataSetProject(basePath, projectName.ToString(), projects[projectName].ToString());
+                var project = CreateDataSetProject(basePath, projectName, projects[projectName]);
+                project.Processed();
                 initialDataSet.AddProject(project);
             }
-            initialDataSet.Processed();
             _dataSetRepository.Update(initialDataSet);
         }
 

@@ -22,20 +22,20 @@ namespace DataSetExplorer.DataSetSerializer
         }
         public void Export(DataSet dataSet, string fileName)
         {
-            foreach (var project in dataSet._projects)
+            foreach (var project in dataSet.Projects)
             {
                 var populatedExcel = PopulateTemplate(dataSet, project);
-                Serialize(fileName, project._name, populatedExcel);
+                Serialize(fileName, project.Name, populatedExcel);
             }
         }
 
         private ExcelPackage PopulateTemplate(DataSet dataSet, DataSetProject project)
         {
-            var template = LoadTemplate(project._url);
+            var template = LoadTemplate(project.Url);
             foreach (var smell in _requiredSmells.GetSmells())
             {
                 var sheet = template.Workbook.Worksheets.First(s => s.Name == smell.Value);
-                var instances = smell.RelevantSnippetType().SelectMany(snippetType => dataSet.GetInstancesOfType(snippetType, project._name)).ToList();
+                var instances = smell.RelevantSnippetType().SelectMany(snippetType => dataSet.GetInstancesOfType(snippetType, project.Name)).ToList();
                 PopulateInstances(sheet, instances, smell);
             }
 

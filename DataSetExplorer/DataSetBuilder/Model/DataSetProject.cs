@@ -1,19 +1,23 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
 {
     public class DataSetProject
     {
-        internal readonly string _name;
-        internal readonly string _url;
-        internal readonly HashSet<DataSetInstance> _instances;
+        [Key]
+        public string Name { get; private set; }
+        public string Url { get; private set; }
+        public HashSet<DataSetInstance> Instances { get; private set; }
+        public DataSetProjectState State { get; private set; }
 
         internal DataSetProject(string name, string url)
         {
-            _name = name;
-            _url = url;
-            _instances = new HashSet<DataSetInstance>();
+            Name = name;
+            Url = url;
+            Instances = new HashSet<DataSetInstance>();
+            State = DataSetProjectState.Processing;
         }
 
         public DataSetProject(string name) : this(name, null) { }
@@ -22,25 +26,30 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
             foreach (var instance in instances)
             {
-                if (_instances.TryGetValue(instance, out var existingInstance))
+                if (Instances.TryGetValue(instance, out var existingInstance))
                 {
                     existingInstance.AddAnnotations(instance);
                 }
                 else
                 {
-                    _instances.Add(instance);
+                    Instances.Add(instance);
                 }
             }
         }
 
         public List<DataSetInstance> GetInsufficientlyAnnotatedInstances(string projectName = null)
         {
-            return _instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
+            return Instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
         }
 
         public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations(string projectName = null)
         {
-            return _instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+            return Instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+        }
+
+        public void Processed()
+        {
+            State = DataSetProjectState.Built;
         }
     }
 }

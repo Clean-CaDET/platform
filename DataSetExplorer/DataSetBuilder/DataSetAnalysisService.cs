@@ -3,7 +3,6 @@ using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using FluentResults;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 
 namespace DataSetExplorer
@@ -16,14 +15,14 @@ namespace DataSetExplorer
             _dataSetRepository = dataSetRepository;
         }
 
-        public Result<string> FindInstancesWithAllDisagreeingAnnotations(ListDictionary projects)
+        public Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects)
         {
             try
             {
                 foreach (var projectFolderPath in projects.Keys)
                 {
-                    var project = LoadDataSetProject(projectFolderPath.ToString(), projectFolderPath.ToString());
-                    var exporter = new TextFileExporter(projects[projectFolderPath].ToString());
+                    var project = LoadDataSetProject(projectFolderPath, projectFolderPath);
+                    var exporter = new TextFileExporter(projects[projectFolderPath]);
                     exporter.ExportInstancesWithAnnotatorId(project.GetInstancesWithAllDisagreeingAnnotations());
                 }
                 return Result.Ok("Instances with disagreeing annotations exported.");
@@ -33,14 +32,14 @@ namespace DataSetExplorer
             }
         }
 
-        public Result<string> FindInstancesRequiringAdditionalAnnotation(ListDictionary projects)
+        public Result<string> FindInstancesRequiringAdditionalAnnotation(IDictionary<string, string> projects)
         {
             try
             {
                 foreach (var projectFolderPath in projects.Keys)
                 {
-                    var project = LoadDataSetProject(projectFolderPath.ToString(), projectFolderPath.ToString());
-                    var exporter = new TextFileExporter(projects[projectFolderPath].ToString());
+                    var project = LoadDataSetProject(projectFolderPath, projectFolderPath);
+                    var exporter = new TextFileExporter(projects[projectFolderPath]);
                     exporter.ExportInstancesWithAnnotatorId(project.GetInsufficientlyAnnotatedInstances());
                 }
                 return Result.Ok("Instances requiring additional annotation exported.");
@@ -56,7 +55,7 @@ namespace DataSetExplorer
             if (dataset == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
 
             var instances = new List<DataSetInstance>();
-            foreach (var project in dataset._projects)
+            foreach (var project in dataset.Projects)
             {
                 instances.AddRange(project.GetInstancesWithAllDisagreeingAnnotations());
             }
@@ -69,7 +68,7 @@ namespace DataSetExplorer
             if (dataset == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
 
             var instances = new List<DataSetInstance>();
-            foreach (var project in dataset._projects)
+            foreach (var project in dataset.Projects)
             {
                 instances.AddRange(project.GetInsufficientlyAnnotatedInstances());
             }

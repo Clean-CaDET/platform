@@ -1,9 +1,7 @@
 ﻿using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
 using FluentResults;
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 
@@ -18,7 +16,7 @@ namespace DataSetExplorer
             _fullDataSetFactory = fullDataSetFactory;
         }
 
-        public Result<string> Export(ListDictionary projects, List<Annotator> annotators, string outputPath)
+        public Result<string> Export(IDictionary<string, string> projects, List<Annotator> annotators, string outputPath)
         {
             try
             {

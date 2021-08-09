@@ -24,8 +24,8 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         public DataSet GetDataSet(int id)
         {
             return _dbContext.DataSets
-                .Include(s => s._projects).ThenInclude(p => p._instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(s => s._projects).ThenInclude(p => p._instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .FirstOrDefault(s => s.Id == id);
         }
 
