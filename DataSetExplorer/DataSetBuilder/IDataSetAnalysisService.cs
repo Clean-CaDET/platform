@@ -6,9 +6,9 @@ namespace DataSetExplorer
 {
     public interface IDataSetAnalysisService
     {
-        public Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects);
-        public Result<string> FindInstancesRequiringAdditionalAnnotation(IDictionary<string, string> projects);
-        public Result<List<DataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(int dataSetId);
-        public Result<List<DataSetInstance>> FindInstancesRequiringAdditionalAnnotation(int dataSetId);
+        Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects);
+        Result<string> FindInstancesRequiringAdditionalAnnotation(IDictionary<string, string> projects);
+        Result<List<DataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(int dataSetId);
+        Result<List<DataSetInstance>> FindInstancesRequiringAdditionalAnnotation(int dataSetId);
     }
 }

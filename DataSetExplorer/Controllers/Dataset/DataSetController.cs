@@ -1,4 +1,6 @@
-﻿using DataSetExplorer.Controllers.Dataset.DTOs;
+﻿using AutoMapper;
+using DataSetExplorer.Controllers.Dataset.DTOs;
+using DataSetExplorer.DataSetBuilder.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -11,33 +13,49 @@ namespace DataSetExplorer.Controllers.Dataset
     {
         private readonly string _gitClonePath;
 
+        private readonly IMapper _mapper;
         private readonly IDataSetCreationService _dataSetCreationService;
 
-        public DataSetController(IDataSetCreationService creationService, IConfiguration configuration)
+        public DataSetController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration)
         {
+            _mapper = mapper;
             _dataSetCreationService = creationService;
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
 
         [HttpPost]
-        public IActionResult CreateDataSet([FromBody] List<ProjectDTO> projects) // TODO: Add dataSetName parameter
+        public IActionResult CreateDataSet([FromBody] string dataSetName)
         {
-            var dataSetProjects = new Dictionary<string, string>();
-            foreach (var project in projects)
-            {
-                dataSetProjects[project.Name] = project.Url;
-            }
+            var result = _dataSetCreationService.CreateEmptyDataSet(dataSetName);
+            return Ok(result.Value);
+        }
 
-            // TODO: Send dataSetName parameter to CreateDataSetInDatabase method instead of "Clean CaDET"
-            var result = _dataSetCreationService.CreateDataSetInDatabase("Clean CaDET", _gitClonePath, dataSetProjects);
+        [HttpPost]
+        [Route("{id}/add-projects")]
+        public IActionResult CreateDataSetProject([FromBody] List<ProjectDTO> projects, [FromRoute] int id)
+        {
+            var dataSetProjects = new List<DataSetProject>();
+            foreach (var project in projects) dataSetProjects.Add(_mapper.Map<DataSetProject>(project));
+
+            var result = _dataSetCreationService.AddProjectsToDataSet(id, _gitClonePath, dataSetProjects);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Accepted(result.Value);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetDataSet(int id)
+        public IActionResult GetDataSet([FromRoute] int id)
         {
             var result = _dataSetCreationService.GetDataSet(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
+        [Route("project/{id}")]
+        public IActionResult GetDataSetProject([FromRoute] int id)
+        {
+            var result = _dataSetCreationService.GetDataSetProject(id);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }

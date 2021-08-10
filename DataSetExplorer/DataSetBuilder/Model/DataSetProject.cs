@@ -6,7 +6,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 {
     public class DataSetProject
     {
-        [Key]
+        public int Id { get; private set; }
         public string Name { get; private set; }
         public string Url { get; private set; }
         public HashSet<DataSetInstance> Instances { get; private set; }
@@ -49,7 +49,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         public void Processed()
         {
-            State = DataSetProjectState.Built;
+            if (State == DataSetProjectState.Processing) State = DataSetProjectState.Built;
+        }
+
+        public void Failed()
+        {
+            if (State == DataSetProjectState.Processing) State = DataSetProjectState.Failed;
         }
     }
 }

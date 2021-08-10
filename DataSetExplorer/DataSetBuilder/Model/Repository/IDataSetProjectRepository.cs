@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
-    public interface IDataSetRepository
+    public interface IDataSetProjectRepository
     {
-        void Create(DataSet dataSet);
-        DataSet GetDataSet(int id);
-        void Update(DataSet dataSet);
+        DataSetProject GetDataSetProject(int id);
+        void Update(DataSetProject dataSetProject);
     }
 }
