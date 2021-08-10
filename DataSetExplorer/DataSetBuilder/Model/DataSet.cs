@@ -6,58 +6,32 @@ namespace DataSetExplorer.DataSetBuilder.Model
     public class DataSet
     {
         public int Id { get; private set; }
-        public string Url { get; private set; }
-        public HashSet<DataSetInstance> Instances { get; private set; }
-        public DataSetState State { get; private set; }
-
-        internal DataSet(string dataSetUrl)
+        public string Name { get; private set; }
+        public HashSet<DataSetProject> Projects { get; private set; }
+        
+        public DataSet(string name)
         {
-            Url = dataSetUrl;
-            Instances = new HashSet<DataSetInstance>();
-            State = DataSetState.Processing;
+            Name = name;
+            Projects = new HashSet<DataSetProject>();
         }
 
         private DataSet()
         {
         }
 
-        internal void AddInstances(List<DataSetInstance> instances)
+        public void AddProject(DataSetProject project)
         {
-            foreach (var instance in instances)
+            Projects.Add(project);
+        }
+
+        public List<DataSetInstance> GetInstancesOfType(SnippetType type, string projectName = null)
+        {
+            if (!projectName.Equals(null))
             {
-                if (Instances.TryGetValue(instance, out var existingInstance))
-                {
-                    existingInstance.AddAnnotations(instance);
-                } else
-                {
-                    Instances.Add(instance);
-                }
+                var project = Projects.First(p => p.Name == projectName);
+                return project.Instances.Where(i => i.Type.Equals(type)).ToList();
             }
-        }
-
-        public List<DataSetInstance> GetInstancesOfType(SnippetType type)
-        {
-            return Instances.Where(i => i.Type.Equals(type)).ToList();
-        }
-
-        public List<DataSetInstance> GetInsufficientlyAnnotatedInstances()
-        {
-            return Instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
-        }
-
-        public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
-        {
-            return Instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
-        }
-
-        public List<DataSetInstance> GetAllInstances()
-        {
-            return Instances.ToList();
-        }
-
-        public void Processed()
-        {
-            State = DataSetState.Built;
+            return Projects.SelectMany(p => p.Instances.Where(i => i.Type.Equals(type))).ToList();
         }
     }
 }

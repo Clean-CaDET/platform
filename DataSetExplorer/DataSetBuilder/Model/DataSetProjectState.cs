@@ -1,6 +1,6 @@
 ﻿namespace DataSetExplorer.DataSetBuilder.Model
 {
-    public enum DataSetState
+    public enum DataSetProjectState
     {
         Processing,
         Built

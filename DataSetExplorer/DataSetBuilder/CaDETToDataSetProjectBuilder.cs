@@ -8,9 +8,10 @@ using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder
 {
-    internal class CaDETToDataSetBuilder
+    internal class CaDETToDataSetProjectBuilder
     {
         private readonly string _projectAndCommitUrl;
+        private readonly string _projectName;
 
         private readonly CaDETProject _cadetProject;
         private int _percentileOfProjectCovered = 100;
@@ -25,24 +26,24 @@ namespace DataSetExplorer.DataSetBuilder
         private int _minimumNMD;
         private int _minimumNAD;
 
-
-        internal CaDETToDataSetBuilder(string projectAndCommitUrl, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
+        internal CaDETToDataSetProjectBuilder(string projectAndCommitUrl, string projectName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers)
         {
             _projectAndCommitUrl = projectAndCommitUrl;
+            _projectName = projectName;
             _cadetProject = new CodeModelFactory(language).CreateProjectWithCodeFileLinks(projectPath);
             _includeClasses = includeClasses;
             _includeMembers = includeMembers;
         }
 
-        internal CaDETToDataSetBuilder(string projectAndCommitUrl, string projectPath): this(projectAndCommitUrl, projectPath, LanguageEnum.CSharp, true, true) { }
+        internal CaDETToDataSetProjectBuilder(string projectAndCommitUrl, string projectName, string projectPath): this(projectAndCommitUrl, projectName, projectPath, LanguageEnum.CSharp, true, true) { }
 
-        internal CaDETToDataSetBuilder SetProjectExtractionPercentile(int percentile)
+        internal CaDETToDataSetProjectBuilder SetProjectExtractionPercentile(int percentile)
         {
             _percentileOfProjectCovered = percentile;
             return this;
         }
         
-        internal CaDETToDataSetBuilder RandomizeClassSelection()
+        internal CaDETToDataSetProjectBuilder RandomizeClassSelection()
         {
             ValidateClassesIncluded();
             _randomizeClassList = true;
@@ -52,7 +53,7 @@ namespace DataSetExplorer.DataSetBuilder
         /// <summary>Final dataset will include classes that have minimumNMD or minimumNAD</summary>
         /// <param name="minimumNMD">Minimum number of methods.</param>
         /// <param name="minimumNAD">Minimum number of fields and properties with implicit fields.</param>
-        internal CaDETToDataSetBuilder IncludeClassesWith(int minimumNMD, int minimumNAD)
+        internal CaDETToDataSetProjectBuilder IncludeClassesWith(int minimumNMD, int minimumNAD)
         {
             ValidateClassesIncluded();
             _minimumNMD = minimumNMD;
@@ -65,7 +66,7 @@ namespace DataSetExplorer.DataSetBuilder
             if (!_includeClasses) throw new InvalidOperationException("Classes are not included.");
         }
 
-        internal CaDETToDataSetBuilder IncludeMemberTypes(CaDETMemberType[] acceptedTypes)
+        internal CaDETToDataSetProjectBuilder IncludeMemberTypes(CaDETMemberType[] acceptedTypes)
         {
             ValidateMembersIncluded();
             _acceptedMemberTypes = acceptedTypes;
@@ -77,26 +78,26 @@ namespace DataSetExplorer.DataSetBuilder
             if (!_includeMembers) throw new InvalidOperationException("Members are not included.");
         }
 
-        internal CaDETToDataSetBuilder RandomizeMemberSelection()
+        internal CaDETToDataSetProjectBuilder RandomizeMemberSelection()
         {
             ValidateMembersIncluded();
             _randomizeMemberList = true;
             return this;
         }
 
-        internal CaDETToDataSetBuilder IncludeMembersWith(int minimumELOC)
+        internal CaDETToDataSetProjectBuilder IncludeMembersWith(int minimumELOC)
         {
             ValidateMembersIncluded();
             _minimumELOC = minimumELOC;
             return this;
         }
 
-        internal DataSet Build()
+        internal DataSetProject Build()
         {
-            var builtDataSet = new DataSet(_projectAndCommitUrl);
-            if (_includeClasses) builtDataSet.AddInstances(BuildClasses());
-            if (_includeMembers) builtDataSet.AddInstances(BuildMembers());
-            return builtDataSet;
+            var builtDataSetProject = new DataSetProject(_projectName, _projectAndCommitUrl);
+            if (_includeClasses) builtDataSetProject.AddInstances(BuildClasses());
+            if (_includeMembers) builtDataSetProject.AddInstances(BuildMembers());
+            return builtDataSetProject;
         }
 
         private List<DataSetInstance> BuildClasses()
@@ -105,7 +106,7 @@ namespace DataSetExplorer.DataSetBuilder
                 c => c.Metrics[CaDETMetric.NAD] >= _minimumNAD || c.Metrics[CaDETMetric.NMD] >= _minimumNMD).ToList();
             if(_randomizeClassList) ShuffleList(cadetClasses);
             if(_percentileOfProjectCovered < 100) cadetClasses = cadetClasses.Take(DetermineNumberOfInstances(_cadetProject.Classes.Count)).ToList();
-            return CaDETToDataSetClasses(cadetClasses);
+            return CaDETToDataSetProjectClasses(cadetClasses);
         }
 
         private int DetermineNumberOfInstances(int totalNumber)
@@ -113,7 +114,7 @@ namespace DataSetExplorer.DataSetBuilder
             return totalNumber * _percentileOfProjectCovered / 100;
         }
 
-        private List<DataSetInstance> CaDETToDataSetClasses(List<CaDETClass> cadetClasses)
+        private List<DataSetInstance> CaDETToDataSetProjectClasses(List<CaDETClass> cadetClasses)
         {
             return cadetClasses.Select(c => new DataSetInstance(
                 c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class, _cadetProject.GetMetricsForCodeSnippet(c.FullName)

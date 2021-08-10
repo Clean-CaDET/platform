@@ -1,9 +1,5 @@
 ﻿using DataSetExplorer.DataSetBuilder.Model;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataSetExplorer.Database
 {
@@ -15,6 +11,7 @@ namespace DataSetExplorer.Database
         public DbSet<DataSetAnnotation> DataSetAnnotations { get; set; }
         public DbSet<DataSetInstance> DataSetInstances { get; set; }
         public DbSet<DataSet> DataSets { get; set; }
+        public DbSet<DataSetProject> DataSetProjects { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
         {
         }

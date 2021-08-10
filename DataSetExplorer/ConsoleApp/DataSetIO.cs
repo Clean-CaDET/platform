@@ -1,22 +1,21 @@
 ﻿using DataSetExplorer.DataSetBuilder.Model;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 
 namespace DataSetExplorer.ConsoleApp
 {
     internal class DataSetIO
     {
-        internal static ListDictionary GetProjects(string info)
+        internal static IDictionary<string, string> GetProjects(string info)
         {
-            ListDictionary projects = new ListDictionary();
+            var projects = new Dictionary<string, string>();
             string projectsFilePath = ConsoleIO.GetAnswerOnQuestion("Enter projects file (csv with " + info + ") path: ");
 
             string[] lines = File.ReadAllLines(projectsFilePath);
             foreach (string line in lines)
             {
                 string[] columns = line.Split(',');
-                projects.Add(columns[0], columns[1]);
+                projects[columns[0]] = columns[1];
             }
             return projects;
         }

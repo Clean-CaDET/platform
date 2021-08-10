@@ -3,7 +3,6 @@ using CodeModel.CaDETModel;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetSerializer;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 
 namespace DataSetExplorer
@@ -11,17 +10,16 @@ namespace DataSetExplorer
     class FullDataSetFactory
     {
 
-        public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(ListDictionary projects, List<Annotator> annotators, int? annotatorId)
+        public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(IDictionary<string, string> projects, List<Annotator> annotators, int? annotatorId)
         {
             var allAnnotatedInstances = new List<DataSetInstance>();
-
-            foreach (var key in projects.Keys)
+            foreach (var projectSourceLocation in projects.Keys)
             {
                 CodeModelFactory factory = new CodeModelFactory();
-                CaDETProject project = factory.CreateProjectWithCodeFileLinks(key.ToString());
+                CaDETProject project = factory.CreateProjectWithCodeFileLinks(projectSourceLocation);
 
-                var importer = new ExcelImporter(projects[key].ToString());
-                var annotatedInstances = importer.Import("Clean CaDET").GetAllInstances();
+                var importer = new ExcelImporter(projects[projectSourceLocation]);
+                var annotatedInstances = importer.Import(projectSourceLocation).Instances.ToList();
 
                 LoadAnnotators(annotators, annotatedInstances);
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();

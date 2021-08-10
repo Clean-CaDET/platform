@@ -1,7 +1,6 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
@@ -22,7 +21,6 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Link = link;
             ProjectLink = projectLink;
             Type = type;
-
             
             Annotations = new HashSet<DataSetAnnotation>();
             MetricFeatures = metricFeatures;

@@ -6,8 +6,8 @@ using DataSetExplorer.DataSetSerializer.ViewModel;
 using DataSetExplorer.RepositoryAdapters;
 using FluentResults;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataSetExplorer
@@ -23,25 +23,33 @@ namespace DataSetExplorer
             _dataSetRepository = dataSetRepository;
         }
 
-        public Result<DataSet> CreateDataSetInDatabase(string basePath, string projectName, string projectAndCommitUrl)
+        public Result<DataSet> CreateDataSetInDatabase(string dataSetName, string basePath, IDictionary<string, string> projects)
         {
-            var initialDataSet = new DataSet(projectAndCommitUrl);
+            var initialDataSet = new DataSet(dataSetName);
             _dataSetRepository.Create(initialDataSet);
-            Task.Run(() => ProcessInitialDataSet(basePath, projectName, projectAndCommitUrl, initialDataSet));
+            Task.Run(() => ProcessInitialDataSet(basePath, projects, initialDataSet));
             return Result.Ok(initialDataSet);
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, string projectAndCommitUrl)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects)
         {
-            var dataSet = CreateDataSet(basePath, projectName, projectAndCommitUrl);
-            return CreateDataSetSpreadsheet(basePath, projectName, new NewSpreadSheetColumnModel(), dataSet);
+            return CreateDataSetSpreadsheet(dataSetName, basePath, projects, new NewSpreadSheetColumnModel());
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, NewSpreadSheetColumnModel columnModel)
         {
             //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
-            var excelFileName = ExportToExcel(basePath, projectName, columnModel, dataSet);
-            return Result.Ok("Data set exported to " + excelFileName);
+            var dataSet = new DataSet(dataSetName);
+            foreach(var projectName in projects.Keys)
+            {
+                var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
+                _codeRepository.SetupRepository(projects[projectName], gitFolderPath);
+                var dataSetProject = CreateDataSetProjectFromRepository(projects[projectName], projectName, gitFolderPath);
+                dataSet.AddProject(dataSetProject);
+            }
+
+            var excelFileName = ExportToExcel(basePath, dataSetName, columnModel, dataSet);
+            return Result.Ok("Data set created: " + excelFileName);
         }
 
         public Result<DataSet> GetDataSet(int id)
@@ -51,27 +59,30 @@ namespace DataSetExplorer
             return Result.Ok(dataSet);
         }
 
-        private DataSet CreateDataSet(string basePath, string projectName, string projectAndCommitUrl)
+        private DataSetProject CreateDataSetProject(string basePath, string projectName, string projectAndCommitUrl)
         {
             var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
             _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
-            return CreateDataSetFromRepository(projectAndCommitUrl, gitFolderPath);
+            return CreateDataSetProjectFromRepository(projectAndCommitUrl, projectName, gitFolderPath);
         }
 
-        private static DataSet CreateDataSetFromRepository(string projectAndCommitUrl, string projectPath)
+        private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetBuilder(projectAndCommitUrl, projectPath);
+            var builder = new CaDETToDataSetProjectBuilder(projectAndCommitUrl, projectName, projectPath);
             return builder.IncludeMembersWith(10).IncludeClassesWith(3, 5)
                 .RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
         }
 
-        private void ProcessInitialDataSet(string basePath, string projectName, string projectAndCommitUrl, DataSet initialDataSet)
+        private void ProcessInitialDataSet(string basePath, IDictionary<string, string> projects, DataSet initialDataSet)
         {
-            var dataSet = CreateDataSet(basePath, projectName, projectAndCommitUrl);
-            initialDataSet.AddInstances(dataSet.GetAllInstances());
-            initialDataSet.Processed();
+            foreach (var projectName in projects.Keys)
+            {
+                var project = CreateDataSetProject(basePath, projectName, projects[projectName]);
+                project.Processed();
+                initialDataSet.AddProject(project);
+            }
             _dataSetRepository.Update(initialDataSet);
         }
 

@@ -1,10 +1,7 @@
 ﻿using DataSetExplorer.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
@@ -27,8 +24,8 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         public DataSet GetDataSet(int id)
         {
             return _dbContext.DataSets
-                .Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(s => s.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .FirstOrDefault(s => s.Id == id);
         }
 

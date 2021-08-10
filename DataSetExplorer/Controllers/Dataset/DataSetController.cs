@@ -1,11 +1,7 @@
 ﻿using DataSetExplorer.Controllers.Dataset.DTOs;
-using DataSetExplorer.DataSetBuilder.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataSetExplorer.Controllers.Dataset
 {
@@ -24,15 +20,17 @@ namespace DataSetExplorer.Controllers.Dataset
         }
 
         [HttpPost]
-        public IActionResult CreateDataSet([FromBody] List<ProjectDTO> projects)
+        public IActionResult CreateDataSet([FromBody] List<ProjectDTO> projects) // TODO: Add dataSetName parameter
         {
-            var dataSets = new List<DataSet>();
+            var dataSetProjects = new Dictionary<string, string>();
             foreach (var project in projects)
             {
-                var result = _dataSetCreationService.CreateDataSetInDatabase(_gitClonePath, project.Name, project.Url);
-                dataSets.Add(result.Value);
+                dataSetProjects[project.Name] = project.Url;
             }
-            return Accepted(dataSets);
+
+            // TODO: Send dataSetName parameter to CreateDataSetInDatabase method instead of "Clean CaDET"
+            var result = _dataSetCreationService.CreateDataSetInDatabase("Clean CaDET", _gitClonePath, dataSetProjects);
+            return Accepted(result.Value);
         }
 
         [HttpGet]
