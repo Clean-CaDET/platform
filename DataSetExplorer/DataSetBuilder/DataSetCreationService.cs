@@ -75,6 +75,12 @@ namespace DataSetExplorer
             return Result.Ok(dataSet);
         }
 
+        public Result<IEnumerable<DataSet>> GetAllDataSets()
+        {
+            var dataSets = _dataSetRepository.GetAll();
+            return Result.Ok(dataSets);
+        }
+
         public Result<DataSetProject> GetDataSetProject(int id)
         {
             var project = _dataSetProjectRepository.GetDataSetProject(id);

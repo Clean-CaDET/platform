@@ -12,6 +12,7 @@ namespace DataSetExplorer
         Result<DataSet> CreateEmptyDataSet(string dataSetName);
         Result<DataSet> AddProjectsToDataSet(int dataSetId, string basePath, IEnumerable<DataSetProject> projects);
         Result<DataSet> GetDataSet(int id);
+        Result<IEnumerable<DataSet>> GetAllDataSets();
         Result<DataSetProject> GetDataSetProject(int id);
     }
 }

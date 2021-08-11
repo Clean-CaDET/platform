@@ -52,6 +52,13 @@ namespace DataSetExplorer.Controllers.Dataset
         }
 
         [HttpGet]
+        public IActionResult GetAllDataSets()
+        {
+            var result = _dataSetCreationService.GetAllDataSets();
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
         [Route("project/{id}")]
         public IActionResult GetDataSetProject([FromRoute] int id)
         {

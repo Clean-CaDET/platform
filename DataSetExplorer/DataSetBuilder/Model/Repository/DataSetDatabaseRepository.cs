@@ -1,6 +1,7 @@
 ﻿using DataSetExplorer.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
@@ -27,6 +28,13 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
                 .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .FirstOrDefault(s => s.Id == id);
+        }
+
+        public IEnumerable<DataSet> GetAll()
+        {
+            return _dbContext.DataSets
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics);
         }
 
         public void Update(DataSet dataSet)
