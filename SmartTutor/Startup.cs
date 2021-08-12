@@ -37,8 +37,8 @@ namespace SmartTutor
             Env = env;
         }
 
-        public IConfiguration Configuration { get; }
-        public IWebHostEnvironment Env { get; }
+        private IConfiguration Configuration { get; }
+        private IWebHostEnvironment Env { get; }
 
         private const string CorsPolicy = "_corsPolicy";
 
@@ -86,6 +86,7 @@ namespace SmartTutor
             services.AddScoped<ICodeQualityAnalyzer, CaDETQualityAnalyzer>();
             services.AddScoped<IAdviceRepository, AdviceDatabaseRepository>();
 
+            if (!bool.Parse(Environment.GetEnvironmentVariable("KEYCLOAK_ON") ?? "false")) return;
             AuthenticationConfig(services);
             AuthorizationConfig(services);
         }
@@ -121,18 +122,15 @@ namespace SmartTutor
                         failedContext.Response.StatusCode = 500;
                         failedContext.Response.ContentType = "text/plain";
 
-                        if (Env.IsDevelopment())
-                        {
-                            return failedContext.Response.WriteAsync(failedContext.Exception.ToString());
-                        }
-
-                        return failedContext.Response.WriteAsync("An error occured processing your authentication.");
+                        return failedContext.Response.WriteAsync(Env.IsDevelopment() ? 
+                            failedContext.Exception.ToString() : 
+                            "An error occured processing your authentication.");
                     }
                 };
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -152,26 +150,23 @@ namespace SmartTutor
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
-        public string GetSecret(string secretName)
+        private static string GetSecret(string secretName)
         {
-            string secretPath = Environment.GetEnvironmentVariable($"{secretName}_FILE");
-            if (File.Exists(secretPath))
-            {
-                return File.ReadAllText(secretPath);
-            } else {
-                return Environment.GetEnvironmentVariable(secretName);
-            }
+            var secretPath = Environment.GetEnvironmentVariable($"{secretName}_FILE") ?? "";
+            return File.Exists(secretPath) ? 
+                File.ReadAllText(secretPath) : 
+                Environment.GetEnvironmentVariable(secretName);
         }
 
-        private string CreateConnectionStringFromEnvironment()
+        private static string CreateConnectionStringFromEnvironment()
         {
-            string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
-            string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
-            string database = GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
-            string user = GetSecret("DATABASE_USERNAME") ?? "postgres";
-            string password = GetSecret("DATABASE_PASSWORD") ?? "super";
-            string integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
-            string pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
+            var server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
+            var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
+            var database = GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
+            var user = GetSecret("DATABASE_USERNAME") ?? "postgres";
+            var password = GetSecret("DATABASE_PASSWORD") ?? "super";
+            var integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
+            var pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
             return
                 $"Server={server};Port={port};Database={database};User ID={user};Password={password};Integrated Security={integratedSecurity};Pooling={pooling};";
