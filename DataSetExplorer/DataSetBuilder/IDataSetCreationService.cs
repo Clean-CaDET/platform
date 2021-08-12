@@ -7,9 +7,12 @@ namespace DataSetExplorer
 {
     public interface IDataSetCreationService
     {
-        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects);
-        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, NewSpreadSheetColumnModel columnModel);
-        public Result<DataSet> CreateDataSetInDatabase(string dataSetName, string basePath, IDictionary<string, string> projects);
-        public Result<DataSet> GetDataSet(int id);
+        Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects);
+        Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, NewSpreadSheetColumnModel columnModel);
+        Result<DataSet> CreateEmptyDataSet(string dataSetName);
+        Result<DataSet> AddProjectsToDataSet(int dataSetId, string basePath, IEnumerable<DataSetProject> projects);
+        Result<DataSet> GetDataSet(int id);
+        Result<IEnumerable<DataSet>> GetAllDataSets();
+        Result<DataSetProject> GetDataSetProject(int id);
     }
 }

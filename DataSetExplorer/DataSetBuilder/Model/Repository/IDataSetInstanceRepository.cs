@@ -8,8 +8,8 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
     public interface IDataSetInstanceRepository
     {
-        public DataSetInstance GetDataSetInstance(int id);
-        public Annotator GetAnnotator(int id);
-        public void Update(DataSetInstance instance);
+        DataSetInstance GetDataSetInstance(int id);
+        Annotator GetAnnotator(int id);
+        void Update(DataSetInstance instance);
     }
 }

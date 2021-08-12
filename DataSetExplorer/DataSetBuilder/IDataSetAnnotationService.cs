@@ -9,6 +9,6 @@ namespace DataSetExplorer.DataSetBuilder
 {
     public interface IDataSetAnnotationService
     {
-        public Result<string> AddDataSetAnnotation(DataSetAnnotation annotation, int dataSetInstanceId, int annotatorId);
+        Result<string> AddDataSetAnnotation(DataSetAnnotation annotation, int dataSetInstanceId, int annotatorId);
     }
 }

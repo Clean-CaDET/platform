@@ -7,8 +7,9 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
     public interface IDataSetRepository
     {
-        public void Create(DataSet dataSet);
-        public DataSet GetDataSet(int id);
-        public void Update(DataSet dataSet);
+        void Create(DataSet dataSet);
+        DataSet GetDataSet(int id);
+        IEnumerable<DataSet> GetAll();
+        void Update(DataSet dataSet);
     }
 }

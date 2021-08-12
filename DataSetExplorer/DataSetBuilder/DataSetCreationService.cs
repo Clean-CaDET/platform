@@ -1,13 +1,17 @@
-﻿using DataSetExplorer.DataSetBuilder;
+﻿using CodeModel.CodeParsers.CSharp.Exceptions;
+using DataSetExplorer.DataSetBuilder;
 using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using DataSetExplorer.DataSetSerializer.ViewModel;
 using DataSetExplorer.RepositoryAdapters;
 using FluentResults;
+using LibGit2Sharp;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataSetExplorer
@@ -16,18 +20,32 @@ namespace DataSetExplorer
     {
         private readonly ICodeRepository _codeRepository;
         private readonly IDataSetRepository _dataSetRepository;
+        private readonly IDataSetProjectRepository _dataSetProjectRepository;
 
-        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository)
+        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository, IDataSetProjectRepository dataSetProjectRepository)
         {
             _codeRepository = codeRepository;
             _dataSetRepository = dataSetRepository;
+            _dataSetProjectRepository = dataSetProjectRepository;
         }
 
-        public Result<DataSet> CreateDataSetInDatabase(string dataSetName, string basePath, IDictionary<string, string> projects)
+        public Result<DataSet> CreateEmptyDataSet(string dataSetName)
         {
-            var initialDataSet = new DataSet(dataSetName);
-            _dataSetRepository.Create(initialDataSet);
-            Task.Run(() => ProcessInitialDataSet(basePath, projects, initialDataSet));
+            var dataSet = new DataSet(dataSetName);
+            _dataSetRepository.Create(dataSet);
+            return Result.Ok(dataSet);
+        }
+
+        public Result<DataSet> AddProjectsToDataSet(int dataSetId, string basePath, IEnumerable<DataSetProject> projects)
+        {
+            var initialDataSet = _dataSetRepository.GetDataSet(dataSetId);
+            if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
+            foreach (var project in projects)
+            {
+                Task.Run(() => ProcessInitialDataSetProject(basePath, project));
+                initialDataSet.AddProject(project);
+            }
+            _dataSetRepository.Update(initialDataSet);
             return Result.Ok(initialDataSet);
         }
 
@@ -42,9 +60,7 @@ namespace DataSetExplorer
             var dataSet = new DataSet(dataSetName);
             foreach(var projectName in projects.Keys)
             {
-                var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
-                _codeRepository.SetupRepository(projects[projectName], gitFolderPath);
-                var dataSetProject = CreateDataSetProjectFromRepository(projects[projectName], projectName, gitFolderPath);
+                var dataSetProject = CreateDataSetProject(basePath, projectName, projects[projectName]);
                 dataSet.AddProject(dataSetProject);
             }
 
@@ -57,6 +73,19 @@ namespace DataSetExplorer
             var dataSet = _dataSetRepository.GetDataSet(id);
             if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
             return Result.Ok(dataSet);
+        }
+
+        public Result<IEnumerable<DataSet>> GetAllDataSets()
+        {
+            var dataSets = _dataSetRepository.GetAll();
+            return Result.Ok(dataSets);
+        }
+
+        public Result<DataSetProject> GetDataSetProject(int id)
+        {
+            var project = _dataSetProjectRepository.GetDataSetProject(id);
+            if (project == default) return Result.Fail($"DataSetProject with id: {id} does not exist.");
+            return Result.Ok(project);
         }
 
         private DataSetProject CreateDataSetProject(string basePath, string projectName, string projectAndCommitUrl)
@@ -75,15 +104,20 @@ namespace DataSetExplorer
                 .SetProjectExtractionPercentile(10).Build();
         }
 
-        private void ProcessInitialDataSet(string basePath, IDictionary<string, string> projects, DataSet initialDataSet)
+        private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject)
         {
-            foreach (var projectName in projects.Keys)
+            try
             {
-                var project = CreateDataSetProject(basePath, projectName, projects[projectName]);
-                project.Processed();
-                initialDataSet.AddProject(project);
+                var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url);
+                initialProject.AddInstances(project.Instances.ToList());
+                initialProject.Processed();
+                _dataSetProjectRepository.Update(initialProject);
             }
-            _dataSetRepository.Update(initialDataSet);
+            catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
+            {
+                initialProject.Failed();
+                _dataSetProjectRepository.Update(initialProject);
+            }
         }
 
         private string ExportToExcel(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)

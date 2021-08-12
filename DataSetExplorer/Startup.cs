@@ -38,6 +38,7 @@ namespace DataSetExplorer
             services.AddScoped<IDataSetCreationService, DataSetCreationService>();
             services.AddScoped<ICodeRepository, GitCodeRepository>();
             services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
+            services.AddScoped<IDataSetProjectRepository, DataSetProjectDatabaseRepository>();
 
             services.AddScoped<IDataSetAnnotationService, DataSetAnnotationService>();
             services.AddScoped<IDataSetInstanceRepository, DataSetInstanceDatabaseRepository>();

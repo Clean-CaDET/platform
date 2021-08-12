@@ -3,6 +3,7 @@
     public enum DataSetProjectState
     {
         Processing,
-        Built
+        Built,
+        Failed
     }
 }
