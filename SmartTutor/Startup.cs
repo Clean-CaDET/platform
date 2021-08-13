@@ -56,7 +56,7 @@ namespace SmartTutor
                 options.AddPolicy(name: CorsPolicy,
                     builder =>
                     {
-                        builder.WithOrigins(GetSecret("CORS_ORIGINS") ?? "http://localhost:4200")
+                        builder.WithOrigins(ParseCorsOrigins())
                             .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization, "access_token")
                             .WithMethods("GET", "PUT", "POST", "DELETE", "OPTIONS");
                     });
@@ -170,6 +170,18 @@ namespace SmartTutor
 
             return
                 $"Server={server};Port={port};Database={database};User ID={user};Password={password};Integrated Security={integratedSecurity};Pooling={pooling};";
+        }
+
+        private static string[] ParseCorsOrigins()
+        {
+            string[] corsOrigins = { "http://localhost:4200" };
+            var corsOriginsPath = GetSecret("SMART_TUTOR_CORS_ORIGINS");
+            if (File.Exists(corsOriginsPath))
+            {
+                corsOrigins = File.ReadAllText(corsOriginsPath).Split(";");
+            }
+
+            return corsOrigins;
         }
     }
 }
