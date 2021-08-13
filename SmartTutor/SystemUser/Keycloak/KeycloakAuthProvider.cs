@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using  System.Text.Json;
 using SmartTutor.LearnerModel.Learners;
+using SmartTutor.Utils;
 
 namespace SmartTutor.SystemUser.Keycloak
 {
@@ -23,12 +24,11 @@ namespace SmartTutor.SystemUser.Keycloak
             Environment.GetEnvironmentVariable("KEYCLOAK_ALL_USERS_PATH") ??
             "http://localhost:8080/auth/admin/realms/master/users";
 
-        //TODO: Take admin credentials from docker secret.
         private readonly string _adminUsername =
-            Environment.GetEnvironmentVariable("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
+            Util.GetSecret("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
 
         private readonly string _adminPassword =
-            Environment.GetEnvironmentVariable("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
+            Util.GetSecret("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
 
         public async Task<Learner> Register(Learner learner)
         {

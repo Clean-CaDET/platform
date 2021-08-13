@@ -25,9 +25,9 @@ using SmartTutor.QualityAnalysis;
 using SmartTutor.QualityAnalysis.Repository;
 using System;
 using Microsoft.Net.Http.Headers;
-using System.IO;
 using SmartTutor.SystemUser;
 using SmartTutor.SystemUser.Keycloak;
+using SmartTutor.Utils;
 
 namespace SmartTutor
 {
@@ -58,7 +58,7 @@ namespace SmartTutor
                 options.AddPolicy(name: CorsPolicy,
                     builder =>
                     {
-                        builder.WithOrigins(GetSecret("CORS_ORIGINS") ?? "http://localhost:4200")
+                        builder.WithOrigins(Util.GetSecret("CORS_ORIGINS") ?? "http://localhost:4200")
                             .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization, "access_token")
                             .WithMethods("GET", "PUT", "POST", "DELETE", "OPTIONS");
                     });
@@ -156,21 +156,13 @@ namespace SmartTutor
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
-        private static string GetSecret(string secretName)
-        {
-            var secretPath = Environment.GetEnvironmentVariable($"{secretName}_FILE") ?? "";
-            return File.Exists(secretPath) ? 
-                File.ReadAllText(secretPath) : 
-                Environment.GetEnvironmentVariable(secretName);
-        }
-
         private static string CreateConnectionStringFromEnvironment()
         {
             var server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
-            var database = GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
-            var user = GetSecret("DATABASE_USERNAME") ?? "postgres";
-            var password = GetSecret("DATABASE_PASSWORD") ?? "super";
+            var database = Util.GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
+            var user = Util.GetSecret("DATABASE_USERNAME") ?? "postgres";
+            var password = Util.GetSecret("DATABASE_PASSWORD") ?? "super";
             var integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             var pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
