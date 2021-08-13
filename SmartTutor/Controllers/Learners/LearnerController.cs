@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -27,8 +28,13 @@ namespace SmartTutor.Controllers.Learners
         [HttpPost("register")]
         public async Task<ActionResult<LearnerDTO>> Register([FromBody] LearnerDTO learnerDto)
         {
-            //TODO: Check if Keycloak is on before calling this method.
-            var learner = await _authProvider.Register(_mapper.Map<Learner>(learnerDto));
+            var learner = _mapper.Map<Learner>(learnerDto);
+
+            if (bool.Parse(Environment.GetEnvironmentVariable("KEYCLOAK_ON") ?? "false"))
+            {
+                learner = await _authProvider.Register(learner);
+            }
+
             var registeredLearner = _learnerService.Register(learner);
             return Ok(_mapper.Map<LearnerDTO>(registeredLearner));
         }
