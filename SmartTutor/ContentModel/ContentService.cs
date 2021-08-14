@@ -1,4 +1,3 @@
-using System;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
 using System.Collections.Generic;
@@ -42,7 +41,7 @@ namespace SmartTutor.ContentModel
 
         public List<LectureDTO> GetLecturesByTeachersId(int id)
         {
-            List<Lecture> lectures = _lectureRepository.GetLecturesByTeachersId(id);
+            List<Lecture> lectures = _lectureRepository.GetLecturesOwnedByTeacher(id);
             var dtos = new List<LectureDTO>();
             foreach (var lecture in lectures)
             {
@@ -57,7 +56,7 @@ namespace SmartTutor.ContentModel
 
         public List<CourseDto> GetCoursesByTeachersId(int id)
         {
-            List<Course> courses = _lectureRepository.GetCoursesByTeachersId(id);
+            List<Course> courses = _lectureRepository.GetCoursesOwnedByTeacher(id);
             var dtos = new List<CourseDto>();
             foreach (var course in courses)
             {

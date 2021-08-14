@@ -27,8 +27,7 @@ namespace SmartTutor.ContentModel
             var individualPlanUsage = new IndividualPlanUsage(individualPlanId);
             var individualPlan = _subscriptionRepository.GetIndividualPlan(individualPlanId);
             individualPlanUsage = _subscriptionRepository.SaveOrUpdatePlanUsage(individualPlanUsage);
-            var end = GetEndDate(individualPlan);
-            var subscription = new Subscription(teacherId, DateTime.Now, end, individualPlanUsage.Id);
+            var subscription = new Subscription(teacherId, DateTime.Now, individualPlan.GetEndDate(), individualPlanUsage.Id);
             subscription = _subscriptionRepository.SaveOrUpdateSubscription(subscription);
             teacher.AddSubscription(subscription);
             _subscriptionRepository.SaveOrUpdateTeacher(teacher);
@@ -89,13 +88,6 @@ namespace SmartTutor.ContentModel
             var subscription = teacher.GetActiveSubscription();
             var planUsage = _subscriptionRepository.GetIndividualPlanUsage(subscription.IndividualPlanUsageId);
             return planUsage;
-        }
-
-        private static DateTime GetEndDate(IndividualPlan plan)
-        {
-            var end = DateTime.Now;
-            end = end.Add(plan.Duration);
-            return end;
         }
     }
 }

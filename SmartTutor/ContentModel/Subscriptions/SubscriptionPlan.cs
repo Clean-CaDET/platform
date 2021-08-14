@@ -9,5 +9,12 @@ namespace SmartTutor.ContentModel.Subscriptions
         public int NumberOfCourses { get; set; }
         public int NumberOfLectures { get; set; }
         public TimeSpan Duration { get; set; }
+
+        public DateTime GetEndDate()
+        {
+            var end = DateTime.Now;
+            end = end.Add(Duration);
+            return end;
+        }
     }
 }

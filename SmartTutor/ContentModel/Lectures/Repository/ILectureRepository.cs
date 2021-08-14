@@ -13,7 +13,7 @@ namespace SmartTutor.ContentModel.Lectures.Repository
         KnowledgeNode GetKnowledgeNodeBySummary(int id);
         Course SaveOrUpdateCourse(Course course);
         Lecture SaveOrUpdateLecture(Lecture lecture);
-        List<Lecture> GetLecturesByTeachersId(int id);
-        List<Course> GetCoursesByTeachersId(int id);
+        List<Lecture> GetLecturesOwnedByTeacher(int id);
+        List<Course> GetCoursesOwnedByTeacher(int id);
     }
 }
