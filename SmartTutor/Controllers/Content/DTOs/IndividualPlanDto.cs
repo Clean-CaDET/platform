@@ -9,6 +9,7 @@ namespace SmartTutor.Controllers.Content.DTOs
         public int NumberOfCourses { get; set; }
         public int NumberOfLectures { get; set; }
         public TimeSpan Duration { get; set; }
+        public int Days { get; set; }
 
         public IndividualPlanDto()
         {
@@ -22,6 +23,7 @@ namespace SmartTutor.Controllers.Content.DTOs
             NumberOfCourses = numberOfCourses;
             NumberOfLectures = numberOfLectures;
             Duration = duration;
+            Days = duration.Days;
         }
     }
 }
