@@ -24,6 +24,14 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
         }
 
+        public void Update(DataSetAnnotation other)
+        {
+            InstanceSmell = other.InstanceSmell;
+            Severity = other.Severity;
+            ApplicableHeuristics = other.ApplicableHeuristics;
+            Validate();
+        }
+
         private void Validate()
         {
             if (Severity < 0 || Severity > 3) throw new ArgumentException("Accepted severity ranges from 0 to 3, but was " + Severity);

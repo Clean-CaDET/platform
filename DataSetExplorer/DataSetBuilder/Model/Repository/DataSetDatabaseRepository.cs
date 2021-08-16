@@ -27,6 +27,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             return _dbContext.DataSets
                 .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
                 .FirstOrDefault(s => s.Id == id);
         }
 
@@ -34,7 +35,8 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         {
             return _dbContext.DataSets
                 .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics);
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(s => s.Projects).ThenInclude(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell);
         }
 
         public void Update(DataSet dataSet)
