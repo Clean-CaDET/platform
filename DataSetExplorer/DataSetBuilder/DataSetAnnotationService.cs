@@ -20,26 +20,26 @@ namespace DataSetExplorer.DataSetBuilder
             _dataSetAnnotationRepository = dataSetAnnotationRepository;
         }
 
-        public Result<string> AddDataSetAnnotation(DataSetAnnotation annotation, int dataSetInstanceId, int annotatorId)
+        public Result<DataSetAnnotation> AddDataSetAnnotation(DataSetAnnotation annotation, int dataSetInstanceId, int annotatorId)
         {
             var instance = _dataSetInstanceRepository.GetDataSetInstance(dataSetInstanceId);
-            if (instance == default) return Result.Fail<string>($"DataSetInstance with id: {dataSetInstanceId} does not exist.");
+            if (instance == default) return Result.Fail<DataSetAnnotation>($"DataSetInstance with id: {dataSetInstanceId} does not exist.");
             var annotator = _dataSetAnnotationRepository.GetAnnotator(annotatorId);
-            if (annotator == default) return Result.Fail<string>($"Annotator with id: {annotatorId} does not exist.");
+            if (annotator == default) return Result.Fail<DataSetAnnotation>($"Annotator with id: {annotatorId} does not exist.");
             annotation.Annotator = annotator;
             instance.AddAnnotation(annotation);
             _dataSetInstanceRepository.Update(instance);
-            return Result.Ok("Annotation added!");
+            return Result.Ok(annotation);
         }
 
-        public Result<string> UpdateAnnotation(DataSetAnnotation changed, int annotationId, int annotatorId)
+        public Result<DataSetAnnotation> UpdateAnnotation(DataSetAnnotation changed, int annotationId, int annotatorId)
         {
             var annotation = _dataSetAnnotationRepository.GetDataSetAnnotation(annotationId);
-            if (annotation == default) return Result.Fail<string>($"DataSetAnnotation with id: {annotationId} does not exist.");
-            if (annotation.Annotator.Id != annotatorId) return Result.Fail<string>($"Only creator can update annotation.");
+            if (annotation == default) return Result.Fail<DataSetAnnotation>($"DataSetAnnotation with id: {annotationId} does not exist.");
+            if (annotation.Annotator.Id != annotatorId) return Result.Fail<DataSetAnnotation>($"Only creator can update annotation.");
             annotation.Update(changed);
             _dataSetAnnotationRepository.Update(annotation);
-            return Result.Ok("Annotation changed!");
+            return Result.Ok(annotation);
         }
     }
 }

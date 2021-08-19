@@ -34,7 +34,7 @@ namespace DataSetExplorer.Controllers.Annotation
                 annotation.AnnotatorId = Int32.Parse(authHeader);
                 var result = _dataSetAnnotationService.AddDataSetAnnotation(_mapper.Map<DataSetAnnotation>(annotation), annotation.DataSetInstanceId, annotation.AnnotatorId);
                 if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
-                return Ok(new { message = result.Value });
+                return Ok(result.Value);
             }
             catch (Exception e) when (e is FormatException || e is InvalidOperationException || e is ArgumentException)
             {
@@ -52,7 +52,7 @@ namespace DataSetExplorer.Controllers.Annotation
                 annotation.AnnotatorId = Int32.Parse(authHeader);
                 var result = _dataSetAnnotationService.UpdateAnnotation(_mapper.Map<DataSetAnnotation>(annotation), id, annotation.AnnotatorId);
                 if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
-                return Ok(new { message = result.Value });
+                return Ok(result.Value);
             }
             catch (Exception e) when (e is FormatException || e is ArgumentException)
             {
