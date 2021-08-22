@@ -66,6 +66,7 @@ namespace CodeModel.Tests.DataFactories
             }"
             };
         }
+
         public IEnumerable<string> GetGitAdapterClassText()
         {
             return new[]
@@ -471,7 +472,6 @@ namespace CodeModel.Tests.DataFactories
                         }
                     }
                 }"
-
             };
         }
 
@@ -665,7 +665,9 @@ namespace CodeModel.Tests.DataFactories
         {
             new object[]
             {
-                new [] {@"
+                new[]
+                {
+                    @"
                     using System;
                     namespace DoctorApp.Model {
                     public class Doctor
@@ -673,12 +675,15 @@ namespace CodeModel.Tests.DataFactories
                       private string Signature;
                       private DateTime startWorking;
                       private DateTime endWorking;
-                    }}"},
+                    }}"
+                },
                 0
             },
             new object[]
             {
-                new [] {@"
+                new[]
+                {
+                    @"
                 using System.Collections.Generic;
                 namespace DoctorApp.Model.Data
                 {
@@ -700,10 +705,10 @@ namespace CodeModel.Tests.DataFactories
                             return !(From > timeSpan.To || To < timeSpan.From);
                         }
                     }
-                }"},
+                }"
+                },
                 15
             }
         };
-
     }
 }

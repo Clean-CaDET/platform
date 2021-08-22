@@ -1,0 +1,9 @@
+﻿namespace CodeModel.CodeParsers.CSharp.ProjectAnalyzer
+{
+    public class CohesionAnalyzer
+    {
+        public int a;
+        
+        public CohesionAnalyzer() {}
+    }
+}

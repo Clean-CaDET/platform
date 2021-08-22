@@ -1,0 +1,104 @@
+﻿using CodeModel.CaDETModel.CodeItems;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CodeModel.CodeParsers.CSharp.Exceptions;
+
+namespace CodeModel.CodeParsers.CSharp.ProjectAnalyzer
+{
+    public class ClassInteractions
+    {
+        private int[,] MethodFieldAccessMapping { get; }
+        public HashSet<Edge> Edges { get; }
+
+        public ClassInteractions(CaDETClass parsedClass)
+        {
+            var normalMethods = parsedClass.Members.Where(IsMemberNormalMethod).ToList();
+            normalMethods.RemoveAll(member => member.AccessedFields.Count == 0 && member.AccessedAccessors.Count == 0);
+
+            var fields = parsedClass.Fields;
+            fields.RemoveAll(field =>
+                !normalMethods.Any(method => method.AccessedFields.Contains(field))
+            );
+
+            var fieldDefiningAccessors =
+                parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToList();
+            fieldDefiningAccessors.RemoveAll(accessor =>
+                !normalMethods.Any(method => method.AccessedAccessors.Contains(accessor)));
+            ValidateCaDETClass(parsedClass.Name, normalMethods, fields, fieldDefiningAccessors);
+            MethodFieldAccessMapping = InitializeInteractions(normalMethods, fields, fieldDefiningAccessors);
+            Edges = GetAllInteractionEdges();
+        }
+
+        private void ValidateCaDETClass(string className, List<CaDETMember> normalMethods, List<CaDETField> fields,
+            List<CaDETMember> fieldDefiningAccessors)
+        {
+            if (normalMethods.Count == 0)
+                throw new CohesionAnalyzerException($"Class `{className}` has no normal methods.");
+            if (fields.Count == 0 && fieldDefiningAccessors.Count == 0)
+                throw new CohesionAnalyzerException($"Class `{className}` has no data members.");
+        }
+
+        private bool IsMemberNormalMethod(CaDETMember caDetMember)
+        {
+            return caDetMember.Type == CaDETMemberType.Method;
+        }
+
+        private int[,] InitializeInteractions(List<CaDETMember> normalMethods, List<CaDETField> fields,
+            List<CaDETMember> fieldDefiningAccessors)
+        {
+            int[,] matrix = new int[normalMethods.Count, fields.Count + fieldDefiningAccessors.Count];
+            for (var i = 0; i < normalMethods.Count; i++)
+            {
+                var accessedFields = normalMethods[i].AccessedFields;
+                for (var j = 0; j < fields.Count; j++)
+                {
+                    if (accessedFields.Contains(fields[j]))
+                        matrix[i, j] = 1;
+                    else
+                        matrix[i, j] = 0;
+                }
+
+                for (var j = 0; j < fieldDefiningAccessors.Count; j++)
+                {
+                    if (normalMethods[i].AccessedAccessors.Contains(fieldDefiningAccessors[j]))
+                        matrix[i, j + fields.Count] = 1;
+                    else
+                        matrix[i, j + fields.Count] = 0;
+                }
+            }
+
+            return matrix;
+        }
+
+        private HashSet<Edge> GetAllInteractionEdges()
+        {
+            var edges = new HashSet<Edge>();
+            for (var i = 0; i < MethodFieldAccessMapping.GetLength(0); i++)
+            for (var j = 0; j < MethodFieldAccessMapping.GetLength(1); j++)
+                if (MethodFieldAccessMapping[i, j] == 1)
+                    edges.Add(new Edge(i, j));
+            return edges;
+        }
+
+        public IEnumerable<HashSet<Edge>> GetInvalidEdgeGroups()
+        {
+            var result = new List<HashSet<Edge>>();
+            int biggerDimension =
+                Math.Max(MethodFieldAccessMapping.GetLength(0), MethodFieldAccessMapping.GetLength(1));
+            for (int i = 0; i < biggerDimension; i++)
+            {
+                var edgesInARow = Edges.Where(e => e.Method == i).ToHashSet();
+                if (edgesInARow.Count != 0)
+                    result.Add(edgesInARow);
+                var edgesInAColumn = Edges.Where(e => e.Field == i).ToHashSet();
+                if (edgesInAColumn.Count != 0)
+                    result.Add(edgesInAColumn);
+            }
+
+            return result;
+        }
+    }
+}

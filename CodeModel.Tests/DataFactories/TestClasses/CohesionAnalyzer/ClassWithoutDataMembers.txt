@@ -1,0 +1,10 @@
+﻿namespace CodeModel.CodeParsers.CSharp.ProjectAnalyzer
+{
+    public class CohesionAnalyzer
+    {
+        public List<CohesiveParts> IdentifyCohesiveParts(CaDETClass parsedClass)
+        {
+            throw new NotImplemented();
+        }
+    }
+}
