@@ -53,16 +53,16 @@ namespace SmartTutor.Controllers.Content
         [HttpGet("learningObjectSummariesByNode/{nodeId}")]
         public ActionResult<List<LearningObjectSummaryDto>> GetLearningObjectSummariesByNode([FromRoute] int nodeId)
         {
-            var los = _contentService.GetLearningObjectSummariesByNode(nodeId);
-            return Ok(_mapper.Map<List<LearningObjectSummaryDto>>(los));
+            var learningObjectSummaries = _contentService.GetLearningObjectSummariesByNode(nodeId);
+            return Ok(_mapper.Map<List<LearningObjectSummaryDto>>(learningObjectSummaries));
         }
 
         [HttpGet("learningObjectsBySummaries/{losId}")]
         public ActionResult<List<LearningObjectSummaryDto>> GetLearningObjectsByLearningObjectSummary(
             [FromRoute] int losId)
         {
-            var los = _contentService.GetLearningObjectsByLearningObjectSummary(losId);
-            return Ok(_mapper.Map<List<LearningObjectDTO>>(los));
+            var learningObjects = _contentService.GetLearningObjectsByLearningObjectSummary(losId);
+            return Ok(_mapper.Map<List<LearningObjectDTO>>(learningObjects));
         }
     }
 }

@@ -6,7 +6,7 @@ namespace SmartTutor.Controllers.Content.DTOs
     {
         public int Id { get; set; }
         public string Description { get; set; }
-        public int KnowledgeNodeId { get; set; }
+        public KnowledgeNodeDto KnowledgeNode { get; set; }
         public List<LearningObjectDTO> LearningObjects { get; set; }
     }
 }

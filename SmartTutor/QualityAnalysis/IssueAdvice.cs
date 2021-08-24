@@ -1,5 +1,5 @@
-﻿using SmartTutor.ContentModel.Lectures;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SmartTutor.ContentModel.LearningObjects;
 
 namespace SmartTutor.QualityAnalysis
 {

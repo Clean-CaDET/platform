@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SmartTutor.ContentModel.LearningObjects;
 
 namespace SmartTutor.ContentModel.Lectures
 {

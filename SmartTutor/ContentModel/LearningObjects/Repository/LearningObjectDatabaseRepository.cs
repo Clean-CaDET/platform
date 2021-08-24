@@ -20,6 +20,33 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             _dbContext = dbContext;
         }
 
+        public LearningObject SaveOrUpdateLearningObject(LearningObject learningObject)
+        {
+            if (learningObject.GetType() == typeof(Video))
+            {
+                learningObject = _dbContext.Videos.Attach((Video) learningObject).Entity;
+            }
+            else if (learningObject.GetType() == typeof(Image))
+            {
+                learningObject = _dbContext.Images.Attach((Image) learningObject).Entity;
+            }
+            else if (learningObject.GetType() == typeof(Text))
+            {
+                learningObject = _dbContext.Texts.Attach((Text) learningObject).Entity;
+            }
+            else if (learningObject.GetType() == typeof(Question))
+            {
+                learningObject = _dbContext.Questions.Attach((Question) learningObject).Entity;
+            }
+            else if (learningObject.GetType() == typeof(Challenge))
+            {
+                learningObject = _dbContext.Challenges.Attach((Challenge) learningObject).Entity;
+            }
+
+            _dbContext.SaveChanges();
+            return learningObject;
+        }
+
         public List<LearningObject> GetLearningObjectsForSummary(int summaryId)
         {
             var query = _dbContext.LearningObjects
@@ -42,13 +69,13 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
                 .Where(c => c.Id == challengeId)
                 .Include(c => c.Solution)
                 .Include(c => c.FulfillmentStrategies)
-                    .ThenInclude(s => (s as BasicMetricChecker).ClassMetricRules)
-                    .ThenInclude(r => r.Hint)
+                .ThenInclude(s => (s as BasicMetricChecker).ClassMetricRules)
+                .ThenInclude(r => r.Hint)
                 .Include(c => c.FulfillmentStrategies)
-                    .ThenInclude(s => (s as BasicMetricChecker).MethodMetricRules)
-                    .ThenInclude(r => r.Hint)
+                .ThenInclude(s => (s as BasicMetricChecker).MethodMetricRules)
+                .ThenInclude(r => r.Hint)
                 .Include(c => c.FulfillmentStrategies)
-                    .ThenInclude(s => (s as BasicNameChecker).Hint)
+                .ThenInclude(s => (s as BasicNameChecker).Hint)
                 .FirstOrDefault();
         }
 
@@ -93,9 +120,22 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
             return _dbContext.LearningObjects.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
         }
 
+        public LearningObjectSummary SaveOrUpdateLearningObjectSummary(LearningObjectSummary learningObjectSummary)
+        {
+            var los = _dbContext.LearningObjectSummaries.Attach(learningObjectSummary).Entity;
+            _dbContext.SaveChanges();
+            return los;
+        }
+
         public LearningObjectSummary GetLearningObjectSummary(int summaryId)
         {
             return _dbContext.LearningObjectSummaries.FirstOrDefault(los => los.Id == summaryId);
+        }
+
+        public List<LearningObjectSummary> GetLearningObjectSummariesByNode(int nodeId)
+        {
+            return _dbContext.LearningObjectSummaries.Where(summary => summary.KnowledgeNode.Id.Equals(nodeId))
+                .Include(summary => summary.LearningObjects).ToList();
         }
     }
 }

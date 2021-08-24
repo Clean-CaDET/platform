@@ -8,6 +8,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 {
     public interface ILearningObjectRepository
     {
+        LearningObject SaveOrUpdateLearningObject(LearningObject learningObject);
         List<LearningObject> GetLearningObjectsForSummary(int summaryId);
         List<LearningObject> GetFirstLearningObjectsForSummaries(List<int> summaries);
         Challenge GetChallenge(int challengeId);
@@ -18,6 +19,8 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         Text GetTextForSummary(int summaryId);
         Video GetVideoForSummary(int summaryId);
         LearningObject GetLearningObjectForSummary(int summaryId);
+        LearningObjectSummary SaveOrUpdateLearningObjectSummary(LearningObjectSummary learningObjectSummary);
         LearningObjectSummary GetLearningObjectSummary(int summaryId);
+        List<LearningObjectSummary> GetLearningObjectSummariesByNode(int nodeId);
     }
 }

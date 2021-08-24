@@ -77,7 +77,7 @@ namespace SmartTutor.Tests.Integration
             learningObjectDtos.Add(new VideoDTO {Url = ""});
 
             var dto = new LearningObjectSummaryDto()
-                {Description = "", KnowledgeNodeId = 1, LearningObjects = learningObjectDtos};
+                {Description = "", KnowledgeNode = new KnowledgeNodeDto {Id = 1}, LearningObjects = learningObjectDtos};
             controller.CreateLearningObjectSummary(dto);
 
             dbContext.LearningObjectSummaries.Count().ShouldBe(losLenght + 1);

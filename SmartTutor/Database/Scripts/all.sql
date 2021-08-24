@@ -498,8 +498,8 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (41, 'Function Length Challenge', 11);
 	
 INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description", "KnowledgeNodeId")
-	VALUES (42, 'Function Length Solution', 11); -- Hidden
+	"Id", "Description")
+	VALUES (42, 'Function Length Solution'); -- Hidden
 
 --== Methods ==- PK Node 2	
 INSERT INTO public."KnowledgeNodes"(
@@ -514,7 +514,7 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (44, 'Function Complexity Challenge', 12);
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description")
-	VALUES (45, 'Function Complexity Heuristic', 12); -- Hidden hint
+	VALUES (45, 'Function Complexity Heuristic'); -- Hidden hint
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description")
 	VALUES (46, 'Function Complexity Challenge Solution');
