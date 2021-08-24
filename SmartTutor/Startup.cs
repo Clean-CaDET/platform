@@ -81,8 +81,8 @@ namespace SmartTutor
             services.AddScoped<IWorkspaceCreator, NoWorkspaceCreator>();
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
 
-            services.AddScoped<VARKRecommender, VARKRecommender>();
-            services.AddScoped<IInstructor, MakeItStickRecommender>();
+            services.AddScoped<VARKInstructor, VARKInstructor>();
+            services.AddScoped<IInstructor, MakeItStickInstructor>();
 
             services.AddScoped<ICodeQualityAnalyzer, CaDETQualityAnalyzer>();
             services.AddScoped<IAdviceRepository, AdviceDatabaseRepository>();

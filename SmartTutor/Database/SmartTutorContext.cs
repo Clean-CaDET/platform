@@ -89,6 +89,10 @@ namespace SmartTutor.Database
             modelBuilder.Entity<KnowledgeNode>()
                 .HasMany(kn => kn.PrerequisiteOf)
                 .WithMany(kn => kn.Prerequisites);
+
+            modelBuilder.Entity<NodeProgress>()
+                .HasMany(np => np.LearningObjects)
+                .WithMany("NodeProgress");
         }
 
         private static void ConfigureChallenge(ModelBuilder modelBuilder)

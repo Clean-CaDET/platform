@@ -9,12 +9,12 @@ using System.Linq;
 
 namespace SmartTutor.InstructorModel.Instructors
 {
-    public class VARKRecommender : IInstructor
+    public class VARKInstructor : IInstructor
     {
         private readonly ILearningObjectRepository _learningObjectRepository;
         private readonly ILearnerRepository _learnerRepository;
 
-        public VARKRecommender(ILearningObjectRepository learningObjectRepository, ILearnerRepository learnerRepository)
+        public VARKInstructor(ILearningObjectRepository learningObjectRepository, ILearnerRepository learnerRepository)
         {
             _learningObjectRepository = learningObjectRepository;
             _learnerRepository = learnerRepository;

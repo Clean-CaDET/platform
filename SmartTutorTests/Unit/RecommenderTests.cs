@@ -51,7 +51,7 @@ namespace SmartTutor.Tests.Unit
             learnerRepo.Setup(repo => repo.GetById(3))
                 .Returns(new Learner(3, 2, 3, 1, 4, new List<CourseEnrollment>()));
 
-            return new VARKRecommender(learningObjectRepo.Object, learnerRepo.Object);
+            return new VARKInstructor(learningObjectRepo.Object, learnerRepo.Object);
         }
 
         [Theory]

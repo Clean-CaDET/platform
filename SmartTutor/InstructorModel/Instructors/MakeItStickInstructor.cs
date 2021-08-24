@@ -8,16 +8,16 @@ using SmartTutor.ContentModel.Lectures.Repository;
 
 namespace SmartTutor.InstructorModel.Instructors
 {
-    public class MakeItStickRecommender : IInstructor
+    public class MakeItStickInstructor : IInstructor
     {
-        private readonly VARKRecommender _varkRecommender;
+        private readonly VARKInstructor _varkInstructor;
         private readonly ILearningObjectRepository _learningObjectRepository;
         private readonly ILectureRepository _lectureRepository;
 
-        public MakeItStickRecommender(VARKRecommender varkRecommender,
+        public MakeItStickInstructor(VARKInstructor varkInstructor,
             ILearningObjectRepository learningObjectRepository, ILectureRepository lectureRepository)
         {
-            _varkRecommender = varkRecommender;
+            _varkInstructor = varkInstructor;
             _learningObjectRepository = learningObjectRepository;
             _lectureRepository = lectureRepository;
         }
@@ -26,7 +26,7 @@ namespace SmartTutor.InstructorModel.Instructors
             List<LearningObjectSummary> learningObjectSummaries)
         {
             var knowledgeNode = learningObjectSummaries[0].KnowledgeNode;
-            var result = _varkRecommender.GatherLearningObjectsForLearner(learnerId, learningObjectSummaries);
+            var result = _varkInstructor.GatherLearningObjectsForLearner(learnerId, learningObjectSummaries);
             AddPrerequisiteRevisionQuestions(knowledgeNode.Id, result);
             AddKnowledgeNodeRevisionQuestions(knowledgeNode, result);
             return result.Distinct().ToList();
@@ -34,7 +34,7 @@ namespace SmartTutor.InstructorModel.Instructors
 
         public List<LearningObject> GatherDefaultLearningObjects(List<LearningObjectSummary> learningObjectSummaries)
         {
-            return _varkRecommender.GatherDefaultLearningObjects(learningObjectSummaries);
+            return _varkInstructor.GatherDefaultLearningObjects(learningObjectSummaries);
         }
 
         private void AddPrerequisiteRevisionQuestions(int id, List<LearningObject> result)
