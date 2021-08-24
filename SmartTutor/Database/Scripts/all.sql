@@ -170,8 +170,8 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (10, 'Challenge Noise', 2);
 	
 INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description") -- Hidden
-	VALUES (11, 'Challenge Noise Solution');
+	"Id", "Description", "KnowledgeNodeId") -- Hidden
+	VALUES (11, 'Challenge Noise Solution', 2);
 -- Naming - PK Node 1
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -245,8 +245,8 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (7, 'Challenge Meaning', 3);
 	
 INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description") -- Hidden
-	VALUES (8, 'Challenge Meaning Solution');
+	"Id", "Description", "KnowledgeNodeId") -- Hidden
+	VALUES (8, 'Challenge Meaning Solution', 3);
 -- Naming - PK Node 2
 INSERT INTO public."LearningObjects"(
 	"Id", "LearningObjectSummaryId")
@@ -498,8 +498,8 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (41, 'Function Length Challenge', 11);
 	
 INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description")
-	VALUES (42, 'Function Length Solution'); -- Hidden
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (42, 'Function Length Solution', 11); -- Hidden
 
 --== Methods ==- PK Node 2	
 INSERT INTO public."KnowledgeNodes"(
@@ -514,7 +514,7 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (44, 'Function Complexity Challenge', 12);
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description")
-	VALUES (45, 'Function Complexity Heuristic'); -- Hidden hint
+	VALUES (45, 'Function Complexity Heuristic', 12); -- Hidden hint
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description")
 	VALUES (46, 'Function Complexity Challenge Solution');
@@ -534,8 +534,8 @@ INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (49, 'Parameter List Challenge', 13);
 INSERT INTO public."LearningObjectSummaries"(
-	"Id", "Description")
-	VALUES (50, 'Parameter List Challenge Solution');
+	"Id", "Description", "KnowledgeNodeId")
+	VALUES (50, 'Parameter List Challenge Solution', 13);
 
 
 

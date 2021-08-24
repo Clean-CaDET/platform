@@ -15,7 +15,87 @@ namespace SmartTutor.Controllers.Content.Mappers
         public override LearningObjectDTO Read(
             ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotImplementedException("Learning objects are only sent, not read");
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException();
+            }
+
+            reader.Read();
+
+            if (reader.TokenType != JsonTokenType.PropertyName)
+            {
+                throw new JsonException();
+            }
+
+            string propertyName = reader.GetString();
+            if (propertyName != "TypeDiscriminator")
+            {
+                throw new JsonException();
+            }
+
+            reader.Read();
+            if (reader.TokenType != JsonTokenType.String)
+            {
+                throw new JsonException();
+            }
+
+            string typeDiscriminator = reader.GetString();
+
+            LearningObjectDTO dto = typeDiscriminator switch
+            {
+                "text" => new TextDTO(),
+                "image" => new ImageDTO(),
+                "video" => new VideoDTO(),
+                _ => throw new JsonException()
+            };
+
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndObject)
+                {
+                    return dto;
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    propertyName = reader.GetString();
+                    reader.Read();
+                    switch (propertyName)
+                    {
+                        case ("url"):
+                            string url = reader.GetString();
+                            switch (dto)
+                            {
+                                case ImageDTO imageDto:
+                                    imageDto.Url = url;
+                                    break;
+                                case VideoDTO videoDto:
+                                    videoDto.Url = url;
+                                    break;
+                            }
+
+                            break;
+                        case ("caption"):
+                            var caption = reader.GetString();
+                            ((ImageDTO) dto).Caption = caption;
+                            break;
+                        case ("content"):
+                            var content = reader.GetString();
+                            ((TextDTO) dto).Content = content;
+                            break;
+                        case ("learningObjectSummaryId"):
+                            var learningObjectSummaryId = reader.GetInt32();
+                            dto.LearningObjectSummaryId = learningObjectSummaryId;
+                            break;
+                        case ("id"):
+                            var id = reader.GetInt32();
+                            dto.Id = id;
+                            break;
+                    }
+                }
+            }
+
+            throw new JsonException();
         }
 
         public override void Write(
@@ -73,6 +153,7 @@ namespace SmartTutor.Controllers.Content.Mappers
                 writer.WriteString("text", answer.Text);
                 writer.WriteEndObject();
             }
+
             writer.WriteEndArray();
         }
 
@@ -90,6 +171,7 @@ namespace SmartTutor.Controllers.Content.Mappers
                 writer.WriteString("title", container.Title);
                 writer.WriteEndObject();
             }
+
             writer.WriteEndArray();
 
             writer.WritePropertyName("unarrangedElements");
@@ -101,6 +183,7 @@ namespace SmartTutor.Controllers.Content.Mappers
                 writer.WriteString("text", element.Text);
                 writer.WriteEndObject();
             }
+
             writer.WriteEndArray();
         }
     }
