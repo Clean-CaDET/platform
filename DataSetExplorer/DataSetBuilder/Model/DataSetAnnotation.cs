@@ -11,9 +11,14 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public List<SmellHeuristic> ApplicableHeuristics { get; private set; }
         public Annotator Annotator { get; set; }
 
-        public DataSetAnnotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
+        public DataSetAnnotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics) : 
+            this(new CodeSmell(instanceSmell), severity, annotator, applicableHeuristics)
         {
-            InstanceSmell = new CodeSmell(instanceSmell);
+        }
+
+        public DataSetAnnotation(CodeSmell instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
+        {
+            InstanceSmell = instanceSmell;
             Severity = severity;
             Annotator = annotator;
             ApplicableHeuristics = applicableHeuristics;

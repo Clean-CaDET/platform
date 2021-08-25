@@ -1,4 +1,5 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using DataSetExplorer.Controllers.Annotation.DTOs;
+using DataSetExplorer.DataSetBuilder.Model;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace DataSetExplorer.DataSetBuilder
 {
     public interface IDataSetAnnotationService
     {
+        Result<List<CodeSmellDTO>> GetAllCodeSmells();
         Result<DataSetAnnotation> AddDataSetAnnotation(DataSetAnnotation annotation, int dataSetInstanceId, int annotatorId);
         Result<DataSetAnnotation> UpdateAnnotation(DataSetAnnotation changed, int annotationId, int annotatorId);
     }

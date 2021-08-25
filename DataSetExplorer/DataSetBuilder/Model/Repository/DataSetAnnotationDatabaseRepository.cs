@@ -29,6 +29,16 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             return _dbContext.Annotators.FirstOrDefault(a => a.Id == id);
         }
 
+        public IEnumerable<CodeSmell> GetAllCodeSmells()
+        {
+            return _dbContext.CodeSmells;
+        }
+
+        public CodeSmell GetGodeSmell(string value)
+        {
+            return _dbContext.CodeSmells.FirstOrDefault(s => s.Value.Equals(value));
+        }
+
         public void Update(DataSetAnnotation annotation)
         {
             _dbContext.Update(annotation);

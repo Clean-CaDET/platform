@@ -25,6 +25,14 @@ namespace DataSetExplorer.Controllers.Annotation
             _dataSetAnalysisService = dataSetAnalysisService;
         }
 
+        [HttpGet]
+        [Route("code-smells")]
+        public IActionResult GetAllCodeSmells()
+        {
+            var result = _dataSetAnnotationService.GetAllCodeSmells();
+            return Ok(result.Value);
+        }
+
         [HttpPost]
         public IActionResult AddDataSetAnnotation([FromBody] DataSetAnnotationDTO annotation)
         {

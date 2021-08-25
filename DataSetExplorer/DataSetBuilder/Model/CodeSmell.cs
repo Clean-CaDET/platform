@@ -30,7 +30,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
             }
         }
 
-        public List<SnippetType> RelevantSnippetType()
+        public List<SnippetType> RelevantSnippetTypes()
         {
             return Value switch
             {

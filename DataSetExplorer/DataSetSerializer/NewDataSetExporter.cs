@@ -35,7 +35,7 @@ namespace DataSetExplorer.DataSetSerializer
             foreach (var smell in _requiredSmells.GetSmells())
             {
                 var sheet = template.Workbook.Worksheets.First(s => s.Name == smell.Value);
-                var instances = smell.RelevantSnippetType().SelectMany(snippetType => dataSet.GetInstancesOfType(snippetType, project.Name)).ToList();
+                var instances = smell.RelevantSnippetTypes().SelectMany(snippetType => dataSet.GetInstancesOfType(snippetType, project.Name)).ToList();
                 PopulateInstances(sheet, instances, smell);
             }
 
