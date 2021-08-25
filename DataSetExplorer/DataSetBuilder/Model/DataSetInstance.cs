@@ -57,6 +57,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         internal bool HasNoAgreeingAnnotations()
         {
+            if (Annotations.Count < 2) return false;
             var severityGrades = Annotations.Select(a => a.Severity);
             return severityGrades.Distinct().Count() == Annotations.Count;
         }
