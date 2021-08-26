@@ -21,6 +21,7 @@ namespace SmartTutor.ProgressModel.Progress.Repository
 
         public NodeProgress GetNodeProgressForLearner(int learnerId, int nodeId)
         {
+            if (_dbContext.NodeProgresses == null || !_dbContext.NodeProgresses.Any()) return null;
             return _dbContext.NodeProgresses
                 .Where(nodeProgress => nodeProgress.LearnerId == learnerId && nodeProgress.Node.Id == nodeId)
                 .Include(np => np.LearningObjects)

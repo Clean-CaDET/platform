@@ -10,14 +10,14 @@ namespace SmartTutor.InstructorModel.Instructors
 {
     public class MakeItStickInstructor : IInstructor
     {
-        private readonly VARKInstructor _varkInstructor;
+        private readonly IInstructor _instructor;
         private readonly ILearningObjectRepository _learningObjectRepository;
         private readonly ILectureRepository _lectureRepository;
 
-        public MakeItStickInstructor(VARKInstructor varkInstructor,
+        public MakeItStickInstructor(IInstructor instructor,
             ILearningObjectRepository learningObjectRepository, ILectureRepository lectureRepository)
         {
-            _varkInstructor = varkInstructor;
+            _instructor = instructor;
             _learningObjectRepository = learningObjectRepository;
             _lectureRepository = lectureRepository;
         }
@@ -26,7 +26,7 @@ namespace SmartTutor.InstructorModel.Instructors
             List<LearningObjectSummary> learningObjectSummaries)
         {
             var knowledgeNode = learningObjectSummaries[0].KnowledgeNode;
-            var result = _varkInstructor.GatherLearningObjectsForLearner(learnerId, learningObjectSummaries);
+            var result = _instructor.GatherLearningObjectsForLearner(learnerId, learningObjectSummaries);
             AddPrerequisiteRevisionQuestions(knowledgeNode.Id, result);
             AddKnowledgeNodeRevisionQuestions(knowledgeNode, result);
             return result.Distinct().ToList();
@@ -34,7 +34,7 @@ namespace SmartTutor.InstructorModel.Instructors
 
         public List<LearningObject> GatherDefaultLearningObjects(List<LearningObjectSummary> learningObjectSummaries)
         {
-            return _varkInstructor.GatherDefaultLearningObjects(learningObjectSummaries);
+            return _instructor.GatherDefaultLearningObjects(learningObjectSummaries);
         }
 
         private void AddPrerequisiteRevisionQuestions(int id, List<LearningObject> result)
