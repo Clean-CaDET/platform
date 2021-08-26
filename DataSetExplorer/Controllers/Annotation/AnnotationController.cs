@@ -5,6 +5,7 @@ using DataSetExplorer.DataSetBuilder.Model;
 using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -15,22 +16,30 @@ namespace DataSetExplorer.Controllers.Annotation
     public class AnnotationController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
         private readonly IDataSetAnnotationService _dataSetAnnotationService;
         private readonly IDataSetAnalysisService _dataSetAnalysisService;
 
-        public AnnotationController(IMapper mapper, IDataSetAnnotationService dataSetAnnotationService, IDataSetAnalysisService dataSetAnalysisService)
+        public AnnotationController(IMapper mapper, IConfiguration configuration, IDataSetAnnotationService dataSetAnnotationService, IDataSetAnalysisService dataSetAnalysisService)
         {
             _mapper = mapper;
+            _configuration = configuration;
             _dataSetAnnotationService = dataSetAnnotationService;
             _dataSetAnalysisService = dataSetAnalysisService;
         }
 
         [HttpGet]
-        [Route("code-smells")]
+        [Route("available-code-smells")]
         public IActionResult GetAllCodeSmells()
         {
-            var result = _dataSetAnnotationService.GetAllCodeSmells();
-            return Ok(result.Value);
+            return Ok(_configuration.GetSection("Annotating:AvailableCodeSmells").Get<IDictionary<string, string[]>>());
+        }
+
+        [HttpGet]
+        [Route("available-heuristics")]
+        public IActionResult GetAllAvailableHeuristics()
+        {
+            return Ok(_configuration.GetSection("Annotating:AvailableHeuristics").Get<IDictionary<string, string[]>>());
         }
 
         [HttpPost]

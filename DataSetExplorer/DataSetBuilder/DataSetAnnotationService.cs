@@ -24,13 +24,6 @@ namespace DataSetExplorer.DataSetBuilder
             _dataSetAnnotationRepository = dataSetAnnotationRepository;
         }
 
-        public Result<List<CodeSmellDTO>> GetAllCodeSmells()
-        {
-            var codeSmells = new List<CodeSmellDTO>();
-            foreach (var codeSmell in _dataSetAnnotationRepository.GetAllCodeSmells()) codeSmells.Add(_mapper.Map<CodeSmellDTO>(codeSmell));
-            return Result.Ok(codeSmells);
-        }
-
         public Result<DataSetAnnotation> AddDataSetAnnotation(DataSetAnnotation annotation, int dataSetInstanceId, int annotatorId)
         {
             var instance = _dataSetInstanceRepository.GetDataSetInstance(dataSetInstanceId);

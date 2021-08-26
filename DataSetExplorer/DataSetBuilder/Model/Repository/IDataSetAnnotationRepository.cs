@@ -9,7 +9,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
     {
         DataSetAnnotation GetDataSetAnnotation(int id);
         Annotator GetAnnotator(int id);
-        IEnumerable<CodeSmell> GetAllCodeSmells();
         CodeSmell GetGodeSmell(string value);
         void Update(DataSetAnnotation annotation);
     }
