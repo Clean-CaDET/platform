@@ -90,9 +90,10 @@ namespace SmartTutor.Database
                 .HasMany(kn => kn.PrerequisiteOf)
                 .WithMany(kn => kn.Prerequisites);
 
-            modelBuilder.Entity<NodeProgress>()
-                .HasMany(np => np.LearningObjects)
-                .WithMany("NodeProgress");
+            // TODO: configure many-to-many relationship without compromising Challenges
+            // modelBuilder.Entity<NodeProgress>()
+            //     .HasMany(np => np.LearningObjects)
+            //     .WithMany("NodeProgress");
 
             modelBuilder.Entity<KnowledgeNode>()
                 .HasMany(kn => kn.LearningObjectSummaries)

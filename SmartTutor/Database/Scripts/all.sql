@@ -5,8 +5,6 @@ DELETE FROM public."ArrangeTaskContainerSubmissions";
 DELETE FROM public."ArrangeTaskSubmissions";
 DELETE FROM public."ChallengeSubmissions";
 DELETE FROM public."QuestionSubmissions";
--- TODO: Learning objects reference Node Progress so the following line had to be moved
-DELETE FROM public."NodeProgresses";
 DELETE FROM public."LearningObjectFeedback";
 
 DELETE FROM public."CourseEnrollment";
@@ -27,9 +25,8 @@ DELETE FROM public."ArrangeTaskElements";
 DELETE FROM public."ArrangeTaskContainers";
 DELETE FROM public."ArrangeTasks";
 DELETE FROM public."LearningObjects";
+DELETE FROM public."NodeProgresses";
 DELETE FROM public."LearningObjectSummaries";
--- TODO: Learning objects reference Node Progress so the following line had to be moved here
--- DELETE FROM public."NodeProgresses";
 DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
 DELETE FROM public."Courses";
