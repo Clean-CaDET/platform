@@ -40,8 +40,11 @@ services:
       KEYCLOAK_ON: ${KEYCLOAK_ON}
       AUTHORITY: ${AUTHORITY:-}
       AUDIENCE: ${AUDIENCE:-}
+      SMART_TUTOR_CORS_ORIGINS: ${SMART_TUTOR_CORS_ORIGINS}
     depends_on:
       - database
+    volumes:
+      - /data/corsorigins
   database:
     image: postgres:${POSTGRES_VERSION-13}
     restart: always
