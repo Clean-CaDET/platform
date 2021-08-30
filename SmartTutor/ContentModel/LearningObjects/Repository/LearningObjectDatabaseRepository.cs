@@ -73,9 +73,9 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
         public LearningObject GetInteractiveLOForSummary(int summaryId)
         {
             var interactiveLearningObjects = new List<LearningObject>();
-            interactiveLearningObjects.AddRange(_dbContext.ArrangeTasks);
-            interactiveLearningObjects.AddRange(_dbContext.Questions);
-            return interactiveLearningObjects.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
+            interactiveLearningObjects.Add(GetArrangeTask(summaryId));
+            interactiveLearningObjects.AddRange(GetQuestionsForSummary(summaryId));
+            return interactiveLearningObjects.FirstOrDefault();
         }
 
         public Text GetTextForSummary(int summaryId)
@@ -90,7 +90,7 @@ namespace SmartTutor.ContentModel.LearningObjects.Repository
 
         public LearningObject GetLearningObjectForSummary(int summaryId)
         {
-            return _dbContext.LearningObjects.FirstOrDefault(lo => lo.LearningObjectSummaryId == summaryId);
+            return GetLearningObjectsForSummary(summaryId).FirstOrDefault();
         }
 
         public LearningObjectSummary GetLearningObjectSummary(int summaryId)

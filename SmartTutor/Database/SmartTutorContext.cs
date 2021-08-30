@@ -85,7 +85,7 @@ namespace SmartTutor.Database
             modelBuilder.Entity<KnowledgeNode>()
                 .HasMany(kn => kn.Prerequisites)
                 .WithMany(kn => kn.PrerequisiteOf);
-            
+
             modelBuilder.Entity<KnowledgeNode>()
                 .HasMany(kn => kn.PrerequisiteOf)
                 .WithMany(kn => kn.Prerequisites);
@@ -93,6 +93,17 @@ namespace SmartTutor.Database
             modelBuilder.Entity<NodeProgress>()
                 .HasMany(np => np.LearningObjects)
                 .WithMany("NodeProgress");
+
+            modelBuilder.Entity<KnowledgeNode>()
+                .HasMany(kn => kn.LearningObjectSummaries)
+                .WithOne(los => los.KnowledgeNode);
+
+            modelBuilder.Entity<KnowledgeNode>()
+                .Property<int>("RecapLearningObjectSummaryIdForeignKey");
+            modelBuilder.Entity<KnowledgeNode>()
+                .HasOne(kn => kn.RecapLearningObjectSummary)
+                .WithMany()
+                .HasForeignKey("RecapLearningObjectSummaryIdForeignKey");
         }
 
         private static void ConfigureChallenge(ModelBuilder modelBuilder)

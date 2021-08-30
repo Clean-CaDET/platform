@@ -54,7 +54,7 @@ namespace SmartTutor.ProgressModel
 
         private NodeProgress BuildNodeForLearner(KnowledgeNode node, int learnerId)
         {
-            var nodeProgress = _progressRepository.GetNodeProgressForLearner(learnerId, node.Id) ?? new NodeProgress(
+            var nodeProgress = /* _progressRepository.GetNodeProgressForLearner(learnerId, node.Id) ?? */ new NodeProgress(
                 0, learnerId, node, NodeStatus.Unlocked, _instructor.GatherLearningObjectsForLearner(learnerId, node.LearningObjectSummaries)
             );
 

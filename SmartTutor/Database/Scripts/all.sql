@@ -77,9 +77,13 @@ INSERT INTO public."Lectures"(
 	
 	
 --== Naming ==- FK Node	
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (201, 'Recap learning objects summary for knowledge node 1', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (1, 'Navedi osnovne vodilje za definisanje značajnih imena.', 0, 1);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (1, 'Navedi osnovne vodilje za definisanje značajnih imena.', 0, 1, 201);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -157,9 +161,13 @@ INSERT INTO public."QuestionAnswers"(
 
 	
 --== Naming =- PK Node 1
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (202, 'Recap learning objects summary for knowledge node 2', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (2, 'Primeni heuristiku odbacivanja beznačajnih reči radi formiranje boljih imena u kodu.', 1, 1);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (2, 'Primeni heuristiku odbacivanja beznačajnih reči radi formiranje boljih imena u kodu.', 1, 1, 202);
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
 	VALUES (5, 'Algorithm', 2);
@@ -235,9 +243,13 @@ INSERT INTO public."Videos"(
 
 
 --== Naming ==- PK Node 2
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (203, 'Recap learning objects summary for knowledge node 3', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (3, 'Primeni osnovne tehnike refaktorisanja za formiranje boljih imena u kodu.', 1, 1);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (3, 'Primeni osnovne tehnike refaktorisanja za formiranje boljih imena u kodu.', 1, 1, 203);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -287,9 +299,13 @@ INSERT INTO public."Videos"(
 
 
 --== Naming ==- CK Node	
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (204, 'Recap learning objects summary for knowledge node 4', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (4, 'Razumi uticaj jasnih i misterioznih imena u kodu na rad programera.', 2, 1);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (4, 'Razumi uticaj jasnih i misterioznih imena u kodu na rad programera.', 2, 1, 204);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -380,10 +396,14 @@ INSERT INTO public."QuestionAnswers"(
 	"Id", "Text", "IsCorrect", "Feedback", "QuestionId")
 	VALUES (15, 'Potrebno je dobro ime izabrati u startu, zato što je naknadna promena skupa.', false, 'Izjava nije tačna. Promena imena za gotovo svaki element koda je trivijalna operacija uz pomoć savremenih editora koda.', 19);
 	
---== Methods ==- FK Node	
+--== Methods ==- FK Node
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (210, 'Recap learning objects summary for knowledge node 10', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (10, 'Analiziraj ideju da je funkcija fokusirana na jedan zadatak.', 0, 2);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (10, 'Analiziraj ideju da je funkcija fokusirana na jedan zadatak.', 0, 2, 210);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
@@ -488,9 +508,13 @@ INSERT INTO public."Images"(
 
 
 --== Methods ==- PK Node 1
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (211, 'Recap learning objects summary for knowledge node 11', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (11, 'Primeni extract method refaktorisanje za formiranje kraćih funkcija.', 1, 2);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (11, 'Primeni extract method refaktorisanje za formiranje kraćih funkcija.', 1, 2, 211);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId") -- Not sure what to do with this Description field.
@@ -505,9 +529,13 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (42, 'Function Length Solution'); -- Hidden
 
 --== Methods ==- PK Node 2	
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (212, 'Recap learning objects summary for knowledge node 12', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (12, 'Primeni extract method refaktorisanje za formiranje jednostavnijih funkcija.', 1, 2);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (12, 'Primeni extract method refaktorisanje za formiranje jednostavnijih funkcija.', 1, 2, 212);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -523,9 +551,13 @@ INSERT INTO public."LearningObjectSummaries"(
 	VALUES (46, 'Function Complexity Challenge Solution');
 	
 --== Methods ==- PK Node 3	
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (213, 'Recap learning objects summary for knowledge node 13', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (13, 'Primeni strategije za redukciju broja parametra za formiranje čistijih funkcija.', 1, 2);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (13, 'Primeni strategije za redukciju broja parametra za formiranje čistijih funkcija.', 1, 2, 213);
 	
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -682,9 +714,13 @@ INSERT INTO public."MetricRangeRules"(
 	
 	
 --== Methods ==- CK Node
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (214, 'Recap learning objects summary for knowledge node 14', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId") -- TODO: KN many to many prerequisites (after experiment)
-	VALUES (14, 'Razumi posledice održavanja koda koji se sastoji od funkcija gde je svaka fokusirana na manji broj zadataka (idealno jedan).', 2, 2);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey") -- TODO: KN many to many prerequisites (after experiment)
+	VALUES (14, 'Razumi posledice održavanja koda koji se sastoji od funkcija gde je svaka fokusirana na manji broj zadataka (idealno jedan).', 2, 2, 214);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -827,9 +863,13 @@ INSERT INTO public."QuestionAnswers"(
 
 
 --== Cohesion ==- FK Node	
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (215, 'Recap learning objects summary for knowledge node 15', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (15, 'Definiši razliku između strukturalne i semantičke kohezije.', 0, 3);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (15, 'Definiši razliku između strukturalne i semantičke kohezije.', 0, 3, 215);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -889,9 +929,13 @@ INSERT INTO public."Images"(
 	
 
 --== Cohesion ==- PK Node 1
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (216, 'Recap learning objects summary for knowledge node 16', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (16, 'Primeni formulu za računanje strukturalne kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (16, 'Primeni formulu za računanje strukturalne kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3, 216);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -1111,9 +1155,13 @@ INSERT INTO public."QuestionAnswers"(
 
 
 --== Cohesion ==- PK Node 2
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (217, 'Recap learning objects summary for knowledge node 17', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (17, 'Primeni formulu za računanje semantičke kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (17, 'Primeni formulu za računanje semantičke kohezije klase i skup refaktorisanja za njeno unapređenje.', 1, 3, 217);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -1148,9 +1196,13 @@ INSERT INTO public."Images"(
 	--TODO PK1 and PK2 challenges
 
 --== Cohesion ==- CK Node
+INSERT INTO public."LearningObjectSummaries"(
+    "Id", "Description", "KnowledgeNodeId")
+VALUES (218, 'Recap learning objects summary for knowledge node 18', null);
+
 INSERT INTO public."KnowledgeNodes"(
-	"Id", "LearningObjective", "Type", "LectureId")
-	VALUES (18, 'Razumi značaj kohezivnih modula za održivi razvoj softvera.', 2, 3);
+	"Id", "LearningObjective", "Type", "LectureId", "RecapLearningObjectSummaryIdForeignKey")
+	VALUES (18, 'Razumi značaj kohezivnih modula za održivi razvoj softvera.', 2, 3, 218);
 
 INSERT INTO public."LearningObjectSummaries"(
 	"Id", "Description", "KnowledgeNodeId")
@@ -1260,7 +1312,7 @@ VALUES (4, 3);
 
 INSERT INTO public."LearningObjects"(
     "Id", "LearningObjectSummaryId")
-VALUES (201, 1);
+VALUES (201, 201);
 INSERT INTO public."Questions"(
     "Id", "Text")
 VALUES (201, 'Question 1');
@@ -1274,7 +1326,7 @@ VALUES (202, 201, 'Answer 2', false, 'Boo');
 
 INSERT INTO public."LearningObjects"(
     "Id", "LearningObjectSummaryId")
-VALUES (202, 1);
+VALUES (202, 202);
 INSERT INTO public."Questions"(
     "Id", "Text")
 VALUES (202, 'Question 2');
@@ -1287,7 +1339,7 @@ VALUES (204, 202, 'Answer 2', false, 'Boo');
 
 INSERT INTO public."LearningObjects"(
     "Id", "LearningObjectSummaryId")
-VALUES (203, 1);
+VALUES (203, 203);
 INSERT INTO public."Questions"(
     "Id", "Text")
 VALUES (203, 'Question 3');

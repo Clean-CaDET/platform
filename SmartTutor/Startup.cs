@@ -26,6 +26,7 @@ using SmartTutor.QualityAnalysis.Repository;
 using System;
 using Microsoft.Net.Http.Headers;
 using System.IO;
+using SmartTutor.InstructorModel.PrerequisiteSelectionStrategies;
 
 namespace SmartTutor
 {
@@ -81,6 +82,7 @@ namespace SmartTutor
             services.AddScoped<IWorkspaceCreator, NoWorkspaceCreator>();
             services.AddScoped<ILearnerRepository, LearnerDatabaseRepository>();
 
+            services.AddScoped<IPrerequisiteSelectionStrategy, RandomizedPrerequisiteSelectionStrategy>();
             services.AddScoped<IInstructor, VARKInstructor>();
             services.Decorate<IInstructor, MakeItStickInstructor>();
 
@@ -154,9 +156,9 @@ namespace SmartTutor
         private static string GetSecret(string secretName)
         {
             var secretPath = Environment.GetEnvironmentVariable($"{secretName}_FILE") ?? "";
-            return File.Exists(secretPath) ? 
-                File.ReadAllText(secretPath) : 
-                Environment.GetEnvironmentVariable(secretName);
+            return File.Exists(secretPath)
+                ? File.ReadAllText(secretPath)
+                : Environment.GetEnvironmentVariable(secretName);
         }
 
         private static string CreateConnectionStringFromEnvironment()

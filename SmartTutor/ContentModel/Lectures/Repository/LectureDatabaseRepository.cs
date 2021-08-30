@@ -60,8 +60,9 @@ namespace SmartTutor.ContentModel.Lectures.Repository
         public KnowledgeNode GetKnowledgeNode(int id)
         {
             return _dbContext.KnowledgeNodes.Where(n => n.Id == id)
+                .Include(n => n.RecapLearningObjectSummary)
                 .Include(n => n.Prerequisites)
-                .ThenInclude(p => p.LearningObjectSummaries)
+                    .ThenInclude(p => p.RecapLearningObjectSummary)
                 .FirstOrDefault();
         }
     }

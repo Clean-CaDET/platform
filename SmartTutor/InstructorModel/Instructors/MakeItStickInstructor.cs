@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures;
 using SmartTutor.ContentModel.Lectures.Repository;
+using SmartTutor.InstructorModel.PrerequisiteSelectionStrategies;
 
 namespace SmartTutor.InstructorModel.Instructors
 {
@@ -13,22 +13,25 @@ namespace SmartTutor.InstructorModel.Instructors
         private readonly IInstructor _instructor;
         private readonly ILearningObjectRepository _learningObjectRepository;
         private readonly ILectureRepository _lectureRepository;
+        private readonly IPrerequisiteSelectionStrategy _prerequisiteSelectionStrategy;
 
         public MakeItStickInstructor(IInstructor instructor,
-            ILearningObjectRepository learningObjectRepository, ILectureRepository lectureRepository)
+            ILearningObjectRepository learningObjectRepository, ILectureRepository lectureRepository,
+            IPrerequisiteSelectionStrategy prerequisiteSelectionStrategy)
         {
             _instructor = instructor;
             _learningObjectRepository = learningObjectRepository;
             _lectureRepository = lectureRepository;
+            _prerequisiteSelectionStrategy = prerequisiteSelectionStrategy;
         }
 
         public List<LearningObject> GatherLearningObjectsForLearner(int learnerId,
             List<LearningObjectSummary> learningObjectSummaries)
         {
-            var knowledgeNode = learningObjectSummaries[0].KnowledgeNode;
+            var knowledgeNode = _lectureRepository.GetKnowledgeNode(learningObjectSummaries[0].KnowledgeNode.Id);
             var result = _instructor.GatherLearningObjectsForLearner(learnerId, learningObjectSummaries);
-            AddPrerequisiteRevisionQuestions(knowledgeNode.Id, result);
-            AddKnowledgeNodeRevisionQuestions(knowledgeNode, result);
+            AddPrerequisiteRecapLOs(knowledgeNode, result);
+            AddKnowledgeNodeRecapLOs(knowledgeNode, result);
             return result.Distinct().ToList();
         }
 
@@ -37,26 +40,22 @@ namespace SmartTutor.InstructorModel.Instructors
             return _instructor.GatherDefaultLearningObjects(learningObjectSummaries);
         }
 
-        private void AddPrerequisiteRevisionQuestions(int id, List<LearningObject> result)
+        private void AddPrerequisiteRecapLOs(KnowledgeNode knowledgeNode, List<LearningObject> result)
         {
-            Random random = new Random();
-            KnowledgeNode knowledgeNode = _lectureRepository.GetKnowledgeNode(id);
-            foreach (var prerequisiteNode in knowledgeNode.Prerequisites ?? new List<KnowledgeNode>())
+            var prerequisites = _prerequisiteSelectionStrategy.GetPrerequisites(knowledgeNode);
+            foreach (var prerequisiteNode in prerequisites)
             {
-                int index = random.Next(0, prerequisiteNode.LearningObjectSummaries.Count);
-                var summary = prerequisiteNode.LearningObjectSummaries[index];
-                var question = _learningObjectRepository.GetQuestionForSummary(summary.Id);
-                if (question != null) result.Insert(0, question);
+                var summaryId = prerequisiteNode.RecapLearningObjectSummary.Id;
+                var recapLO = _learningObjectRepository.GetLearningObjectForSummary(summaryId);
+                if (recapLO != null) result.Insert(0, recapLO);
             }
         }
 
-        private void AddKnowledgeNodeRevisionQuestions(KnowledgeNode knowledgeNode, List<LearningObject> result)
+        private void AddKnowledgeNodeRecapLOs(KnowledgeNode knowledgeNode, List<LearningObject> result)
         {
-            foreach (var questions in knowledgeNode.LearningObjectSummaries.Select(summary =>
-                _learningObjectRepository.GetQuestionsForSummary(summary.Id)))
-            {
-                result.AddRange(questions);
-            }
+            var recapSummaryId = knowledgeNode.RecapLearningObjectSummary.Id;
+            var recapLO = _learningObjectRepository.GetLearningObjectForSummary(recapSummaryId);
+            if (recapLO != null) result.Add(recapLO);
         }
     }
 }
