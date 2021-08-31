@@ -33,5 +33,19 @@ namespace DataSetExplorer.DataSetBuilder.Model
             }
             return Projects.SelectMany(p => p.Instances.Where(i => i.Type.Equals(type))).ToList();
         }
+
+        public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
+        {
+            var instances = new List<DataSetInstance>();
+            foreach (var project in Projects) instances.AddRange(project.GetInstancesWithAllDisagreeingAnnotations());
+            return instances;
+        }
+
+        public List<DataSetInstance> GetInsufficientlyAnnotatedInstances()
+        {
+            var instances = new List<DataSetInstance>();
+            foreach (var project in Projects) instances.AddRange(project.GetInsufficientlyAnnotatedInstances());
+            return instances;
+        }
     }
 }

@@ -11,9 +11,14 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public List<SmellHeuristic> ApplicableHeuristics { get; private set; }
         public Annotator Annotator { get; set; }
 
-        public DataSetAnnotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
+        public DataSetAnnotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics) : 
+            this(new CodeSmell(instanceSmell), severity, annotator, applicableHeuristics)
         {
-            InstanceSmell = new CodeSmell(instanceSmell);
+        }
+
+        public DataSetAnnotation(CodeSmell instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
+        {
+            InstanceSmell = instanceSmell;
             Severity = severity;
             Annotator = annotator;
             ApplicableHeuristics = applicableHeuristics;
@@ -24,6 +29,14 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
         }
 
+        public void Update(DataSetAnnotation other)
+        {
+            InstanceSmell = other.InstanceSmell;
+            Severity = other.Severity;
+            ApplicableHeuristics = other.ApplicableHeuristics;
+            Validate();
+        }
+
         private void Validate()
         {
             if (Severity < 0 || Severity > 3) throw new ArgumentException("Accepted severity ranges from 0 to 3, but was " + Severity);
@@ -31,18 +44,18 @@ namespace DataSetExplorer.DataSetBuilder.Model
             if (Severity > 0 && ApplicableHeuristics.Count < 1) throw new ArgumentException("Annotations made by " + Annotator.Id + " with severity " + Severity + " must have at least one applicable heuristic.");
         }
 
-        public override int GetHashCode() => (Annotator.Id, InstanceSmell: InstanceSmell.Value).GetHashCode();
+        public override int GetHashCode() => (Annotator.Id, InstanceSmell: InstanceSmell.Name).GetHashCode();
 
         public override bool Equals(object other)
         {
             return other is DataSetAnnotation annotation
                    && Annotator.Equals(annotation.Annotator)
-                   && InstanceSmell.Value.Equals(annotation.InstanceSmell.Value);
+                   && InstanceSmell.Name.Equals(annotation.InstanceSmell.Name);
         }
 
         public override string ToString()
         {
-            return "Annotator: " + Annotator.Id + "; Smell: " + InstanceSmell.Value + "; Severity: " + Severity;
+            return "Annotator: " + Annotator.Id + "; Smell: " + InstanceSmell.Name + "; Severity: " + Severity;
         }
     }
 }

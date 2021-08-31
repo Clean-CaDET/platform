@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
@@ -21,7 +22,17 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             return _dbContext.DataSetProjects
                 .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
                 .FirstOrDefault(s => s.Id == id);
+        }
+
+        public IEnumerable<DataSetProject> GetDataSetProjects(IEnumerable<int> projectIds)
+        {
+            return _dbContext.DataSetProjects
+                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .Where(p => projectIds.Contains(p.Id));
         }
 
         public void Update(DataSetProject dataSetProject)
