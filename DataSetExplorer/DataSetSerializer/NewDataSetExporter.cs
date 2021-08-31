@@ -34,7 +34,7 @@ namespace DataSetExplorer.DataSetSerializer
             var template = LoadTemplate(project.Url);
             foreach (var smell in _requiredSmells.GetSmells())
             {
-                var sheet = template.Workbook.Worksheets.First(s => s.Name == smell.Value);
+                var sheet = template.Workbook.Worksheets.First(s => s.Name == smell.Name);
                 var instances = smell.RelevantSnippetTypes().SelectMany(snippetType => dataSet.GetInstancesOfType(snippetType, project.Name)).ToList();
                 PopulateInstances(sheet, instances, smell);
             }
@@ -52,8 +52,8 @@ namespace DataSetExplorer.DataSetSerializer
             
             foreach (var smell in _requiredSmells.GetSmells())
             {
-                var sheet = template.Workbook.Worksheets.Add(smell.Value, defaultSheet);
-                sheet.Cells[2, 2].Value = smell.Value;
+                var sheet = template.Workbook.Worksheets.Add(smell.Name, defaultSheet);
+                sheet.Cells[2, 2].Value = smell.Name;
                 PopulateHeuristics(sheet, smell);
             }
 

@@ -9,7 +9,6 @@ namespace DataSetExplorer
 {
     class FullDataSetFactory
     {
-
         public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(IDictionary<string, string> projects, List<Annotator> annotators, int? annotatorId)
         {
             var allAnnotatedInstances = new List<DataSetInstance>();
@@ -25,7 +24,7 @@ namespace DataSetExplorer
                 if (annotatorId != null) annotatedInstances = annotatedInstances.Where(i => i.IsAnnotatedBy((int)annotatorId)).ToList();
                 allAnnotatedInstances.AddRange(FillInstancesWithMetrics(annotatedInstances, project));
             }
-            return allAnnotatedInstances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Value);
+            return allAnnotatedInstances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Name);
         }
 
         private List<DataSetInstance> FillInstancesWithMetrics(List<DataSetInstance> annotatedInstances, CaDETProject project)

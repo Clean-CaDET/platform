@@ -7,7 +7,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
     {
         public CodeSmell(string smell)
         {
-            Value = smell;
+            Name = smell;
             Validate();
         }
 
@@ -16,11 +16,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
         }
 
         public int Id { get; private set; }
-        public string Value { get; private set; }
+        public string Name { get; private set; }
 
         public void Validate()
         {
-            switch (Value)
+            switch (Name)
             {
                 case "Large Class":
                 case "Long Method":
@@ -32,7 +32,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         public List<SnippetType> RelevantSnippetTypes()
         {
-            return Value switch
+            return Name switch
             {
                 "Large Class" => new List<SnippetType> {SnippetType.Class},
                 "Long Method" => new List<SnippetType> {SnippetType.Function},

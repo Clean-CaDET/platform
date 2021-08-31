@@ -44,18 +44,18 @@ namespace DataSetExplorer.DataSetBuilder.Model
             if (Severity > 0 && ApplicableHeuristics.Count < 1) throw new ArgumentException("Annotations made by " + Annotator.Id + " with severity " + Severity + " must have at least one applicable heuristic.");
         }
 
-        public override int GetHashCode() => (Annotator.Id, InstanceSmell: InstanceSmell.Value).GetHashCode();
+        public override int GetHashCode() => (Annotator.Id, InstanceSmell: InstanceSmell.Name).GetHashCode();
 
         public override bool Equals(object other)
         {
             return other is DataSetAnnotation annotation
                    && Annotator.Equals(annotation.Annotator)
-                   && InstanceSmell.Value.Equals(annotation.InstanceSmell.Value);
+                   && InstanceSmell.Name.Equals(annotation.InstanceSmell.Name);
         }
 
         public override string ToString()
         {
-            return "Annotator: " + Annotator.Id + "; Smell: " + InstanceSmell.Value + "; Severity: " + Severity;
+            return "Annotator: " + Annotator.Id + "; Smell: " + InstanceSmell.Name + "; Severity: " + Severity;
         }
     }
 }

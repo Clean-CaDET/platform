@@ -9,7 +9,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
     public class DataSetAnnotationDatabaseRepository : IDataSetAnnotationRepository
     {
-
         private readonly DataSetExplorerContext _dbContext;
 
         public DataSetAnnotationDatabaseRepository(DataSetExplorerContext dbContext)
@@ -29,9 +28,9 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             return _dbContext.Annotators.FirstOrDefault(a => a.Id == id);
         }
 
-        public CodeSmell GetGodeSmell(string value)
+        public CodeSmell GetCodeSmell(string name)
         {
-            return _dbContext.CodeSmells.FirstOrDefault(s => s.Value.Equals(value));
+            return _dbContext.CodeSmells.FirstOrDefault(s => s.Name.Equals(name));
         }
 
         public void Update(DataSetAnnotation annotation)

@@ -9,7 +9,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
     {
         DataSetAnnotation GetDataSetAnnotation(int id);
         Annotator GetAnnotator(int id);
-        CodeSmell GetGodeSmell(string value);
+        CodeSmell GetCodeSmell(string name);
         void Update(DataSetAnnotation annotation);
     }
 }

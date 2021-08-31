@@ -24,7 +24,7 @@ namespace DataSetExplorer.DataSetSerializer.ViewModel
 
         internal List<string> GetHeuristicsByCodeSmellName(string smellName)
         {
-            return _heuristics.First(h => h.Key.Value.Equals(smellName)).Value; 
+            return _heuristics.First(h => h.Key.Name.Equals(smellName)).Value; 
         }
 
         internal List<CodeSmell> GetSmells()

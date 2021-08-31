@@ -30,8 +30,8 @@ namespace DataSetExplorer.DataSetBuilder
             if (instance == default) return Result.Fail<DataSetAnnotation>($"DataSetInstance with id: {dataSetInstanceId} does not exist.");
             var annotator = _dataSetAnnotationRepository.GetAnnotator(annotatorId);
             if (annotator == default) return Result.Fail<DataSetAnnotation>($"Annotator with id: {annotatorId} does not exist.");
-            var codeSmell = _dataSetAnnotationRepository.GetGodeSmell(annotation.InstanceSmell.Value);
-            if (codeSmell == default) return Result.Fail<DataSetAnnotation>($"CodeSmell with value: {annotation.InstanceSmell.Value} does not exist.");
+            var codeSmell = _dataSetAnnotationRepository.GetCodeSmell(annotation.InstanceSmell.Name);
+            if (codeSmell == default) return Result.Fail<DataSetAnnotation>($"CodeSmell with value: {annotation.InstanceSmell.Name} does not exist.");
             annotation = new DataSetAnnotation(codeSmell, annotation.Severity, annotator, annotation.ApplicableHeuristics);
             instance.AddAnnotation(annotation);
             _dataSetInstanceRepository.Update(instance);
@@ -43,8 +43,8 @@ namespace DataSetExplorer.DataSetBuilder
             var annotation = _dataSetAnnotationRepository.GetDataSetAnnotation(annotationId);
             if (annotation == default) return Result.Fail<DataSetAnnotation>($"DataSetAnnotation with id: {annotationId} does not exist.");
             if (annotation.Annotator.Id != annotatorId) return Result.Fail<DataSetAnnotation>($"Only creator can update annotation.");
-            var codeSmell = _dataSetAnnotationRepository.GetGodeSmell(changed.InstanceSmell.Value);
-            if (codeSmell == default) return Result.Fail<DataSetAnnotation>($"CodeSmell with value: {changed.InstanceSmell.Value} does not exist.");
+            var codeSmell = _dataSetAnnotationRepository.GetCodeSmell(changed.InstanceSmell.Name);
+            if (codeSmell == default) return Result.Fail<DataSetAnnotation>($"CodeSmell with value: {changed.InstanceSmell.Name} does not exist.");
             annotation.Update(new DataSetAnnotation(codeSmell, changed.Severity, annotation.Annotator, changed.ApplicableHeuristics));
             _dataSetAnnotationRepository.Update(annotation);
             return Result.Ok(annotation);
