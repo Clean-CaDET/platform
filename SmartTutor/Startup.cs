@@ -173,11 +173,11 @@ namespace SmartTutor
 
         private static string[] ParseCorsOrigins()
         {
-            string[] corsOrigins = { "http://localhost:4200" };
+            var corsOrigins = Array.Empty<string>();
             var corsOriginsPath = Util.GetSecret("SMART_TUTOR_CORS_ORIGINS");
             if (File.Exists(corsOriginsPath))
             {
-                corsOrigins = File.ReadAllText(corsOriginsPath).Split(";");
+                corsOrigins = File.ReadAllLines(corsOriginsPath);
             }
 
             return corsOrigins;

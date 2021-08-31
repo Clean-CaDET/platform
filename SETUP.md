@@ -48,7 +48,29 @@ Previous command creates `cleancadet/smart-tutor:migration-latest` image.
 When images are built, next step is to run services.
 
 ```shell
-docker-compose --env-file config/env.conf up
+docker-compose --env-file config/env.conf up --detach
+```
+
+**Note**: Make sure that database service is ready to be used by checking 
+database logs.
+
+#### Database Logs
+Run the following command:
+```shell
+docker-compose --env-file config/keycloak-env.conf \
+  --file docker-compose.yml \
+  --file docker-compose.keycloak.yml \
+  logs database
+```
+
+Last lines of the output should be like this:
+
+```
+database_1     | 2021-08-31 11:42:52.832 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+database_1     | 2021-08-31 11:42:52.832 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+database_1     | 2021-08-31 11:42:52.838 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+database_1     | 2021-08-31 11:42:52.846 UTC [85] LOG:  database system was shut down at 2021-08-31 11:42:52 UTC
+database_1     | 2021-08-31 11:42:52.852 UTC [1] LOG:  database system is ready to accept connections
 ```
 
 ### 1.3. Data Migration
@@ -129,10 +151,49 @@ When images are built, next step is to run services.
 docker-compose --env-file config/keycloak-env.conf \
   --file docker-compose.yml \
   --file docker-compose.keycloak.yml \
-  up
+  up --detach
+```
+**Note**: If `KEYCLOAK_DATABASE_SCHEMA` variable is updated make sure to also update `config/database-init/keycloak.sql` script.
+
+**Note**: Make sure that keycloak and database service are ready to be used
+by checking their logs.
+
+#### Database Logs
+Run the following command:
+```shell
+docker-compose --env-file config/keycloak-env.conf \
+  --file docker-compose.yml \
+  --file docker-compose.keycloak.yml \
+  logs database
 ```
 
-**Note**: If `KEYCLOAK_DATABASE_SCHEMA` variable is updated make sure to also update `config/database-init/keycloak.sql` script.
+Last lines of the output should be like this:
+
+```
+database_1     | 2021-08-31 11:42:52.832 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+database_1     | 2021-08-31 11:42:52.832 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+database_1     | 2021-08-31 11:42:52.838 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+database_1     | 2021-08-31 11:42:52.846 UTC [85] LOG:  database system was shut down at 2021-08-31 11:42:52 UTC
+database_1     | 2021-08-31 11:42:52.852 UTC [1] LOG:  database system is ready to accept connections
+```
+
+#### Keycloak Logs
+Run the following command:
+```shell
+docker-compose --env-file config/keycloak-env.conf \
+  --file docker-compose.yml \
+  --file docker-compose.keycloak.yml \
+  logs keycloak
+```
+
+Last lines of the output should be like this:
+```
+keycloak_1     | 11:43:25,372 INFO  [org.jboss.as.server] (Controller Boot Thread) WFLYSRV0212: Resuming server
+keycloak_1     | 11:43:25,375 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0025: Keycloak 13.0.1 (WildFly Core 15.0.1.Final) started in 21965ms - Started 693 of 978 services (686 services are lazy, passive or on-demand)
+keycloak_1     | 11:43:25,377 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0060: Http management interface listening on http://127.0.0.1:9990/management
+keycloak_1     | 11:43:25,378 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0051: Admin console listening on http://127.0.0.1:9990
+```
+
 
 ### 2.3. Data Migration
 
