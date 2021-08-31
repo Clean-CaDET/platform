@@ -42,6 +42,7 @@ namespace DataSetExplorer
 
             services.AddScoped<IDataSetAnnotationService, DataSetAnnotationService>();
             services.AddScoped<IDataSetInstanceRepository, DataSetInstanceDatabaseRepository>();
+            services.AddScoped<IDataSetAnnotationRepository, DataSetAnnotationDatabaseRepository>();
 
             services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
         }

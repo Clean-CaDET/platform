@@ -10,9 +10,11 @@ namespace DataSetExplorer
     public class DataSetAnalysisService : IDataSetAnalysisService
     {
         private readonly IDataSetRepository _dataSetRepository;
-        public DataSetAnalysisService(IDataSetRepository dataSetRepository)
+        private readonly IDataSetProjectRepository _dataSetProjectRepository;
+        public DataSetAnalysisService(IDataSetRepository dataSetRepository, IDataSetProjectRepository dataSetProjectRepository)
         {
             _dataSetRepository = dataSetRepository;
+            _dataSetProjectRepository = dataSetProjectRepository;
         }
 
         public Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects)
@@ -49,29 +51,21 @@ namespace DataSetExplorer
             }
         }
 
-        public Result<List<DataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(int dataSetId)
+        public Result<List<DataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds)
         {
-            var dataset = _dataSetRepository.GetDataSet(dataSetId);
-            if (dataset == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
-
             var instances = new List<DataSetInstance>();
-            foreach (var project in dataset.Projects)
-            {
-                instances.AddRange(project.GetInstancesWithAllDisagreeingAnnotations());
-            }
+            var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
+            foreach (var project in projects) instances.AddRange(project.GetInstancesWithAllDisagreeingAnnotations());
+
             return Result.Ok(instances);
         }
 
-        public Result<List<DataSetInstance>> FindInstancesRequiringAdditionalAnnotation(int dataSetId)
+        public Result<List<DataSetInstance>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds)
         {
-            var dataset = _dataSetRepository.GetDataSet(dataSetId);
-            if (dataset == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
-
             var instances = new List<DataSetInstance>();
-            foreach (var project in dataset.Projects)
-            {
-                instances.AddRange(project.GetInsufficientlyAnnotatedInstances());
-            }
+            var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
+            foreach (var project in projects) instances.AddRange(project.GetInsufficientlyAnnotatedInstances());
+
             return Result.Ok(instances);
         }
 

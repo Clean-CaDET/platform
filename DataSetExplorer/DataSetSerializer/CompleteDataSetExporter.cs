@@ -48,7 +48,7 @@ namespace DataSetExplorer.DataSetSerializer
                 _sheet.Cells[row, 1].Value = instances[i].CodeSnippetId;
                 _sheet.Cells[row, 2].Value = instances[i].Link;
                 _sheet.Cells[row, 3].Value =
-                    instances[i].Annotations.First().InstanceSmell.Value;
+                    instances[i].Annotations.First().InstanceSmell.Name;
                 _sheet.Cells[row, 4].Value = instances[i].ProjectLink;
                 PopulateAnnotations(instances[i], row);
             }

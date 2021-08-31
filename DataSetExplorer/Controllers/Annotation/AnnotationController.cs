@@ -5,10 +5,9 @@ using DataSetExplorer.DataSetBuilder.Model;
 using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataSetExplorer.Controllers.Annotation
 {
@@ -17,14 +16,30 @@ namespace DataSetExplorer.Controllers.Annotation
     public class AnnotationController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
         private readonly IDataSetAnnotationService _dataSetAnnotationService;
         private readonly IDataSetAnalysisService _dataSetAnalysisService;
 
-        public AnnotationController(IMapper mapper, IDataSetAnnotationService dataSetAnnotationService, IDataSetAnalysisService dataSetAnalysisService)
+        public AnnotationController(IMapper mapper, IConfiguration configuration, IDataSetAnnotationService dataSetAnnotationService, IDataSetAnalysisService dataSetAnalysisService)
         {
             _mapper = mapper;
+            _configuration = configuration;
             _dataSetAnnotationService = dataSetAnnotationService;
             _dataSetAnalysisService = dataSetAnalysisService;
+        }
+
+        [HttpGet]
+        [Route("available-code-smells")]
+        public IActionResult GetAllCodeSmells()
+        {
+            return Ok(_configuration.GetSection("Annotating:AvailableCodeSmells").Get<IDictionary<string, string[]>>());
+        }
+
+        [HttpGet]
+        [Route("available-heuristics")]
+        public IActionResult GetAllAvailableHeuristics()
+        {
+            return Ok(_configuration.GetSection("Annotating:AvailableHeuristics").Get<IDictionary<string, string[]>>());
         }
 
         [HttpPost]
@@ -34,37 +49,63 @@ namespace DataSetExplorer.Controllers.Annotation
             {
                 var authHeader = HttpContext.Request.Headers["Authorization"];
                 annotation.AnnotatorId = Int32.Parse(authHeader);
-                var dataSetAnnotation = _mapper.Map<DataSetAnnotation>(annotation);
-                var result = _dataSetAnnotationService.AddDataSetAnnotation(dataSetAnnotation, annotation.DataSetInstanceId, annotation.AnnotatorId);
+                var result = _dataSetAnnotationService.AddDataSetAnnotation(_mapper.Map<DataSetAnnotation>(annotation), annotation.DataSetInstanceId, annotation.AnnotatorId);
                 if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
-                return Ok(new { message = result.Value });
+                return Ok(result.Value);
             }
-            catch (FormatException e)
+            catch (Exception e) when (e is FormatException || e is InvalidOperationException || e is ArgumentException)
             {
                 return BadRequest(new { message = e.Message });
             }
-            catch (ArgumentException e)
+        }
+
+        [HttpPut]
+        [Route("update/{id}")]
+        public IActionResult UpdateAnnotation([FromRoute] int id, [FromBody] DataSetAnnotationDTO annotation)
+        {
+            try
+            {
+                var authHeader = HttpContext.Request.Headers["Authorization"];
+                annotation.AnnotatorId = Int32.Parse(authHeader);
+                var result = _dataSetAnnotationService.UpdateAnnotation(_mapper.Map<DataSetAnnotation>(annotation), id, annotation.AnnotatorId);
+                if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
+                return Ok(result.Value);
+            }
+            catch (Exception e) when (e is FormatException || e is ArgumentException)
             {
                 return BadRequest(new { message = e.Message });
             }
         }
 
         [HttpGet]
-        [Route("requiring-additional-annotation/{dataSetId}")]
-        public IActionResult FindInstancesRequiringAdditionalAnnotation(int dataSetId)
+        [Route("requiring-additional-annotation")]
+        public IActionResult FindInstancesRequiringAdditionalAnnotation([FromQuery(Name = "projectIds")] string projectIds)
         {
-            var result = _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation(dataSetId);
-            if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
-            return Ok(result.Value);
+            return FindInstances(projectIds, _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation);
         }
 
         [HttpGet]
-        [Route("disagreeing-annotations/{dataSetId}")]
-        public IActionResult FindInstancesWithAllDisagreeingAnnotations(int dataSetId)
+        [Route("disagreeing-annotations")]
+        public IActionResult FindInstancesWithAllDisagreeingAnnotations([FromQuery(Name = "projectIds")] string projectIds)
         {
-            var result = _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations(dataSetId);
-            if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
-            return Ok(result.Value);
+            return FindInstances(projectIds, _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations);
+        }
+
+        private IActionResult FindInstances(string projectIds, Func<IEnumerable<int>, Result<List<DataSetInstance>>> findInstancesMethod)
+        {
+            try
+            {
+                if (projectIds == null) return BadRequest(new { message = "Missing project ids" });
+                var ids = new List<int>();
+                foreach (var id in projectIds.Split(',')) ids.Add(Int32.Parse(id));
+                var result = findInstancesMethod(ids);
+                if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
+                return Ok(result.Value);
+            }
+            catch (FormatException)
+            {
+                return BadRequest(new { message = "Project ids must be numbers!" });
+            }
         }
     }
 }

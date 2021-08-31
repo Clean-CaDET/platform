@@ -21,11 +21,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             return _dbContext.DataSetInstances.Include(i => i.Annotations).FirstOrDefault(i => i.Id == id);
         }
 
-        public Annotator GetAnnotator(int id)
-        {
-            return _dbContext.Annotators.FirstOrDefault(a => a.Id == id);
-        }
-
         public void Update(DataSetInstance instance)
         {
             _dbContext.Update(instance);
