@@ -17,6 +17,8 @@ namespace SmartTutor.LearnerModel.Learners
         public int KinaestheticScore { get; private set; }
         public List<CourseEnrollment> CourseEnrollments { get; private set; }
         public Workspace Workspace { get; set; }
+        
+        public string IamId { get; set; }
 
         public Learner(int id, int visualScore, int auralScore, int readWriteScore, int kinaestheticScore,
             List<CourseEnrollment> courseEnrollments)

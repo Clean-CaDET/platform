@@ -24,8 +24,11 @@ using SmartTutor.ProgressModel.Submissions.Repository;
 using SmartTutor.QualityAnalysis;
 using SmartTutor.QualityAnalysis.Repository;
 using System;
-using Microsoft.Net.Http.Headers;
 using System.IO;
+using Microsoft.Net.Http.Headers;
+using SmartTutor.SystemUser;
+using SmartTutor.SystemUser.Keycloak;
+using SmartTutor.Utils;
 
 namespace SmartTutor
 {
@@ -85,6 +88,8 @@ namespace SmartTutor
 
             services.AddScoped<ICodeQualityAnalyzer, CaDETQualityAnalyzer>();
             services.AddScoped<IAdviceRepository, AdviceDatabaseRepository>();
+            
+            services.AddScoped<IAuthProvider, KeycloakAuthProvider>();
 
             if (!bool.Parse(Environment.GetEnvironmentVariable("KEYCLOAK_ON") ?? "false")) return;
             AuthenticationConfig(services);
@@ -95,8 +100,10 @@ namespace SmartTutor
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("testPolicy", policy =>
-                    policy.Requirements.Add(new KeycloakRole("Administrator")));
+                options.AddPolicy("learnerPolicy", policy =>
+                    policy.Requirements.Add(new KeycloakRole("Learner")));
+                options.AddPolicy("professorPolicy", policy =>
+                    policy.Requirements.Add(new KeycloakRole("Professor")));
             });
             services.AddSingleton<IAuthorizationHandler, KeycloakRoleHandler>();
         }
@@ -150,21 +157,13 @@ namespace SmartTutor
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
-        private static string GetSecret(string secretName)
-        {
-            var secretPath = Environment.GetEnvironmentVariable($"{secretName}_FILE") ?? "";
-            return File.Exists(secretPath) ? 
-                File.ReadAllText(secretPath) : 
-                Environment.GetEnvironmentVariable(secretName);
-        }
-
         private static string CreateConnectionStringFromEnvironment()
         {
             var server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
-            var database = GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
-            var user = GetSecret("DATABASE_USERNAME") ?? "postgres";
-            var password = GetSecret("DATABASE_PASSWORD") ?? "super";
+            var database = Util.GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
+            var user = Util.GetSecret("DATABASE_USERNAME") ?? "postgres";
+            var password = Util.GetSecret("DATABASE_PASSWORD") ?? "super";
             var integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             var pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
@@ -174,11 +173,11 @@ namespace SmartTutor
 
         private static string[] ParseCorsOrigins()
         {
-            string[] corsOrigins = { "http://localhost:4200" };
-            var corsOriginsPath = GetSecret("SMART_TUTOR_CORS_ORIGINS");
+            var corsOrigins = Array.Empty<string>();
+            var corsOriginsPath = Util.GetSecret("SMART_TUTOR_CORS_ORIGINS");
             if (File.Exists(corsOriginsPath))
             {
-                corsOrigins = File.ReadAllText(corsOriginsPath).Split(";");
+                corsOrigins = File.ReadAllLines(corsOriginsPath);
             }
 
             return corsOrigins;

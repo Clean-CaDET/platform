@@ -44,7 +44,9 @@ services:
     depends_on:
       - database
     volumes:
-      - /data/corsorigins
+      - type: bind
+        source: ${SMAR_TUTOR_CORS_CONFIG_FILE:-./config/cors/cors.txt}
+        target: ${SMART_TUTOR_CORS_ORIGINS}
   database:
     image: postgres:${POSTGRES_VERSION-13}
     restart: always
