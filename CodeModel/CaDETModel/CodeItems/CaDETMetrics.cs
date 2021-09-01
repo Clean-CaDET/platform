@@ -134,9 +134,14 @@
         /// </summary>
         WOC,
 
-    #endregion
+        /// <summary>
+        /// NOPA: Number Of Public Attributes
+        /// </summary>
+        NOPA,
 
-    #region MemberMetrics
+        #endregion
+
+        #region MemberMetrics
         /// <summary>
         /// CYCLO - Cyclomatic complexity
         ///

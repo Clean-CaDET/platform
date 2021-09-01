@@ -514,9 +514,24 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
         public void Calculates_weight_of_class()
         {
             CodeModelFactory factory = new CodeModelFactory();
-            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetClassForWOCMetric()).Classes;
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetCaDETMetricsClasses()).Classes;
 
-            classes.First().Metrics[CaDETMetric.WOC].ShouldBe(0.75);
+            var wocClass = classes.Find(c => c.Name.Equals("ClassWOC"));
+
+            wocClass.Metrics[CaDETMetric.WOC].ShouldBe(0.75);
+        }
+
+        [Fact]
+        public void Calculates_number_of_public_attributes()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetCaDETMetricsClasses()).Classes;
+
+            var levelClass = classes.Find(c => c.Name.Equals("Level"));
+            var asepriteReader = classes.Find(c => c.Name.Equals("AsepriteReader"));
+
+            levelClass.Metrics[CaDETMetric.NOPA].ShouldBe(27);
+            asepriteReader.Metrics[CaDETMetric.NOPA].ShouldBe(0);
         }
     }
 }

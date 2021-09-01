@@ -16,9 +16,9 @@ namespace CodeModel.Tests.DataFactories
             return Directory.GetFiles("../../../DataFactories/TestClasses/CodeParser/").Select(File.ReadAllText);
         }
 
-        public IEnumerable<string> GetClassForWOCMetric()
+        public IEnumerable<string> GetCaDETMetricsClasses()
         {
-            return ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/ClassWOC.txt");
+            return Directory.GetFiles("../../../DataFactories/TestClasses/CaDETMetrics/").Select(File.ReadAllText);
         }
 
         public IEnumerable<string> GetEffectiveLinesOfCodeTest()
