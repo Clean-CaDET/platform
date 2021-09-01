@@ -518,7 +518,7 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
 
             var wocClass = classes.Find(c => c.Name.Equals("ClassWOC"));
 
-            wocClass.Metrics[CaDETMetric.WOC].ShouldBe(0.75);
+            wocClass.Metrics[CaDETMetric.WOC].ShouldBe(1);
         }
 
         [Fact]
@@ -532,6 +532,19 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
 
             levelClass.Metrics[CaDETMetric.NOPA].ShouldBe(27);
             asepriteReader.Metrics[CaDETMetric.NOPA].ShouldBe(0);
+        }
+
+        [Fact]
+        public void Calculates_number_of_public_properties()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetCaDETMetricsClasses()).Classes;
+
+            var levelClass = classes.Find(c => c.Name.Equals("Level"));
+            var classWOC = classes.Find(c => c.Name.Equals("ClassWOC"));
+
+            levelClass.Metrics[CaDETMetric.NOPP].ShouldBe(2);
+            classWOC.Metrics[CaDETMetric.NOPP].ShouldBe(2);
         }
     }
 }

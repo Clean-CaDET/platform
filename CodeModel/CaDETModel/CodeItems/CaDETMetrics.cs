@@ -139,6 +139,11 @@
         /// </summary>
         NOPA,
 
+        /// <summary>
+        /// NOAM: Number Of Public Properties
+        /// </summary>
+        NOPP,
+
         #endregion
 
         #region MemberMetrics

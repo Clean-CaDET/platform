@@ -7,11 +7,11 @@ namespace DoctorApp.Model
     public class ClassWOC
     {
         public Appointment TestAppoint { get; set; }
-        public Appointment TestAppoint2 { get; }
+        public Appointment TestAppoint2 { get; private set; }
         public int TestNum;
         private List<Appointment> _appointments;
 
-        public AppointmentService()
+        public ClassWOC()
         {
             _appointments = new List<Appointment>();
         }

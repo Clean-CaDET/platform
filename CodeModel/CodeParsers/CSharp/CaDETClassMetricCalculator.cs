@@ -40,6 +40,7 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NIC] = CountInnerClasses(parsedClass),
                 [CaDETMetric.WOC] = CountWeightOfClass(parsedClass),
                 [CaDETMetric.NOPA] = CountPublicAttributes(parsedClass),
+                [CaDETMetric.NOPP] = CountPublicProperties(parsedClass.Members),
             };
         }
 
@@ -56,7 +57,7 @@ namespace CodeModel.CodeParsers.CSharp
 
         private static double CountWeightOfClass(CaDETClass parsedClass)
         {
-            return (double)CountFunctionalPublicMethods(parsedClass.Members) / (CountGetSetMethods(parsedClass.Members) + GetPublicFields(parsedClass.Fields).Count());
+            return (double)CountFunctionalPublicMethods(parsedClass.Members) / (CountPublicProperties(parsedClass.Members) + GetPublicFields(parsedClass.Fields).Count());
         }
 
         // Public fields for WOC metric do not include constants. (Object-oriented metrics in practice)
@@ -75,11 +76,11 @@ namespace CodeModel.CodeParsers.CSharp
                     select field);
         }
 
-        private static int CountGetSetMethods(IEnumerable<CaDETMember> members)
+        private static int CountPublicProperties(IEnumerable<CaDETMember> members)
         {
             var properties = members.Where(m => m.Type.Equals(CaDETMemberType.Property));
             var publicProperties = FindMembersWithModifier(properties, CaDETModifierValue.Public);
-            return publicProperties.Where(m => m.SourceCode.Contains("get;")).Count() + publicProperties.Where(m => m.SourceCode.Contains("set;")).Count();
+            return publicProperties.Count();
         }
 
         // Functional public methods do not include get/set, constructor and abstract methods. (Object-oriented metrics in practice)
