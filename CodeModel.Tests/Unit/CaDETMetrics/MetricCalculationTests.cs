@@ -546,5 +546,15 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
             levelClass.Metrics[CaDETMetric.NOPP].ShouldBe(2);
             classWOC.Metrics[CaDETMetric.NOPP].ShouldBe(2);
         }
+
+        [Fact]
+        public void Calculates_weighted_methods_count_of_not_accessor_or_mutator_methods()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/Level.txt")).Classes;
+
+            classes.First().Metrics[CaDETMetric.WMCNAMM].ShouldBe(412);
+        }
     }
 }

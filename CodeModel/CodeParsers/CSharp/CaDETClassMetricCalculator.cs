@@ -41,7 +41,13 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.WOC] = CountWeightOfClass(parsedClass),
                 [CaDETMetric.NOPA] = CountPublicAttributes(parsedClass),
                 [CaDETMetric.NOPP] = CountPublicProperties(parsedClass.Members),
+                [CaDETMetric.WMCNAMM] = GetWMCOfNotAccessorOrMuttatorMethods(parsedClass),
             };
+        }
+
+        private static double GetWMCOfNotAccessorOrMuttatorMethods(CaDETClass parsedClass)
+        {
+            return parsedClass.Members.Where(m => !m.Type.Equals(CaDETMemberType.Property)).Sum(m => m.Metrics[CaDETMetric.CYCLO]);
         }
 
         // Public attributes for NOPA metric do not include constants and static fields. (Object-oriented metrics in practice)

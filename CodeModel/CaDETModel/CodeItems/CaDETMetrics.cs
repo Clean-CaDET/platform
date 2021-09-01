@@ -144,6 +144,11 @@
         /// </summary>
         NOPP,
 
+        /// <summary>
+        /// WMCNAMM: Weighted Methods Count of Not Accessor or Mutator Methods
+        /// </summary>
+        WMCNAMM,
+
         #endregion
 
         #region MemberMetrics
