@@ -37,8 +37,48 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.DIT] = CountInheritanceLevel(parsedClass),
                 [CaDETMetric.DCC] = CountClassCoupling(parsedClass),
                 [CaDETMetric.ATFD_10] = GetAccessToForeignDataDirectly(parsedClass),
-                [CaDETMetric.NIC] = CountInnerClasses(parsedClass)
+                [CaDETMetric.NIC] = CountInnerClasses(parsedClass),
+                [CaDETMetric.WOC] = CountWeightOfClass(parsedClass),
             };
+        }
+
+        private static double CountWeightOfClass(CaDETClass parsedClass)
+        {
+            return (double)CountFunctionalPublicMethods(parsedClass.Members) / (CountGetSetMethods(parsedClass.Members) + CountPublicFields(parsedClass.Fields));
+        }
+
+        // Public fields for WOC metric do not include constants. (Object-oriented metrics in practice)
+        private static int CountPublicFields(List<CaDETField> fields)
+        {
+            var publicFields = fields.Where(f => f.Modifiers[0].Value.Equals(CaDETModifierValue.Public));
+            var constants = (from field in publicFields
+                             from modifier in field.Modifiers
+                             where modifier.Value.Equals(CaDETModifierValue.Const)
+                             select field).ToList();
+            return publicFields.Where(f => !constants.Contains(f)).Count();
+        }
+
+        private static int CountGetSetMethods(IEnumerable<CaDETMember> members)
+        {
+            var publicGetSetMethods = members.Where(
+                m => m.Modifiers[0].Value.Equals(CaDETModifierValue.Public) &&
+                m.Type.Equals(CaDETMemberType.Property));
+
+            return publicGetSetMethods.Where(m => m.SourceCode.Contains("get;")).Count() + publicGetSetMethods.Where(m => m.SourceCode.Contains("set;")).Count();
+        }
+
+        // Functional public methods do not include get/set, constructor and abstract methods. (Object-oriented metrics in practice)
+        private static int CountFunctionalPublicMethods(List<CaDETMember> members)
+        {
+            var publicMethods = members.Where(
+                m => m.Type.Equals(CaDETMemberType.Method) &&
+                m.Modifiers[0].Value.Equals(CaDETModifierValue.Public));
+
+            var abstractMethods = (from method in publicMethods
+                                   from modifier in method.Modifiers
+                                   where modifier.Value.Equals(CaDETModifierValue.Abstract)
+                                   select method).ToList();
+            return publicMethods.Where(m => !abstractMethods.Contains(m)).Count();
         }
 
         private static int GetLinesOfCode(string code)

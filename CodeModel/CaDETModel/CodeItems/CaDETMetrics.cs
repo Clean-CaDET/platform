@@ -129,9 +129,14 @@
         /// </summary>
         NIC,
 
-        #endregion
+        /// <summary>
+        /// WOC: Weight Of a Class, counts the number of “functional” public methods divided by the total number of public members
+        /// </summary>
+        WOC,
 
-        #region MemberMetrics
+    #endregion
+
+    #region MemberMetrics
         /// <summary>
         /// CYCLO - Cyclomatic complexity
         ///

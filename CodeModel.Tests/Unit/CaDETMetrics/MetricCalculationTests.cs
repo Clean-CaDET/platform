@@ -509,5 +509,14 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
             gitClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOUW].ShouldBe(22);
             gitClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOUW].ShouldBe(33);
         }
+
+        [Fact]
+        public void Calculates_weight_of_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetClassForWOCMetric()).Classes;
+
+            classes.First().Metrics[CaDETMetric.WOC].ShouldBe(0.75);
+        }
     }
 }
