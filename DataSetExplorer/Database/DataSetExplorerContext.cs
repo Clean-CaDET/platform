@@ -1,5 +1,10 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSetBuilder.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace DataSetExplorer.Database
 {
@@ -18,7 +23,11 @@ namespace DataSetExplorer.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DataSetInstance>().Ignore(i => i.MetricFeatures);
+            modelBuilder.Entity<DataSetInstance>()
+                .Property(i => i.MetricFeatures)
+                .HasConversion(
+                    m => JsonConvert.SerializeObject(m),
+                    m => JsonConvert.DeserializeObject<Dictionary<CaDETMetric, double>>(m));
         }
     }
 }

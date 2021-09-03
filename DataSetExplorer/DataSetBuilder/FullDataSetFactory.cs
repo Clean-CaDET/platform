@@ -1,14 +1,24 @@
 ﻿using CodeModel;
 using CodeModel.CaDETModel;
 using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DataSetExplorer
 {
-    class FullDataSetFactory
+    public class FullDataSetFactory
     {
+        private readonly IDataSetInstanceRepository _instanceRepository;
+
+        public FullDataSetFactory(IDataSetInstanceRepository instanceRepository)
+        {
+            _instanceRepository = instanceRepository;
+        }
+
+        public FullDataSetFactory() { }
+
         public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(IDictionary<string, string> projects, List<Annotator> annotators, int? annotatorId)
         {
             var allAnnotatedInstances = new List<DataSetInstance>();
@@ -25,6 +35,12 @@ namespace DataSetExplorer
                 allAnnotatedInstances.AddRange(FillInstancesWithMetrics(annotatedInstances, project));
             }
             return allAnnotatedInstances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Name);
+        }
+
+        public IEnumerable<IGrouping<string, DataSetInstance>> GetAnnotatedInstancesGroupedBySmells(int projectId, int? annotatorId)
+        {
+            var instances = _instanceRepository.GetInstancesAnnotatedByAnnotator(projectId, annotatorId);
+            return instances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Name);
         }
 
         private List<DataSetInstance> FillInstancesWithMetrics(List<DataSetInstance> annotatedInstances, CaDETProject project)
