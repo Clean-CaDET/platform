@@ -261,7 +261,12 @@
         /// <summary>
         /// NOUW: Number of unique words
         /// </summary>
-        NOUW
+        NOUW,
+
+        /// <summary>
+        /// AID: Access to import data, counts attributes and methods (differs from ATFD which counts attributes and get/set methods)
+        /// </summary>
+        AID,
         #endregion
     }
 }

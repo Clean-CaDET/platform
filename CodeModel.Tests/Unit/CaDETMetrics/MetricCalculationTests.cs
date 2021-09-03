@@ -582,5 +582,21 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
             childClass.Metrics[CaDETMetric.BOvR].ShouldBe(0.25);
             parentClass.Metrics[CaDETMetric.BOvR].ShouldBe(0);
         }
+
+        [Fact]
+        public void Calculates_access_of_import_data()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetATFDMultipleClassTexts()).Classes;
+
+            var class1member1 = classes.Find(c => c.Name.Equals("Class1")).FindMember("m1");
+            var class3member1 = classes.Find(c => c.Name.Equals("Class3")).FindMember("m1");
+            var class5member2 = classes.Find(c => c.Name.Equals("Class5")).FindMember("m2");
+
+            class1member1.Metrics[CaDETMetric.AID].ShouldBe(2);
+            class3member1.Metrics[CaDETMetric.AID].ShouldBe(1);
+            class5member2.Metrics[CaDETMetric.AID].ShouldBe(2);
+        }
     }
 }
