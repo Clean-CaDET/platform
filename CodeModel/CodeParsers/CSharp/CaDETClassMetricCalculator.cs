@@ -42,7 +42,42 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NOPA] = CountPublicAttributes(parsedClass),
                 [CaDETMetric.NOPP] = CountPublicProperties(parsedClass.Members),
                 [CaDETMetric.WMCNAMM] = GetWMCOfNotAccessorOrMuttatorMethods(parsedClass),
+                [CaDETMetric.BUR] = GetBaseClassUsageRatio(parsedClass),
             };
+        }
+
+        private static double GetBaseClassUsageRatio(CaDETClass parsedClass)
+        {
+            if (parsedClass.Parent == null) return 0;
+            return (double) CountProtectedMembersUsed(parsedClass) / CountProtectedMembersInBaseClass(parsedClass.Parent);
+        }
+
+        private static int CountProtectedMembersInBaseClass(CaDETClass parent)
+        {
+            return FindFieldsWithModifier(parent.Fields, CaDETModifierValue.Protected).Count() + FindMembersWithModifier(parent.Members, CaDETModifierValue.Protected).Count();
+        }
+
+        private static int CountProtectedMembersUsed(CaDETClass parsedClass)
+        {
+            return CountAccessedInheritatedFields(parsedClass) + CountUsedInheritatedMethods(parsedClass);
+        }
+
+        private static int CountAccessedInheritatedFields(CaDETClass parsedClass)
+        {
+            var protectedParentFields = FindFieldsWithModifier(parsedClass.Parent.Fields, CaDETModifierValue.Protected);
+            var accessedFields = parsedClass.Members.SelectMany(m => m.AccessedFields);
+            var accessedInheritedFields = protectedParentFields.Select(f => f.Name).Intersect(accessedFields.Select(f => f.Name));
+            return accessedInheritedFields.Count();
+        }
+
+        private static int CountUsedInheritatedMethods(CaDETClass parsedClass)
+        {
+            var protectedParentMembers = FindMembersWithModifier(parsedClass.Parent.Members, CaDETModifierValue.Protected);
+            var invokedMethods = parsedClass.Members.SelectMany(m => m.InvokedMethods);
+            var accessedAccessors = parsedClass.Members.SelectMany(m => m.AccessedAccessors);
+            var usedMethods = invokedMethods.Union(accessedAccessors);
+            var usedInheritedMethods = protectedParentMembers.Select(m => m.Name).Intersect(usedMethods.Select(m => m.Name));
+            return usedInheritedMethods.Count();
         }
 
         private static double GetWMCOfNotAccessorOrMuttatorMethods(CaDETClass parsedClass)

@@ -149,6 +149,12 @@
         /// </summary>
         WMCNAMM,
 
+        /// <summary>
+        /// BUR: Base class Usage Ratio, counts the number of inheritance-specific members used by the measured class, 
+        /// divided by the total number of inheritance-specific members from the base class
+        /// </summary>
+        BUR,
+
         #endregion
 
         #region MemberMetrics
