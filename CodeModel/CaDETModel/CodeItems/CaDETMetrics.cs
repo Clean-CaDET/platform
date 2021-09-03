@@ -155,6 +155,12 @@
         /// </summary>
         BUR,
 
+        /// <summary>
+        /// BOvR: Base class Overriding Ratio, counts the number of methods of the measured class that override methods from the base class, 
+        /// divided by the total number of methods in the class
+        /// </summary>
+        BOvR,
+
         #endregion
 
         #region MemberMetrics

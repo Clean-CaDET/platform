@@ -43,7 +43,24 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NOPP] = CountPublicProperties(parsedClass.Members),
                 [CaDETMetric.WMCNAMM] = GetWMCOfNotAccessorOrMuttatorMethods(parsedClass),
                 [CaDETMetric.BUR] = GetBaseClassUsageRatio(parsedClass),
+                [CaDETMetric.BOvR] = GetBaseClassOverridingRatio(parsedClass),
             };
+        }
+
+        private static double GetBaseClassOverridingRatio(CaDETClass parsedClass)
+        {
+            if (parsedClass.Parent == null) return 0;
+            return (double)CountOverridingMethods(parsedClass) / GetNumberOfMethodsDeclared(parsedClass);
+        }
+
+        private static double CountOverridingMethods(CaDETClass parsedClass)
+        {
+            return FindMembersWithModifier(GetMethods(parsedClass.Members), CaDETModifierValue.Override).Count();
+        }
+
+        private static IEnumerable<CaDETMember> GetMethods(IEnumerable<CaDETMember> members)
+        {
+            return members.Where(m => m.Type.Equals(CaDETMemberType.Method));
         }
 
         private static double GetBaseClassUsageRatio(CaDETClass parsedClass)
@@ -127,7 +144,7 @@ namespace CodeModel.CodeParsers.CSharp
         // Functional public methods do not include get/set, constructor and abstract methods. (Object-oriented metrics in practice)
         private static int CountFunctionalPublicMethods(List<CaDETMember> members)
         {
-            var methods = members.Where(m => m.Type.Equals(CaDETMemberType.Method));
+            var methods = GetMethods(members);
             var publicMethods = FindMembersWithModifier(methods, CaDETModifierValue.Public);
             var abstractMethods = FindMembersWithModifier(publicMethods, CaDETModifierValue.Abstract);
             return publicMethods.Where(m => !abstractMethods.Contains(m)).Count();
@@ -195,7 +212,7 @@ namespace CodeModel.CodeParsers.CSharp
             if (maxCohesion == 0) return -1;
 
             double methodFieldAccess = 0;
-            foreach (var method in parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)))
+            foreach (var method in GetMethods(parsedClass.Members))
             {
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
@@ -215,7 +232,7 @@ namespace CodeModel.CodeParsers.CSharp
             if (numberOfMethods == 1) return 0;
 
             double methodFieldAccess = 0;
-            foreach (var method in parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)))
+            foreach (var method in GetMethods(parsedClass.Members))
             {
                 methodFieldAccess += CountOwnFieldAndAccessorAccessed(parsedClass, method);
             }
@@ -228,7 +245,7 @@ namespace CodeModel.CodeParsers.CSharp
         /// </summary>
         private static double GetLackOfCohesionOfMethods4(CaDETClass parsedClass)
         {
-            var methods = parsedClass.Members.Where(method => method.Type.Equals(CaDETMemberType.Method)).ToList();
+            var methods = GetMethods(parsedClass.Members).ToList();
 
             var numberOfMethodsThatAccessOwnFieldsOrMethods = CountNumberOfMethodsThatAccessToOwnFieldsOrMethods(parsedClass, methods);
             var numberOfMethodsThatShareAccessToFieldOrAccessor = CountNumberOfMethodsThatShareAccessToAFieldOrAccessor(methods);
@@ -284,7 +301,7 @@ namespace CodeModel.CodeParsers.CSharp
             double NP = (N * (N - 1)) / 2;
             if (NP == 0) return -1;
 
-            var classMethods = parsedClass.Members.FindAll(m => m.Type.Equals(CaDETMemberType.Method));
+            var classMethods = GetMethods(parsedClass.Members).ToList();
 
             return Math.Round(CountMethodPairsThatShareAccessToAFieldOrAccessor(classMethods) / NP, 2);
         }
@@ -345,7 +362,7 @@ namespace CodeModel.CodeParsers.CSharp
 
         private static int GetNumberOfMethodsDeclared(CaDETClass parsedClass)
         {
-            return parsedClass.Members.Count(method => method.Type.Equals(CaDETMemberType.Method));
+            return GetMethods(parsedClass.Members).Count();
         }
 
         // Implementation based on https://github.com/mauricioaniche/ck

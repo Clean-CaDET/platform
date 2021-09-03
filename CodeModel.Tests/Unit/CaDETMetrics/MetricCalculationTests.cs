@@ -569,5 +569,18 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
             childClass.Metrics[CaDETMetric.BUR].ShouldBe(0.5);
             parentClass.Metrics[CaDETMetric.BUR].ShouldBe(0);
         }
+
+        [Fact]
+        public void Calculates_base_class_overriding_ratio()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/HierarchyClasses.txt")).Classes;
+            var childClass = classes.Find(c => c.Name.Equals("ChildClass"));
+            var parentClass = classes.Find(c => c.Name.Equals("ParentClass"));
+
+            childClass.Metrics[CaDETMetric.BOvR].ShouldBe(0.25);
+            parentClass.Metrics[CaDETMetric.BOvR].ShouldBe(0);
+        }
     }
 }

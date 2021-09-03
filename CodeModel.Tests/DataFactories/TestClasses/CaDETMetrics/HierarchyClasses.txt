@@ -51,5 +51,8 @@
 			Method2();
 			_f1 = D;
 		}
+		public override void Method5() {
+			var abc = 5;
+		}
 	}
 }
