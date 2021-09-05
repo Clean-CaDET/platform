@@ -102,7 +102,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             Process process = Process.Start(startInfo);
             StreamReader reader = process.StandardOutput;
             var result = reader.ReadToEnd();
-            return result.Equals("") ? "Unable to calculate test result." : result;
+            return result.Equals("") ? "Unable to calculate result, because there is not enough data to conduct a statistical test." : result;
         }
     }
 }
