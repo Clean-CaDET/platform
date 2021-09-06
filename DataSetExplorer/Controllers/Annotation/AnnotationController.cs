@@ -19,15 +19,13 @@ namespace DataSetExplorer.Controllers.Annotation
         private readonly IConfiguration _configuration;
         private readonly IDataSetAnnotationService _dataSetAnnotationService;
         private readonly IDataSetAnalysisService _dataSetAnalysisService;
-        private readonly IAnnotationConsistencyService _annotationConsistencyService;
 
-        public AnnotationController(IMapper mapper, IConfiguration configuration, IDataSetAnnotationService dataSetAnnotationService, IDataSetAnalysisService dataSetAnalysisService, IAnnotationConsistencyService annotationConsistencyService)
+        public AnnotationController(IMapper mapper, IConfiguration configuration, IDataSetAnnotationService dataSetAnnotationService, IDataSetAnalysisService dataSetAnalysisService)
         {
             _mapper = mapper;
             _configuration = configuration;
             _dataSetAnnotationService = dataSetAnnotationService;
             _dataSetAnalysisService = dataSetAnalysisService;
-            _annotationConsistencyService = annotationConsistencyService;
         }
 
         [HttpGet]
@@ -91,38 +89,6 @@ namespace DataSetExplorer.Controllers.Annotation
         public IActionResult FindInstancesWithAllDisagreeingAnnotations([FromQuery(Name = "projectIds")] string projectIds)
         {
             return FindInstances(projectIds, _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations);
-        }
-
-        [HttpGet]
-        [Route("consistency/annotator/{projectId}/{annotatorId}")]
-        public IActionResult GetAnnotationConsistencyForAnnotator([FromRoute] int projectId, [FromRoute] int annotatorId)
-        {
-            var result = _annotationConsistencyService.CheckAnnotationConsistencyForAnnotator(projectId, annotatorId);
-            return Ok(result.Value);
-        }
-
-        [HttpGet]
-        [Route("consistency/annotators/{projectId}/{severity}")]
-        public IActionResult GetAnnotationConsistencyBetweenAnnotatorsForSeverity([FromRoute] int projectId, [FromRoute] int severity)
-        {
-            var result = _annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(projectId, severity);
-            return Ok(result.Value);
-        }
-
-        [HttpGet]
-        [Route("consistency/metrics/annotator/{projectId}/{annotatorId}")]
-        public IActionResult GetMetricsSignificanceInAnnotationsForAnnotator([FromRoute] int projectId, [FromRoute] int annotatorId)
-        {
-             var result = _annotationConsistencyService.CheckMetricsSignificanceInAnnotationsForAnnotator(projectId, annotatorId);
-            return Ok(result.Value);
-        }
-
-        [HttpGet]
-        [Route("consistency/metrics/annotators/{projectId}/{severity}")]
-        public IActionResult GetMetricsSignificanceBetweenAnnotatorsForSeverity([FromRoute] int projectId, [FromRoute] int severity)
-        {
-            var result = _annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(projectId, severity);
-            return Ok(result.Value);
         }
 
         private IActionResult FindInstances(string projectIds, Func<IEnumerable<int>, Result<List<DataSetInstance>>> findInstancesMethod)
