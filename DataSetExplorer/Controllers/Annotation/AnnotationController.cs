@@ -95,7 +95,7 @@ namespace DataSetExplorer.Controllers.Annotation
         {
             try
             {
-                if (projectIds == null) return BadRequest(new { message = "Missing project ids" });
+                if (projectIds == null) return BadRequest(new { message = "Missing project ids!" });
                 var ids = new List<int>();
                 foreach (var id in projectIds.Split(',')) ids.Add(Int32.Parse(id));
                 var result = findInstancesMethod(ids);

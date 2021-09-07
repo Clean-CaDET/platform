@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace DataSetExplorer
 {
-    class AnnotationConsistencyService : IAnnotationConsistencyService
+    public class AnnotationConsistencyService : IAnnotationConsistencyService
     {
-        private FullDataSetFactory _fullDataSetFactory;
+        private readonly FullDataSetFactory _fullDataSetFactory;
 
         public AnnotationConsistencyService(FullDataSetFactory fullDataSetFactory)
         {
@@ -58,6 +58,34 @@ namespace DataSetExplorer
             var results = tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
             results.Value.ToList().ForEach(result => Console.WriteLine(result.Key + "\n" + result.Value));
             return Result.Ok();
+        }
+
+        public Result<Dictionary<string, string>> CheckAnnotationConsistencyForAnnotator(int projectId, int annotatorId)
+        {
+            var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projectId, annotatorId);
+            IAnnotatorsConsistencyTester tester = new ManovaTest();
+            return tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
+        }
+
+        public Result<Dictionary<string, string>> CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int projectId, int severity)
+        {
+            var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projectId, annotatorId: null);
+            IAnnotatorsConsistencyTester tester = new ManovaTest();
+            return tester.TestConsistencyBetweenAnnotators(severity, instancesGroupedBySmells);
+        }
+
+        public Result<Dictionary<string, Dictionary<string, string>>> CheckMetricsSignificanceInAnnotationsForAnnotator(int projectId, int annotatorId)
+        {
+            var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projectId, annotatorId);
+            IMetricsSignificanceTester tester = new AnovaTest();
+            return tester.TestForSingleAnnotator(annotatorId, instancesGroupedBySmells);
+        }
+
+        public Result<Dictionary<string, Dictionary<string, string>>> CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int projectId, int severity)
+        {
+            var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projectId, annotatorId: null);
+            IMetricsSignificanceTester tester = new AnovaTest();
+            return tester.TestBetweenAnnotators(severity, instancesGroupedBySmells);
         }
     }
 }
