@@ -85,6 +85,11 @@ namespace CodeModel.CaDETModel.CodeItems
             return accessedOwnAccessors;
         }
 
+        public bool HasModifier(CaDETModifierValue modifier)
+        {
+            return Modifiers.Find(m => m.Value.Equals(modifier)) != null;
+        }
+
         public override bool Equals(object other)
         {
             if (!(other is CaDETMember otherMember)) return false;

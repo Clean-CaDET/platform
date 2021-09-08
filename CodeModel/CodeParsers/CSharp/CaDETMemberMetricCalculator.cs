@@ -37,15 +37,6 @@ namespace CodeModel.CodeParsers.CSharp
             };
         }
 
-        private static int CountAccessOfImportData(CaDETMember member)
-        {
-            var accessedExternalFields = member.AccessedFields.Where(f => !f.Parent.Equals(member.Parent));
-            var accessedExternalAccessors = member.AccessedAccessors.Where(a => !a.Parent.Equals(member.Parent));
-            var usedExternalMethods = member.InvokedMethods.Where(m => !m.Parent.Equals(member.Parent));
-
-            return accessedExternalAccessors.Count() + accessedExternalFields.Count() + usedExternalMethods.Count();
-        }
-
         /// <summary>
         /// DOI: 10.1109/MALTESQUE.2017.7882011
         /// </summary>
@@ -457,5 +448,13 @@ namespace CodeModel.CodeParsers.CSharp
             return keywords;
         }
 
+        private static int CountAccessOfImportData(CaDETMember member)
+        {
+            var totalAccessedExternalFields = member.AccessedFields.Count(f => !f.Parent.Equals(member.Parent));
+            var totalAccessedExternalAccessors = member.AccessedAccessors.Count(a => !a.Parent.Equals(member.Parent));
+            var totalUsedExternalMethods = member.InvokedMethods.Count(m => !m.Parent.Equals(member.Parent));
+
+            return totalAccessedExternalFields + totalAccessedExternalAccessors + totalUsedExternalMethods;
+        }
     }
 }

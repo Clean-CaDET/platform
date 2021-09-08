@@ -86,6 +86,12 @@ namespace CodeModel.CaDETModel.CodeItems
         {
             return Fields.Find(field => field.Name.Equals(name));
         }
+
+        public IEnumerable<CaDETMember> GetMethods()
+        {
+            return Members.Where(m => m.Type.Equals(CaDETMemberType.Method));
+        }
+
         public bool IsPartialClass()
         {
             return Modifiers.Any(m => m.Value == CaDETModifierValue.Partial);
