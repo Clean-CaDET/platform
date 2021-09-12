@@ -17,7 +17,7 @@ namespace CodeModel.Tests.Unit.CodeParser
             string[] classCode = GetCode("CohesionAnalyzer/ClassWithoutDataMembers.txt");
             CaDETClass testClass = new CodeModelFactory().CreateProject(classCode).Classes[0];
 
-            var analyzer = new CohesionAnalyzer();
+            var analyzer = new CohesionAnalyzer(new Coh());
             Exception ex = Assert.Throws<ClassWithoutElementsException>(() =>
                 analyzer.IdentifyCohesiveParts(testClass));
             Assert.Equal("Class `CohesionAnalyzer` has no data members.", ex.Message);
@@ -29,7 +29,7 @@ namespace CodeModel.Tests.Unit.CodeParser
             string[] classCode = GetCode("CohesionAnalyzer/ClassWithoutMethods.txt");
             CaDETClass testClass = new CodeModelFactory().CreateProject(classCode).Classes[0];
 
-            var analyzer = new CohesionAnalyzer();
+            var analyzer = new CohesionAnalyzer(new Coh());
             Exception ex = Assert.Throws<ClassWithoutElementsException>(() =>
                 analyzer.IdentifyCohesiveParts(testClass));
             Assert.Equal("Class `CohesionAnalyzer` has no normal methods.", ex.Message);
@@ -43,12 +43,12 @@ namespace CodeModel.Tests.Unit.CodeParser
             string[] classCode = GetCode(classPath);
             CaDETClass testClass = new CodeModelFactory().CreateProject(classCode).Classes[0];
 
-            CohesionAnalyzer analyzer = new CohesionAnalyzer();
+            CohesionAnalyzer analyzer = new CohesionAnalyzer(new Coh());
             var result = analyzer.IdentifyCohesiveParts(testClass);
             Assert.Equal(resultsCount, result.Count);
             Assert.Equal(accessesToCutCounts, result.Select(res => res.AccessesToCut.Count));
-            Assert.Equal(firstPartsCounts, result.Select(res => res.Parts[0].Count));
-            Assert.Equal(secondPartsCounts, result.Select(res => res.Parts[1].Count));
+            Assert.Equal(firstPartsCounts, result.Select(res => res.Parts[0].Accesses.Count));
+            Assert.Equal(secondPartsCounts, result.Select(res => res.Parts[1].Accesses.Count));
         }
 
         public static IEnumerable<object[]> GetTestClassesWithSingleResult() => new List<object[]>

@@ -6,50 +6,46 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
     public class CohesionAnalyzer
     {
+        private const double MaximumLackOfCohesion = 0.4;
+        private const int MaximumCohesivePartsCount = 2;
+        private ICohesionMetric CohesionMetric { get; }
+
+        public CohesionAnalyzer(ICohesionMetric cohesionMetric)
+        {
+            CohesionMetric = cohesionMetric;
+        }
+
         public List<CohesiveParts> IdentifyCohesiveParts(CaDETClass parsedClass)
         {
-            ClassInteractions classInteractions = new ClassInteractions(parsedClass);
+            ClassPart classPart = new ClassPart(parsedClass);
 
-            IEnumerable<CohesiveParts> possibleParts = GetAllPossibleParts(classInteractions);
+            IEnumerable<CohesiveParts> possibleParts = GetAllPossibleParts(classPart);
 
+            return FilterHighlyCohesiveParts(possibleParts);
+        }
+
+        private List<CohesiveParts> FilterHighlyCohesiveParts(IEnumerable<CohesiveParts> possibleParts)
+        {
             return possibleParts.Where(cohesiveParts =>
-                    cohesiveParts.Parts.TrueForAll(set => CalculateLCOM(set) < 0.4))
+                    cohesiveParts.Parts.TrueForAll(part => CohesionMetric.Calculate(part) < MaximumLackOfCohesion))
                 .ToList();
         }
 
-        private IEnumerable<CohesiveParts> GetAllPossibleParts(ClassInteractions classInteractions)
+        private IEnumerable<CohesiveParts> GetAllPossibleParts(ClassPart classPart)
         {
-            var accessesThatCannotBeCut = classInteractions.GetAccessesThatCannotBeCut();
-            var accessesToBeCut = GetAccessesThatCanBeCut(classInteractions.Accesses, accessesThatCannotBeCut);
+            var accessesToBeCut = classPart.GetAccessesThatCanBeRemoved();
             var possibleParts = new List<CohesiveParts>();
             foreach (var accesses in accessesToBeCut)
             {
                 if (possibleParts.Any(s => accesses.IsProperSupersetOf(s.AccessesToCut))) continue;
-                var parts = FindValidCohesiveParts(accesses, new HashSet<Access>(classInteractions.Accesses));
-                if (parts is not { Count: 2 }) continue;
+                var parts = FindValidCohesiveParts(accesses, new HashSet<Access>(classPart.Accesses));
+                if (parts is not { Count: MaximumCohesivePartsCount }) continue;
                 var cohesiveParts = new CohesiveParts(accesses, parts);
                 possibleParts.RemoveAll(s => s.AccessesToCut.IsProperSupersetOf(cohesiveParts.AccessesToCut));
                 possibleParts.Add(cohesiveParts);
             }
 
             return possibleParts;
-        }
-
-        private IEnumerable<HashSet<Access>> GetAccessesThatCanBeCut(HashSet<Access> allAccesses,
-            IEnumerable<HashSet<Access>> accessesThatCannotBeCut)
-        {
-            var data = allAccesses.ToArray();
-            if (data.Length == 0) return new List<HashSet<Access>>();
-
-            var allAccessesCombinations = Enumerable
-                .Range(0, 1 << (data.Length / 2 + 1))
-                .Select(index => data
-                    .Where((v, i) => (index & (1 << i)) != 0)
-                    .ToHashSet());
-
-            return allAccessesCombinations.Where(accesses =>
-                !accessesThatCannotBeCut.Any(accesses.IsSupersetOf)
-            );
         }
 
         private List<HashSet<Access>> FindValidCohesiveParts(HashSet<Access> accessesToCut, HashSet<Access> accesses)
@@ -62,7 +58,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             while (foundAccesses != null)
             {
                 result.Add(foundAccesses);
-                if (result.Count == 2) break;
+                if (result.Count == MaximumCohesivePartsCount) break;
                 lastGroup = accesses;
                 accesses.ExceptWith(foundAccesses);
                 foundAccesses = FindConnectedAccesses(accesses);
@@ -114,13 +110,6 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             }
 
             return collectedAccesses;
-        }
-
-        private static double CalculateLCOM(HashSet<Access> accesses)
-        {
-            int methods = accesses.GroupBy(e => e.Method).Count();
-            int fields = accesses.GroupBy(e => e.Field).Count();
-            return 1 - (double)accesses.Count / (methods * fields);
         }
     }
 }

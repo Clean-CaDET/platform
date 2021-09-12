@@ -5,11 +5,11 @@ using CodeModel.CodeParsers.CSharp.Exceptions;
 
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
-    public class ClassInteractions
+    public class ClassPart
     {
         public HashSet<Access> Accesses { get; }
 
-        public ClassInteractions(CaDETClass parsedClass)
+        public ClassPart(CaDETClass parsedClass)
         {
             var fields = parsedClass.Fields;
             var fieldsDefiningAccessors =
@@ -20,6 +20,11 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             RemoveUnusedMethodsAndFields(normalMethods, fields, fieldsDefiningAccessors);
 
             Accesses = GetAllAccesses(normalMethods, fields, fieldsDefiningAccessors);
+        }
+
+        public ClassPart(IEnumerable<Access> parsedClass)
+        {
+            Accesses = new HashSet<Access>(parsedClass);
         }
 
         private void ValidateCaDETClass(string className, List<CaDETMember> normalMethods, List<CaDETField> fields,
@@ -60,7 +65,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             return accesses;
         }
 
-        public IEnumerable<HashSet<Access>> GetAccessesThatCannotBeCut()
+        private IEnumerable<HashSet<Access>> GetAccessesThatCannotBeRemoved()
         {
             var allFieldIndexes = Accesses.Select(access => access.Field).ToHashSet();
             var allMethodIndexes = Accesses.Select(access => access.Method).ToHashSet();
@@ -76,6 +81,26 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
                 .Where(methodAccesses => methodAccesses.Count != 0));
 
             return result;
+        }
+
+        public IEnumerable<HashSet<Access>> GetAccessesThatCanBeRemoved()
+        {
+            var data = Accesses.ToArray();
+            if (data.Length == 0) return new List<HashSet<Access>>();
+            
+            // create all combinations of edges without repetition
+            // as hashsets having 0 to n/2 + 1 elements
+            var allAccessesCombinations = Enumerable
+                .Range(0, 1 << (data.Length / 2 + 1))
+                .Select(index => data
+                    .Where((v, i) => (index & (1 << i)) != 0)
+                    .ToHashSet()
+                );
+
+            var accessesThatCannotBeRemoved = GetAccessesThatCannotBeRemoved();
+            return allAccessesCombinations.Where(accesses =>
+                !accessesThatCannotBeRemoved.Any(accesses.IsSupersetOf)
+            );
         }
     }
 }
