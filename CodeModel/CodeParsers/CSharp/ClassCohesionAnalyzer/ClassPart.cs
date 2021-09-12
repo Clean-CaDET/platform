@@ -9,17 +9,9 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
     {
         public HashSet<Access> Accesses { get; }
 
-        public ClassPart(CaDETClass parsedClass)
+        public ClassPart(ResultMapper resultMapper)
         {
-            var fields = parsedClass.Fields;
-            var fieldsDefiningAccessors =
-                parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToList();
-            var normalMethods = parsedClass.Members.Where(m => m.Type == CaDETMemberType.Method).ToList();
-
-            ValidateCaDETClass(parsedClass.Name, normalMethods, fields, fieldsDefiningAccessors);
-            RemoveUnusedMethodsAndFields(normalMethods, fields, fieldsDefiningAccessors);
-
-            Accesses = GetAllAccesses(normalMethods, fields, fieldsDefiningAccessors);
+            Accesses = GetAllAccesses(resultMapper);
         }
 
         public ClassPart(IEnumerable<Access> parsedClass)
@@ -27,29 +19,12 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             Accesses = new HashSet<Access>(parsedClass);
         }
 
-        private void ValidateCaDETClass(string className, List<CaDETMember> normalMethods, List<CaDETField> fields,
-            List<CaDETMember> fieldsDefiningAccessors)
+        private HashSet<Access> GetAllAccesses(ResultMapper resultMapper)
         {
-            if (fields.Count == 0 && fieldsDefiningAccessors.Count == 0)
-                throw new ClassWithoutElementsException($"Class `{className}` has no data members.");
-            if (normalMethods.Count == 0)
-                throw new ClassWithoutElementsException($"Class `{className}` has no normal methods.");
-        }
+            var fields = resultMapper.FieldsMapping.Values.ToList();
+            var fieldsDefiningAccessors = resultMapper.AccessorsMapping.Values.ToList();
+            var normalMethods = resultMapper.MethodsMapping.Values.ToList();
 
-        private static void RemoveUnusedMethodsAndFields(List<CaDETMember> normalMethods, List<CaDETField> fields,
-            List<CaDETMember> fieldsDefiningAccessors)
-        {
-            normalMethods.RemoveAll(member => member.AccessedFields.Count == 0 && member.AccessedAccessors.Count == 0);
-            fields.RemoveAll(field =>
-                !normalMethods.Any(method => method.AccessedFields.Contains(field))
-            );
-            fieldsDefiningAccessors.RemoveAll(accessor =>
-                !normalMethods.Any(method => method.AccessedAccessors.Contains(accessor)));
-        }
-
-        private HashSet<Access> GetAllAccesses(List<CaDETMember> normalMethods, List<CaDETField> fields,
-            List<CaDETMember> fieldsDefiningAccessors)
-        {
             var accesses = new HashSet<Access>();
             for (var i = 0; i < normalMethods.Count; i++)
             {
@@ -87,7 +62,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
         {
             var data = Accesses.ToArray();
             if (data.Length == 0) return new List<HashSet<Access>>();
-            
+
             // create all combinations of edges without repetition
             // as hashsets having 0 to n/2 + 1 elements
             var allAccessesCombinations = Enumerable

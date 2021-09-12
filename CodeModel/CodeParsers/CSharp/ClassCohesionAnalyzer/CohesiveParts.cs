@@ -6,11 +6,11 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
     public class CohesiveParts
     {
         public List<ClassPart> Parts { get; }
-        public HashSet<Access> AccessesToCut { get; }
+        public HashSet<Access> AccessesToRemove { get; }
 
-        public CohesiveParts(HashSet<Access> accessesToCut, IEnumerable<HashSet<Access>> parts)
+        public CohesiveParts(HashSet<Access> accessesToRemove, IEnumerable<HashSet<Access>> parts)
         {
-            AccessesToCut = accessesToCut;
+            AccessesToRemove = accessesToRemove;
             Parts = parts.Select(part => new ClassPart(part)).ToList();
         }
     }

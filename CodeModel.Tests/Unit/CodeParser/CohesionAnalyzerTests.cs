@@ -46,7 +46,7 @@ namespace CodeModel.Tests.Unit.CodeParser
             CohesionAnalyzer analyzer = new CohesionAnalyzer(new Coh());
             var result = analyzer.IdentifyCohesiveParts(testClass);
             Assert.Equal(resultsCount, result.Count);
-            Assert.Equal(accessesToCutCounts, result.Select(res => res.AccessesToCut.Count));
+            Assert.Equal(accessesToCutCounts, result.Select(res => res.AccessesToRemove.Count));
             Assert.Equal(firstPartsCounts, result.Select(res => res.Parts[0].Accesses.Count));
             Assert.Equal(secondPartsCounts, result.Select(res => res.Parts[1].Accesses.Count));
         }
@@ -92,6 +92,14 @@ namespace CodeModel.Tests.Unit.CodeParser
                 Array.Empty<object>(),
                 Array.Empty<object>(),
                 Array.Empty<object>()
+            },
+            new object[]
+            {
+                @"CohesionAnalyzer/HardLinkHelper.txt",
+                1,
+                new[] { 0 },
+                new[] { 5 },
+                new[] { 1 }
             }
         };
 

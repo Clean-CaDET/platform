@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
 
@@ -17,41 +19,43 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
         public List<CohesiveParts> IdentifyCohesiveParts(CaDETClass parsedClass)
         {
-            ClassPart classPart = new ClassPart(parsedClass);
+            ResultMapper resultMapper = new ResultMapper(parsedClass);
+            ClassPart classPart = new ClassPart(resultMapper);
 
             IEnumerable<CohesiveParts> possibleParts = GetAllPossibleParts(classPart);
 
-            return FilterHighlyCohesiveParts(possibleParts);
+            var cohesiveParts = FilterHighlyCohesiveParts(possibleParts).ToList();
+
+            return cohesiveParts;
         }
 
-        private List<CohesiveParts> FilterHighlyCohesiveParts(IEnumerable<CohesiveParts> possibleParts)
+        private IEnumerable<CohesiveParts> FilterHighlyCohesiveParts(IEnumerable<CohesiveParts> possibleParts)
         {
             return possibleParts.Where(cohesiveParts =>
-                    cohesiveParts.Parts.TrueForAll(part => CohesionMetric.Calculate(part) < MaximumLackOfCohesion))
-                .ToList();
+                cohesiveParts.Parts.TrueForAll(part => CohesionMetric.Calculate(part) < MaximumLackOfCohesion));
         }
 
         private IEnumerable<CohesiveParts> GetAllPossibleParts(ClassPart classPart)
         {
-            var accessesToBeCut = classPart.GetAccessesThatCanBeRemoved();
+            var accessesToBeRemoved = classPart.GetAccessesThatCanBeRemoved();
             var possibleParts = new List<CohesiveParts>();
-            foreach (var accesses in accessesToBeCut)
+            foreach (var accesses in accessesToBeRemoved)
             {
-                if (possibleParts.Any(s => accesses.IsProperSupersetOf(s.AccessesToCut))) continue;
+                if (possibleParts.Any(s => accesses.IsProperSupersetOf(s.AccessesToRemove))) continue;
                 var parts = FindValidCohesiveParts(accesses, new HashSet<Access>(classPart.Accesses));
                 if (parts is not { Count: MaximumCohesivePartsCount }) continue;
                 var cohesiveParts = new CohesiveParts(accesses, parts);
-                possibleParts.RemoveAll(s => s.AccessesToCut.IsProperSupersetOf(cohesiveParts.AccessesToCut));
+                possibleParts.RemoveAll(s => s.AccessesToRemove.IsProperSupersetOf(cohesiveParts.AccessesToRemove));
                 possibleParts.Add(cohesiveParts);
             }
 
             return possibleParts;
         }
 
-        private List<HashSet<Access>> FindValidCohesiveParts(HashSet<Access> accessesToCut, HashSet<Access> accesses)
+        private List<HashSet<Access>> FindValidCohesiveParts(HashSet<Access> accessesToRemove, HashSet<Access> accesses)
         {
             List<HashSet<Access>> result = new List<HashSet<Access>>();
-            accesses.ExceptWith(accessesToCut);
+            accesses.ExceptWith(accessesToRemove);
 
             var lastGroup = new HashSet<Access>();
             var foundAccesses = FindConnectedAccesses(accesses);
