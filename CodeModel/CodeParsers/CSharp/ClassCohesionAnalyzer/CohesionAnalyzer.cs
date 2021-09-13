@@ -27,7 +27,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
             var cohesiveParts = FilterHighlyCohesiveParts(possibleParts).ToArray();
 
-            return resultMapper.GenerateOutput(cohesiveParts);
+            return CohesivePartsOutput.GenerateOutput(cohesiveParts, resultMapper);
         }
 
         private IEnumerable<CohesiveParts> FilterHighlyCohesiveParts(IEnumerable<CohesiveParts> possibleParts)

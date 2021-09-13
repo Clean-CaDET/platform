@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CodeModel.CaDETModel.CodeItems;
 using CodeModel.CodeParsers.CSharp.Exceptions;
 
@@ -68,69 +64,6 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             {
                 MethodsMapping[i] = normalMethods[i];
             }
-        }
-
-        public CohesivePartsOutput[] GenerateOutput(CohesiveParts[] cohesiveParts)
-        {
-            if (cohesiveParts.Length == 0)
-                return Array.Empty<CohesivePartsOutput>();
-
-            var result = new CohesivePartsOutput[cohesiveParts.Length];
-            for (var i = 0; i < cohesiveParts.Length; i++)
-            {
-                var part = cohesiveParts[i];
-                var accessesToRemove = GetAccessesToRemoveText(part);
-                var textsOfParts = part.Parts.Select(GetClassPartText).ToList();
-
-                result[i] = new CohesivePartsOutput(accessesToRemove, textsOfParts);
-            }
-
-            return result;
-        }
-
-        private string GetAccessesToRemoveText(CohesiveParts part)
-        {
-            if (part.AccessesToRemove.Count == 0)
-                return "Class is already disconnected. No accesses should be removed.\n";
-
-            var builder = new StringBuilder();
-            builder.Append("To perform refactoring remove following method-field accesses:\n");
-            foreach (var access in part.AccessesToRemove)
-            {
-                var method = MethodsMapping[access.Method].Name;
-                var dataMember = FieldsMapping.ContainsKey(access.Field)
-                    ? FieldsMapping[access.Field].Name
-                    : AccessorsMapping[access.Field].Name;
-
-                builder.Append("Method: ");
-                builder.Append(method);
-                builder.Append(" -> Field: ");
-                builder.Append(dataMember);
-                builder.Append('\n');
-            }
-
-            return builder.ToString();
-        }
-
-        private string GetClassPartText(ClassPart classPart)
-        {
-            var dataMembers = classPart.Accesses.GroupBy(access => access.Field).Select(group => group.Key).ToList();
-            var normalMethods = classPart.Accesses.GroupBy(access => access.Method).Select(group => group.Key).ToList();
-
-            var builder = new StringBuilder();
-            builder.Append("Cohesive part:\nFields & Accessors: ");
-            var fields = dataMembers.Where(dataMember => FieldsMapping.ContainsKey(dataMember))
-                .Select(i => FieldsMapping[i].Name);
-            var accessors = dataMembers.Where(dataMember => AccessorsMapping.ContainsKey(dataMember))
-                .Select(i => AccessorsMapping[i].Name);
-            builder.AppendJoin(", ", fields);
-            builder.AppendJoin(", ", accessors);
-
-            builder.Append("\nNormal methods: ");
-            var methods = normalMethods.Select(i => MethodsMapping[i].Name);
-            builder.AppendJoin(", ", methods);
-
-            return builder.ToString();
         }
     }
 }
