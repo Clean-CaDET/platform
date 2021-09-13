@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
 using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics;
@@ -84,7 +82,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
         private HashSet<Access> SearchForConnectedAccesses(IReadOnlyCollection<Access> accesses)
         {
             List<int> visitedMethods = new List<int>();
-            List<int> visitedFields = new List<int>();
+            List<int> visitedDataMembers = new List<int>();
             HashSet<Access> collectedAccesses = new HashSet<Access>();
             HashSet<Access> accessesToVisit = new HashSet<Access> { accesses.First() };
 
@@ -100,10 +98,10 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
                         visitedMethods.Add(access.Method);
                     }
 
-                    if (visitedFields.Contains(access.Field)) continue;
-                    List<Access> accessesForField = accesses.Where(acs => acs.Field == access.Field).ToList();
-                    accessesForField.ForEach(e => accessesForNextIteration.Add(e));
-                    visitedFields.Add(access.Field);
+                    if (visitedDataMembers.Contains(access.DataMember)) continue;
+                    List<Access> accessesForDataMember = accesses.Where(acs => acs.DataMember == access.DataMember).ToList();
+                    accessesForDataMember.ForEach(e => accessesForNextIteration.Add(e));
+                    visitedDataMembers.Add(access.DataMember);
                 }
 
                 foreach (var visitedAccesses in accessesToVisit)

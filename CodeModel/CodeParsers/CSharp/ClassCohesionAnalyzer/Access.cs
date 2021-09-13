@@ -3,28 +3,28 @@
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
     /// <summary>
-    /// Class <c>Access</c> represents a read/write interaction between a <c>Method</c> and a <c>Field</c>.
+    /// Class <c>Access</c> represents a read/write interaction between a <c>Method</c> and a <c>DataMember</c>.
     /// </summary>
     public class Access
     {
         public int Method { get; }
-        public int Field { get; }
+        public int DataMember { get; }
 
-        public Access(int method, int field)
+        public Access(int method, int dataMember)
         {
             Method = method;
-            Field = field;
+            DataMember = dataMember;
         }
 
         public override bool Equals(object obj)
         {
             if (obj is not Access access) return false;
-            return Method == access.Method && Field == access.Field;
+            return Method == access.Method && DataMember == access.DataMember;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Method, Field);
+            return HashCode.Combine(Method, DataMember);
         }
     }
 }

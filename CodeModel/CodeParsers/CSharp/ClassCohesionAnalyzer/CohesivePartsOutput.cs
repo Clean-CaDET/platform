@@ -59,13 +59,12 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             foreach (var access in part.AccessesToRemove)
             {
                 var method = resultMapper.MethodsMapping[access.Method].Name;
-                var dataMember = resultMapper.FieldsMapping.ContainsKey(access.Field)
-                    ? resultMapper.FieldsMapping[access.Field].Name
-                    : resultMapper.AccessorsMapping[access.Field].Name;
+                var dataMember = resultMapper.FieldsMapping.ContainsKey(access.DataMember)
+                    ? resultMapper.FieldsMapping[access.DataMember].Name
+                    : resultMapper.AccessorsMapping[access.DataMember].Name;
 
-                builder.Append("Method: ");
                 builder.Append(method);
-                builder.Append(" -> Field: ");
+                builder.Append(" -> ");
                 builder.Append(dataMember);
                 builder.Append('\n');
             }
@@ -75,11 +74,12 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
         private static string GetClassPartText(ClassPart classPart, ResultMapper resultMapper)
         {
-            var dataMembers = classPart.Accesses.GroupBy(access => access.Field).Select(group => group.Key).ToList();
+            var dataMembers = classPart.Accesses.GroupBy(access => access.DataMember).Select(group => group.Key)
+                .ToList();
             var normalMethods = classPart.Accesses.GroupBy(access => access.Method).Select(group => group.Key).ToList();
 
             var builder = new StringBuilder();
-            builder.Append("Cohesive part:\nFields & Accessors: ");
+            builder.Append("Cohesive part:\nData members: ");
             var fields = dataMembers.Where(dataMember => resultMapper.FieldsMapping.ContainsKey(dataMember))
                 .Select(i => resultMapper.FieldsMapping[i].Name);
             var accessors = dataMembers.Where(dataMember => resultMapper.AccessorsMapping.ContainsKey(dataMember))

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CodeModel.CaDETModel.CodeItems;
-using CodeModel.CodeParsers.CSharp.Exceptions;
 
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
@@ -14,9 +12,9 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             Accesses = GetAllAccesses(resultMapper);
         }
 
-        public ClassPart(IEnumerable<Access> parsedClass)
+        public ClassPart(IEnumerable<Access> accesses)
         {
-            Accesses = new HashSet<Access>(parsedClass);
+            Accesses = new HashSet<Access>(accesses);
         }
 
         private HashSet<Access> GetAllAccesses(ResultMapper resultMapper)
@@ -42,13 +40,13 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
         private IEnumerable<HashSet<Access>> GetAccessesThatCannotBeRemoved()
         {
-            var allFieldIndexes = Accesses.Select(access => access.Field).ToHashSet();
+            var allFieldIndexes = Accesses.Select(access => access.DataMember).ToHashSet();
             var allMethodIndexes = Accesses.Select(access => access.Method).ToHashSet();
 
             var accessesPerField =
                 allFieldIndexes.Select(fieldIndex => Accesses.Where(e => e.Method == fieldIndex).ToHashSet());
             var accessesPerMethod =
-                allMethodIndexes.Select(methodIndex => Accesses.Where(e => e.Field == methodIndex).ToHashSet());
+                allMethodIndexes.Select(methodIndex => Accesses.Where(e => e.DataMember == methodIndex).ToHashSet());
 
             var result = accessesPerField
                 .Where(fieldAccesses => fieldAccesses.Count != 0).ToList();

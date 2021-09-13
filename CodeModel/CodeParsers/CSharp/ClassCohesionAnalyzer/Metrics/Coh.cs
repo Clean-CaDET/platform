@@ -10,8 +10,8 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics
             if (accesses.Count == 0) return 1;
 
             int methods = accesses.GroupBy(e => e.Method).Count();
-            int fields = accesses.GroupBy(e => e.Field).Count();
-            return 1 - ((double)accesses.Count / (methods * fields));
+            int dataMembers = accesses.GroupBy(e => e.DataMember).Count();
+            return 1 - ((double)accesses.Count / (methods * dataMembers));
         }
     }
 }

@@ -57,11 +57,11 @@ namespace CodeModel.Tests.Unit.CodeParser
                 new[]
                 {
                     new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nMethod: GetInvalidEdgeGroups -> Field: MethodFieldAccessMapping\n",
+                        "To perform refactoring remove following method-field accesses:\nGetInvalidEdgeGroups -> MethodFieldAccessMapping\n",
                         new List<string>
                         {
-                            "Cohesive part:\nFields & Accessors: MethodFieldAccessMapping\nNormal methods: GetAllInteractionEdges",
-                            "Cohesive part:\nFields & Accessors: Edges\nNormal methods: GetInvalidEdgeGroups"
+                            "Cohesive part:\nData members: MethodFieldAccessMapping\nNormal methods: GetAllInteractionEdges",
+                            "Cohesive part:\nData members: Edges\nNormal methods: GetInvalidEdgeGroups"
                         })
                 }
             },
@@ -74,8 +74,8 @@ namespace CodeModel.Tests.Unit.CodeParser
                     new CohesivePartsOutput("Class is already disconnected. No accesses should be removed.\n",
                         new List<string>
                         {
-                            "Cohesive part:\nFields & Accessors: a\nNormal methods: getA",
-                            "Cohesive part:\nFields & Accessors: b, c\nNormal methods: BPlusC, BMinusC"
+                            "Cohesive part:\nData members: a\nNormal methods: getA",
+                            "Cohesive part:\nData members: b, c\nNormal methods: BPlusC, BMinusC"
                         })
                 }
             },
@@ -86,11 +86,11 @@ namespace CodeModel.Tests.Unit.CodeParser
                 new[]
                 {
                     new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nMethod: Reflect -> Field: groundLayerMask\n",
+                        "To perform refactoring remove following method-field accesses:\nReflect -> groundLayerMask\n",
                         new List<string>
                         {
-                            "Cohesive part:\nFields & Accessors: groundLayerMask, _colliders\nNormal methods: ResolveCollisions, StepOffset",
-                            "Cohesive part:\nFields & Accessors: _planes, maxClipPlanes, numBumps, SurfSlope\nNormal methods: Reflect"
+                            "Cohesive part:\nData members: groundLayerMask, _colliders\nNormal methods: ResolveCollisions, StepOffset",
+                            "Cohesive part:\nData members: _planes, maxClipPlanes, numBumps, SurfSlope\nNormal methods: Reflect"
                         })
                 }
             },
@@ -101,18 +101,18 @@ namespace CodeModel.Tests.Unit.CodeParser
                 new[]
                 {
                     new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nMethod: RegisterUser -> Field: _userManager\nMethod: GetAllUser -> Field: _logger\nMethod: GetUserList -> Field: _logger\nMethod: Login -> Field: _logger\n",
+                        "To perform refactoring remove following method-field accesses:\nRegisterUser -> _userManager\nGetAllUser -> _logger\nGetUserList -> _logger\nLogin -> _logger\n",
                         new List<string>
                         {
-                            "Cohesive part:\nFields & Accessors: _logger, _rolewManager, _jWTConfig\nNormal methods: RegisterUser, AddRole, GetRoles, GenerateToken",
-                            "Cohesive part:\nFields & Accessors: _userManager, _signInManager\nNormal methods: GetAllUser, GetUserList, Login"
+                            "Cohesive part:\nData members: _logger, _rolewManager, _jWTConfig\nNormal methods: RegisterUser, AddRole, GetRoles, GenerateToken",
+                            "Cohesive part:\nData members: _userManager, _signInManager\nNormal methods: GetAllUser, GetUserList, Login"
                         }),
                     new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nMethod: RegisterUser -> Field: _logger\nMethod: RegisterUser -> Field: _rolewManager\nMethod: GetAllUser -> Field: _logger\nMethod: GetUserList -> Field: _logger\nMethod: Login -> Field: _logger\n",
+                        "To perform refactoring remove following method-field accesses:\nRegisterUser -> _logger\nRegisterUser -> _rolewManager\nGetAllUser -> _logger\nGetUserList -> _logger\nLogin -> _logger\n",
                         new List<string>
                         {
-                            "Cohesive part:\nFields & Accessors: _userManager, _signInManager\nNormal methods: RegisterUser, GetAllUser, GetUserList, Login",
-                            "Cohesive part:\nFields & Accessors: _logger, _rolewManager, _jWTConfig\nNormal methods: AddRole, GetRoles, GenerateToken"
+                            "Cohesive part:\nData members: _userManager, _signInManager\nNormal methods: RegisterUser, GetAllUser, GetUserList, Login",
+                            "Cohesive part:\nData members: _logger, _rolewManager, _jWTConfig\nNormal methods: AddRole, GetRoles, GenerateToken"
                         })
                 }
             },
@@ -131,8 +131,8 @@ namespace CodeModel.Tests.Unit.CodeParser
                     new CohesivePartsOutput("Class is already disconnected. No accesses should be removed.\n",
                         new List<string>
                         {
-                            "Cohesive part:\nFields & Accessors: _builder\nNormal methods: HardLink, HardLink, CreateHarkLink, Copy, CreateFolder",
-                            "Cohesive part:\nFields & Accessors: _createdFolders\nNormal methods: SearchFolder"
+                            "Cohesive part:\nData members: _builder\nNormal methods: HardLink, HardLink, CreateHarkLink, Copy, CreateFolder",
+                            "Cohesive part:\nData members: _createdFolders\nNormal methods: SearchFolder"
                         })
                 }
             }
