@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
 using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer;
+using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics;
 using CodeModel.CodeParsers.CSharp.Exceptions;
 using Xunit;
 
@@ -37,18 +37,16 @@ namespace CodeModel.Tests.Unit.CodeParser
 
         [Theory]
         [MemberData(nameof(GetTestClassesWithSingleResult))]
-        public void Test_Identify_Cohesive_Parts_Within_A_Class(string classPath, int resultsCount,
-            int[] accessesToCutCounts, int[] firstPartsCounts, int[] secondPartsCounts)
+        public void Test_Identify_Cohesive_Parts_Within_A_Class(string classPath,
+            CohesivePartsOutput[] expectedCohesiveParts)
         {
             string[] classCode = GetCode(classPath);
             CaDETClass testClass = new CodeModelFactory().CreateProject(classCode).Classes[0];
 
             CohesionAnalyzer analyzer = new CohesionAnalyzer(new Coh());
-            var result = analyzer.IdentifyCohesiveParts(testClass);
-            Assert.Equal(resultsCount, result.Count);
-            Assert.Equal(accessesToCutCounts, result.Select(res => res.AccessesToRemove.Count));
-            Assert.Equal(firstPartsCounts, result.Select(res => res.Parts[0].Accesses.Count));
-            Assert.Equal(secondPartsCounts, result.Select(res => res.Parts[1].Accesses.Count));
+            var results = analyzer.IdentifyCohesiveParts(testClass);
+
+            Assert.Equal(expectedCohesiveParts, results);
         }
 
         public static IEnumerable<object[]> GetTestClassesWithSingleResult() => new List<object[]>
@@ -56,57 +54,97 @@ namespace CodeModel.Tests.Unit.CodeParser
             new object[]
             {
                 @"CohesionAnalyzer/ClassInteractions.txt",
-                1,
-                new[] { 1 },
-                new[] { 1 },
-                new[] { 1 }
+                new[]
+                {
+                    new CohesivePartsOutput(
+                        "To perform refactoring remove following method-field accesses:\nMethod: GetInvalidEdgeGroups -> Field: MethodFieldAccessMapping\n",
+                        new List<string>
+                        {
+                            "Cohesive part:\nFields & Accessors: MethodFieldAccessMapping\nNormal methods: GetAllInteractionEdges",
+                            "Cohesive part:\nFields & Accessors: Edges\nNormal methods: GetInvalidEdgeGroups"
+                        })
+                }
             },
+
             new object[]
             {
                 @"CohesionAnalyzer/DisconnectedClass.txt",
-                1,
-                new[] { 0 },
-                new[] { 1 },
-                new[] { 4 }
+                new[]
+                {
+                    new CohesivePartsOutput("Class is already disconnected. No accesses should be removed.\n",
+                        new List<string>
+                        {
+                            "Cohesive part:\nFields & Accessors: a\nNormal methods: getA",
+                            "Cohesive part:\nFields & Accessors: b, c\nNormal methods: BPlusC, BMinusC"
+                        })
+                }
             },
+
             new object[]
             {
                 @"CohesionAnalyzer/SurfPhysics.txt",
-                1,
-                new[] { 1 },
-                new[] { 3 },
-                new[] { 4 }
+                new[]
+                {
+                    new CohesivePartsOutput(
+                        "To perform refactoring remove following method-field accesses:\nMethod: Reflect -> Field: groundLayerMask\n",
+                        new List<string>
+                        {
+                            "Cohesive part:\nFields & Accessors: groundLayerMask, _colliders\nNormal methods: ResolveCollisions, StepOffset",
+                            "Cohesive part:\nFields & Accessors: _planes, maxClipPlanes, numBumps, SurfSlope\nNormal methods: Reflect"
+                        })
+                }
             },
+
             new object[]
             {
                 @"CohesionAnalyzer/UserController.txt",
-                2,
-                new[] { 4, 5 },
-                new[] { 8, 5 },
-                new[] { 4, 6 }
+                new[]
+                {
+                    new CohesivePartsOutput(
+                        "To perform refactoring remove following method-field accesses:\nMethod: RegisterUser -> Field: _userManager\nMethod: GetAllUser -> Field: _logger\nMethod: GetUserList -> Field: _logger\nMethod: Login -> Field: _logger\n",
+                        new List<string>
+                        {
+                            "Cohesive part:\nFields & Accessors: _logger, _rolewManager, _jWTConfig\nNormal methods: RegisterUser, AddRole, GetRoles, GenerateToken",
+                            "Cohesive part:\nFields & Accessors: _userManager, _signInManager\nNormal methods: GetAllUser, GetUserList, Login"
+                        }),
+                    new CohesivePartsOutput(
+                        "To perform refactoring remove following method-field accesses:\nMethod: RegisterUser -> Field: _logger\nMethod: RegisterUser -> Field: _rolewManager\nMethod: GetAllUser -> Field: _logger\nMethod: GetUserList -> Field: _logger\nMethod: Login -> Field: _logger\n",
+                        new List<string>
+                        {
+                            "Cohesive part:\nFields & Accessors: _userManager, _signInManager\nNormal methods: RegisterUser, GetAllUser, GetUserList, Login",
+                            "Cohesive part:\nFields & Accessors: _logger, _rolewManager, _jWTConfig\nNormal methods: AddRole, GetRoles, GenerateToken"
+                        })
+                }
             },
+
             new object[]
             {
                 @"CohesionAnalyzer/FullyConnectedClass.txt",
-                0,
-                Array.Empty<object>(),
-                Array.Empty<object>(),
                 Array.Empty<object>()
             },
+
             new object[]
             {
                 @"CohesionAnalyzer/HardLinkHelper.txt",
-                1,
-                new[] { 0 },
-                new[] { 5 },
-                new[] { 1 }
+                new[]
+                {
+                    new CohesivePartsOutput("Class is already disconnected. No accesses should be removed.\n",
+                        new List<string>
+                        {
+                            "Cohesive part:\nFields & Accessors: _builder\nNormal methods: HardLink, HardLink, CreateHarkLink, Copy, CreateFolder",
+                            "Cohesive part:\nFields & Accessors: _createdFolders\nNormal methods: SearchFolder"
+                        })
+                }
             }
         };
 
         private string[] GetCode(string path)
         {
             string classCode = File.ReadAllText("../../../DataFactories/TestClasses/" + path);
-            return new[] { classCode };
+            return new[]
+            {
+                classCode
+            };
         }
     }
 }

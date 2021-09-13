@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
+namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics
 {
     public class Coh : ICohesionMetric
     {
@@ -11,7 +11,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
             int methods = accesses.GroupBy(e => e.Method).Count();
             int fields = accesses.GroupBy(e => e.Field).Count();
-            return 1 - (double)accesses.Count / (methods * fields);
+            return 1 - ((double)accesses.Count / (methods * fields));
         }
     }
 }

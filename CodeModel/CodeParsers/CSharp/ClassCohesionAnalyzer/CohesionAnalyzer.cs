@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
+using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics;
 
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
@@ -17,16 +18,16 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             CohesionMetric = cohesionMetric;
         }
 
-        public List<CohesiveParts> IdentifyCohesiveParts(CaDETClass parsedClass)
+        public CohesivePartsOutput[] IdentifyCohesiveParts(CaDETClass parsedClass)
         {
             ResultMapper resultMapper = new ResultMapper(parsedClass);
             ClassPart classPart = new ClassPart(resultMapper);
 
             IEnumerable<CohesiveParts> possibleParts = GetAllPossibleParts(classPart);
 
-            var cohesiveParts = FilterHighlyCohesiveParts(possibleParts).ToList();
+            var cohesiveParts = FilterHighlyCohesiveParts(possibleParts).ToArray();
 
-            return cohesiveParts;
+            return resultMapper.GenerateOutput(cohesiveParts);
         }
 
         private IEnumerable<CohesiveParts> FilterHighlyCohesiveParts(IEnumerable<CohesiveParts> possibleParts)

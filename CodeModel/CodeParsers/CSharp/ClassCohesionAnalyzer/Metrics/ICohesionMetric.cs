@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
+﻿namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics
 {
     public interface ICohesionMetric
     {

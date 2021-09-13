@@ -66,7 +66,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             // create all combinations of edges without repetition
             // as hashsets having 0 to n/2 + 1 elements
             var allAccessesCombinations = Enumerable
-                .Range(0, 1 << (data.Length / 2 + 1))
+                .Range(0, 1 << ((data.Length / 2) + 1))
                 .Select(index => data
                     .Where((v, i) => (index & (1 << i)) != 0)
                     .ToHashSet()
