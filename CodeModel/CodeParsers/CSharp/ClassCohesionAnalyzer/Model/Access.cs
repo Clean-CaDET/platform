@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
+namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
 {
     /// <summary>
     /// Class <c>Access</c> represents a read/write interaction between a <c>Method</c> and a <c>DataMember</c>.

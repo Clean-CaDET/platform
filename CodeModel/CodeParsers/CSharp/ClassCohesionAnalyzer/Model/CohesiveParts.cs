@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
+namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
 {
     public class CohesiveParts
     {

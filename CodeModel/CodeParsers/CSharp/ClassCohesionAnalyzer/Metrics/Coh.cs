@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model;
 
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics
 {

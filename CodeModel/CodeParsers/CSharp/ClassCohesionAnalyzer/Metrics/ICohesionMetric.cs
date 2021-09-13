@@ -1,4 +1,6 @@
-﻿namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics
+﻿using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model;
+
+namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics
 {
     public interface ICohesionMetric
     {

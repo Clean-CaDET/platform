@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model;
 
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {

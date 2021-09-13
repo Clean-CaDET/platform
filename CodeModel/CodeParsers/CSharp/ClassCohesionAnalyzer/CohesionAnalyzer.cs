@@ -2,6 +2,7 @@
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
 using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Metrics;
+using CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model;
 
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
