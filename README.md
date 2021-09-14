@@ -22,9 +22,7 @@
 - [Introduction](#introduction)
   - [What is the problem?](#what-is-the-problem)
   - [Who is it for?](#who-is-it-for)
-- [Get started](#get-started)
-  - [Requirements](#requirements)
-  - [Packages](#packages)
+- [Get started](https://github.com/Clean-CaDET/platform/blob/master/SETUP.md)
 - [Team](#team)
 
 # Introduction
