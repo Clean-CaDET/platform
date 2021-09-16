@@ -509,5 +509,94 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
             gitClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOUW].ShouldBe(22);
             gitClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOUW].ShouldBe(33);
         }
+
+        [Fact]
+        public void Calculates_weight_of_class()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetCaDETMetricsClasses()).Classes;
+
+            var wocClass = classes.Find(c => c.Name.Equals("ClassWOC"));
+
+            wocClass.Metrics[CaDETMetric.WOC].ShouldBe(1);
+        }
+
+        [Fact]
+        public void Calculates_number_of_public_attributes()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetCaDETMetricsClasses()).Classes;
+
+            var levelClass = classes.Find(c => c.Name.Equals("Level"));
+            var asepriteReader = classes.Find(c => c.Name.Equals("AsepriteReader"));
+
+            levelClass.Metrics[CaDETMetric.NOPA].ShouldBe(27);
+            asepriteReader.Metrics[CaDETMetric.NOPA].ShouldBe(0);
+        }
+
+        [Fact]
+        public void Calculates_number_of_public_properties()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetCaDETMetricsClasses()).Classes;
+
+            var levelClass = classes.Find(c => c.Name.Equals("Level"));
+            var classWOC = classes.Find(c => c.Name.Equals("ClassWOC"));
+
+            levelClass.Metrics[CaDETMetric.NOPP].ShouldBe(2);
+            classWOC.Metrics[CaDETMetric.NOPP].ShouldBe(2);
+        }
+
+        [Fact]
+        public void Calculates_weighted_methods_count_of_not_accessor_or_mutator_methods()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/Level.txt")).Classes;
+
+            classes.First().Metrics[CaDETMetric.WMCNAMM].ShouldBe(412);
+        }
+
+        [Fact]
+        public void Calculates_base_class_usage_ratio()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/HierarchyClasses.txt")).Classes;
+            var childClass = classes.Find(c => c.Name.Equals("ChildClass"));
+            var parentClass = classes.Find(c => c.Name.Equals("ParentClass"));
+
+            childClass.Metrics[CaDETMetric.BUR].ShouldBe(0.5);
+            parentClass.Metrics[CaDETMetric.BUR].ShouldBe(0);
+        }
+
+        [Fact]
+        public void Calculates_base_class_overriding_ratio()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.ReadClassFromFile("../../../DataFactories/TestClasses/CaDETMetrics/HierarchyClasses.txt")).Classes;
+            var childClass = classes.Find(c => c.Name.Equals("ChildClass"));
+            var parentClass = classes.Find(c => c.Name.Equals("ParentClass"));
+
+            childClass.Metrics[CaDETMetric.BOvR].ShouldBe(0.25);
+            parentClass.Metrics[CaDETMetric.BOvR].ShouldBe(0);
+        }
+
+        [Fact]
+        public void Calculates_access_of_import_data()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetATFDMultipleClassTexts()).Classes;
+
+            var class1member1 = classes.Find(c => c.Name.Equals("Class1")).FindMember("m1");
+            var class3member1 = classes.Find(c => c.Name.Equals("Class3")).FindMember("m1");
+            var class5member2 = classes.Find(c => c.Name.Equals("Class5")).FindMember("m2");
+
+            class1member1.Metrics[CaDETMetric.AID].ShouldBe(2);
+            class3member1.Metrics[CaDETMetric.AID].ShouldBe(1);
+            class5member2.Metrics[CaDETMetric.AID].ShouldBe(2);
+        }
     }
 }

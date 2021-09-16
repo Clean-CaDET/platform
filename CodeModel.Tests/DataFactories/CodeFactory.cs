@@ -16,6 +16,11 @@ namespace CodeModel.Tests.DataFactories
             return Directory.GetFiles("../../../DataFactories/TestClasses/CodeParser/").Select(File.ReadAllText);
         }
 
+        public IEnumerable<string> GetCaDETMetricsClasses()
+        {
+            return Directory.GetFiles("../../../DataFactories/TestClasses/CaDETMetrics/").Select(File.ReadAllText);
+        }
+
         public IEnumerable<string> GetEffectiveLinesOfCodeTest()
         {
             return new[]
@@ -269,6 +274,8 @@ namespace CodeModel.Tests.DataFactories
                     }
 
                     public double m2() {
+                        Class3 class3 = new Class3();
+                        class3.m1();
                         Class4 class4 = new Class4();
 
                         return class4.Hours;

@@ -32,7 +32,8 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.NOPE] = CountNumberOfParenthesizedExpressions(member),
                 [CaDETMetric.NOLE] = CountNumberOfLambdaExpressions(member),
                 [CaDETMetric.MMNB] = CountMaxNestedBlocks(member),
-                [CaDETMetric.NOUW] = CountNumberOfUniqueWords(member)
+                [CaDETMetric.NOUW] = CountNumberOfUniqueWords(member),
+                [CaDETMetric.AID] = CountAccessOfImportData(method)
             };
         }
 
@@ -447,5 +448,13 @@ namespace CodeModel.CodeParsers.CSharp
             return keywords;
         }
 
+        private static int CountAccessOfImportData(CaDETMember member)
+        {
+            var totalAccessedExternalFields = member.AccessedFields.Count(f => !f.Parent.Equals(member.Parent));
+            var totalAccessedExternalAccessors = member.AccessedAccessors.Count(a => !a.Parent.Equals(member.Parent));
+            var totalUsedExternalMethods = member.InvokedMethods.Count(m => !m.Parent.Equals(member.Parent));
+
+            return totalAccessedExternalFields + totalAccessedExternalAccessors + totalUsedExternalMethods;
+        }
     }
 }

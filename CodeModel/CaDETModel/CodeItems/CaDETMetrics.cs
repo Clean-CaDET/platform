@@ -129,6 +129,38 @@
         /// </summary>
         NIC,
 
+        /// <summary>
+        /// WOC: Weight Of a Class, counts the number of “functional” public methods divided by the total number of public members
+        /// </summary>
+        WOC,
+
+        /// <summary>
+        /// NOPA: Number Of Public Attributes
+        /// </summary>
+        NOPA,
+
+        /// <summary>
+        /// NOAM: Number Of Public Properties
+        /// </summary>
+        NOPP,
+
+        /// <summary>
+        /// WMCNAMM: Weighted Methods Count of Not Accessor or Mutator Methods
+        /// </summary>
+        WMCNAMM,
+
+        /// <summary>
+        /// BUR: Base class Usage Ratio, counts the number of inheritance-specific members used by the measured class, 
+        /// divided by the total number of inheritance-specific members from the base class
+        /// </summary>
+        BUR,
+
+        /// <summary>
+        /// BOvR: Base class Overriding Ratio, counts the number of methods of the measured class that override methods from the base class, 
+        /// divided by the total number of methods in the class
+        /// </summary>
+        BOvR,
+
         #endregion
 
         #region MemberMetrics
@@ -229,7 +261,12 @@
         /// <summary>
         /// NOUW: Number of unique words
         /// </summary>
-        NOUW
+        NOUW,
+
+        /// <summary>
+        /// AID: Access to import data, counts attributes and methods (differs from ATFD which counts attributes and get/set methods)
+        /// </summary>
+        AID,
         #endregion
     }
 }

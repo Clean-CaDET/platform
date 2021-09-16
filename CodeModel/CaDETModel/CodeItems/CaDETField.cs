@@ -30,5 +30,10 @@ namespace CodeModel.CaDETModel.CodeItems
         {
             return Type.LinkedTypes;
         }
+
+        public bool HasModifier(CaDETModifierValue modifier)
+        {
+            return Modifiers.Find(m => m.Value.Equals(modifier)) != null;
+        }
     }
 }
