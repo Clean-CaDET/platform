@@ -7,43 +7,35 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
     public class FilteredClass
     {
-        public CaDETField[] Fields { get; }
-        public CaDETMember[] Accessors { get; }
-        public CaDETMember[] Methods { get; }
+        public CaDETField[] Fields { get; private set; }
+        public CaDETMember[] Accessors { get; private set; }
+        public CaDETMember[] Methods { get; private set; }
 
         public FilteredClass(CaDETClass parsedClass)
         {
-            var fields = parsedClass.Fields;
-            var fieldsDefiningAccessors =
-                parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToList();
-            var normalMethods = parsedClass.Members.Where(m => m.Type == CaDETMemberType.Method).ToList();
+            Fields = parsedClass.Fields.ToArray();
+            Accessors =
+                parsedClass.Members.Where(m => m.IsFieldDefiningAccessor()).ToArray();
+            Methods = parsedClass.Members.Where(m => m.Type == CaDETMemberType.Method).ToArray();
 
-            ValidateCaDETClass(parsedClass.Name, normalMethods, fields, fieldsDefiningAccessors);
-            RemoveUnusedMethodsAndFields(normalMethods, fields, fieldsDefiningAccessors);
-
-            Fields = fields.ToArray();
-            Accessors = fieldsDefiningAccessors.ToArray();
-            Methods = normalMethods.ToArray();
+            ValidateCaDETClass(parsedClass.Name);
+            RemoveUnusedMethodsAndFields();
         }
 
-        private void ValidateCaDETClass(string className, List<CaDETMember> normalMethods, List<CaDETField> fields,
-            List<CaDETMember> fieldsDefiningAccessors)
+        private void ValidateCaDETClass(string className)
         {
-            if (fields.Count == 0 && fieldsDefiningAccessors.Count == 0)
+            if (Fields.Length == 0 && Accessors.Length == 0)
                 throw new ClassWithoutElementsException($"Class `{className}` has no data members.");
-            if (normalMethods.Count == 0)
+            if (Methods.Length == 0)
                 throw new ClassWithoutElementsException($"Class `{className}` has no normal methods.");
         }
 
-        private static void RemoveUnusedMethodsAndFields(List<CaDETMember> normalMethods, List<CaDETField> fields,
-            List<CaDETMember> fieldsDefiningAccessors)
+        private void RemoveUnusedMethodsAndFields()
         {
-            normalMethods.RemoveAll(member => member.AccessedFields.Count == 0 && member.AccessedAccessors.Count == 0);
-            fields.RemoveAll(field =>
-                !normalMethods.Any(method => method.AccessedFields.Contains(field))
-            );
-            fieldsDefiningAccessors.RemoveAll(accessor =>
-                !normalMethods.Any(method => method.AccessedAccessors.Contains(accessor)));
+            Fields = Fields.Where(field => Methods.Any(method => method.AccessedFields.Contains(field))).ToArray();
+            Accessors = Accessors.Where(accessor =>
+                Methods.Any(method => method.AccessedAccessors.Contains(accessor))).ToArray();
+            Methods = Methods.Where(member => member.AccessedFields.Count != 0 || member.AccessedAccessors.Count != 0).ToArray();
         }
     }
 }
