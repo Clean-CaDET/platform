@@ -17,7 +17,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             CohesionMetric = cohesionMetric;
         }
 
-        public CohesivePartsOutput[] IdentifyCohesiveParts(CaDETClass parsedClass)
+        public string[] IdentifyCohesiveParts(CaDETClass parsedClass)
         {
             ResultMapper resultMapper = new ResultMapper(parsedClass);
             ClassPart classPart = new ClassPart(resultMapper);
@@ -26,7 +26,8 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
             var cohesiveParts = FilterHighlyCohesiveParts(possibleParts).ToArray();
 
-            return CohesivePartsOutput.GenerateOutput(cohesiveParts, resultMapper);
+            // return CohesivePartsOutput.GenerateOutput(cohesiveParts, resultMapper);
+            return cohesiveParts.Select(part => part.RefactoringResults(resultMapper)).ToArray();
         }
 
         private IEnumerable<CohesiveParts> FilterHighlyCohesiveParts(IEnumerable<CohesiveParts> possibleParts)

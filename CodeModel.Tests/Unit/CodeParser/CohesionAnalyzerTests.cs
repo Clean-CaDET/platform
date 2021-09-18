@@ -38,7 +38,7 @@ namespace CodeModel.Tests.Unit.CodeParser
         [Theory]
         [MemberData(nameof(GetTestClassesWithSingleResult))]
         public void Test_Identify_Cohesive_Parts_Within_A_Class(string classPath,
-            CohesivePartsOutput[] expectedCohesiveParts)
+            string[] expectedCohesiveParts)
         {
             string[] classCode = GetCode(classPath);
             CaDETClass testClass = new CodeModelFactory().CreateProject(classCode).Classes[0];
@@ -56,13 +56,10 @@ namespace CodeModel.Tests.Unit.CodeParser
                 @"CohesionAnalyzer/ClassInteractions.txt",
                 new[]
                 {
-                    new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nGetInvalidEdgeGroups -> MethodFieldAccessMapping\n",
-                        new List<string>
-                        {
-                            "Cohesive part:\nData members: MethodFieldAccessMapping\nNormal methods: GetAllInteractionEdges",
-                            "Cohesive part:\nData members: Edges\nNormal methods: GetInvalidEdgeGroups"
-                        })
+                    "To perform the refactoring remove the following method-field accesses:\n" +
+                    "GetInvalidEdgeGroups -> MethodFieldAccessMapping\n" +
+                    "Cohesive part:\nData members: MethodFieldAccessMapping\nNormal methods: GetAllInteractionEdges\n" +
+                    "Cohesive part:\nData members: Edges\nNormal methods: GetInvalidEdgeGroups"
                 }
             },
 
@@ -71,12 +68,9 @@ namespace CodeModel.Tests.Unit.CodeParser
                 @"CohesionAnalyzer/DisconnectedClass.txt",
                 new[]
                 {
-                    new CohesivePartsOutput("Class is already disconnected. No accesses should be removed.\n",
-                        new List<string>
-                        {
-                            "Cohesive part:\nData members: a\nNormal methods: getA",
-                            "Cohesive part:\nData members: b, c\nNormal methods: BPlusC, BMinusC"
-                        })
+                    "Class is already disconnected. No accesses should be removed.\n" +
+                    "Cohesive part:\nData members: a\nNormal methods: getA\n" +
+                    "Cohesive part:\nData members: b, c\nNormal methods: BPlusC, BMinusC"
                 }
             },
 
@@ -85,13 +79,9 @@ namespace CodeModel.Tests.Unit.CodeParser
                 @"CohesionAnalyzer/SurfPhysics.txt",
                 new[]
                 {
-                    new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nReflect -> groundLayerMask\n",
-                        new List<string>
-                        {
-                            "Cohesive part:\nData members: groundLayerMask, _colliders\nNormal methods: ResolveCollisions, StepOffset",
-                            "Cohesive part:\nData members: _planes, maxClipPlanes, numBumps, SurfSlope\nNormal methods: Reflect"
-                        })
+                    "To perform the refactoring remove the following method-field accesses:\nReflect -> groundLayerMask\n" +
+                    "Cohesive part:\nData members: groundLayerMask, _colliders\nNormal methods: ResolveCollisions, StepOffset\n" +
+                    "Cohesive part:\nData members: _planes, maxClipPlanes, numBumps, SurfSlope\nNormal methods: Reflect"
                 }
             },
 
@@ -100,20 +90,12 @@ namespace CodeModel.Tests.Unit.CodeParser
                 @"CohesionAnalyzer/UserController.txt",
                 new[]
                 {
-                    new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nRegisterUser -> _userManager\nGetAllUser -> _logger\nGetUserList -> _logger\nLogin -> _logger\n",
-                        new List<string>
-                        {
-                            "Cohesive part:\nData members: _logger, _rolewManager, _jWTConfig\nNormal methods: RegisterUser, AddRole, GetRoles, GenerateToken",
-                            "Cohesive part:\nData members: _userManager, _signInManager\nNormal methods: GetAllUser, GetUserList, Login"
-                        }),
-                    new CohesivePartsOutput(
-                        "To perform refactoring remove following method-field accesses:\nRegisterUser -> _logger\nRegisterUser -> _rolewManager\nGetAllUser -> _logger\nGetUserList -> _logger\nLogin -> _logger\n",
-                        new List<string>
-                        {
-                            "Cohesive part:\nData members: _userManager, _signInManager\nNormal methods: RegisterUser, GetAllUser, GetUserList, Login",
-                            "Cohesive part:\nData members: _logger, _rolewManager, _jWTConfig\nNormal methods: AddRole, GetRoles, GenerateToken"
-                        })
+                    "To perform the refactoring remove the following method-field accesses:\nRegisterUser -> _userManager\nGetAllUser -> _logger\nGetUserList -> _logger\nLogin -> _logger\n" +
+                    "Cohesive part:\nData members: _logger, _rolewManager, _jWTConfig\nNormal methods: RegisterUser, AddRole, GetRoles, GenerateToken\n" +
+                    "Cohesive part:\nData members: _userManager, _signInManager\nNormal methods: GetAllUser, GetUserList, Login",
+                    "To perform the refactoring remove the following method-field accesses:\nRegisterUser -> _logger\nRegisterUser -> _rolewManager\nGetAllUser -> _logger\nGetUserList -> _logger\nLogin -> _logger\n" +
+                    "Cohesive part:\nData members: _userManager, _signInManager\nNormal methods: RegisterUser, GetAllUser, GetUserList, Login\n" +
+                    "Cohesive part:\nData members: _logger, _rolewManager, _jWTConfig\nNormal methods: AddRole, GetRoles, GenerateToken"
                 }
             },
 
@@ -128,12 +110,9 @@ namespace CodeModel.Tests.Unit.CodeParser
                 @"CohesionAnalyzer/HardLinkHelper.txt",
                 new[]
                 {
-                    new CohesivePartsOutput("Class is already disconnected. No accesses should be removed.\n",
-                        new List<string>
-                        {
-                            "Cohesive part:\nData members: _builder\nNormal methods: HardLink, HardLink, CreateHarkLink, Copy, CreateFolder",
-                            "Cohesive part:\nData members: _createdFolders\nNormal methods: SearchFolder"
-                        })
+                    "Class is already disconnected. No accesses should be removed.\n" +
+                    "Cohesive part:\nData members: _builder\nNormal methods: HardLink, HardLink, CreateHarkLink, Copy, CreateFolder\n" +
+                    "Cohesive part:\nData members: _createdFolders\nNormal methods: SearchFolder"
                 }
             }
         };
