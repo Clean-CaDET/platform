@@ -5,13 +5,13 @@ using CodeModel.CodeParsers.CSharp.Exceptions;
 
 namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
-    public class ResultMapper
+    public class FilteredClass
     {
         public CaDETField[] Fields { get; }
         public CaDETMember[] Accessors { get; }
         public CaDETMember[] Methods { get; }
 
-        public ResultMapper(CaDETClass parsedClass)
+        public FilteredClass(CaDETClass parsedClass)
         {
             var fields = parsedClass.Fields;
             var fieldsDefiningAccessors =

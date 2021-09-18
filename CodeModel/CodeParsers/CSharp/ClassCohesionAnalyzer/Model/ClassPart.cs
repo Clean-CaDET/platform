@@ -7,9 +7,9 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
     {
         public HashSet<Access> Accesses { get; }
 
-        public ClassPart(ResultMapper resultMapper)
+        public ClassPart(FilteredClass filteredClass)
         {
-            Accesses = GetAllAccesses(resultMapper);
+            Accesses = GetAllAccesses(filteredClass);
         }
 
         public ClassPart(IEnumerable<Access> accesses)
@@ -17,11 +17,11 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
             Accesses = new HashSet<Access>(accesses);
         }
 
-        private HashSet<Access> GetAllAccesses(ResultMapper resultMapper)
+        private HashSet<Access> GetAllAccesses(FilteredClass filteredClass)
         {
-            var fields = resultMapper.Fields;
-            var fieldsDefiningAccessors = resultMapper.Accessors;
-            var normalMethods = resultMapper.Methods;
+            var fields = filteredClass.Fields;
+            var fieldsDefiningAccessors = filteredClass.Accessors;
+            var normalMethods = filteredClass.Methods;
 
             var accesses = new HashSet<Access>();
             for (var i = 0; i < normalMethods.Length; i++)

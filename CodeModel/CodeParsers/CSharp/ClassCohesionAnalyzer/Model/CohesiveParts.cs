@@ -16,17 +16,17 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
             Parts = parts.Select(part => new ClassPart(part)).ToList();
         }
         
-        public string RefactoringResults(ResultMapper resultMapper)
+        public string RefactoringResults(FilteredClass filteredClass)
         {
             var builder = new StringBuilder();
-            builder.Append(GetAccessesToRemoveText(resultMapper));
-            var textsOfParts = Parts.Select(p => GetClassPartText(p, resultMapper)).ToList();
+            builder.Append(GetAccessesToRemoveText(filteredClass));
+            var textsOfParts = Parts.Select(p => GetClassPartText(p, filteredClass)).ToList();
             builder.AppendJoin('\n', textsOfParts);
 
             return builder.ToString();
         }
 
-        private string GetAccessesToRemoveText(ResultMapper resultMapper)
+        private string GetAccessesToRemoveText(FilteredClass filteredClass)
         {
             if (AccessesToRemove.Count == 0)
                 return "Class is already disconnected. No accesses should be removed.\n";
@@ -35,10 +35,10 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
             builder.Append("To perform the refactoring remove the following method-field accesses:\n");
             foreach (var access in AccessesToRemove)
             {
-                var method = resultMapper.Methods[access.Method].Name;
-                var dataMember = access.DataMember < resultMapper.Fields.Length
-                    ? resultMapper.Fields[access.DataMember].Name
-                    : resultMapper.Accessors[access.DataMember].Name;
+                var method = filteredClass.Methods[access.Method].Name;
+                var dataMember = access.DataMember < filteredClass.Fields.Length
+                    ? filteredClass.Fields[access.DataMember].Name
+                    : filteredClass.Accessors[access.DataMember].Name;
 
                 builder.Append(method);
                 builder.Append(" -> ");
@@ -49,7 +49,7 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
             return builder.ToString();
         }
 
-        private string GetClassPartText(ClassPart classPart, ResultMapper resultMapper)
+        private string GetClassPartText(ClassPart classPart, FilteredClass filteredClass)
         {
             var dataMembers = classPart.Accesses.GroupBy(access => access.DataMember).Select(group => group.Key)
                 .ToList();
@@ -57,15 +57,15 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
 
             var builder = new StringBuilder();
             builder.Append("Cohesive part:\nData members: ");
-            var fields = dataMembers.Where(dataMember => dataMember < resultMapper.Fields.Length)
-                .Select(i => resultMapper.Fields[i].Name);
-            var accessors = dataMembers.Where(dataMember => dataMember >= resultMapper.Fields.Length)
-                .Select(i => resultMapper.Accessors[i].Name);
+            var fields = dataMembers.Where(dataMember => dataMember < filteredClass.Fields.Length)
+                .Select(i => filteredClass.Fields[i].Name);
+            var accessors = dataMembers.Where(dataMember => dataMember >= filteredClass.Fields.Length)
+                .Select(i => filteredClass.Accessors[i].Name);
             builder.AppendJoin(", ", fields);
             builder.AppendJoin(", ", accessors);
 
             builder.Append("\nNormal methods: ");
-            var methods = normalMethods.Select(i => resultMapper.Methods[i].Name);
+            var methods = normalMethods.Select(i => filteredClass.Methods[i].Name);
             builder.AppendJoin(", ", methods);
 
             return builder.ToString();

@@ -19,15 +19,14 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
         public string[] IdentifyCohesiveParts(CaDETClass parsedClass)
         {
-            ResultMapper resultMapper = new ResultMapper(parsedClass);
-            ClassPart classPart = new ClassPart(resultMapper);
+            FilteredClass filteredClass = new FilteredClass(parsedClass);
+            ClassPart classPart = new ClassPart(filteredClass);
 
             IEnumerable<CohesiveParts> possibleParts = GetAllPossibleParts(classPart);
 
             var cohesiveParts = FilterHighlyCohesiveParts(possibleParts).ToArray();
 
-            // return CohesivePartsOutput.GenerateOutput(cohesiveParts, resultMapper);
-            return cohesiveParts.Select(part => part.RefactoringResults(resultMapper)).ToArray();
+            return cohesiveParts.Select(part => part.RefactoringResults(filteredClass)).ToArray();
         }
 
         private IEnumerable<CohesiveParts> FilterHighlyCohesiveParts(IEnumerable<CohesiveParts> possibleParts)
