@@ -19,20 +19,20 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer.Model
 
         private HashSet<Access> GetAllAccesses(ResultMapper resultMapper)
         {
-            var fields = resultMapper.FieldsMapping.Values.ToList();
-            var fieldsDefiningAccessors = resultMapper.AccessorsMapping.Values.ToList();
-            var normalMethods = resultMapper.MethodsMapping.Values.ToList();
+            var fields = resultMapper.Fields;
+            var fieldsDefiningAccessors = resultMapper.Accessors;
+            var normalMethods = resultMapper.Methods;
 
             var accesses = new HashSet<Access>();
-            for (var i = 0; i < normalMethods.Count; i++)
+            for (var i = 0; i < normalMethods.Length; i++)
             {
-                for (var j = 0; j < fields.Count; j++)
+                for (var j = 0; j < fields.Length; j++)
                     if (normalMethods[i].AccessedFields.Contains(fields[j]))
                         accesses.Add(new Access(i, j));
 
-                for (var j = 0; j < fieldsDefiningAccessors.Count; j++)
+                for (var j = 0; j < fieldsDefiningAccessors.Length; j++)
                     if (normalMethods[i].AccessedAccessors.Contains(fieldsDefiningAccessors[j]))
-                        accesses.Add(new Access(i, j + fields.Count));
+                        accesses.Add(new Access(i, j + fields.Length));
             }
 
             return accesses;

@@ -7,9 +7,9 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 {
     public class ResultMapper
     {
-        public Dictionary<int, CaDETField> FieldsMapping { get; private set; }
-        public Dictionary<int, CaDETMember> AccessorsMapping { get; private set; }
-        public Dictionary<int, CaDETMember> MethodsMapping { get; private set; }
+        public CaDETField[] Fields { get; }
+        public CaDETMember[] Accessors { get; }
+        public CaDETMember[] Methods { get; }
 
         public ResultMapper(CaDETClass parsedClass)
         {
@@ -21,7 +21,9 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             ValidateCaDETClass(parsedClass.Name, normalMethods, fields, fieldsDefiningAccessors);
             RemoveUnusedMethodsAndFields(normalMethods, fields, fieldsDefiningAccessors);
 
-            InitializeMappings(fields, fieldsDefiningAccessors, normalMethods);
+            Fields = fields.ToArray();
+            Accessors = fieldsDefiningAccessors.ToArray();
+            Methods = normalMethods.ToArray();
         }
 
         private void ValidateCaDETClass(string className, List<CaDETMember> normalMethods, List<CaDETField> fields,
@@ -42,28 +44,6 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             );
             fieldsDefiningAccessors.RemoveAll(accessor =>
                 !normalMethods.Any(method => method.AccessedAccessors.Contains(accessor)));
-        }
-
-        private void InitializeMappings(IReadOnlyList<CaDETField> fields,
-            IReadOnlyList<CaDETMember> fieldsDefiningAccessors, IReadOnlyList<CaDETMember> normalMethods)
-        {
-            FieldsMapping = new Dictionary<int, CaDETField>();
-            for (var i = 0; i < fields.Count; i++)
-            {
-                FieldsMapping[i] = fields[i];
-            }
-
-            AccessorsMapping = new Dictionary<int, CaDETMember>();
-            for (var i = 0; i < fieldsDefiningAccessors.Count; i++)
-            {
-                AccessorsMapping[i + fields.Count] = fieldsDefiningAccessors[i];
-            }
-
-            MethodsMapping = new Dictionary<int, CaDETMember>();
-            for (var i = 0; i < normalMethods.Count; i++)
-            {
-                MethodsMapping[i] = normalMethods[i];
-            }
         }
     }
 }

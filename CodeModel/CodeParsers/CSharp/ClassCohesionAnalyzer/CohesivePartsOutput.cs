@@ -59,10 +59,10 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
             builder.Append("To perform refactoring remove following method-field accesses:\n");
             foreach (var access in part.AccessesToRemove)
             {
-                var method = resultMapper.MethodsMapping[access.Method].Name;
-                var dataMember = resultMapper.FieldsMapping.ContainsKey(access.DataMember)
-                    ? resultMapper.FieldsMapping[access.DataMember].Name
-                    : resultMapper.AccessorsMapping[access.DataMember].Name;
+                var method = resultMapper.Methods[access.Method].Name;
+                var dataMember = access.DataMember < resultMapper.Fields.Length
+                    ? resultMapper.Fields[access.DataMember].Name
+                    : resultMapper.Accessors[access.DataMember].Name;
 
                 builder.Append(method);
                 builder.Append(" -> ");
@@ -81,15 +81,15 @@ namespace CodeModel.CodeParsers.CSharp.ClassCohesionAnalyzer
 
             var builder = new StringBuilder();
             builder.Append("Cohesive part:\nData members: ");
-            var fields = dataMembers.Where(dataMember => resultMapper.FieldsMapping.ContainsKey(dataMember))
-                .Select(i => resultMapper.FieldsMapping[i].Name);
-            var accessors = dataMembers.Where(dataMember => resultMapper.AccessorsMapping.ContainsKey(dataMember))
-                .Select(i => resultMapper.AccessorsMapping[i].Name);
+            var fields = dataMembers.Where(dataMember => dataMember < resultMapper.Fields.Length)
+                .Select(i => resultMapper.Fields[i].Name);
+            var accessors = dataMembers.Where(dataMember => dataMember >= resultMapper.Fields.Length)
+                .Select(i => resultMapper.Accessors[i].Name);
             builder.AppendJoin(", ", fields);
             builder.AppendJoin(", ", accessors);
 
             builder.Append("\nNormal methods: ");
-            var methods = normalMethods.Select(i => resultMapper.MethodsMapping[i].Name);
+            var methods = normalMethods.Select(i => resultMapper.Methods[i].Name);
             builder.AppendJoin(", ", methods);
 
             return builder.ToString();
