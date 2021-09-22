@@ -25,12 +25,12 @@ namespace DataSetExplorer.Controllers.Dataset
 
         [HttpPost]
         [Route("{name}")]
-        public IActionResult CreateDataSet([FromBody] List<CodeSmellDTO> codeSmells, [FromRoute] string dataSetName)
+        public IActionResult CreateDataSet([FromBody] List<CodeSmellDTO> codeSmells, [FromRoute] string name)
         {
             var smells = new List<CodeSmell>();
             foreach (var codeSmell in codeSmells) smells.Add(_mapper.Map<CodeSmell>(codeSmell));
 
-            var result = _dataSetCreationService.CreateEmptyDataSet(dataSetName, smells);
+            var result = _dataSetCreationService.CreateEmptyDataSet(name, smells);
             return Ok(result.Value);
         }
 
