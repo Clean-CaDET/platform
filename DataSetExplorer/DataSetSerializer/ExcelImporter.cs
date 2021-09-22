@@ -32,7 +32,7 @@ namespace DataSetExplorer.DataSetSerializer
             var sheets = GetWorksheets(GetExcelDocuments());
             foreach (var excelWorksheet in sheets)
             {
-                project.AddInstances(ExtractInstances(excelWorksheet));
+                project.AddCandidateInstance(new CandidateDataSetInstance(new CodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
             }
             
             return project;

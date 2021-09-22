@@ -1,8 +1,4 @@
-﻿using DataSetExplorer.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
@@ -10,6 +6,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
     {
         DataSetInstance GetDataSetInstance(int id);
         IEnumerable<DataSetInstance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId);
+        IEnumerable<DataSetInstance> GetAnnotatedInstances(int projectId);
         void Update(DataSetInstance instance);
     }
 }

@@ -3,13 +3,12 @@ using DataSetExplorer.DataSetSerializer;
 using FluentResults;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace DataSetExplorer
 {
     class DataSetExportationService : IDataSetExportationService
     {
-        private FullDataSetFactory _fullDataSetFactory;
+        private readonly FullDataSetFactory _fullDataSetFactory;
 
         public DataSetExportationService(FullDataSetFactory fullDataSetFactory)
         {
@@ -24,7 +23,7 @@ namespace DataSetExplorer
                 var exporter = new CompleteDataSetExporter(outputPath);
                 foreach (var codeSmellGroup in instancesGroupedBySmells)
                 {
-                    exporter.Export(codeSmellGroup.ToList(), codeSmellGroup.Key, "DataSet_" + codeSmellGroup.Key);
+                    exporter.Export(codeSmellGroup.Instances, codeSmellGroup.CodeSmell.Name, "DataSet_" + codeSmellGroup.CodeSmell.Name);
                 }
                 return Result.Ok("Data set exported: " + outputPath);
             } catch (IOException e)

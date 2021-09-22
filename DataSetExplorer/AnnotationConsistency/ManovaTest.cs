@@ -20,25 +20,25 @@ namespace DataSetExplorer.AnnotationConsistencyTests
 
         private delegate void PrepareTestDelegate(int id, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics);
 
-        public Result<Dictionary<string, string>> TestConsistencyBetweenAnnotators(int severity, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, string>> TestConsistencyBetweenAnnotators(int severity, List<CandidateDataSetInstance> instancesGroupedBySmells)
         {
             return Test(severity, instancesGroupedBySmells, PrepareDataForBetweenAnnotators);
         }
 
-        public Result<Dictionary<string, string>> TestConsistencyOfSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, string>> TestConsistencyOfSingleAnnotator(int annotatorId, List<CandidateDataSetInstance> instancesGroupedBySmells)
         {
             return Test(annotatorId, instancesGroupedBySmells, PrepareDataForSingleAnnotator);
         }
 
-        private Result<Dictionary<string, string>> Test(int id, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells,
+        private Result<Dictionary<string, string>> Test(int id, List<CandidateDataSetInstance> instancesGroupedBySmells,
              PrepareTestDelegate prepareTest)
         {
             var results = new Dictionary<string, string>();
             foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
-                var instances = codeSmellGroup.ToList();
+                var codeSmell = codeSmellGroup.CodeSmell.Name.Replace(" ", "_");
+                var metrics = codeSmellGroup.Instances.First().MetricFeatures.Keys.ToList();
+                var instances = codeSmellGroup.Instances;
 
                 prepareTest(id, instances, codeSmell, metrics);
                 results[codeSmell] = StartProcess();

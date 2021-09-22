@@ -91,7 +91,7 @@ namespace DataSetExplorer.Controllers.Annotation
             return FindInstances(projectIds, _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations);
         }
 
-        private IActionResult FindInstances(string projectIds, Func<IEnumerable<int>, Result<List<DataSetInstance>>> findInstancesMethod)
+        private IActionResult FindInstances(string projectIds, Func<IEnumerable<int>, Result<List<CandidateDataSetInstance>>> findInstancesMethod)
         {
             try
             {

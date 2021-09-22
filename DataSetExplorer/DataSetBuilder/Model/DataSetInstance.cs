@@ -23,12 +23,22 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Type = type;
             
             Annotations = new HashSet<DataSetAnnotation>();
-            MetricFeatures = metricFeatures;
+            SetMetricFeatures(metricFeatures);
             Validate();
         }
 
         private DataSetInstance()
         {
+        }
+
+        private void SetMetricFeatures(Dictionary<CaDETMetric, double> metricFeatures)
+        {
+            if (metricFeatures == null) return;
+            foreach (var metric in metricFeatures)
+            {
+                if (Double.IsInfinity(metric.Value) || Double.IsNaN(metric.Value)) metricFeatures.Remove(metric.Key);
+            }
+            MetricFeatures = metricFeatures;
         }
 
         private void Validate()

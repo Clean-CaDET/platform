@@ -24,6 +24,9 @@ namespace DataSetExplorer.DataSetBuilder.Model
             {
                 case "Large Class":
                 case "Long Method":
+                case "Feature Envy":
+                case "Data Class":
+                case "Refused Bequest":
                     return;
                 default:
                     throw new InvalidOperationException("Unsupported code smell type.");
@@ -36,6 +39,9 @@ namespace DataSetExplorer.DataSetBuilder.Model
             {
                 "Large Class" => new List<SnippetType> {SnippetType.Class},
                 "Long Method" => new List<SnippetType> {SnippetType.Function},
+                "Feature Envy" => new List<SnippetType> { SnippetType.Function },
+                "Data Class" => new List<SnippetType> { SnippetType.Class },
+                "Refused Bequest" => new List<SnippetType> { SnippetType.Class },
                 _ => null
             };
         }

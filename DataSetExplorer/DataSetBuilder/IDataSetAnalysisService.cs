@@ -8,7 +8,7 @@ namespace DataSetExplorer
     {
         Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects);
         Result<string> FindInstancesRequiringAdditionalAnnotation(IDictionary<string, string> projects);
-        Result<List<DataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds);
-        Result<List<DataSetInstance>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds);
+        Result<List<CandidateDataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds);
+        Result<List<CandidateDataSetInstance>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds);
     }
 }

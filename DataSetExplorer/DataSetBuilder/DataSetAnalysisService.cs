@@ -9,11 +9,9 @@ namespace DataSetExplorer
 {
     public class DataSetAnalysisService : IDataSetAnalysisService
     {
-        private readonly IDataSetRepository _dataSetRepository;
         private readonly IDataSetProjectRepository _dataSetProjectRepository;
-        public DataSetAnalysisService(IDataSetRepository dataSetRepository, IDataSetProjectRepository dataSetProjectRepository)
+        public DataSetAnalysisService(IDataSetProjectRepository dataSetProjectRepository)
         {
-            _dataSetRepository = dataSetRepository;
             _dataSetProjectRepository = dataSetProjectRepository;
         }
 
@@ -51,21 +49,21 @@ namespace DataSetExplorer
             }
         }
 
-        public Result<List<DataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds)
+        public Result<List<CandidateDataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds)
         {
-            var instances = new List<DataSetInstance>();
+            var instances = new List<CandidateDataSetInstance>();
             var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
             foreach (var project in projects) instances.AddRange(project.GetInstancesWithAllDisagreeingAnnotations());
-
+            
             return Result.Ok(instances);
         }
 
-        public Result<List<DataSetInstance>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds)
+        public Result<List<CandidateDataSetInstance>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds)
         {
-            var instances = new List<DataSetInstance>();
+            var instances = new List<CandidateDataSetInstance>();
             var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
             foreach (var project in projects) instances.AddRange(project.GetInsufficientlyAnnotatedInstances());
-
+            
             return Result.Ok(instances);
         }
 

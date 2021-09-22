@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
@@ -9,42 +8,60 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public int Id { get; private set; }
         public string Name { get; private set; }
         public string Url { get; private set; }
-        public HashSet<DataSetInstance> Instances { get; private set; }
+        public List<CandidateDataSetInstance> CandidateInstances { get; private set; }
         public DataSetProjectState State { get; private set; }
 
         internal DataSetProject(string name, string url)
         {
             Name = name;
             Url = url;
-            Instances = new HashSet<DataSetInstance>();
+            CandidateInstances = new List<CandidateDataSetInstance>();
             State = DataSetProjectState.Processing;
         }
 
         public DataSetProject(string name) : this(name, null) { }
 
-        internal void AddInstances(List<DataSetInstance> instances)
+        internal void AddCandidateInstance(CandidateDataSetInstance newCandidate)
         {
-            foreach (var instance in instances)
+            var i = CandidateInstances.FindIndex(c => c.CodeSmell.Name.Equals(newCandidate.CodeSmell.Name));
+            if (i != -1) AddInstances(i, newCandidate);
+            else CandidateInstances.Add(newCandidate);
+        }
+
+        private void AddInstances(int i, CandidateDataSetInstance candidate)
+        {
+            foreach(var instance in candidate.Instances)
             {
-                if (Instances.TryGetValue(instance, out var existingInstance))
+                if (CandidateInstances[i].HasInstanceWithCodeSnippetId(instance.CodeSnippetId))
                 {
-                    existingInstance.AddAnnotations(instance);
-                }
-                else
+                    CandidateInstances[i].GetInstanceWithCodeSnippetId(instance.CodeSnippetId).AddAnnotations(instance);
+                } else
                 {
-                    Instances.Add(instance);
+                    CandidateInstances[i].Instances.Add(instance);
                 }
             }
         }
 
-        public List<DataSetInstance> GetInsufficientlyAnnotatedInstances(string projectName = null)
+        public List<CandidateDataSetInstance> GetInsufficientlyAnnotatedInstances()
         {
-            return Instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
+            var insufficientlyAnnotated = new List<CandidateDataSetInstance>();
+            foreach (var candidate in CandidateInstances)
+            {
+                var instances = candidate.Instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
+                insufficientlyAnnotated.Add(new CandidateDataSetInstance(candidate.CodeSmell, instances));
+            }
+            return insufficientlyAnnotated;
         }
 
-        public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations(string projectName = null)
+        public List<CandidateDataSetInstance> GetInstancesWithAllDisagreeingAnnotations()
         {
-            return Instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+            var noAgreement = new List<CandidateDataSetInstance>();
+            foreach (var candidate in CandidateInstances)
+            {
+                var instances = candidate.Instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+                noAgreement.Add(new CandidateDataSetInstance(candidate.CodeSmell, instances));
+            }
+            return noAgreement;
         }
 
         public void Processed()
@@ -55,6 +72,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public void Failed()
         {
             if (State == DataSetProjectState.Processing) State = DataSetProjectState.Failed;
+        }
+
+        internal void SetCandidateInstances(List<CandidateDataSetInstance> candidateInstances)
+        {
+            CandidateInstances = candidateInstances;
         }
     }
 }

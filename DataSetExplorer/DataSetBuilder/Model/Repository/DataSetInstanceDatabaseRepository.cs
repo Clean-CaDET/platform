@@ -1,9 +1,7 @@
 ﻿using DataSetExplorer.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
@@ -23,13 +21,29 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 
         public IEnumerable<DataSetInstance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId)
         {
-            var project = _dbContext.DataSetProjects.FirstOrDefault(p => p.Id == projectId);
+            var project = _dbContext.DataSetProjects
+                .Where(p => p.Id == projectId)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator);
             if (project == default) return new List<DataSetInstance>();
-            return _dbContext.DataSetInstances.Where(i => i.ProjectLink.Equals(project.Url) && i.Annotations.Count > 0)
-                .Where(i => annotatorId == null || i.Annotations.Any(a => a.Annotator.Id == annotatorId))
-                .Include(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(i => i.Annotations).ThenInclude(a => a.InstanceSmell);
+
+            var instances = project.SelectMany(p => p.CandidateInstances)
+                .SelectMany(c => c.Instances.Where(i => i.Annotations.Any(a => a.Annotator.Id == annotatorId)));
+            return instances;
+        }
+
+        public IEnumerable<DataSetInstance> GetAnnotatedInstances(int projectId)
+        {
+            var project = _dbContext.DataSetProjects
+                .Where(p => p.Id == projectId)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell);
+            if (project == default) return new List<DataSetInstance>();
+
+            var instances = project.SelectMany(p => p.CandidateInstances)
+                .SelectMany(c => c.Instances.Where(i => i.Annotations.Count > 0));
+            return instances;
         }
 
         public void Update(DataSetInstance instance)

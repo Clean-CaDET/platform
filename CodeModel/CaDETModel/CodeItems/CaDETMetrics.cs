@@ -140,7 +140,7 @@
         NOPA,
 
         /// <summary>
-        /// NOAM: Number Of Public Properties
+        /// NPP: Number Of Public Properties
         /// </summary>
         NOPP,
 

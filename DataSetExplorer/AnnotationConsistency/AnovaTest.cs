@@ -20,24 +20,24 @@ namespace DataSetExplorer.AnnotationConsistencyTests
 
         private delegate Dictionary<string, string> TestCodeSmellDelegate(int id, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics);
 
-        public Result<Dictionary<string, Dictionary<string, string>>> TestForSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, Dictionary<string, string>>> TestForSingleAnnotator(int annotatorId, List<CandidateDataSetInstance> instancesGroupedBySmells)
         {
             return Test(annotatorId, instancesGroupedBySmells, TestCodeSmellForAnnotator);
         }
 
-        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(int severity, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(int severity, List<CandidateDataSetInstance> instancesGroupedBySmells)
         {
             return Test(severity, instancesGroupedBySmells, TestCodeSmellBetweenAnnotators);
         }
 
-        private Result<Dictionary<string, Dictionary<string, string>>> Test(int id, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells, TestCodeSmellDelegate testCodeSmell)
+        private Result<Dictionary<string, Dictionary<string, string>>> Test(int id, List<CandidateDataSetInstance> instancesGroupedBySmells, TestCodeSmellDelegate testCodeSmell)
         {
             var results = new Dictionary<string, Dictionary<string, string>>();
             foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
-                var instances = codeSmellGroup.ToList();
+                var codeSmell = codeSmellGroup.CodeSmell.Name.Replace(" ", "_");
+                var metrics = codeSmellGroup.Instances.First().MetricFeatures.Keys.ToList();
+                var instances = codeSmellGroup.Instances;
                 results[codeSmell] = testCodeSmell(id, instances, codeSmell, metrics);
             }
             return Result.Ok(results);
