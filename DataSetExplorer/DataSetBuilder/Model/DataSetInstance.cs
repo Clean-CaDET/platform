@@ -27,6 +27,13 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Validate();
         }
 
+        internal DataSetInstance(string codeSnippetId, string projectLink)
+        {
+            CodeSnippetId = codeSnippetId;
+            ProjectLink = projectLink;
+            Annotations = new HashSet<DataSetAnnotation>();
+        }
+
         private DataSetInstance()
         {
         }

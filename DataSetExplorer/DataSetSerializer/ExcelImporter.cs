@@ -90,6 +90,30 @@ namespace DataSetExplorer.DataSetSerializer
             return SnippetType.Class;
         }
 
+        internal List<DataSetInstance> ImportAnnotatedInstancesFromDataSet(string path)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var excel = new ExcelPackage(new FileInfo(path));
+            var sheets = excel.Workbook.Worksheets;
+            var instances = new List<DataSetInstance>();
+            foreach (var sheet in sheets)
+            {
+                for (var row = 3; row <= sheet.Dimension.End.Row; row++)
+                {
+                    if (IsEndOfSheet(sheet, row)) break;
+                    var codeSnippetId = sheet.Cells["A" + row].Text;
+                    var projectLink = sheet.Cells["D" + row].Text;
+                    var finalAnnotation = sheet.Cells["AD" + row].Text;
+                    DataSetInstance instance = new DataSetInstance(codeSnippetId, projectLink);
+                    // Dummy values for DataSetAnnotation constructor to pass validations (the final annotation is the only important parameter in this case).
+                    DataSetAnnotation annotation = new DataSetAnnotation(new CodeSmell("Large Class"), int.Parse(finalAnnotation), new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") });
+                    instance.AddAnnotation(annotation);
+                    instances.Add(instance);
+                }
+            }
+            return instances;
+        }
+
         private static DataSetAnnotation GetAnnotation(ExcelWorksheet sheet, int row)
         {
             try

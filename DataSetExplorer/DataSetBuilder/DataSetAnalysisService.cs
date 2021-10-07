@@ -1,4 +1,7 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using CodeModel;
+using CodeModel.CaDETModel;
+using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSetBuilder.Model;
 using DataSetExplorer.DataSetBuilder.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using FluentResults;
@@ -71,6 +74,47 @@ namespace DataSetExplorer
         {
             var importer = new ExcelImporter(folder);
             return importer.Import(projectName);
+        }
+
+        private List<DataSetInstance> LoadAnnotatedInstances(string datasetPath)
+        {
+            var importer = new ExcelImporter(datasetPath);
+            return importer.ImportAnnotatedInstancesFromDataSet(datasetPath);
+        }
+
+        public Result<string> ExportMembersFromAnnotatedClasses(IDictionary<string, string> projects, string datasetPath, string outputFolder)
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            try
+            {
+                var classesGroupedBySeverity = new Dictionary<int, List<CaDETClass>>();
+                var annotatedInstances = LoadAnnotatedInstances(datasetPath);
+
+                foreach (var projectUrl in projects.Keys)
+                {
+                    CaDETProject cadetProject = factory.CreateProjectWithCodeFileLinks(projects[projectUrl]);
+
+                    foreach (var instance in annotatedInstances)
+                    {
+                        var classForExport = cadetProject.Classes.Find(c => c.FullName.Equals(instance.CodeSnippetId));
+                        if (classForExport != null)
+                        {
+                            var finalAnnotation = instance.GetFinalAnnotation();
+                            if (!classesGroupedBySeverity.ContainsKey(finalAnnotation)) classesGroupedBySeverity.Add(finalAnnotation, new List<CaDETClass>());
+                            classesGroupedBySeverity[finalAnnotation].Add(classForExport);
+                        }
+                    }
+                }
+
+                var exporter = new TextFileExporter(outputFolder);
+                exporter.ExportMembersFromAnnotatedClasses(classesGroupedBySeverity, annotatedInstances);
+                return Result.Ok("Members from smelly classes exported.");
+            }
+            catch (IOException e)
+            {
+                return Result.Fail(e.ToString());
+            }
         }
     }
 }
