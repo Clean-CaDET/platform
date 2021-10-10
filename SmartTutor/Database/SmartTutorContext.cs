@@ -7,6 +7,7 @@ using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.Met
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.Lectures;
+using SmartTutor.KnowledgeComponentModel;
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Progress;
@@ -49,6 +50,13 @@ namespace SmartTutor.Database
         public DbSet<ChallengeSubmission> ChallengeSubmissions { get; set; }
         public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
+        #endregion
+        
+        #region Knowledge Components
+
+        public DbSet<KnowledgeComponent> KnowledgeComponents { get; set; }
+        public DbSet<KnowledgeComponentProgress> KnowledgeComponentProgress { get; set; }
+        
         #endregion
         public DbSet<Learner> Learners { get; set; }
         public DbSet<IssueAdvice> Advice { get; set; }
