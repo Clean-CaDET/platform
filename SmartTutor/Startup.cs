@@ -26,6 +26,8 @@ using SmartTutor.QualityAnalysis.Repository;
 using System;
 using System.IO;
 using Microsoft.Net.Http.Headers;
+using SmartTutor.KnowledgeComponentModel;
+using SmartTutor.KnowledgeComponentModel.KnowledgeComponents.Repository;
 using SmartTutor.SystemUser;
 using SmartTutor.SystemUser.Keycloak;
 using SmartTutor.Utils;
@@ -71,6 +73,9 @@ namespace SmartTutor
             services.AddScoped<IContentService, ContentService>();
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
+            
+            services.AddScoped<IKnowledgeComponentRepository, KnowledgeComponentDatabaseRepository>();
+            services.AddScoped<IKnowledgeComponentService, KnowledgeComponentService>();
 
             services.AddScoped<IProgressService, ProgressService>();
             services.AddScoped<IProgressRepository, ProgressDatabaseRepository>();
