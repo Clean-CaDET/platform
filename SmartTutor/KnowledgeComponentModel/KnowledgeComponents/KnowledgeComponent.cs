@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SmartTutor.KnowledgeComponentModel
+namespace SmartTutor.KnowledgeComponentModel.KnowledgeComponents
 {
     public class KnowledgeComponent
     {

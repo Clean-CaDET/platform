@@ -1,6 +1,6 @@
 ﻿using SmartTutor.LearnerModel.Learners;
 
-namespace SmartTutor.KnowledgeComponentModel
+namespace SmartTutor.KnowledgeComponentModel.KnowledgeComponents
 {
     public class KnowledgeComponentProgress
     {
