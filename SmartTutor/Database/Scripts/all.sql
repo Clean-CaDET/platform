@@ -30,6 +30,7 @@ DELETE FROM public."LearningObjectSummaries";
 DELETE FROM public."KnowledgeNodes";
 DELETE FROM public."Lectures";
 DELETE FROM public."Courses";
+DELETE FROM public."KnowledgeComponents";
 
 INSERT INTO public."Learners"(
 	"Id", "StudentIndex", "VisualScore", "AuralScore", "ReadWriteScore", "KinaestheticScore", "WorkspacePath")
@@ -1243,3 +1244,13 @@ INSERT INTO public."IssueAdviceLearningObjectSummary"(
 INSERT INTO public."IssueAdviceLearningObjectSummary"(
 	"AdviceId", "SummariesId")
 	VALUES (2, 102);
+
+INSERT INTO public."KnowledgeComponents"(
+    "Name", "KnowledgeComponentId")
+    VALUES ('Čiste funkcije', NULL);
+INSERT INTO public."KnowledgeComponents"(
+    "Name", "KnowledgeComponentId")
+    VALUES ('Redukcija broja parametara', 1);
+INSERT INTO public."KnowledgeComponents"(
+    "Name", "KnowledgeComponentId")
+    VALUES ('Čisti nazivi', 1);
