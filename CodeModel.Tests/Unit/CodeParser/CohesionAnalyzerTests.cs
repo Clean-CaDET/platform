@@ -107,6 +107,12 @@ namespace CodeModel.Tests.Unit.CodeParser
 
             new object[]
             {
+                @"CohesionAnalyzer/TestClass3.txt",
+                Array.Empty<object>()
+            },
+
+            new object[]
+            {
                 @"CohesionAnalyzer/HardLinkHelper.txt",
                 new[]
                 {
