@@ -48,6 +48,7 @@ CREATE TABLE "Learners" (
     "ReadWriteScore" integer NOT NULL,
     "KinaestheticScore" integer NOT NULL,
     "WorkspacePath" text NULL,
+    "IamId" text NULL,
     CONSTRAINT "PK_Learners" PRIMARY KEY ("Id")
 );
 
