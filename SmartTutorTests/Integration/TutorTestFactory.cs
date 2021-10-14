@@ -7,6 +7,7 @@ using SmartTutor.Database;
 using System;
 using System.IO;
 using System.Linq;
+using SmartTutor.Utils;
 
 namespace SmartTutor.Tests.Integration
 {
@@ -53,13 +54,13 @@ namespace SmartTutor.Tests.Integration
 
         private string CreateConnectionStringForTest()
         {
-            var server = "localhost";
-            var port = "5432";
-            var database = "smart-tutor-test";
-            var user = "postgres";
-            var password = "super";
-            var integratedSecurity = "false";
-            var pooling = "true";
+            var server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
+            var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
+            var database = Util.GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-test";
+            var user = Util.GetSecret("DATABASE_USERNAME") ?? "postgres";
+            var password = Util.GetSecret("DATABASE_PASSWORD") ?? "super";
+            var integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
+            var pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
             return
                 $"Server={server};Port={port};Database={database};User ID={user};Password={password};Integrated Security={integratedSecurity};Pooling={pooling};";
