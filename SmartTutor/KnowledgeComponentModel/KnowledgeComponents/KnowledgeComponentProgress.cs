@@ -8,9 +8,9 @@ namespace SmartTutor.KnowledgeComponentModel.KnowledgeComponents
         
         public double Progress { get; private set; }
         
-        public KnowledgeComponent KnowledgeComponent { get; private set; }
+        public KnowledgeComponent KnowledgeComponent { get; private set; } //TODO: KC parent id
         
-        public Learner Learner { get; private set; } 
+        public Learner Learner { get; private set; } //TODO: Learner id
         
         public void UpdateProgress() {}
     }

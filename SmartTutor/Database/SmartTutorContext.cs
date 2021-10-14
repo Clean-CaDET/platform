@@ -73,7 +73,7 @@ namespace SmartTutor.Database
             modelBuilder.Entity<Video>().ToTable("Videos");
             modelBuilder.Entity<Question>().ToTable("Questions");
             modelBuilder.Entity<ArrangeTask>().ToTable("ArrangeTasks");
-            modelBuilder.Entity<KnowledgeComponent>().ToTable("KnowledgeComponents");
+            //modelBuilder.Entity<KnowledgeComponent>().ToTable("KnowledgeComponents");
             ConfigureChallenge(modelBuilder);
 
             modelBuilder.Entity<Learner>()
