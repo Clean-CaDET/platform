@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-namespace SmartTutor.Utils
+namespace SmartTutor.Security
 {
-    public static class Util
+    public static class EnvironmentConnection
     {
         public static string GetSecret(string secretName)
         {

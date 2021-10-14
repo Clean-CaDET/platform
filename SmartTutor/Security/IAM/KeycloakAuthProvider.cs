@@ -1,34 +1,32 @@
-﻿using System;
+﻿using SmartTutor.LearnerModel.Learners;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
-using  System.Text.Json;
-using SmartTutor.LearnerModel.Learners;
-using SmartTutor.Utils;
 
-namespace SmartTutor.SystemUser.Keycloak
+namespace SmartTutor.Security.IAM
 {
-      public class KeycloakAuthProvider : IAuthProvider
+    public class KeycloakAuthProvider : IAuthProvider
     {
         private readonly string _loginPath =
-            Environment.GetEnvironmentVariable("KEYCLOAK_LOGIN_PATH") ??
+            System.Environment.GetEnvironmentVariable("KEYCLOAK_LOGIN_PATH") ??
             "http://localhost:8080/auth/realms/master/protocol/openid-connect/token";
 
         private readonly string _registerPath =
-            Environment.GetEnvironmentVariable("KEYCLOAK_REGISTER_PATH") ??
+            System.Environment.GetEnvironmentVariable("KEYCLOAK_REGISTER_PATH") ??
             "http://localhost:8080/auth/admin/realms/master/users";
 
         private readonly string _allUsersPath =
-            Environment.GetEnvironmentVariable("KEYCLOAK_ALL_USERS_PATH") ??
+            System.Environment.GetEnvironmentVariable("KEYCLOAK_ALL_USERS_PATH") ??
             "http://localhost:8080/auth/admin/realms/master/users";
 
         private readonly string _adminUsername =
-            Util.GetSecret("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
+            EnvironmentConnection.GetSecret("KEYCLOAK_ADMIN_USERNAME") ?? "admin";
 
         private readonly string _adminPassword =
-            Util.GetSecret("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
+            EnvironmentConnection.GetSecret("KEYCLOAK_ADMIN_PASSWORD") ?? "admin";
 
         public async Task<Learner> Register(Learner learner)
         {
