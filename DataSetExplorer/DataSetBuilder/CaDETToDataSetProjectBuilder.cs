@@ -22,19 +22,12 @@ namespace DataSetExplorer.DataSetBuilder
         private readonly bool _includeMembers;
         private bool _randomizeMemberList;
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
-        private int _minimumELOC = 10;
-        private int _minimumNMD = 3;
-        private int _minimumNAD = 5;
-        private int _minimumAID = 4;
-        private double _maximumWOC = 0.33;
-        private int _maximumWMCNAMM = 24;
-        private int _minimumNOPANOPP = 2;
-        private double _maximumBUR = 0.33;
-        private double _maximumBOvR = 0.33;
         private readonly List<CodeSmell> _codeSmells;
+        private readonly InstanceFilter _instanceFilter;
 
-        internal CaDETToDataSetProjectBuilder(string projectAndCommitUrl, string projectName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
+        internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
         {
+            _instanceFilter = instanceFilter;
             _projectAndCommitUrl = projectAndCommitUrl;
             _projectName = projectName;
             _cadetProject = new CodeModelFactory(language).CreateProjectWithCodeFileLinks(projectPath);
@@ -43,25 +36,11 @@ namespace DataSetExplorer.DataSetBuilder
             _codeSmells = codeSmells;
         }
 
-        internal CaDETToDataSetProjectBuilder(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells): this(projectAndCommitUrl, projectName, projectPath, LanguageEnum.CSharp, true, true, codeSmells) { }
+        internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells): this(instanceFilter, projectAndCommitUrl, projectName, projectPath, LanguageEnum.CSharp, true, true, codeSmells) { }
 
         internal CaDETToDataSetProjectBuilder SetProjectExtractionPercentile(int percentile)
         {
             _percentileOfProjectCovered = percentile;
-            return this;
-        }
-
-        internal CaDETToDataSetProjectBuilder SetAutomatizationThresholds(Dictionary<string, int> thresholds)
-        {
-            if (thresholds.TryGetValue("minimumELOC", out var minimumELOC)) _minimumELOC = minimumELOC;
-            if (thresholds.TryGetValue("minimumNMD", out var minimumNMD)) _minimumNMD = minimumNMD;
-            if (thresholds.TryGetValue("minimumNAD", out var minimumNAD)) _minimumNAD = minimumNAD;
-            if (thresholds.TryGetValue("minimumAID", out var minimumAID)) _minimumAID = minimumAID;
-            if (thresholds.TryGetValue("maximumWOC", out var maximumWOC)) _maximumWOC = maximumWOC;
-            if (thresholds.TryGetValue("maximumWMCNAMM", out var maximumWMCNAMM)) _maximumWMCNAMM = maximumWMCNAMM;
-            if (thresholds.TryGetValue("minimumNOPANOPP", out var minimumNOPANOPP)) _minimumNOPANOPP = minimumNOPANOPP;
-            if (thresholds.TryGetValue("maximumBUR", out var maximumBUR)) _maximumBUR = maximumBUR;
-            if (thresholds.TryGetValue("maximumBOvR", out var maximumBOvR)) _maximumBOvR = maximumBOvR;
             return this;
         }
 
@@ -102,13 +81,13 @@ namespace DataSetExplorer.DataSetBuilder
 
             foreach (var smell in _codeSmells)
             {
-                if (_includeClasses) builtDataSetProject.AddCandidateInstance(new CandidateDataSetInstance(smell, FilterInstancesForSmell(smell, BuildClasses())));
-                if (_includeMembers) builtDataSetProject.AddCandidateInstance(new CandidateDataSetInstance(smell, FilterInstancesForSmell(smell, BuildMembers())));
+                if (_includeClasses) builtDataSetProject.AddCandidateInstance(new SmellCandidateInstances(smell, _instanceFilter.FilterInstances(smell, BuildClasses())));
+                if (_includeMembers) builtDataSetProject.AddCandidateInstance(new SmellCandidateInstances(smell, _instanceFilter.FilterInstances(smell, BuildMembers())));
             }
             return builtDataSetProject;
         }
 
-        private List<DataSetInstance> BuildClasses()
+        private List<Instance> BuildClasses()
         {
             var cadetClasses = _cadetProject.Classes;
             if(_randomizeClassList) ShuffleList(cadetClasses);
@@ -121,62 +100,11 @@ namespace DataSetExplorer.DataSetBuilder
             return totalNumber * _percentileOfProjectCovered / 100;
         }
 
-        private List<DataSetInstance> CaDETToDataSetProjectClasses(List<CaDETClass> cadetClasses)
+        private List<Instance> CaDETToDataSetProjectClasses(List<CaDETClass> cadetClasses)
         {
-            return cadetClasses.Select(c => new DataSetInstance(
+            return cadetClasses.Select(c => new Instance(
                 c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class, _cadetProject.GetMetricsForCodeSnippet(c.FullName)
             )).ToList();
-        }
-
-        private List<DataSetInstance> FilterInstancesForSmell(CodeSmell codeSmell, List<DataSetInstance> instances)
-        {
-            var filteredInstances = new List<DataSetInstance>();
-            switch (codeSmell.Name)
-            {
-                case "Large Class":
-                    foreach (var i in instances)
-                    {
-                        var NAD = i.MetricFeatures.GetValueOrDefault(CaDETMetric.NAD);
-                        var NMD = i.MetricFeatures.GetValueOrDefault(CaDETMetric.NMD);
-                        if (i.Type.Equals(SnippetType.Class) && (NAD >= _minimumNAD || NMD >= _minimumNMD)) filteredInstances.Add(i);
-                    }
-                    return filteredInstances;
-                case "Long Method":
-                    foreach (var i in instances)
-                    {
-                        var MELOC = i.MetricFeatures.GetValueOrDefault(CaDETMetric.MELOC);
-                        if (i.Type.Equals(SnippetType.Function) && MELOC >= _minimumELOC) filteredInstances.Add(i);
-                    }
-                    return filteredInstances;
-                case "Feature Envy":
-                    foreach (var i in instances)
-                    {
-                        var AID = i.MetricFeatures.GetValueOrDefault(CaDETMetric.AID);
-                        if (i.Type.Equals(SnippetType.Function) && AID >= _minimumAID) filteredInstances.Add(i);
-                    }
-                    return filteredInstances;
-                case "Data Class":
-                    foreach (var i in instances)
-                    {
-                        var WOC = i.MetricFeatures.GetValueOrDefault(CaDETMetric.WOC);
-                        var WMCNAMM = i.MetricFeatures.GetValueOrDefault(CaDETMetric.WMCNAMM);
-                        var NOPA = i.MetricFeatures.GetValueOrDefault(CaDETMetric.NOPA);
-                        var NOPP = i.MetricFeatures.GetValueOrDefault(CaDETMetric.NOPP);
-                        if (i.Type.Equals(SnippetType.Class) && 
-                            WOC < _maximumWOC && WMCNAMM <= _maximumWMCNAMM && NOPA+NOPP > _minimumNOPANOPP) filteredInstances.Add(i);
-                    }
-                    return filteredInstances;
-                case "Refused Bequest":
-                    foreach (var i in instances)
-                    {
-                        var BUR = i.MetricFeatures.GetValueOrDefault(CaDETMetric.BUR);
-                        var BOvR = i.MetricFeatures.GetValueOrDefault(CaDETMetric.BOvR);
-                        if (i.Type.Equals(SnippetType.Class) && BUR < _maximumBUR && BOvR < _maximumBOvR) filteredInstances.Add(i);
-                    }
-                    return filteredInstances;
-                default:
-                    return new List<DataSetInstance>();
-            }
         }
 
         private string GetCodeUrl(string snippetId)
@@ -197,7 +125,7 @@ namespace DataSetExplorer.DataSetBuilder
             }
         }
 
-        private List<DataSetInstance> BuildMembers()
+        private List<Instance> BuildMembers()
         {
             var allMembers = _cadetProject.Classes.SelectMany(c => c.Members).ToList();
             var cadetMembers = allMembers.Where(m => _acceptedMemberTypes.Contains(m.Type)).ToList();
@@ -206,9 +134,9 @@ namespace DataSetExplorer.DataSetBuilder
             return CaDETToDataSetFunction(cadetMembers);
         }
 
-        private List<DataSetInstance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
+        private List<Instance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
         {
-            return cadetMembers.Select(m => new DataSetInstance(
+            return cadetMembers.Select(m => new Instance(
                 m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function, _cadetProject.GetMetricsForCodeSnippet(m.Signature())
             )).ToList();
         }

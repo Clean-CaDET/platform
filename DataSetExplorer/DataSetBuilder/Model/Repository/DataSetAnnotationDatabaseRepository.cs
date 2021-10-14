@@ -16,7 +16,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             _dbContext = dbContext;
         }
 
-        public DataSetAnnotation GetDataSetAnnotation(int id)
+        public Annotation GetDataSetAnnotation(int id)
         {
             return _dbContext.DataSetAnnotations
                 .Include(a => a.Annotator)
@@ -33,7 +33,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             return _dbContext.CodeSmells.FirstOrDefault(s => s.Name.Equals(name));
         }
 
-        public void Update(DataSetAnnotation annotation)
+        public void Update(Annotation annotation)
         {
             _dbContext.Update(annotation);
             _dbContext.SaveChanges();

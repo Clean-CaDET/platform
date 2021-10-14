@@ -5,29 +5,44 @@ using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
 {
-    public class DataSetInstance
+    public class Instance
     {
         public int Id { get; private set; }
         public string CodeSnippetId { get; private set; }
         public string Link { get; private set; }
         public string ProjectLink { get; private set; }
         public SnippetType Type { get; private set; }
-        public ISet<DataSetAnnotation> Annotations { get; private set; }
-        public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
+        public ISet<Annotation> Annotations { get; private set; }
+       /* public Dictionary<CaDETMetric, double> MetricFeatures 
+        {
+            get => MetricFeatures;
+            internal set 
+            {
+                if (value == null) return;
+                foreach (var metric in value)
+                {
+                    if (Double.IsInfinity(metric.Value) || Double.IsNaN(metric.Value)) value.Remove(metric.Key);
+                }
+                MetricFeatures = value;
+            } 
+        } // TODO: Expand and replace with the IFeature if a new feature type is introduced*/
 
-        internal DataSetInstance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
+        public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; }
+
+        internal Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
         {
             CodeSnippetId = codeSnippetId;
             Link = link;
             ProjectLink = projectLink;
             Type = type;
             
-            Annotations = new HashSet<DataSetAnnotation>();
+            Annotations = new HashSet<Annotation>();
+            //MetricFeatures = metricFeatures;
             SetMetricFeatures(metricFeatures);
             Validate();
         }
 
-        private DataSetInstance()
+        private Instance()
         {
         }
 
@@ -46,12 +61,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
             if (string.IsNullOrEmpty(CodeSnippetId)) throw new ArgumentException("CodeSnippetId cannot be empty.");
         }
 
-        internal void AddAnnotation(DataSetAnnotation annotation)
+        internal void AddAnnotation(Annotation annotation)
         {
             Annotations.Add(annotation);
         }
 
-        internal void AddAnnotations(DataSetInstance instance)
+        internal void AddAnnotations(Instance instance)
         {
             if (Annotations.Overlaps(instance.Annotations)) throw new InvalidOperationException("Duplicate annotations (same author and same code quality issue): " + instance.CodeSnippetId);
             Annotations.UnionWith(instance.Annotations);
@@ -99,7 +114,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         }
 
         private bool HasMajoritySeverityVote(
-            IEnumerable<IGrouping<int, DataSetAnnotation>> annotationsGroupedBySeverity)
+            IEnumerable<IGrouping<int, Annotation>> annotationsGroupedBySeverity)
         {
             var severityCounts = annotationsGroupedBySeverity.Select(group => group.Count());
             if (severityCounts.Count() == 1) return true;
@@ -123,7 +138,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         public override bool Equals(object other)
         {
-            return other is DataSetInstance instance && CodeSnippetId.Equals(instance.CodeSnippetId);
+            return other is Instance instance && CodeSnippetId.Equals(instance.CodeSnippetId);
         }
 
         public override string ToString()

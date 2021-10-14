@@ -35,15 +35,24 @@ namespace DataSetExplorer.Controllers.Dataset
         }
 
         [HttpPost]
-        [Route("{id}/add-projects")]
-        public IActionResult CreateDataSetProject([FromBody] List<ProjectDTO> projects, [FromRoute] int id)
+        [Route("{id}/add-project")]
+        public IActionResult CreateDataSetProject([FromBody] ProjectDTO project, [FromRoute] int id)
         {
-            var dataSetProjects = new List<DataSetProject>();
-            foreach (var project in projects) dataSetProjects.Add(_mapper.Map<DataSetProject>(project));
-
-            var result = _dataSetCreationService.AddProjectsToDataSet(id, _gitClonePath, dataSetProjects);
+            var metricsThresholds = _mapper.Map<List<MetricThresholds>>(project.MetricsThresholds);
+            var dataSetProject = _mapper.Map<DataSetProject>(project);
+            dataSetProject.MetricsThresholds = metricsThresholds;
+            var result = _dataSetCreationService.AddProjectToDataSet(id, _gitClonePath, dataSetProject);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Accepted(result.Value);
+        }
+
+        [HttpGet]
+        [Route("{id}/code-smells")]
+        public IActionResult GetDataSetCodeSmells([FromRoute] int id)
+        {
+            var result = _dataSetCreationService.GetDataSetCodeSmells(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
         }
 
         [HttpGet]

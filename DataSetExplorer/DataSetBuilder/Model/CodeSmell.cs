@@ -22,11 +22,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
             switch (Name)
             {
-                case "Large Class":
-                case "Long Method":
-                case "Feature Envy":
-                case "Data Class":
-                case "Refused Bequest":
+                case "Large_Class":
+                case "Long_Method":
+                case "Feature_Envy":
+                case "Data_Class":
+                case "Refused_Bequest":
                     return;
                 default:
                     throw new InvalidOperationException("Unsupported code smell type.");
@@ -37,13 +37,23 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
             return Name switch
             {
-                "Large Class" => new List<SnippetType> {SnippetType.Class},
-                "Long Method" => new List<SnippetType> {SnippetType.Function},
-                "Feature Envy" => new List<SnippetType> { SnippetType.Function },
-                "Data Class" => new List<SnippetType> { SnippetType.Class },
-                "Refused Bequest" => new List<SnippetType> { SnippetType.Class },
+                "Large_Class" => new List<SnippetType> {SnippetType.Class},
+                "Long_Method" => new List<SnippetType> {SnippetType.Function},
+                "Feature_Envy" => new List<SnippetType> { SnippetType.Function },
+                "Data_Class" => new List<SnippetType> { SnippetType.Class },
+                "Refused_Bequest" => new List<SnippetType> { SnippetType.Class },
                 _ => null
             };
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
+        public override bool Equals(object other)
+        {
+            return other is CodeSmell smell && Name.Equals(smell.Name);
         }
     }
 }

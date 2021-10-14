@@ -23,14 +23,14 @@ namespace DataSetExplorer.DataSetSerializer
             _exportPath = exportPath;
         }
 
-        public void Export(List<DataSetInstance> dataSetInstances, string smell, string fileName)
+        public void Export(List<Instance> dataSetInstances, string smell, string fileName)
         {
             ExportDataSetWithAnnotations(dataSetInstances, fileName);
             ExportDataSetWithMetrics(dataSetInstances, fileName);
             ExportDataSetWithHeuristics(dataSetInstances, smell, fileName);
         }
 
-        private void ExportDataSetWithAnnotations(List<DataSetInstance> dataSetInstances, string fileName)
+        private void ExportDataSetWithAnnotations(List<Instance> dataSetInstances, string fileName)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _excelFile = new ExcelPackage(new FileInfo(_dataSetWithAnnotationsTemplatePath));
@@ -39,7 +39,7 @@ namespace DataSetExplorer.DataSetSerializer
             Serialize(fileName + "_Annotations");
         }
 
-        private void PopulateAnnotationsTemplate(List<DataSetInstance> instances)
+        private void PopulateAnnotationsTemplate(List<Instance> instances)
         {
             PopulateAnnotationsHeader(instances);
             for (var i = 0; i < instances.Count; i++)
@@ -54,7 +54,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateAnnotationsHeader(List<DataSetInstance> instances)
+        private void PopulateAnnotationsHeader(List<Instance> instances)
         {
             var allAnnotators = GetAnnotationsFromFullyAnnotatedInstance(instances).Select(a => a.Annotator).ToList();
             _sheet.Cells[1, 6, 1, 5 + allAnnotators.Count()].Merge = true;
@@ -65,13 +65,13 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private static List<DataSetAnnotation> GetAnnotationsFromFullyAnnotatedInstance(List<DataSetInstance> instances)
+        private static List<Annotation> GetAnnotationsFromFullyAnnotatedInstance(List<Instance> instances)
         {
             return instances.OrderByDescending(i => i.Annotations.Count())
                             .First().Annotations.ToList();
         }
 
-        private void PopulateAnnotations(DataSetInstance instance, int row)
+        private void PopulateAnnotations(Instance instance, int row)
         {
             _sheet.Cells[row, 5].Value = instance.GetFinalAnnotation();
 
@@ -98,7 +98,7 @@ namespace DataSetExplorer.DataSetSerializer
             return _sheet.Cells[2, 6 + i].Value;
         }
 
-        private void ExportDataSetWithMetrics(List<DataSetInstance> dataSetInstances, string fileName)
+        private void ExportDataSetWithMetrics(List<Instance> dataSetInstances, string fileName)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _excelFile = new ExcelPackage(new FileInfo(_dataSetWithMetricsTemplatePath));
@@ -107,7 +107,7 @@ namespace DataSetExplorer.DataSetSerializer
             Serialize(fileName + "_Metrics");
         }
 
-        private void PopulateMetricsTemplate(List<DataSetInstance> instances)
+        private void PopulateMetricsTemplate(List<Instance> instances)
         {
             PopulateMetricsHeader(instances);
             for (var i = 0; i < instances.Count; i++)
@@ -118,7 +118,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateMetricsHeader(List<DataSetInstance> instances)
+        private void PopulateMetricsHeader(List<Instance> instances)
         {
             var numOfMetrics = instances.First().MetricFeatures.Count;
             _sheet.Cells[1, 2, 1, 1 + numOfMetrics].Merge = true;
@@ -135,7 +135,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void ExportDataSetWithHeuristics(List<DataSetInstance> dataSetInstances, string smell, string fileName)
+        private void ExportDataSetWithHeuristics(List<Instance> dataSetInstances, string smell, string fileName)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _excelFile = new ExcelPackage(new FileInfo(_dataSetWithHeuristicsTemplatePath));
@@ -144,7 +144,7 @@ namespace DataSetExplorer.DataSetSerializer
             Serialize(fileName + "_Heuristics");
         }
 
-        private void PopulateHeuristicsTemplate(List<DataSetInstance> instances, string smell)
+        private void PopulateHeuristicsTemplate(List<Instance> instances, string smell)
         {
             var allAnnotators = GetAnnotationsFromFullyAnnotatedInstance(instances).Select(a => a.Annotator).ToList();
             PopulateHeuristicsHeader(instances, smell, allAnnotators);
@@ -157,7 +157,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateHeuristicsHeader(List<DataSetInstance> instances, string smell, List<Annotator> annotators)
+        private void PopulateHeuristicsHeader(List<Instance> instances, string smell, List<Annotator> annotators)
         {
             var smellHeuristics = _requiredSmells.GetHeuristicsByCodeSmellName(smell);
             var numOfHeuristics = smellHeuristics.Count();
@@ -170,7 +170,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateHeuristics(List<DataSetAnnotation> annotations, int row, List<Annotator> annotators, string smell)
+        private void PopulateHeuristics(List<Annotation> annotations, int row, List<Annotator> annotators, string smell)
         {
             var smellHeuristics = _requiredSmells.GetHeuristicsByCodeSmellName(smell);
             var numOfHeuristics = smellHeuristics.Count();

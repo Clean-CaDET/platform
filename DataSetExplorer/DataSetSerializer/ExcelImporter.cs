@@ -32,7 +32,7 @@ namespace DataSetExplorer.DataSetSerializer
             var sheets = GetWorksheets(GetExcelDocuments());
             foreach (var excelWorksheet in sheets)
             {
-                project.AddCandidateInstance(new CandidateDataSetInstance(new CodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
+                project.AddCandidateInstance(new SmellCandidateInstances(new CodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
             }
             
             return project;
@@ -56,9 +56,9 @@ namespace DataSetExplorer.DataSetSerializer
             return sheets;
         }
 
-        private static List<DataSetInstance> ExtractInstances(ExcelWorksheet sheet)
+        private static List<Instance> ExtractInstances(ExcelWorksheet sheet)
         {
-            var instances = new List<DataSetInstance>();
+            var instances = new List<Instance>();
             for (var row = StartingInstanceRow; row <= sheet.Dimension.End.Row; row++)
             {
                 if (IsEndOfSheet(sheet, row)) break;
@@ -75,13 +75,13 @@ namespace DataSetExplorer.DataSetSerializer
             return string.IsNullOrEmpty(sheet.Cells["A" + row].Text);
         }
 
-        private static DataSetInstance GetBasicInstance(ExcelWorksheet sheet, int row)
+        private static Instance GetBasicInstance(ExcelWorksheet sheet, int row)
         {
             var codeSnippetId = sheet.Cells["A" + row].Text;
             var link = sheet.Cells["B" + row].Text;
             var projectLink = sheet.Cells["A2"].Text;
             var snippetType = GetInstanceType(codeSnippetId);
-            return new DataSetInstance(codeSnippetId, link, projectLink, snippetType, null);
+            return new Instance(codeSnippetId, link, projectLink, snippetType, null);
         }
 
         private static SnippetType GetInstanceType(string codeSnippetId)
@@ -90,7 +90,7 @@ namespace DataSetExplorer.DataSetSerializer
             return SnippetType.Class;
         }
 
-        private static DataSetAnnotation GetAnnotation(ExcelWorksheet sheet, int row)
+        private static Annotation GetAnnotation(ExcelWorksheet sheet, int row)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace DataSetExplorer.DataSetSerializer
                 var annotatorId = int.Parse(sheet.Cells["C2"].Text);
                 var codeSmell = sheet.Cells["B2"].Text;
                 var heuristics = GetHeuristics(sheet, row);
-                return new DataSetAnnotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics);
+                return new Annotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics);
             }
             catch (InvalidOperationException e)
             {

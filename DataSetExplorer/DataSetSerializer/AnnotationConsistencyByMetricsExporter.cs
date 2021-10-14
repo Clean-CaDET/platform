@@ -20,7 +20,7 @@ namespace DataSetExplorer.DataSetSerializer
             _exportPath = exportPath;
         }
 
-        public void ExportAnnotationsFromAnnotator(int annotatorId, List<DataSetInstance> instances,
+        public void ExportAnnotationsFromAnnotator(int annotatorId, List<Instance> instances,
             string fileName)
         {
             InitializeExcelSheet(_singleAnnotatorTemplatePath);
@@ -28,7 +28,7 @@ namespace DataSetExplorer.DataSetSerializer
             Serialize(fileName);
         }
 
-        public void ExportAnnotatorsForSeverity(int severity, List<DataSetInstance> instances,
+        public void ExportAnnotatorsForSeverity(int severity, List<Instance> instances,
             string fileName)
         {
             InitializeExcelSheet(_multipleAnnotatorsTemplatePath);
@@ -43,7 +43,7 @@ namespace DataSetExplorer.DataSetSerializer
             _sheet = _excelFile.Workbook.Worksheets[0];
         }
 
-        private void PopulateTemplateForAnnotator(int annotatorId, List<DataSetInstance> instances)
+        private void PopulateTemplateForAnnotator(int annotatorId, List<Instance> instances)
         {
             for (var i = 0; i < instances.Count; i++)
             {
@@ -53,7 +53,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateTemplateForSeverity(int severity, List<DataSetInstance> instances)
+        private void PopulateTemplateForSeverity(int severity, List<Instance> instances)
         {
             var j = 0;
             foreach (var instance in instances)

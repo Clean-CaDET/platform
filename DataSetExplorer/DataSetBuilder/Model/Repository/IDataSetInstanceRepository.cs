@@ -4,9 +4,9 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
     public interface IDataSetInstanceRepository
     {
-        DataSetInstance GetDataSetInstance(int id);
-        IEnumerable<DataSetInstance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId);
-        IEnumerable<DataSetInstance> GetAnnotatedInstances(int projectId);
-        void Update(DataSetInstance instance);
+        Instance GetDataSetInstance(int id);
+        IEnumerable<Instance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId);
+        IEnumerable<Instance> GetAnnotatedInstances(int projectId);
+        void Update(Instance instance);
     }
 }

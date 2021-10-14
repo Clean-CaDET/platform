@@ -13,8 +13,8 @@ namespace DataSetExplorer.Database
         public DbSet<Annotator> Annotators { get; set; }
         public DbSet<CodeSmell> CodeSmells { get; set; }
         public DbSet<SmellHeuristic> SmellHeuristics { get; set; }
-        public DbSet<DataSetAnnotation> DataSetAnnotations { get; set; }
-        public DbSet<DataSetInstance> DataSetInstances { get; set; }
+        public DbSet<Annotation> DataSetAnnotations { get; set; }
+        public DbSet<Instance> DataSetInstances { get; set; }
         public DbSet<DataSet> DataSets { get; set; }
         public DbSet<DataSetProject> DataSetProjects { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
@@ -23,7 +23,7 @@ namespace DataSetExplorer.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DataSetInstance>()
+            modelBuilder.Entity<Instance>()
                 .Property(i => i.MetricFeatures)
                 .HasConversion(
                     m => JsonConvert.SerializeObject(m),

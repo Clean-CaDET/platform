@@ -12,11 +12,11 @@ namespace DataSetExplorer.DataSetSerializer.ViewModel
         {
             _heuristics = new Dictionary<CodeSmell, List<string>>();
             //TODO: Load from DB or config.
-            _heuristics.Add(new CodeSmell("Large Class"), LCHeuristics());
-            _heuristics.Add(new CodeSmell("Long Method"), LMHeuristics());
-            _heuristics.Add(new CodeSmell("Feature Envy"), FEHeuristics());
-            _heuristics.Add(new CodeSmell("Data Class"), DCHeuristics());
-            _heuristics.Add(new CodeSmell("Refused Bequest"), RBHeuristics());
+            _heuristics.Add(new CodeSmell("Large_Class"), LCHeuristics());
+            _heuristics.Add(new CodeSmell("Long_Method"), LMHeuristics());
+            _heuristics.Add(new CodeSmell("Feature_Envy"), FEHeuristics());
+            _heuristics.Add(new CodeSmell("Data_Class"), DCHeuristics());
+            _heuristics.Add(new CodeSmell("Refused_Bequest"), RBHeuristics());
         }
 
         internal List<string> GetHeuristics(CodeSmell smell)

@@ -49,18 +49,18 @@ namespace DataSetExplorer
             }
         }
 
-        public Result<List<CandidateDataSetInstance>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds)
+        public Result<List<SmellCandidateInstances>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds)
         {
-            var instances = new List<CandidateDataSetInstance>();
+            var instances = new List<SmellCandidateInstances>();
             var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
             foreach (var project in projects) instances.AddRange(project.GetInstancesWithAllDisagreeingAnnotations());
             
             return Result.Ok(instances);
         }
 
-        public Result<List<CandidateDataSetInstance>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds)
+        public Result<List<SmellCandidateInstances>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds)
         {
-            var instances = new List<CandidateDataSetInstance>();
+            var instances = new List<SmellCandidateInstances>();
             var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
             foreach (var project in projects) instances.AddRange(project.GetInsufficientlyAnnotatedInstances());
             

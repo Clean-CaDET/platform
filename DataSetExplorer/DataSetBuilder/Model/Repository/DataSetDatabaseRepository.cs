@@ -25,7 +25,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         public DataSet GetDataSet(int id)
         {
             return _dbContext.DataSets
-                .Include(d => d.CodeSmells)
+                .Include(d => d.SupportedCodeSmells)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
@@ -35,7 +35,7 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         public IEnumerable<DataSet> GetAll()
         {
             return _dbContext.DataSets
-                .Include(d => d.CodeSmells)
+                .Include(d => d.SupportedCodeSmells)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell);
@@ -45,6 +45,19 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         {
             _dbContext.Update(dataSet);
             _dbContext.SaveChanges();
+        }
+
+        public Dictionary<string, List<string>> GetDataSetCodeSmells(int id)
+        {
+            var result = new Dictionary<string, List<string>>();
+            var dataSet = _dbContext.DataSets.Include(d => d.SupportedCodeSmells).FirstOrDefault(s => s.Id == id);
+            if (dataSet == null) return null;
+
+            foreach (var smell in dataSet.SupportedCodeSmells)
+            {
+                result.Add(smell.Name, smell.RelevantSnippetTypes().Select(t => t.ToString()).ToList());
+            }
+            return result;
         }
     }
 }

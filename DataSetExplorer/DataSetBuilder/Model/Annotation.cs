@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataSetExplorer.DataSetBuilder.Model
 {
-    public class DataSetAnnotation
+    public class Annotation
     {
         public int Id { get; private set; }
         public CodeSmell InstanceSmell { get; private set; }
@@ -11,12 +11,12 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public List<SmellHeuristic> ApplicableHeuristics { get; private set; }
         public Annotator Annotator { get; set; }
 
-        public DataSetAnnotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics) : 
+        public Annotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics) : 
             this(new CodeSmell(instanceSmell), severity, annotator, applicableHeuristics)
         {
         }
 
-        public DataSetAnnotation(CodeSmell instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
+        public Annotation(CodeSmell instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
         {
             InstanceSmell = instanceSmell;
             Severity = severity;
@@ -25,11 +25,11 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Validate();
         }
 
-        private DataSetAnnotation()
+        private Annotation()
         {
         }
 
-        public void Update(DataSetAnnotation other)
+        public void Update(Annotation other)
         {
             InstanceSmell = other.InstanceSmell;
             Severity = other.Severity;
@@ -48,7 +48,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
 
         public override bool Equals(object other)
         {
-            return other is DataSetAnnotation annotation
+            return other is Annotation annotation
                    && Annotator.Equals(annotation.Annotator)
                    && InstanceSmell.Name.Equals(annotation.InstanceSmell.Name);
         }
