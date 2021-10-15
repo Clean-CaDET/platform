@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmartTutor.Database;
+using SmartTutor.Security;
 using System;
 using System.IO;
 using System.Linq;
-using SmartTutor.Utils;
 
 namespace SmartTutor.Tests.Integration
 {
@@ -46,19 +46,19 @@ namespace SmartTutor.Tests.Integration
             });
         }
 
-        private void InitializeDbForTests(SmartTutorContext db)
+        private static void InitializeDbForTests(SmartTutorContext db)
         {
             var startingDb = File.ReadAllText("../../../Integration/Scripts/data.sql");
             db.Database.ExecuteSqlRaw(startingDb);
         }
 
-        private string CreateConnectionStringForTest()
+        private static string CreateConnectionStringForTest()
         {
             var server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
-            var database = Util.GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-test";
-            var user = Util.GetSecret("DATABASE_USERNAME") ?? "postgres";
-            var password = Util.GetSecret("DATABASE_PASSWORD") ?? "super";
+            var database = EnvironmentConnection.GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-test";
+            var user = EnvironmentConnection.GetSecret("DATABASE_USERNAME") ?? "postgres";
+            var password = EnvironmentConnection.GetSecret("DATABASE_PASSWORD") ?? "super";
             var integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             var pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
