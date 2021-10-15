@@ -1,6 +1,6 @@
 ﻿namespace SmartTutor.ContentModel.LearningObjects.Questions
 {
-    public class QuestionAnswer
+    public class QuestionAnswer : AssessmentEvent
     {
         public int Id { get; private set; }
         public int QuestionId { get; private set; }
