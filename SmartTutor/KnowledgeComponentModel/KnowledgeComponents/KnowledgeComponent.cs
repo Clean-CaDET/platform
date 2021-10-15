@@ -8,6 +8,6 @@ namespace SmartTutor.KnowledgeComponentModel.KnowledgeComponents
         
         public string Name { get; private set; }
 
-        public List<KnowledgeComponent> KnowledgeSubcomponents { get; private set; }
+        public List<KnowledgeComponent> Subcomponents { get; private set; }
     }
 }

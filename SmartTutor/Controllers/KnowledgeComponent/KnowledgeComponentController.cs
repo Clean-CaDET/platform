@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartTutor.Controllers.KnowledgeComponent.DTOs;
 using SmartTutor.KnowledgeComponentModel;
 
-namespace SmartTutor.Controllers.KnowledgeComponent
+namespace SmartTutor.Controllers.KnowledgeComponents
 {
     [Route("api/knowledge-components/")]
     [ApiController]
