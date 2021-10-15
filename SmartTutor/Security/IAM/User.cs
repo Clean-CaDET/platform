@@ -1,4 +1,4 @@
-﻿namespace SmartTutor.SystemUser
+﻿namespace SmartTutor.Security.IAM
 {
     public class User
     {

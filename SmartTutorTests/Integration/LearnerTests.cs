@@ -5,7 +5,7 @@ using Shouldly;
 using SmartTutor.Controllers.Learners;
 using SmartTutor.Controllers.Learners.DTOs;
 using SmartTutor.LearnerModel;
-using SmartTutor.SystemUser;
+using SmartTutor.Security.IAM;
 using Xunit;
 
 namespace SmartTutor.Tests.Integration

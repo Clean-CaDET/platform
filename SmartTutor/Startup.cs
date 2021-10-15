@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using SmartTutor.ContentModel;
 using SmartTutor.ContentModel.LearningObjects.Repository;
 using SmartTutor.ContentModel.Lectures.Repository;
@@ -23,12 +24,10 @@ using SmartTutor.ProgressModel.Progress.Repository;
 using SmartTutor.ProgressModel.Submissions.Repository;
 using SmartTutor.QualityAnalysis;
 using SmartTutor.QualityAnalysis.Repository;
+using SmartTutor.Security;
+using SmartTutor.Security.IAM;
 using System;
 using System.IO;
-using Microsoft.Net.Http.Headers;
-using SmartTutor.SystemUser;
-using SmartTutor.SystemUser.Keycloak;
-using SmartTutor.Utils;
 
 namespace SmartTutor
 {
@@ -161,9 +160,9 @@ namespace SmartTutor
         {
             var server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             var port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
-            var database = Util.GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
-            var user = Util.GetSecret("DATABASE_USERNAME") ?? "postgres";
-            var password = Util.GetSecret("DATABASE_PASSWORD") ?? "super";
+            var database = EnvironmentConnection.GetSecret("DATABASE_SCHEMA") ?? "smart-tutor-db";
+            var user = EnvironmentConnection.GetSecret("DATABASE_USERNAME") ?? "postgres";
+            var password = EnvironmentConnection.GetSecret("DATABASE_PASSWORD") ?? "super";
             var integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             var pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 
@@ -174,7 +173,7 @@ namespace SmartTutor
         private static string[] ParseCorsOrigins()
         {
             var corsOrigins = Array.Empty<string>();
-            var corsOriginsPath = Util.GetSecret("SMART_TUTOR_CORS_ORIGINS");
+            var corsOriginsPath = EnvironmentConnection.GetSecret("SMART_TUTOR_CORS_ORIGINS");
             if (File.Exists(corsOriginsPath))
             {
                 corsOrigins = File.ReadAllLines(corsOriginsPath);
