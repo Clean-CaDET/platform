@@ -13,21 +13,7 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public string ProjectLink { get; private set; }
         public SnippetType Type { get; private set; }
         public ISet<Annotation> Annotations { get; private set; }
-       /* public Dictionary<CaDETMetric, double> MetricFeatures 
-        {
-            get => MetricFeatures;
-            internal set 
-            {
-                if (value == null) return;
-                foreach (var metric in value)
-                {
-                    if (Double.IsInfinity(metric.Value) || Double.IsNaN(metric.Value)) value.Remove(metric.Key);
-                }
-                MetricFeatures = value;
-            } 
-        } // TODO: Expand and replace with the IFeature if a new feature type is introduced*/
-
-        public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; }
+        public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
 
         internal Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
         {

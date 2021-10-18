@@ -41,52 +41,10 @@ namespace DataSetExplorer.DataSetBuilder
         {
             var metric = (CaDETMetric)Enum.Parse(typeof(CaDETMetric), thresholds.Metric);
             var metricValue = instance.MetricFeatures.GetValueOrDefault(metric);
-            if (CheckIfInRange(thresholds))
-            {
-                return IsMetricValueInRange(metricValue, thresholds);
-            }
-            else if (CheckIfGreaterThanMinValue(thresholds))
-            {
-                return IsMetricValueGreaterThan(metricValue, thresholds.MinValue);
-            }
-            else if (CheckIfLessThanMaxValue(thresholds))
-            {
-                return IsMetricValueLessThan(metricValue, thresholds.MaxValue);
-            }
-            return true;
-        }
 
-        private static bool CheckIfInRange(MetricThresholds thresholds)
-        {
-            return !thresholds.MinValue.Equals("") && !thresholds.MaxValue.Equals("");
-        }
-
-        private static bool IsMetricValueInRange(double metricValue, MetricThresholds thresholds)
-        {
-            if (metricValue > Double.Parse(thresholds.MinValue) && metricValue < Double.Parse(thresholds.MaxValue)) return true;
-            else return false;
-        }
-
-        private static bool CheckIfGreaterThanMinValue(MetricThresholds thresholds)
-        {
-            return !thresholds.MinValue.Equals("");
-        }
-
-        private static bool IsMetricValueGreaterThan(double metricValue, string minValue)
-        {
-            if (metricValue > Double.Parse(minValue)) return true;
-            else return false;
-        }
-
-        private static bool CheckIfLessThanMaxValue(MetricThresholds thresholds)
-        {
-            return !thresholds.MaxValue.Equals("");
-        }
-
-        private static bool IsMetricValueLessThan(double metricValue, string maxValue)
-        {
-            if (metricValue < Double.Parse(maxValue)) return true;
-            else return false;
+            double minValue = thresholds.MinValue.Equals("") ? Double.MinValue : Double.Parse(thresholds.MinValue);
+            double maxValue = thresholds.MaxValue.Equals("") ? Double.MaxValue : Double.Parse(thresholds.MaxValue);
+            return metricValue >= minValue && metricValue <= maxValue;
         }
     }
 }

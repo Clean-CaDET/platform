@@ -69,8 +69,8 @@ namespace DataSetExplorer
             if (annotatorId != null) instances = _instanceRepository.GetInstancesAnnotatedByAnnotator(projectId, annotatorId).ToList();
             else instances = _instanceRepository.GetAnnotatedInstances(projectId).ToList();
 
-            var groupes = instances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Name);
-            foreach (var group in groupes)
+            var instancesBySmell = instances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Name);
+            foreach (var group in instancesBySmell)
             {
                 candidateInstances.Add(new SmellCandidateInstances(new CodeSmell(group.Key), group.ToList()));
             }

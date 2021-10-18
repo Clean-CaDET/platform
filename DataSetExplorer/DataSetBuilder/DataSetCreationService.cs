@@ -53,7 +53,6 @@ namespace DataSetExplorer
 
         public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells, NewSpreadSheetColumnModel columnModel)
         {
-            //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
             var dataSet = new DataSet(dataSetName, codeSmells);
             foreach(var projectName in projects.Keys)
             {
