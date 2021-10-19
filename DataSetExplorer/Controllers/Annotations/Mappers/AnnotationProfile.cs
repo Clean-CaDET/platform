@@ -1,20 +1,17 @@
 ﻿using AutoMapper;
-using DataSetExplorer.Controllers.Annotation.DTOs;
 using DataSetExplorer.DataSetBuilder.Model;
-using System;
+using DataSetExplorer.Controllers.Annotations.DTOs;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace DataSetExplorer.Controllers.Annotation.Mappers
+namespace DataSetExplorer.Controllers.Annotations.Mappers
 {
     public class AnnotationProfile : Profile
     {
         public AnnotationProfile()
         {
-            CreateMap<DataSetAnnotationDTO, DataSetAnnotation>()
+            CreateMap<AnnotationDTO, Annotation>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
-                .ConstructUsing(src => new DataSetAnnotation(src.CodeSmell, src.Severity, new Annotator(src.AnnotatorId), CreateHeuristics(src.ApplicableHeuristics)));
+                .ConstructUsing(src => new Annotation(src.CodeSmell, src.Severity, new Annotator(src.AnnotatorId), CreateHeuristics(src.ApplicableHeuristics)));
         }
 
         private List<SmellHeuristic> CreateHeuristics(List<SmellHeuristicDTO> heuristics)

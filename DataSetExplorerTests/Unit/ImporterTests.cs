@@ -15,22 +15,22 @@ namespace DataSetExplorer.Tests.Unit
         {
             var codeSmells = new List<CodeSmell>
             {
-                new CodeSmell("Long Method"),
-                new CodeSmell("Large Class")
+                new CodeSmell("Long_Method"),
+                new CodeSmell("Large_Class")
             };
             var dataSet = new DataSet("Test", codeSmells);
             ExcelImporter importer = new ExcelImporter(new ExcelFactory().GetTestDataFolder());
             var project = importer.Import("BurningKnight");
             dataSet.AddProject(project);
 
-            var longMethodCandidate = dataSet.Projects.First(p => p.Name.Equals("BurningKnight")).CandidateInstances.First(c => c.CodeSmell.Name.Equals("Long Method"));
+            var longMethodCandidate = dataSet.Projects.First(p => p.Name.Equals("BurningKnight")).CandidateInstances.First(c => c.CodeSmell.Name.Equals("Long_Method"));
             var distinctMethods = longMethodCandidate.Instances.Distinct();
             distinctMethods.Count().ShouldBe(311);
             distinctMethods.Count(i => i.Annotations.Count == 3).ShouldBe(298);
             distinctMethods.Count(i => i.Annotations.Count == 2).ShouldBe(8);
             distinctMethods.Count(i => i.Annotations.Count == 1).ShouldBe(5);
 
-            var largeClassCandidate = dataSet.Projects.First(p => p.Name.Equals("BurningKnight")).CandidateInstances.First(c => c.CodeSmell.Name.Equals("Large Class"));
+            var largeClassCandidate = dataSet.Projects.First(p => p.Name.Equals("BurningKnight")).CandidateInstances.First(c => c.CodeSmell.Name.Equals("Large_Class"));
             var distinctClasses = largeClassCandidate.Instances.Distinct();
             distinctClasses.Count().ShouldBe(79);
             distinctClasses.Count(i => i.Annotations.Count == 3).ShouldBe(79);
@@ -49,7 +49,7 @@ namespace DataSetExplorer.Tests.Unit
             allClassAnnotations.First(a => a.Annotator.Id == 3).Annotator.ShouldBe(annotators.Find(a => a.Id == 3));
         }
 
-        private void JoinInstancesAndAnnotators(List<DataSetInstance> annotatedInstances, List<Annotator> annotators)
+        private void JoinInstancesAndAnnotators(List<Instance> annotatedInstances, List<Annotator> annotators)
         {
             foreach (var annotation in annotatedInstances.SelectMany(i => i.Annotations))
             {
@@ -64,8 +64,8 @@ namespace DataSetExplorer.Tests.Unit
             var project = importer.Import("BurningKnight");
 
             var instances = project.GetInsufficientlyAnnotatedInstances();
-            var classes = instances.Find(c => c.CodeSmell.Name.Equals("Large Class")).Instances;
-            var methods = instances.Find(c => c.CodeSmell.Name.Equals("Long Method")).Instances;
+            var classes = instances.Find(c => c.CodeSmell.Name.Equals("Large_Class")).Instances;
+            var methods = instances.Find(c => c.CodeSmell.Name.Equals("Long_Method")).Instances;
             classes.Count.ShouldBe(0);
             methods.Count.ShouldBe(7);
         }
@@ -77,8 +77,8 @@ namespace DataSetExplorer.Tests.Unit
             var project = importer.Import("BurningKnight");
 
             var instances = project.GetInstancesWithAllDisagreeingAnnotations();
-            var classes = instances.Find(c => c.CodeSmell.Name.Equals("Large Class")).Instances;
-            var methods = instances.Find(c => c.CodeSmell.Name.Equals("Long Method")).Instances;
+            var classes = instances.Find(c => c.CodeSmell.Name.Equals("Large_Class")).Instances;
+            var methods = instances.Find(c => c.CodeSmell.Name.Equals("Long_Method")).Instances;
             classes.Count.ShouldBe(4);
             methods.Count.ShouldBe(10);
         }

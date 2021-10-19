@@ -17,7 +17,7 @@ namespace DataSetExplorer.DataSetSerializer
             _resultFolder = destinationPath;
         }
 
-        public void ExportInstancesWithAnnotatorId(List<CandidateDataSetInstance> candidateInstances)
+        public void ExportInstancesWithAnnotatorId(List<SmellCandidateInstances> candidateInstances)
         {
             //TODO: Consider moving to DataSet or new entity
             foreach (var candidate in candidateInstances)
@@ -31,7 +31,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void SaveInstanceToFile(List<DataSetInstance> instances, string fileName)
+        private void SaveInstanceToFile(List<Instance> instances, string fileName)
         {
             var sb = new StringBuilder();
             foreach (var instance in instances)
@@ -47,7 +47,7 @@ namespace DataSetExplorer.DataSetSerializer
             File.WriteAllText(_resultFolder + fileName, text);
         }
 
-        private void SaveSnippetLinkToFile(List<DataSetInstance> instances, string fileName)
+        private void SaveSnippetLinkToFile(List<Instance> instances, string fileName)
         {
             var sb = new StringBuilder();
             foreach (var instance in instances)
@@ -57,7 +57,7 @@ namespace DataSetExplorer.DataSetSerializer
             WriteToFile(sb.ToString(), fileName);
         }
 
-        internal void ExportMembersFromAnnotatedClasses(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<DataSetInstance> annotatedClasses)
+        internal void ExportMembersFromAnnotatedClasses(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedClasses)
         {
             foreach (var severity in classesGroupedBySeverity.Keys)
             {

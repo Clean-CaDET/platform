@@ -11,9 +11,10 @@ namespace DataSetExplorer
         Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells);
         Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells, NewSpreadSheetColumnModel columnModel);
         Result<DataSet> CreateEmptyDataSet(string dataSetName, List<CodeSmell> codeSmells);
-        Result<DataSet> AddProjectsToDataSet(int dataSetId, string basePath, List<DataSetProject> projects);
+        Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project);
         Result<DataSet> GetDataSet(int id);
         Result<IEnumerable<DataSet>> GetAllDataSets();
         Result<DataSetProject> GetDataSetProject(int id);
+        Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id);
     }
 }

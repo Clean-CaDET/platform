@@ -1,7 +1,5 @@
-﻿using System;
+﻿using DataSetExplorer.DataSetBuilder.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataSetExplorer.Controllers.Dataset.DTOs
 {
@@ -9,5 +7,6 @@ namespace DataSetExplorer.Controllers.Dataset.DTOs
     {
         public string Name { get; set; }
         public string Url { get; set; }
+        public List<MetricThresholds> MetricsThresholds { get; set; }
     }
 }

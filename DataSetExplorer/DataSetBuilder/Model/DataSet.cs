@@ -7,13 +7,13 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public int Id { get; private set; }
         public string Name { get; private set; }
         public HashSet<DataSetProject> Projects { get; private set; }
-        public List<CodeSmell> CodeSmells { get; private set; }
+        public List<CodeSmell> SupportedCodeSmells { get; private set; }
 
         public DataSet(string name, List<CodeSmell> codeSmells)
         {
             Name = name;
             Projects = new HashSet<DataSetProject>();
-            CodeSmells = codeSmells;
+            SupportedCodeSmells = codeSmells;
         }
 
         private DataSet()
