@@ -1,5 +1,4 @@
-﻿
-namespace DataSetExplorer.Controllers.Dataset.DTOs
+﻿namespace DataSetExplorer.Controllers.Dataset.DTOs
 {
     public class MetricThresholdsDTO
     {
