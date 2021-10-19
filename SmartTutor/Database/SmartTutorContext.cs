@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using SmartTutor.ContentModel.LearningObjects;
 using SmartTutor.ContentModel.LearningObjects.ArrangeTasks;
 using SmartTutor.ContentModel.LearningObjects.Challenges;
@@ -7,6 +8,7 @@ using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.Met
 using SmartTutor.ContentModel.LearningObjects.Challenges.FulfillmentStrategy.NameChecker;
 using SmartTutor.ContentModel.LearningObjects.Questions;
 using SmartTutor.ContentModel.Lectures;
+using SmartTutor.KnowledgeComponentModel.KnowledgeComponents;
 using SmartTutor.LearnerModel.Learners;
 using SmartTutor.ProgressModel.Feedback;
 using SmartTutor.ProgressModel.Progress;
@@ -50,6 +52,13 @@ namespace SmartTutor.Database
         public DbSet<QuestionSubmission> QuestionSubmissions { get; set; }
         public DbSet<LearningObjectFeedback> LearningObjectFeedback { get; set; }
         #endregion
+        
+        #region Knowledge Components
+
+        public DbSet<KnowledgeComponent> KnowledgeComponents { get; set; }
+        public DbSet<KnowledgeComponentProgress> KnowledgeComponentProgress { get; set; }
+        
+        #endregion
         public DbSet<Learner> Learners { get; set; }
         public DbSet<IssueAdvice> Advice { get; set; }
 
@@ -64,7 +73,7 @@ namespace SmartTutor.Database
             modelBuilder.Entity<Video>().ToTable("Videos");
             modelBuilder.Entity<Question>().ToTable("Questions");
             modelBuilder.Entity<ArrangeTask>().ToTable("ArrangeTasks");
-            
+
             ConfigureChallenge(modelBuilder);
 
             modelBuilder.Entity<Learner>()

@@ -28,6 +28,8 @@ using SmartTutor.Security;
 using SmartTutor.Security.IAM;
 using System;
 using System.IO;
+using SmartTutor.KnowledgeComponentModel;
+using SmartTutor.KnowledgeComponentModel.KnowledgeComponents.Repository;
 
 namespace SmartTutor
 {
@@ -70,6 +72,9 @@ namespace SmartTutor
             services.AddScoped<IContentService, ContentService>();
             services.AddScoped<ILectureRepository, LectureDatabaseRepository>();
             services.AddScoped<ILearningObjectRepository, LearningObjectDatabaseRepository>();
+            
+            services.AddScoped<IKnowledgeComponentRepository, KnowledgeComponentDatabaseRepository>();
+            services.AddScoped<IKnowledgeComponentService, KnowledgeComponentService>();
 
             services.AddScoped<IProgressService, ProgressService>();
             services.AddScoped<IProgressRepository, ProgressDatabaseRepository>();

@@ -527,3 +527,13 @@ INSERT INTO public."IssueAdviceLearningObjectSummary"(
 INSERT INTO public."IssueAdviceLearningObjectSummary"(
 	"AdviceId", "SummariesId")
 	VALUES (1, 63);
+
+INSERT INTO public."KnowledgeComponents"(
+    "Name", "KnowledgeComponentId")
+VALUES ('Clean functions', NULL);
+INSERT INTO public."KnowledgeComponents"(
+    "Name", "KnowledgeComponentId")
+VALUES ('Parameter list reduction', 1);
+INSERT INTO public."KnowledgeComponents"(
+    "Name", "KnowledgeComponentId")
+VALUES ('Clean names', 1);
