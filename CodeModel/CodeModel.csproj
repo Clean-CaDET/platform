@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageId>CleanCaDET.CodeModel</PackageId>
+    <Authors>Nikola Luburić, Simona Prokić, Katarina-Glorija Grujić</Authors>
+    <Company>Clean CaDET</Company>
+    <Description>Contains classes for structuring and creating a code model, formed from C# source code and used by the Clean CaDET platform.</Description>
+    <PackageLicenseFile></PackageLicenseFile>
+    <PackageProjectUrl>https://clean-cadet.github.io/</PackageProjectUrl>
+    <PackageIcon></PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/Clean-CaDET/platform/tree/master/CodeModel</RepositoryUrl>
+    <PackageLicenseExpression>https://licenses.nuget.org/GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
