@@ -1,4 +1,6 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSetBuilder.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,6 +55,25 @@ namespace DataSetExplorer.DataSetSerializer
                 sb.Append(instance.Link).Append("\n");
             }
             WriteToFile(sb.ToString(), fileName);
+        }
+
+        internal void ExportMembersFromAnnotatedClasses(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedClasses)
+        {
+            foreach (var severity in classesGroupedBySeverity.Keys)
+            {
+                Directory.CreateDirectory(_resultFolder + severity + "/");
+                for (var i = 0; i < annotatedClasses.Count; i++)
+                {
+                    var classForExport = classesGroupedBySeverity[severity].Find(c => c.FullName.Equals(annotatedClasses[0].CodeSnippetId));
+                    if (classForExport == null) continue;
+                    var classFolderPath = _resultFolder + severity + "/" + i + "/";
+                    Directory.CreateDirectory(classFolderPath);
+                    for (var j = 0; j < classForExport.Members.Count; j++)
+                    {
+                        File.WriteAllText(classFolderPath + j + 1 + ".txt", classForExport.Members[j].SourceCode);
+                    }
+                }
+            }
         }
     }
 }

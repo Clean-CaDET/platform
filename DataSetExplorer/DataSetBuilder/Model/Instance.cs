@@ -23,13 +23,20 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Type = type;
             
             Annotations = new HashSet<Annotation>();
-            //MetricFeatures = metricFeatures;
             SetMetricFeatures(metricFeatures);
             Validate();
         }
 
         private Instance()
         {
+        }
+
+        public Instance(string codeSnippetId, string projectLink)
+        {
+            CodeSnippetId = codeSnippetId;
+            ProjectLink = projectLink;
+            Annotations = new HashSet<Annotation>();
+            MetricFeatures = new Dictionary<CaDETMetric, double>();
         }
 
         private void SetMetricFeatures(Dictionary<CaDETMetric, double> metricFeatures)
