@@ -11,7 +11,7 @@
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/Clean-CaDET/platform/tree/master/CodeModel</RepositoryUrl>
-    <PackageLicenseExpression>https://licenses.nuget.org/GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
