@@ -50,13 +50,13 @@ namespace DataSetExplorer.Controllers.Annotations
         }
 
         [HttpPost]
-        public IActionResult AddDataSetAnnotation([FromBody] DataSetAnnotationDTO annotation)
+        public IActionResult AddDataSetAnnotation([FromBody] AnnotationDTO annotation)
         {
             try 
             {
                 var authHeader = HttpContext.Request.Headers["Authorization"];
                 annotation.AnnotatorId = Int32.Parse(authHeader);
-                var result = _dataSetAnnotationService.AddDataSetAnnotation(_mapper.Map<Annotation>(annotation), annotation.DataSetInstanceId, annotation.AnnotatorId);
+                var result = _dataSetAnnotationService.AddDataSetAnnotation(_mapper.Map<Annotation>(annotation), annotation.InstanceId, annotation.AnnotatorId);
                 if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
                 return Ok(result.Value);
             }
@@ -68,7 +68,7 @@ namespace DataSetExplorer.Controllers.Annotations
 
         [HttpPut]
         [Route("update/{id}")]
-        public IActionResult UpdateAnnotation([FromRoute] int id, [FromBody] DataSetAnnotationDTO annotation)
+        public IActionResult UpdateAnnotation([FromRoute] int id, [FromBody] AnnotationDTO annotation)
         {
             try
             {
