@@ -7,27 +7,22 @@ namespace DataSetExplorer.DataSetBuilder
 {
     internal class InstanceFilter
     {
-        public List<MetricThresholds> MetricThresholds { get; }
+        public List<SmellFilter> SmellFilters { get; }
         
-        public InstanceFilter(List<MetricThresholds> metricThresholds)
+        public InstanceFilter(List<SmellFilter> smellFilters)
         {
-            MetricThresholds = metricThresholds;
+            SmellFilters = smellFilters;
         }
 
         public List<Instance> FilterInstances(CodeSmell codeSmell, List<Instance> instances)
         {
             var filteredInstances = new List<Instance>();
-            var metricsForSmell = MetricThresholds.FindAll(m => m.CodeSmell.Equals(codeSmell.Name));
+            var metricsThresholds = SmellFilters.Find(f => f.CodeSmell.Equals(codeSmell)).MetricsThresholds;
 
             foreach (var i in instances)
             {
                 if (!ValidSnippetTypeForSmell(i, codeSmell)) continue;
-                var fulfilledConditions = new List<bool>();
-                foreach (var thresholds in metricsForSmell)
-                {
-                    fulfilledConditions.Add(InstanceFulfillesConditions(i, thresholds));
-                }
-                if (!fulfilledConditions.Contains(false)) filteredInstances.Add(i);
+                if (InstancePassesMetricThresholds(i, metricsThresholds)) filteredInstances.Add(i);
             }
             return filteredInstances;
         }
@@ -35,6 +30,11 @@ namespace DataSetExplorer.DataSetBuilder
         private static bool ValidSnippetTypeForSmell(Instance instance, CodeSmell codeSmell)
         {
             return codeSmell.RelevantSnippetTypes()[0].ToString().Equals(instance.Type.ToString());
+        }
+
+        private static bool InstancePassesMetricThresholds(Instance i, List<MetricThresholds> metricsThreholds)
+        {
+            return metricsThreholds.TrueForAll(thresholds => InstanceFulfillesConditions(i, thresholds));
         }
 
         private static bool InstanceFulfillesConditions(Instance instance, MetricThresholds thresholds)

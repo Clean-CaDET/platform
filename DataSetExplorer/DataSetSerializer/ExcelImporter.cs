@@ -106,7 +106,7 @@ namespace DataSetExplorer.DataSetSerializer
                     var finalAnnotation = sheet.Cells["AD" + row].Text;
                     Instance instance = new Instance(codeSnippetId, projectLink);
                     // Dummy values for DataSetAnnotation constructor to pass validations (the final annotation is the only important parameter in this case).
-                    Annotation annotation = new Annotation(new CodeSmell("Large Class"), int.Parse(finalAnnotation), new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") });
+                    Annotation annotation = new Annotation(new CodeSmell("Large_Class"), int.Parse(finalAnnotation), new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") });
                     instance.AddAnnotation(annotation);
                     instances.Add(instance);
                 }

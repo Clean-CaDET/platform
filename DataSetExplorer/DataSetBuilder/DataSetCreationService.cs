@@ -34,12 +34,12 @@ namespace DataSetExplorer
             return Result.Ok(dataSet);
         }
 
-        public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project)
+        public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters)
         {
             var initialDataSet = _dataSetRepository.GetDataSet(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
             
-            Task.Run(() => ProcessInitialDataSetProject(basePath, project, initialDataSet.SupportedCodeSmells));
+            Task.Run(() => ProcessInitialDataSetProject(basePath, project, initialDataSet.SupportedCodeSmells, smellFilters));
             initialDataSet.AddProject(project);
             
             _dataSetRepository.Update(initialDataSet);
@@ -85,26 +85,26 @@ namespace DataSetExplorer
             return Result.Ok(project);
         }
 
-        private DataSetProject CreateDataSetProject(string basePath, string projectName, string projectAndCommitUrl, List<CodeSmell> codeSmells, List<MetricThresholds> metricsThresholds)
+        private DataSetProject CreateDataSetProject(string basePath, string projectName, string projectAndCommitUrl, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters)
         {
             var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
             _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
-            return CreateDataSetProjectFromRepository(projectAndCommitUrl, projectName, gitFolderPath, codeSmells, metricsThresholds);
+            return CreateDataSetProjectFromRepository(projectAndCommitUrl, projectName, gitFolderPath, codeSmells, smellFilters);
         }
 
-        private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells, List<MetricThresholds> metricsThresholds)
+        private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(metricsThresholds), projectAndCommitUrl, projectName, projectPath, codeSmells);
+            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, codeSmells);
             return builder.RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
         }
 
-        private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject, List<CodeSmell> codeSmells)
+        private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters)
         {
             try
             {
-                var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, initialProject.MetricsThresholds);
+                var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters);
                 initialProject.CandidateInstances = project.CandidateInstances;
                 initialProject.Processed();
                 _dataSetProjectRepository.Update(initialProject);

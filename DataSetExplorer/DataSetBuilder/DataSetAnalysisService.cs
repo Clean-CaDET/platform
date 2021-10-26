@@ -94,17 +94,7 @@ namespace DataSetExplorer
                 foreach (var projectUrl in projects.Keys)
                 {
                     CaDETProject cadetProject = factory.CreateProjectWithCodeFileLinks(projects[projectUrl]);
-
-                    foreach (var instance in annotatedInstances)
-                    {
-                        var classForExport = cadetProject.Classes.Find(c => c.FullName.Equals(instance.CodeSnippetId));
-                        if (classForExport != null)
-                        {
-                            var finalAnnotation = instance.GetFinalAnnotation();
-                            if (!classesGroupedBySeverity.ContainsKey(finalAnnotation)) classesGroupedBySeverity.Add(finalAnnotation, new List<CaDETClass>());
-                            classesGroupedBySeverity[finalAnnotation].Add(classForExport);
-                        }
-                    }
+                    GroupInstancesBySeverity(classesGroupedBySeverity, annotatedInstances, cadetProject);
                 }
 
                 var exporter = new TextFileExporter(outputFolder);
@@ -114,6 +104,20 @@ namespace DataSetExplorer
             catch (IOException e)
             {
                 return Result.Fail(e.ToString());
+            }
+        }
+
+        private static void GroupInstancesBySeverity(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedInstances, CaDETProject cadetProject)
+        {
+            foreach (var instance in annotatedInstances)
+            {
+                var classForExport = cadetProject.Classes.Find(c => c.FullName.Equals(instance.CodeSnippetId));
+                if (classForExport != null)
+                {
+                    var finalAnnotation = instance.GetFinalAnnotation();
+                    if (!classesGroupedBySeverity.ContainsKey(finalAnnotation)) classesGroupedBySeverity.Add(finalAnnotation, new List<CaDETClass>());
+                    classesGroupedBySeverity[finalAnnotation].Add(classForExport);
+                }
             }
         }
     }

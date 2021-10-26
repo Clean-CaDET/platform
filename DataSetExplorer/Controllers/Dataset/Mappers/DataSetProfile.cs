@@ -8,8 +8,10 @@ namespace DataSetExplorer.Controllers.Dataset.Mappers
     {
         public DataSetProfile()
         {
-            CreateMap<ProjectDTO, DataSetProject>();
             CreateMap<CodeSmellDTO, CodeSmell>();
+            CreateMap<ProjectDTO, DataSetProject>();
+            CreateMap<SmellFilterDTO, SmellFilter>();
+            CreateMap<MetricThresholdsDTO, MetricThresholds>();
         }
     }
 }

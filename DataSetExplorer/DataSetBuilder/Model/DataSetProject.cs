@@ -10,7 +10,6 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public string Url { get; private set; }
         public HashSet<SmellCandidateInstances> CandidateInstances { get; internal set; }
         public ProjectState State { get; private set; }
-        public List<MetricThresholds> MetricsThresholds { get; internal set; }
 
         internal DataSetProject(string name, string url)
         {
@@ -18,7 +17,6 @@ namespace DataSetExplorer.DataSetBuilder.Model
             Url = url;
             CandidateInstances = new HashSet<SmellCandidateInstances>();
             State = ProjectState.Processing;
-            MetricsThresholds = new List<MetricThresholds>();
         }
 
         public DataSetProject(string name) : this(name, null) { }
