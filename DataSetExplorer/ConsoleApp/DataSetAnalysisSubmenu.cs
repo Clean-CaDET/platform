@@ -13,8 +13,7 @@ namespace DataSetExplorer.ConsoleApp
         }
 
         public void AnalyzeDataSet()
-        {
-            
+        {   
             string chosenOption;
             do
             {

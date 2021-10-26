@@ -24,6 +24,5 @@ namespace DataSetExplorer.DataSetBuilder.Model
         {
             return other is CodeSmell smell && CodeSmell.Equals(smell);
         }
-
     }
 }
