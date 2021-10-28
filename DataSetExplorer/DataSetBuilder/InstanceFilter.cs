@@ -32,12 +32,12 @@ namespace DataSetExplorer.DataSetBuilder
             return codeSmell.RelevantSnippetTypes()[0].ToString().Equals(instance.Type.ToString());
         }
 
-        private static bool InstancePassesMetricThresholds(Instance i, List<MetricThresholds> metricsThreholds)
+        private static bool InstancePassesMetricThresholds(Instance instance, List<MetricThresholds> metricsThreholds)
         {
-            return metricsThreholds.TrueForAll(thresholds => InstanceFulfillesConditions(i, thresholds));
+            return metricsThreholds.TrueForAll(thresholds => IsInThresholdRange(instance, thresholds));
         }
 
-        private static bool InstanceFulfillesConditions(Instance instance, MetricThresholds thresholds)
+        private static bool IsInThresholdRange(Instance instance, MetricThresholds thresholds)
         {
             var metric = (CaDETMetric)Enum.Parse(typeof(CaDETMetric), thresholds.Metric);
             var metricValue = instance.MetricFeatures.GetValueOrDefault(metric);
