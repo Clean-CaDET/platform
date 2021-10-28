@@ -12,8 +12,11 @@ namespace DataSetExplorer.DataSetSerializer.ViewModel
         {
             _heuristics = new Dictionary<CodeSmell, List<string>>();
             //TODO: Load from DB or config.
-            _heuristics.Add(new CodeSmell("Large Class"), LCHeuristics());
-            _heuristics.Add(new CodeSmell("Long Method"), LMHeuristics());
+            _heuristics.Add(new CodeSmell("Large_Class"), LCHeuristics());
+            _heuristics.Add(new CodeSmell("Long_Method"), LMHeuristics());
+            _heuristics.Add(new CodeSmell("Feature_Envy"), FEHeuristics());
+            _heuristics.Add(new CodeSmell("Data_Class"), DCHeuristics());
+            _heuristics.Add(new CodeSmell("Refused_Bequest"), RBHeuristics());
         }
 
         internal List<string> GetHeuristics(CodeSmell smell)
@@ -32,7 +35,7 @@ namespace DataSetExplorer.DataSetSerializer.ViewModel
             return _heuristics.Keys.ToList();
         }
 
-        private List<string> LMHeuristics()
+        private static List<string> LMHeuristics()
         {
             var retVal = new List<string>
             {
@@ -44,13 +47,46 @@ namespace DataSetExplorer.DataSetSerializer.ViewModel
             return retVal;
         }
 
-        private List<string> LCHeuristics()
+        private static List<string> LCHeuristics()
         {
             var retVal = new List<string>
             {
                 "Class is too long.",
                 "Class is too complex.",
                 "Class has multiple concerns."
+            };
+            return retVal;
+        }
+
+        private static List<string> FEHeuristics()
+        {
+            var retVal = new List<string>
+            {
+                "Function has method chains.",
+                "Function uses foreign data.",
+                "Function has few foreign providers.",
+                "Function does not belong here (semantic)."
+            };
+            return retVal;
+        }
+
+        private static List<string> DCHeuristics()
+        {
+            var retVal = new List<string>
+            {
+                "No logic in methods.",
+                "Not DTO, DAO,..."
+            };
+            return retVal;
+        }
+
+        private static List<string> RBHeuristics()
+        {
+            var retVal = new List<string>
+            {
+                "Few parent members used.", 
+                "Many members overriden.", 
+                "Unnecessary hierarchy."
             };
             return retVal;
         }

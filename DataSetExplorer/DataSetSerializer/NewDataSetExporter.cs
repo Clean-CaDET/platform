@@ -35,7 +35,8 @@ namespace DataSetExplorer.DataSetSerializer
             foreach (var smell in _requiredSmells.GetSmells())
             {
                 var sheet = template.Workbook.Worksheets.First(s => s.Name == smell.Name);
-                var instances = smell.RelevantSnippetTypes().SelectMany(snippetType => dataSet.GetInstancesOfType(snippetType, project.Name)).ToList();
+                var dataSetProject = dataSet.Projects.First(p => p.Name.Equals(project.Name));
+                var instances = dataSetProject.CandidateInstances.First(c => c.CodeSmell.Name.Equals(smell.Name)).Instances;
                 PopulateInstances(sheet, instances, smell);
             }
 
@@ -72,7 +73,7 @@ namespace DataSetExplorer.DataSetSerializer
             sheet.Cells[2, 4 + (2*heuristics.Count)].Value = "Custom heuristics.";
         }
 
-        private void PopulateInstances(ExcelWorksheet sheet, List<DataSetInstance> instances, CodeSmell smell)
+        private void PopulateInstances(ExcelWorksheet sheet, List<Instance> instances, CodeSmell smell)
         {
             int numOfHeuristics = _requiredSmells.GetHeuristics(smell).Count() + 1; // +1 for custom heuristic
             for (var i = 0; i < instances.Count; i++)
@@ -88,7 +89,7 @@ namespace DataSetExplorer.DataSetSerializer
             }
         }
 
-        private void PopulateMetrics(ExcelWorksheet sheet, DataSetInstance dataSetInstance, int row, int column)
+        private void PopulateMetrics(ExcelWorksheet sheet, Instance dataSetInstance, int row, int column)
         {
             sheet.Cells[1, column].Value = "Metrics";
             foreach (var metric in dataSetInstance.MetricFeatures)

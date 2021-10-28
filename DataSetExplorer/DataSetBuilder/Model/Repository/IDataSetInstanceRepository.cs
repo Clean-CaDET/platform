@@ -1,15 +1,12 @@
-﻿using DataSetExplorer.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
     public interface IDataSetInstanceRepository
     {
-        DataSetInstance GetDataSetInstance(int id);
-        IEnumerable<DataSetInstance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId);
-        void Update(DataSetInstance instance);
+        Instance GetDataSetInstance(int id);
+        IEnumerable<Instance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId);
+        IEnumerable<Instance> GetAnnotatedInstances(int projectId);
+        void Update(Instance instance);
     }
 }

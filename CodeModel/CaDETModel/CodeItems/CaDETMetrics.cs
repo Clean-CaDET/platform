@@ -140,7 +140,7 @@
         NOPA,
 
         /// <summary>
-        /// NOAM: Number Of Public Properties
+        /// NPP: Number Of Public Properties
         /// </summary>
         NOPP,
 
@@ -209,12 +209,12 @@
         NOTC,
 
         /// <summary>
-        /// NOL: Number of loops in method
+        /// MNOL: Number of loops in method
         /// </summary>
         MNOL,
 
         /// <summary>
-        /// NOR: Number of return statements in method
+        /// MNOR: Number of return statements in method
         /// </summary>
         MNOR,
 

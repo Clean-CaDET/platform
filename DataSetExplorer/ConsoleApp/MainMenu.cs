@@ -35,7 +35,7 @@ namespace DataSetExplorer.ConsoleApp
                     CreateDataSet();
                     break;
                 case "2":
-                    new DataSetAnalysisSubmenu(new DataSetAnalysisService(null, null)).AnalyzeDataSet();
+                    new DataSetAnalysisSubmenu(new DataSetAnalysisService(null)).AnalyzeDataSet();
                     break;
                 case "3":
                     ExportDataSet();
@@ -54,10 +54,11 @@ namespace DataSetExplorer.ConsoleApp
         private void CreateDataSet()
         {
             string dataSetName = ConsoleIO.GetAnswerOnQuestion("Enter data set name: ");
+            var codeSmells = DataSetIO.GetCodeSmells("code smell name");
             string outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
             var projects = DataSetIO.GetProjects("project name and project/commit URL");
 
-            var result = _dataSetCreationService.CreateDataSetSpreadsheet(dataSetName, outputPath, projects);
+            var result = _dataSetCreationService.CreateDataSetSpreadsheet(dataSetName, outputPath, projects, codeSmells);
             Console.WriteLine(result.ToString());
         }
 

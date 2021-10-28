@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
@@ -20,18 +21,20 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         public DataSetProject GetDataSetProject(int id)
         {
             return _dbContext.DataSetProjects
-                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
                 .FirstOrDefault(s => s.Id == id);
         }
 
         public IEnumerable<DataSetProject> GetDataSetProjects(IEnumerable<int> projectIds)
         {
             return _dbContext.DataSetProjects
-                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(p => p.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
                 .Where(p => projectIds.Contains(p.Id));
         }
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace DataSetExplorer.DataSetBuilder.Model
@@ -9,52 +8,60 @@ namespace DataSetExplorer.DataSetBuilder.Model
         public int Id { get; private set; }
         public string Name { get; private set; }
         public string Url { get; private set; }
-        public HashSet<DataSetInstance> Instances { get; private set; }
-        public DataSetProjectState State { get; private set; }
+        public HashSet<SmellCandidateInstances> CandidateInstances { get; internal set; }
+        public ProjectState State { get; private set; }
 
         internal DataSetProject(string name, string url)
         {
             Name = name;
             Url = url;
-            Instances = new HashSet<DataSetInstance>();
-            State = DataSetProjectState.Processing;
+            CandidateInstances = new HashSet<SmellCandidateInstances>();
+            State = ProjectState.Processing;
         }
 
         public DataSetProject(string name) : this(name, null) { }
 
-        internal void AddInstances(List<DataSetInstance> instances)
+        internal void AddCandidateInstance(SmellCandidateInstances newCandidate)
         {
-            foreach (var instance in instances)
+            if (CandidateInstances.TryGetValue(newCandidate, out var existingCandidate))
             {
-                if (Instances.TryGetValue(instance, out var existingInstance))
-                {
-                    existingInstance.AddAnnotations(instance);
-                }
-                else
-                {
-                    Instances.Add(instance);
-                }
+                existingCandidate.AddInstances(newCandidate);
+            } else
+            {
+                CandidateInstances.Add(newCandidate);
             }
         }
 
-        public List<DataSetInstance> GetInsufficientlyAnnotatedInstances(string projectName = null)
+        public List<SmellCandidateInstances> GetInsufficientlyAnnotatedInstances()
         {
-            return Instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
+            var insufficientlyAnnotated = new List<SmellCandidateInstances>();
+            foreach (var candidate in CandidateInstances)
+            {
+                var instances = candidate.Instances.Where(i => !i.IsSufficientlyAnnotated()).ToList();
+                insufficientlyAnnotated.Add(new SmellCandidateInstances(candidate.CodeSmell, instances));
+            }
+            return insufficientlyAnnotated;
         }
 
-        public List<DataSetInstance> GetInstancesWithAllDisagreeingAnnotations(string projectName = null)
+        public List<SmellCandidateInstances> GetInstancesWithAllDisagreeingAnnotations()
         {
-            return Instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+            var noAgreement = new List<SmellCandidateInstances>();
+            foreach (var candidate in CandidateInstances)
+            {
+                var instances = candidate.Instances.Where(i => i.HasNoAgreeingAnnotations()).ToList();
+                noAgreement.Add(new SmellCandidateInstances(candidate.CodeSmell, instances));
+            }
+            return noAgreement;
         }
 
         public void Processed()
         {
-            if (State == DataSetProjectState.Processing) State = DataSetProjectState.Built;
+            if (State == ProjectState.Processing) State = ProjectState.Built;
         }
 
         public void Failed()
         {
-            if (State == DataSetProjectState.Processing) State = DataSetProjectState.Failed;
+            if (State == ProjectState.Processing) State = ProjectState.Failed;
         }
     }
 }

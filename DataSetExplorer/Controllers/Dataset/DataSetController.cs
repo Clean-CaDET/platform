@@ -24,22 +24,35 @@ namespace DataSetExplorer.Controllers.Dataset
         }
 
         [HttpPost]
-        public IActionResult CreateDataSet([FromBody] string dataSetName)
+        [Route("{name}")]
+        public IActionResult CreateDataSet([FromBody] List<CodeSmellDTO> codeSmells, [FromRoute] string name)
         {
-            var result = _dataSetCreationService.CreateEmptyDataSet(dataSetName);
+            var smells = new List<CodeSmell>();
+            foreach (var codeSmell in codeSmells) smells.Add(_mapper.Map<CodeSmell>(codeSmell));
+
+            var result = _dataSetCreationService.CreateEmptyDataSet(name, smells);
             return Ok(result.Value);
         }
 
         [HttpPost]
-        [Route("{id}/add-projects")]
-        public IActionResult CreateDataSetProject([FromBody] List<ProjectDTO> projects, [FromRoute] int id)
+        [Route("{id}/add-project")]
+        public IActionResult CreateDataSetProject([FromBody] ProjectCreationDTO data, [FromRoute] int id)
         {
-            var dataSetProjects = new List<DataSetProject>();
-            foreach (var project in projects) dataSetProjects.Add(_mapper.Map<DataSetProject>(project));
+            var dataSetProject = _mapper.Map<DataSetProject>(data.Project);
+            var smellFilters = _mapper.Map<List<SmellFilter>>(data.SmellFilters);
 
-            var result = _dataSetCreationService.AddProjectsToDataSet(id, _gitClonePath, dataSetProjects);
+            var result = _dataSetCreationService.AddProjectToDataSet(id, _gitClonePath, dataSetProject, smellFilters);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Accepted(result.Value);
+        }
+
+        [HttpGet]
+        [Route("{id}/code-smells")]
+        public IActionResult GetDataSetCodeSmells([FromRoute] int id)
+        {
+            var result = _dataSetCreationService.GetDataSetCodeSmells(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
         }
 
         [HttpGet]

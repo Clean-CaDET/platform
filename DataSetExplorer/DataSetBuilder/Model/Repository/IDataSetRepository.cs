@@ -11,5 +11,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         DataSet GetDataSet(int id);
         IEnumerable<DataSet> GetAll();
         void Update(DataSet dataSet);
+        Dictionary<string, List<string>> GetDataSetCodeSmells(int id);
     }
 }

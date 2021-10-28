@@ -33,5 +33,18 @@ namespace DataSetExplorer.ConsoleApp
             }
             return annotators;
         }
+
+        internal static List<CodeSmell> GetCodeSmells(string info)
+        {
+            var codeSmells = new List<CodeSmell>();
+            string codeSmellsFilePath = ConsoleIO.GetAnswerOnQuestion("Enter code smells file (csv with " + info + ") path: ");
+
+            string[] lines = File.ReadAllLines(codeSmellsFilePath);
+            foreach (string line in lines)
+            {
+                codeSmells.Add(new CodeSmell(line));
+            }
+            return codeSmells;
+        }
     }
 }

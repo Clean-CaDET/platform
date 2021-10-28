@@ -18,32 +18,32 @@ namespace DataSetExplorer.AnnotationConsistencyTests
         private string _independentVariable;
         private readonly string _annotatedInstancesFolderPath = "D:/ccadet/annotations/sanity_check/anova/Output/";
 
-        private delegate Dictionary<string, string> TestCodeSmellDelegate(int id, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics);
+        private delegate Dictionary<string, string> TestCodeSmellDelegate(int id, List<Instance> instances, string codeSmell, List<CaDETMetric> metrics);
 
-        public Result<Dictionary<string, Dictionary<string, string>>> TestForSingleAnnotator(int annotatorId, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, Dictionary<string, string>>> TestForSingleAnnotator(int annotatorId, List<SmellCandidateInstances> instancesGroupedBySmells)
         {
             return Test(annotatorId, instancesGroupedBySmells, TestCodeSmellForAnnotator);
         }
 
-        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(int severity, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells)
+        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(int severity, List<SmellCandidateInstances> instancesGroupedBySmells)
         {
             return Test(severity, instancesGroupedBySmells, TestCodeSmellBetweenAnnotators);
         }
 
-        private Result<Dictionary<string, Dictionary<string, string>>> Test(int id, IEnumerable<IGrouping<string, DataSetInstance>> instancesGroupedBySmells, TestCodeSmellDelegate testCodeSmell)
+        private Result<Dictionary<string, Dictionary<string, string>>> Test(int id, List<SmellCandidateInstances> instancesGroupedBySmells, TestCodeSmellDelegate testCodeSmell)
         {
             var results = new Dictionary<string, Dictionary<string, string>>();
             foreach (var codeSmellGroup in instancesGroupedBySmells)
             {
-                var codeSmell = codeSmellGroup.Key.Replace(" ", "_");
-                var metrics = codeSmellGroup.First().MetricFeatures.Keys.ToList();
-                var instances = codeSmellGroup.ToList();
+                var codeSmell = codeSmellGroup.CodeSmell.Name;
+                var metrics = codeSmellGroup.Instances.First().MetricFeatures.Keys.ToList();
+                var instances = codeSmellGroup.Instances;
                 results[codeSmell] = testCodeSmell(id, instances, codeSmell, metrics);
             }
             return Result.Ok(results);
         }
        
-        private Dictionary<string, string> TestCodeSmellForAnnotator(int annotatorId, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
+        private Dictionary<string, string> TestCodeSmellForAnnotator(int annotatorId, List<Instance> instances, string codeSmell, List<CaDETMetric> metrics)
         {
             var results = new Dictionary<string, string>();
             string exportedAnnotationsFile = ExportAnnotationsForAnnotator(annotatorId, instances, codeSmell);
@@ -55,7 +55,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             return results;
         }
 
-        private Dictionary<string, string> TestCodeSmellBetweenAnnotators(int severity, List<DataSetInstance> instances, string codeSmell, List<CaDETMetric> metrics)
+        private Dictionary<string, string> TestCodeSmellBetweenAnnotators(int severity, List<Instance> instances, string codeSmell, List<CaDETMetric> metrics)
         {
             var results = new Dictionary<string, string>();
             string exportedAnnotationsFile = ExportAnnotationsForSeverity(severity, instances, codeSmell);
@@ -67,7 +67,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             return results;
         }
 
-        private string ExportAnnotationsForAnnotator(int annotatorId, List<DataSetInstance> instances, string codeSmell)
+        private string ExportAnnotationsForAnnotator(int annotatorId, List<Instance> instances, string codeSmell)
         {
             var exportedAnnotationsFile = "MetricsSignificance_" + codeSmell + "_Annotator_" + annotatorId;
             var exporter = new AnnotationConsistencyByMetricsExporter(_annotatedInstancesFolderPath);
@@ -75,7 +75,7 @@ namespace DataSetExplorer.AnnotationConsistencyTests
             return exportedAnnotationsFile;
         }
 
-        private string ExportAnnotationsForSeverity(int severity, List<DataSetInstance> instances, string codeSmell)
+        private string ExportAnnotationsForSeverity(int severity, List<Instance> instances, string codeSmell)
         {
             var exportedAnnotationsFile = "MetricsSignificance_" + codeSmell + "_Severity_" + severity;
             var exporter = new AnnotationConsistencyByMetricsExporter(_annotatedInstancesFolderPath);

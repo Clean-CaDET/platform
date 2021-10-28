@@ -1,4 +1,6 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSetBuilder.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,36 +11,27 @@ namespace DataSetExplorer.DataSetSerializer
     class TextFileExporter
     {
         private readonly string _resultFolder;
-        private const string ClassFileName = "classNames.txt";
-        private const string FunctionFileName = "functionNames.txt";
-        private const string ClassLinks = "classLinks.txt";
-        private const string FunctionLinks = "functionLinks.txt";
 
         public TextFileExporter(string destinationPath)
         {
             _resultFolder = destinationPath;
         }
 
-        public void ExportInstancesWithAnnotatorId(List<DataSetInstance> instances)
+        public void ExportInstancesWithAnnotatorId(List<SmellCandidateInstances> candidateInstances)
         {
             //TODO: Consider moving to DataSet or new entity
-            var groupedInstances = instances.GroupBy(i => i.GetSortedAnnotatorIds());
-            foreach (var group in groupedInstances)
+            foreach (var candidate in candidateInstances)
             {
-                SaveInstanceToFile(group.ToList(), group.Key + ".txt");
-                SaveSnippetLinkToFile(group.ToList(), group.Key + "-links.txt");
+                var groupedInstances = candidate.Instances.GroupBy(i => i.GetSortedAnnotatorIds());
+                foreach (var group in groupedInstances)
+                {
+                    SaveInstanceToFile(group.ToList(), candidate.CodeSmell.Name + "_" + group.Key + ".txt");
+                    SaveSnippetLinkToFile(group.ToList(), candidate.CodeSmell.Name + "_" + group.Key + "-links.txt");
+                }
             }
         }
 
-        public void Export(DataSet dataSet)
-        {
-            SaveInstanceToFile(dataSet.GetInstancesOfType(SnippetType.Class), ClassFileName);
-            SaveInstanceToFile(dataSet.GetInstancesOfType(SnippetType.Function), FunctionFileName);
-            SaveSnippetLinkToFile(dataSet.GetInstancesOfType(SnippetType.Class), ClassLinks);
-            SaveSnippetLinkToFile(dataSet.GetInstancesOfType(SnippetType.Function), FunctionLinks);
-        }
-
-        private void SaveInstanceToFile(List<DataSetInstance> instances, string fileName)
+        private void SaveInstanceToFile(List<Instance> instances, string fileName)
         {
             var sb = new StringBuilder();
             foreach (var instance in instances)
@@ -54,7 +47,7 @@ namespace DataSetExplorer.DataSetSerializer
             File.WriteAllText(_resultFolder + fileName, text);
         }
 
-        private void SaveSnippetLinkToFile(List<DataSetInstance> instances, string fileName)
+        private void SaveSnippetLinkToFile(List<Instance> instances, string fileName)
         {
             var sb = new StringBuilder();
             foreach (var instance in instances)
@@ -62,6 +55,25 @@ namespace DataSetExplorer.DataSetSerializer
                 sb.Append(instance.Link).Append("\n");
             }
             WriteToFile(sb.ToString(), fileName);
+        }
+
+        internal void ExportMembersFromAnnotatedClasses(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedClasses)
+        {
+            foreach (var severity in classesGroupedBySeverity.Keys)
+            {
+                Directory.CreateDirectory(_resultFolder + severity + "/");
+                for (var i = 0; i < annotatedClasses.Count; i++)
+                {
+                    var classForExport = classesGroupedBySeverity[severity].Find(c => c.FullName.Equals(annotatedClasses[0].CodeSnippetId));
+                    if (classForExport == null) continue;
+                    var classFolderPath = _resultFolder + severity + "/" + i + "/";
+                    Directory.CreateDirectory(classFolderPath);
+                    for (var j = 0; j < classForExport.Members.Count; j++)
+                    {
+                        File.WriteAllText(classFolderPath + j + 1 + ".txt", classForExport.Members[j].SourceCode);
+                    }
+                }
+            }
         }
     }
 }

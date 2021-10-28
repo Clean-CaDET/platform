@@ -7,9 +7,9 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
     public interface IDataSetAnnotationRepository
     {
-        DataSetAnnotation GetDataSetAnnotation(int id);
+        Annotation GetDataSetAnnotation(int id);
         Annotator GetAnnotator(int id);
         CodeSmell GetCodeSmell(string name);
-        void Update(DataSetAnnotation annotation);
+        void Update(Annotation annotation);
     }
 }

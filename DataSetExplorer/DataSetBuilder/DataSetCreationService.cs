@@ -7,11 +7,9 @@ using DataSetExplorer.DataSetSerializer.ViewModel;
 using DataSetExplorer.RepositoryAdapters;
 using FluentResults;
 using LibGit2Sharp;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataSetExplorer
@@ -29,38 +27,37 @@ namespace DataSetExplorer
             _dataSetProjectRepository = dataSetProjectRepository;
         }
 
-        public Result<DataSet> CreateEmptyDataSet(string dataSetName)
+        public Result<DataSet> CreateEmptyDataSet(string dataSetName, List<CodeSmell> codeSmells)
         {
-            var dataSet = new DataSet(dataSetName);
+            var dataSet = new DataSet(dataSetName, codeSmells);
             _dataSetRepository.Create(dataSet);
             return Result.Ok(dataSet);
         }
 
-        public Result<DataSet> AddProjectsToDataSet(int dataSetId, string basePath, IEnumerable<DataSetProject> projects)
+        public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters)
         {
             var initialDataSet = _dataSetRepository.GetDataSet(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
-            foreach (var project in projects)
-            {
-                Task.Run(() => ProcessInitialDataSetProject(basePath, project));
-                initialDataSet.AddProject(project);
-            }
+            
+            Task.Run(() => ProcessInitialDataSetProject(basePath, project, initialDataSet.SupportedCodeSmells, smellFilters));
+            initialDataSet.AddProject(project);
+            
             _dataSetRepository.Update(initialDataSet);
             return Result.Ok(initialDataSet);
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells)
         {
-            return CreateDataSetSpreadsheet(dataSetName, basePath, projects, new NewSpreadSheetColumnModel());
+            return CreateDataSetSpreadsheet(dataSetName, basePath, projects, codeSmells, new NewSpreadSheetColumnModel());
         }
 
-        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, NewSpreadSheetColumnModel columnModel)
+        public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells, NewSpreadSheetColumnModel columnModel)
         {
-            //TODO: Once we establish some DB, we can have the export to excel operation be separate from the "CreateDataSet"
-            var dataSet = new DataSet(dataSetName);
+            var dataSet = new DataSet(dataSetName, codeSmells);
             foreach(var projectName in projects.Keys)
             {
-                var dataSetProject = CreateDataSetProject(basePath, projectName, projects[projectName]);
+                // TODO: Update console app and send metrics thresholds to CreateDataSetProject method
+                var dataSetProject = CreateDataSetProject(basePath, projectName, projects[projectName], codeSmells, null);
                 dataSet.AddProject(dataSetProject);
             }
 
@@ -88,28 +85,27 @@ namespace DataSetExplorer
             return Result.Ok(project);
         }
 
-        private DataSetProject CreateDataSetProject(string basePath, string projectName, string projectAndCommitUrl)
+        private DataSetProject CreateDataSetProject(string basePath, string projectName, string projectAndCommitUrl, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters)
         {
             var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
             _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
-            return CreateDataSetProjectFromRepository(projectAndCommitUrl, projectName, gitFolderPath);
+            return CreateDataSetProjectFromRepository(projectAndCommitUrl, projectName, gitFolderPath, codeSmells, smellFilters);
         }
 
-        private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath)
+        private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetProjectBuilder(projectAndCommitUrl, projectName, projectPath);
-            return builder.IncludeMembersWith(10).IncludeClassesWith(3, 5)
-                .RandomizeClassSelection().RandomizeMemberSelection()
+            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, codeSmells);
+            return builder.RandomizeClassSelection().RandomizeMemberSelection()
                 .SetProjectExtractionPercentile(10).Build();
         }
 
-        private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject)
+        private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters)
         {
             try
             {
-                var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url);
-                initialProject.AddInstances(project.Instances.ToList());
+                var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters);
+                initialProject.CandidateInstances = project.CandidateInstances;
                 initialProject.Processed();
                 _dataSetProjectRepository.Update(initialProject);
             }
@@ -129,6 +125,13 @@ namespace DataSetExplorer
             var fileName = DateTime.Now.ToString("yyyy-MM-dd--HH-mm-ss");
             exporter.Export(dataSet, fileName);
             return fileName;
+        }
+
+        public Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id)
+        {
+            var codeSmells = _dataSetRepository.GetDataSetCodeSmells(id);
+            if (codeSmells == default) return Result.Fail($"DataSet with id: {id} does not exist.");
+            return Result.Ok(codeSmells);
         }
     }
 }
