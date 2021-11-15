@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataSetExplorer.Controllers.Dataset.DTOs;
 using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSetSerializer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -21,6 +22,15 @@ namespace DataSetExplorer.Controllers.Dataset
             _mapper = mapper;
             _dataSetCreationService = creationService;
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
+        }
+
+        [HttpPost]
+        [Route("export")]
+        public IActionResult ExportDataSet([FromBody] DraftDataSetExportDTO dataSetDTO)
+        {
+            var dataSet = _dataSetCreationService.GetDataSet(dataSetDTO.Id).Value;
+            var exportPath = new DraftDataSetExporter(dataSetDTO.ExportPath).Export(dataSetDTO.AnnotatorId, dataSet);
+            return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
         }
 
         [HttpPost]
