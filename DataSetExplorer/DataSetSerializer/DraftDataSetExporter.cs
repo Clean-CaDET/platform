@@ -68,7 +68,7 @@ namespace DataSetExplorer.DataSetSerializer
             var smellHeuristics = _requiredSmells.GetHeuristicsByCodeSmellName(candidate.CodeSmell.Name);
             for (var i = 0; i < smellHeuristics.Count; i++)
             {
-                _sheet.Cells[2, 4 + 2 * i].Value = smellHeuristics[i];
+                _sheet.Cells[2, 4 + (2 * i)].Value = smellHeuristics[i];
             }
             return smellHeuristics;
         }
@@ -94,7 +94,7 @@ namespace DataSetExplorer.DataSetSerializer
                 foreach (var applicableHeuristic in annotation.ApplicableHeuristics)
                 {
                     var index = smellHeuristics.FindIndex(h => h.Equals(applicableHeuristic.Description));
-                    _sheet.Cells[row, 4 + 2 * index].Value = "Yes";
+                    _sheet.Cells[row, 4 + (2 * index)].Value = "Yes";
                 }
                 PopulateNotApplicableAnnotations(smellHeuristics, row, annotation);
             }
@@ -107,7 +107,7 @@ namespace DataSetExplorer.DataSetSerializer
             foreach (var heuristic in notApplicableHeuristics)
             {
                 var index = smellHeuristics.FindIndex(h => h.Equals(heuristic));
-                _sheet.Cells[row, 4 + 2 * index].Value = "No";
+                _sheet.Cells[row, 4 + (2 * index)].Value = "No";
             }
         }
 
