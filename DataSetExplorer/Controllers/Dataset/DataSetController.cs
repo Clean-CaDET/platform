@@ -23,6 +23,15 @@ namespace DataSetExplorer.Controllers.Dataset
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
 
+        [HttpPut]
+        public IActionResult UpdateDataSet([FromBody] DatasetDTO datasetDto)
+        {
+            var dataset = _mapper.Map<DataSet>(datasetDto);
+            var result = _dataSetCreationService.UpdateDataSet(dataset);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
         [HttpPost]
         [Route("{name}")]
         public IActionResult CreateDataSet([FromBody] List<CodeSmellDTO> codeSmells, [FromRoute] string name)

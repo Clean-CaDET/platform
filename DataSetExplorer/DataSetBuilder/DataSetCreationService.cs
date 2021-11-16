@@ -139,5 +139,11 @@ namespace DataSetExplorer
             var dataset = _dataSetRepository.DeleteDataSet(id);
             return Result.Ok(dataset);
         }
+
+        public Result<DataSet> UpdateDataSet(DataSet dataset)
+        {
+            var updatedDataset = _dataSetRepository.UpdateDataSet(dataset);
+            return Result.Ok(updatedDataset);
+        }
     }
 }

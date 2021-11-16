@@ -75,5 +75,12 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
                 .FirstOrDefault(s => s.Id == id);
         }
+
+        public DataSet UpdateDataSet(DataSet dataset)
+        {
+            var updatedDataset = _dbContext.Update(dataset).Entity;
+            _dbContext.SaveChanges();
+            return updatedDataset;
+        }
     }
 }

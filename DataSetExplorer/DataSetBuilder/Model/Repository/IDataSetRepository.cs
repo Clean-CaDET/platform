@@ -10,5 +10,6 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         void Update(DataSet dataSet);
         Dictionary<string, List<string>> GetDataSetCodeSmells(int id);
         DataSet DeleteDataSet(int id);
+        DataSet UpdateDataSet(DataSet dataset);
     }
 }
