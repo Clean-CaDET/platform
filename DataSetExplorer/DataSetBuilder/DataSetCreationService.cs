@@ -145,5 +145,17 @@ namespace DataSetExplorer
             var updatedDataset = _dataSetRepository.UpdateDataSet(dataset);
             return Result.Ok(updatedDataset);
         }
+
+        public Result<DataSetProject> DeleteDataSetProject(int id)
+        {
+            var project = _dataSetRepository.DeleteDataSetProject(id);
+            return Result.Ok(project);
+        }
+
+        public Result<DataSetProject> UpdateDataSetProject(DataSetProject project)
+        {
+            var updatedProject = _dataSetRepository.UpdateDataSetProject(project);
+            return Result.Ok(updatedProject);
+        }
     }
 }

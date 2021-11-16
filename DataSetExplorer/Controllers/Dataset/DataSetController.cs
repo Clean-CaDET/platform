@@ -90,6 +90,25 @@ namespace DataSetExplorer.Controllers.Dataset
         }
 
         [HttpDelete]
+        [Route("project/{id}")]
+        public IActionResult DeleteDataSetProject([FromRoute] int id)
+        {
+            var result = _dataSetCreationService.DeleteDataSetProject(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpPut]
+        [Route("project/")]
+        public IActionResult UpdateDataSetProject([FromBody] ProjectUpdateDTO projectDto)
+        {
+            var project = _mapper.Map<DataSetProject>(projectDto);
+            var result = _dataSetCreationService.UpdateDataSetProject(project);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpDelete]
         [Route("{id}")]
         public IActionResult DeleteDataSet([FromRoute] int id)
         {

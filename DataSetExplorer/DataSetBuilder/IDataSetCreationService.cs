@@ -17,5 +17,7 @@ namespace DataSetExplorer
         Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id);
         Result<DataSet> DeleteDataSet(int id);
         Result<DataSet> UpdateDataSet(DataSet dataset);
+        Result<DataSetProject> DeleteDataSetProject(int id);
+        Result<DataSetProject> UpdateDataSetProject(DataSetProject project);
     }
 }

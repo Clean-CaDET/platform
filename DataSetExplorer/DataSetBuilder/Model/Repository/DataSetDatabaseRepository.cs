@@ -82,5 +82,27 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             _dbContext.SaveChanges();
             return updatedDataset;
         }
+
+        public DataSetProject DeleteDataSetProject(int id)
+        {
+            var deletedProject = _dbContext.DataSetProjects.Remove(FindProjectForDeletion(id)).Entity;
+            _dbContext.SaveChanges();
+            return deletedProject;
+        }
+
+        private DataSetProject FindProjectForDeletion(int id)
+        {
+            return _dbContext.DataSetProjects
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .FirstOrDefault(p => p.Id == id);
+        }
+
+        public DataSetProject UpdateDataSetProject(DataSetProject project)
+        {
+            var updatedProject = _dbContext.Update(project).Entity;
+            _dbContext.SaveChanges();
+            return updatedProject;
+        }
     }
 }
