@@ -20,18 +20,23 @@ namespace CodeModel.CaDETModel
             SyntaxErrors = syntaxErrors;
         }
 
+        /// <summary>
+        /// Finds the code snippet (class or member) and returns the related calculated code metrics.
+        /// </summary>
+        /// <param name="snippetId">The code snippet id is either the Full Name of a class or the Signature of a member.</param>
+        /// <returns>A set of metrics calculated for the code snippet with the given ID. Null if no code snippet is found.</returns>
         public Dictionary<CaDETMetric, double> GetMetricsForCodeSnippet(string snippetId)
         {
-            CaDETClass classInstance = Classes.FirstOrDefault(c => c.FullName.Equals(snippetId));
+            var classInstance = Classes.FirstOrDefault(c => c.FullName.Equals(snippetId));
             if (classInstance != null) return classInstance.Metrics;
             
-            CaDETMember memberInstance = null;
-            foreach (var cl in Classes)
+            foreach (var c in Classes)
             {
-                memberInstance = cl.Members.FirstOrDefault(m => m.ToString().Equals(snippetId));
-                if (memberInstance != null) break;
+                var memberInstance = c.Members.FirstOrDefault(m => m.ToString().Equals(snippetId));
+                if (memberInstance != null) return memberInstance.Metrics;
             }
-            return memberInstance.Metrics;
+
+            return null;
         }
     }
 }
