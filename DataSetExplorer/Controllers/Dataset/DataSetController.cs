@@ -79,5 +79,14 @@ namespace DataSetExplorer.Controllers.Dataset
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult DeleteDataSet([FromRoute] int id)
+        {
+            var result = _dataSetCreationService.DeleteDataSet(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
     }
 }

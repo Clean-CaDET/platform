@@ -59,5 +59,21 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
             }
             return result;
         }
+
+        public DataSet DeleteDataSet(int id)
+        { 
+            var deletedDataset = _dbContext.DataSets.Remove(FindDataSetForDeletion(id)).Entity;
+            _dbContext.SaveChanges();
+            return deletedDataset;
+        }
+
+        private DataSet FindDataSetForDeletion(int id)
+        {
+            return _dbContext.DataSets
+                .Include(d => d.SupportedCodeSmells)
+                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .FirstOrDefault(s => s.Id == id);
+        }
     }
 }
