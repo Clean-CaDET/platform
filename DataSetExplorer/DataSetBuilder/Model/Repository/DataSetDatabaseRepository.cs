@@ -61,19 +61,10 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         }
 
         public DataSet DeleteDataSet(int id)
-        { 
-            var deletedDataset = _dbContext.DataSets.Remove(FindDataSetForDeletion(id)).Entity;
+        {
+            var deletedDataset = _dbContext.DataSets.Remove(_dbContext.DataSets.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedDataset;
-        }
-
-        private DataSet FindDataSetForDeletion(int id)
-        {
-            return _dbContext.DataSets
-                .Include(d => d.SupportedCodeSmells)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
-                .FirstOrDefault(s => s.Id == id);
         }
 
         public DataSet UpdateDataSet(DataSet dataset)
@@ -85,19 +76,11 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
 
         public DataSetProject DeleteDataSetProject(int id)
         {
-            var deletedProject = _dbContext.DataSetProjects.Remove(FindProjectForDeletion(id)).Entity;
+            var deletedProject = _dbContext.DataSetProjects.Remove(_dbContext.DataSetProjects.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedProject;
         }
-
-        private DataSetProject FindProjectForDeletion(int id)
-        {
-            return _dbContext.DataSetProjects
-                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
-                .FirstOrDefault(p => p.Id == id);
-        }
-
+        
         public DataSetProject UpdateDataSetProject(DataSetProject project)
         {
             var updatedProject = _dbContext.Update(project).Entity;

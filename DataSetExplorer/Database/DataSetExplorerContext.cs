@@ -30,6 +30,12 @@ namespace DataSetExplorer.Database
             modelBuilder.Entity<CodeSmell>().HasOne<DataSet>().WithMany(d => d.SupportedCodeSmells)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<CodeSmell>().HasMany<SmellCandidateInstances>().WithOne(c => c.CodeSmell)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CodeSmell>().HasMany<Annotation>().WithOne(a => a.InstanceSmell)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<DataSetProject>().HasOne<DataSet>().WithMany(d => d.Projects)
                 .OnDelete(DeleteBehavior.Cascade);
 
