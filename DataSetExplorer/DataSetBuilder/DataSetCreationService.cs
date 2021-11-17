@@ -133,5 +133,29 @@ namespace DataSetExplorer
             if (codeSmells == default) return Result.Fail($"DataSet with id: {id} does not exist.");
             return Result.Ok(codeSmells);
         }
+
+        public Result<DataSet> DeleteDataSet(int id)
+        {
+            var dataset = _dataSetRepository.DeleteDataSet(id);
+            return Result.Ok(dataset);
+        }
+
+        public Result<DataSet> UpdateDataSet(DataSet dataset)
+        {
+            var updatedDataset = _dataSetRepository.UpdateDataSet(dataset);
+            return Result.Ok(updatedDataset);
+        }
+
+        public Result<DataSetProject> DeleteDataSetProject(int id)
+        {
+            var project = _dataSetRepository.DeleteDataSetProject(id);
+            return Result.Ok(project);
+        }
+
+        public Result<DataSetProject> UpdateDataSetProject(DataSetProject project)
+        {
+            var updatedProject = _dataSetRepository.UpdateDataSetProject(project);
+            return Result.Ok(updatedProject);
+        }
     }
 }

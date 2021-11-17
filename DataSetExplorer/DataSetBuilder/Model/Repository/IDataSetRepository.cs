@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DataSetExplorer.DataSetBuilder.Model.Repository
 {
@@ -12,5 +9,9 @@ namespace DataSetExplorer.DataSetBuilder.Model.Repository
         IEnumerable<DataSet> GetAll();
         void Update(DataSet dataSet);
         Dictionary<string, List<string>> GetDataSetCodeSmells(int id);
+        DataSet DeleteDataSet(int id);
+        DataSet UpdateDataSet(DataSet dataset);
+        DataSetProject DeleteDataSetProject(int id);
+        DataSetProject UpdateDataSetProject(DataSetProject project);
     }
 }

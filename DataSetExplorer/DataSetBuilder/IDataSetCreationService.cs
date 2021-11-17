@@ -2,7 +2,6 @@
 using DataSetExplorer.DataSetSerializer.ViewModel;
 using FluentResults;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DataSetExplorer
 {
@@ -16,5 +15,9 @@ namespace DataSetExplorer
         Result<IEnumerable<DataSet>> GetAllDataSets();
         Result<DataSetProject> GetDataSetProject(int id);
         Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id);
+        Result<DataSet> DeleteDataSet(int id);
+        Result<DataSet> UpdateDataSet(DataSet dataset);
+        Result<DataSetProject> DeleteDataSetProject(int id);
+        Result<DataSetProject> UpdateDataSetProject(DataSetProject project);
     }
 }
