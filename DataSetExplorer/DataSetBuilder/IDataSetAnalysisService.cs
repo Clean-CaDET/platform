@@ -8,8 +8,8 @@ namespace DataSetExplorer
     {
         Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects);
         Result<string> FindInstancesRequiringAdditionalAnnotation(IDictionary<string, string> projects);
-        Result<List<SmellCandidateInstances>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds);
-        Result<List<SmellCandidateInstances>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds);
+        Result<List<SmellCandidateInstances>> FindInstancesWithAllDisagreeingAnnotations(int projectId);
+        Result<List<SmellCandidateInstances>> FindInstancesRequiringAdditionalAnnotation(int projectId);
         Result<string> ExportMembersFromAnnotatedClasses(IDictionary<string, string> projects, string datasetPath, string outputFolder);
     }
 }

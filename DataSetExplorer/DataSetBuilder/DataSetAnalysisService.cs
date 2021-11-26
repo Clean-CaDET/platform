@@ -51,23 +51,17 @@ namespace DataSetExplorer
                 return Result.Fail(e.ToString());
             }
         }
-
-        public Result<List<SmellCandidateInstances>> FindInstancesWithAllDisagreeingAnnotations(IEnumerable<int> projectIds)
+        
+        public Result<List<SmellCandidateInstances>> FindInstancesWithAllDisagreeingAnnotations(int projectId)
         {
-            var instances = new List<SmellCandidateInstances>();
-            var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
-            foreach (var project in projects) instances.AddRange(project.GetInstancesWithAllDisagreeingAnnotations());
-            
-            return Result.Ok(instances);
+            var project = _dataSetProjectRepository.GetDataSetProject(projectId);
+            return Result.Ok(project.GetInstancesWithAllDisagreeingAnnotations());
         }
 
-        public Result<List<SmellCandidateInstances>> FindInstancesRequiringAdditionalAnnotation(IEnumerable<int> projectIds)
+        public Result<List<SmellCandidateInstances>> FindInstancesRequiringAdditionalAnnotation(int projectId)
         {
-            var instances = new List<SmellCandidateInstances>();
-            var projects = _dataSetProjectRepository.GetDataSetProjects(projectIds);
-            foreach (var project in projects) instances.AddRange(project.GetInsufficientlyAnnotatedInstances());
-            
-            return Result.Ok(instances);
+            var project = _dataSetProjectRepository.GetDataSetProject(projectId);
+            return Result.Ok(project.GetInsufficientlyAnnotatedInstances());
         }
 
         private DataSetProject LoadDataSetProject(string folder, string projectName)
