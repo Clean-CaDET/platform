@@ -97,9 +97,9 @@ namespace DataSetExplorer.Controllers.Annotations
             return FindInstances(id, _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations);
         }
 
-        private IActionResult FindInstances(int projectId, Func<int, Result<List<SmellCandidateInstances>>> findInstancesMethod)
+        private IActionResult FindInstances(int projectId, Func<int, Result<List<SmellCandidateInstances>>> searchCriteria)
         {
-            var result = findInstancesMethod(projectId);
+            var result = searchCriteria(projectId);
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
