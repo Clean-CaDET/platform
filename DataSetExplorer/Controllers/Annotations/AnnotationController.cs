@@ -3,7 +3,6 @@ using DataSetExplorer.Controllers.Annotations.DTOs;
 using DataSetExplorer.DataSetBuilder;
 using DataSetExplorer.DataSetBuilder.Model;
 using FluentResults;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -83,36 +82,26 @@ namespace DataSetExplorer.Controllers.Annotations
                 return BadRequest(new { message = e.Message });
             }
         }
-
+        
         [HttpGet]
-        [Route("requiring-additional-annotation")]
-        public IActionResult FindInstancesRequiringAdditionalAnnotation([FromQuery(Name = "projectIds")] string projectIds)
+        [Route("requiring-additional-annotation/{id}")]
+        public IActionResult FindInstancesRequiringAdditionalAnnotation([FromRoute] int id)
         {
-            return FindInstances(projectIds, _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation);
+            return FindInstances(id, _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation);
         }
 
         [HttpGet]
-        [Route("disagreeing-annotations")]
-        public IActionResult FindInstancesWithAllDisagreeingAnnotations([FromQuery(Name = "projectIds")] string projectIds)
+        [Route("disagreeing-annotations/{id}")]
+        public IActionResult FindInstancesWithAllDisagreeingAnnotations([FromRoute] int id)
         {
-            return FindInstances(projectIds, _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations);
+            return FindInstances(id, _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations);
         }
 
-        private IActionResult FindInstances(string projectIds, Func<IEnumerable<int>, Result<List<SmellCandidateInstances>>> findInstancesMethod)
+        private IActionResult FindInstances(int projectId, Func<int, Result<List<SmellCandidateInstances>>> searchCriteria)
         {
-            try
-            {
-                if (projectIds == null) return BadRequest(new { message = "Missing project ids!" });
-                var ids = new List<int>();
-                foreach (var id in projectIds.Split(',')) ids.Add(Int32.Parse(id));
-                var result = findInstancesMethod(ids);
-                if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
-                return Ok(result.Value);
-            }
-            catch (FormatException)
-            {
-                return BadRequest(new { message = "Project ids must be numbers!" });
-            }
+            var result = searchCriteria(projectId);
+            if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
         }
     }
 }
