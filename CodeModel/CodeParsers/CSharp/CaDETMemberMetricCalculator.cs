@@ -284,7 +284,7 @@ namespace CodeModel.CodeParsers.CSharp
         // Implementation based on https://github.com/mauricioaniche/ck
         private static int CountNumberOfUniqueWords(MemberDeclarationSyntax method)
         {
-            if (!method.Kind().Equals(SyntaxKind.MethodDeclaration)) return 0;
+            if (!(method.Kind().Equals(SyntaxKind.MethodDeclaration) || method.Kind().Equals(SyntaxKind.ConstructorDeclaration))) return 0;
 
             BaseMethodDeclarationSyntax baseMethod = (BaseMethodDeclarationSyntax)method;
             string methodBody = RemoveCommentsFromCode(baseMethod.Body);
@@ -292,7 +292,7 @@ namespace CodeModel.CodeParsers.CSharp
             List<string> words = GetWords(methodBody);
             words = BreakWords(words);
             words = FilterWords(words);
-            return words.Distinct().Count();
+            return words.Distinct(StringComparer.CurrentCultureIgnoreCase).Count();
         }
 
         private static List<string> GetWords(string methodBody)
