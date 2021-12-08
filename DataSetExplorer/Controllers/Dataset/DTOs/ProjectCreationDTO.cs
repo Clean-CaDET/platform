@@ -4,5 +4,6 @@
     {
         public ProjectDTO Project { get; set; }
         public SmellFilterDTO[] SmellFilters { get; set; }
+        public ProjectBuildSettingsDTO BuildSettings { get; set; }
     }
 }
