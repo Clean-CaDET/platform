@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using DataSetExplorer.Controllers.Dataset.DTOs;
-using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSets.Model;
 using DataSetExplorer.DataSetSerializer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using DataSetExplorer.DataSets;
 
 namespace DataSetExplorer.Controllers.Dataset
 {

@@ -1,11 +1,11 @@
-﻿using DataSetExplorer.AnnotationConsistencyTests;
-using DataSetExplorer.DataSetBuilder.Model;
-using FluentResults;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataSetExplorer.DataSets;
+using DataSetExplorer.DataSets.Model;
+using FluentResults;
 
-namespace DataSetExplorer
+namespace DataSetExplorer.AnnotationConsistency
 {
     public class AnnotationConsistencyService : IAnnotationConsistencyService
     {

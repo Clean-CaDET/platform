@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.DataSetBuilder.Model.Repository;
+using DataSetExplorer.DataSets.Model;
+using DataSetExplorer.DataSets.Model.Repository;
 using FluentResults;
 
-namespace DataSetExplorer.DataSetBuilder
+namespace DataSetExplorer.Annotations
 {
     public class DataSetAnnotationService : IDataSetAnnotationService
     {

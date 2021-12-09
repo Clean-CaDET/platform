@@ -1,4 +1,4 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using DataSetExplorer.DataSets.Model;
 using DataSetExplorer.DataSetSerializer.ViewModel;
 using OfficeOpenXml;
 using System.Collections.Generic;

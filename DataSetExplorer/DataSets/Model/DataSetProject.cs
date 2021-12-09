@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataSetExplorer.DataSetBuilder.Model
+namespace DataSetExplorer.DataSets.Model
 {
     public class DataSetProject
     {

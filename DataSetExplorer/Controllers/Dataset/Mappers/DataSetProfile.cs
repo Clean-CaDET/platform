@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DataSetExplorer.Controllers.Dataset.DTOs;
-using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSets.Model;
 
 namespace DataSetExplorer.Controllers.Dataset.Mappers
 {

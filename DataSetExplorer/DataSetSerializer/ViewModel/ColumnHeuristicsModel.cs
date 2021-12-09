@@ -1,4 +1,4 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using DataSetExplorer.DataSets.Model;
 using System.Collections.Generic;
 using System.Linq;
 

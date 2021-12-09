@@ -1,4 +1,7 @@
 ﻿using System;
+using DataSetExplorer.AnnotationConsistency;
+using DataSetExplorer.Annotations;
+using DataSetExplorer.DataSets;
 using FluentResults;
 
 namespace DataSetExplorer.ConsoleApp

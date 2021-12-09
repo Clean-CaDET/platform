@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataSetExplorer.DataSetBuilder.Model.Repository
+namespace DataSetExplorer.DataSets.Model.Repository
 {
     public class DataSetInstanceDatabaseRepository : IDataSetInstanceRepository
     {

@@ -1,12 +1,12 @@
 ﻿using CodeModel;
 using CodeModel.CaDETModel;
 using CodeModel.CaDETModel.CodeItems;
-using DataSetExplorer.DataSetBuilder.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataSetExplorer.DataSets.Model;
 
-namespace DataSetExplorer.DataSetBuilder
+namespace DataSetExplorer.DataSets
 {
     internal class CaDETToDataSetProjectBuilder
     {

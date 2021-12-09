@@ -506,8 +506,8 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
 
             var gitClass = classes.First();
             gitClass.FindMember("CSharpCodeParserInit").Metrics[CaDETMetric.NOUW].ShouldBe(5);
-            gitClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOUW].ShouldBe(22);
-            gitClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOUW].ShouldBe(33);
+            gitClass.FindMember("CreateClassMemberBuilders1").Metrics[CaDETMetric.NOUW].ShouldBe(21);
+            gitClass.FindMember("CreateClassMemberBuilders2").Metrics[CaDETMetric.NOUW].ShouldBe(31);
         }
 
         [Fact]

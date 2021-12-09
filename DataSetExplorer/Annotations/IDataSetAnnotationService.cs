@@ -1,11 +1,7 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using DataSetExplorer.DataSets.Model;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace DataSetExplorer.DataSetBuilder
+namespace DataSetExplorer.Annotations
 {
     public interface IDataSetAnnotationService
     {

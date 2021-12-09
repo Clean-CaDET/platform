@@ -1,9 +1,9 @@
-using DataSetExplorer.DataSetBuilder.Model;
 using System.Collections.Generic;
 using CodeModel.CaDETModel.CodeItems;
 using System;
+using DataSetExplorer.DataSets.Model;
 
-namespace DataSetExplorer.DataSetBuilder
+namespace DataSetExplorer.DataSets
 {
     internal class InstanceFilter
     {

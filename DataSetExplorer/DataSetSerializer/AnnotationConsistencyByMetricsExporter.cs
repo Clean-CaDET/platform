@@ -1,5 +1,5 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
-using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSets.Model;
 using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;

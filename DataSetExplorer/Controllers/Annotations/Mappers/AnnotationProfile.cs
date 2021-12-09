@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSets.Model;
 using DataSetExplorer.Controllers.Annotations.DTOs;
 using System.Collections.Generic;
 

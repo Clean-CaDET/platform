@@ -1,8 +1,8 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using System.Collections.Generic;
+using DataSetExplorer.DataSets.Model;
 using FluentResults;
-using System.Collections.Generic;
 
-namespace DataSetExplorer.AnnotationConsistencyTests
+namespace DataSetExplorer.AnnotationConsistency
 {
     internal interface IAnnotatorsConsistencyTester
     {

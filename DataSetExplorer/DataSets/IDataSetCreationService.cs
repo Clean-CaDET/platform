@@ -1,9 +1,9 @@
-﻿using DataSetExplorer.DataSetBuilder.Model;
+﻿using System.Collections.Generic;
+using DataSetExplorer.DataSets.Model;
 using DataSetExplorer.DataSetSerializer.ViewModel;
 using FluentResults;
-using System.Collections.Generic;
 
-namespace DataSetExplorer
+namespace DataSetExplorer.DataSets
 {
     public interface IDataSetCreationService
     {

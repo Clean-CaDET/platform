@@ -1,6 +1,5 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
-using DataSetExplorer.DataSetBuilder.Model;
-using System;
+using DataSetExplorer.DataSets.Model;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DataSetExplorer.DataSetBuilder.Model.Repository
+namespace DataSetExplorer.DataSets.Model.Repository
 {
     public interface IDataSetRepository
     {

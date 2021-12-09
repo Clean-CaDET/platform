@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using DataSetExplorer.Controllers.Annotations.DTOs;
-using DataSetExplorer.DataSetBuilder;
-using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSets.Model;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using DataSetExplorer.Annotations;
 
 namespace DataSetExplorer.Controllers.Annotations
 {

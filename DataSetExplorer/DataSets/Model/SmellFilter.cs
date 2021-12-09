@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DataSetExplorer.DataSetBuilder.Model
+namespace DataSetExplorer.DataSets.Model
 {
     public class SmellFilter
     {

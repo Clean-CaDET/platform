@@ -1,4 +1,4 @@
-namespace DataSetExplorer.DataSetBuilder.Model
+namespace DataSetExplorer.DataSets.Model
 {
     public class MetricThresholds
     {

@@ -1,14 +1,14 @@
-﻿using CodeModel;
+﻿using System.Collections.Generic;
+using System.IO;
+using CodeModel;
 using CodeModel.CaDETModel;
 using CodeModel.CaDETModel.CodeItems;
-using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.DataSetBuilder.Model.Repository;
+using DataSetExplorer.DataSets.Model;
+using DataSetExplorer.DataSets.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using FluentResults;
-using System.Collections.Generic;
-using System.IO;
 
-namespace DataSetExplorer
+namespace DataSetExplorer.Annotations
 {
     public class DataSetAnalysisService : IDataSetAnalysisService
     {

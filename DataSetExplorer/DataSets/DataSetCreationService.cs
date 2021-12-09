@@ -1,18 +1,17 @@
-﻿using CodeModel.CodeParsers.CSharp.Exceptions;
-using DataSetExplorer.DataSetBuilder;
-using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.DataSetBuilder.Model.Repository;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using CodeModel.CodeParsers.CSharp.Exceptions;
+using DataSetExplorer.DataSets.Model;
+using DataSetExplorer.DataSets.Model.Repository;
 using DataSetExplorer.DataSetSerializer;
 using DataSetExplorer.DataSetSerializer.ViewModel;
 using DataSetExplorer.RepositoryAdapters;
 using FluentResults;
 using LibGit2Sharp;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace DataSetExplorer
+namespace DataSetExplorer.DataSets
 {
     public class DataSetCreationService : IDataSetCreationService
     {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataSetExplorer.DataSetBuilder.Model.Repository
+namespace DataSetExplorer.DataSets.Model.Repository
 {
     public class DataSetDatabaseRepository : IDataSetRepository
     {

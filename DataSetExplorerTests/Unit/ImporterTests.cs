@@ -1,4 +1,4 @@
-using DataSetExplorer.DataSetBuilder.Model;
+using DataSetExplorer.DataSets.Model;
 using DataSetExplorer.DataSetSerializer;
 using DataSetExplorer.Tests.DataFactories;
 using Shouldly;

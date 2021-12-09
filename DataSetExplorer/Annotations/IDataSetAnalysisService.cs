@@ -1,8 +1,8 @@
-using DataSetExplorer.DataSetBuilder.Model;
-using FluentResults;
 using System.Collections.Generic;
+using DataSetExplorer.DataSets.Model;
+using FluentResults;
 
-namespace DataSetExplorer
+namespace DataSetExplorer.Annotations
 {
     public interface IDataSetAnalysisService
     {

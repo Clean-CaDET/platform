@@ -1,13 +1,13 @@
-﻿using CodeModel.CaDETModel.CodeItems;
-using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.DataSetSerializer;
-using FluentResults;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.DataSets.Model;
+using DataSetExplorer.DataSetSerializer;
+using FluentResults;
 
-namespace DataSetExplorer.AnnotationConsistencyTests
+namespace DataSetExplorer.AnnotationConsistency
 {
     public class AnovaTest : IMetricsSignificanceTester
     {

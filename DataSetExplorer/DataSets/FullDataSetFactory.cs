@@ -1,12 +1,12 @@
-﻿using CodeModel;
-using CodeModel.CaDETModel;
-using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.DataSetBuilder.Model.Repository;
-using DataSetExplorer.DataSetSerializer;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CodeModel;
+using CodeModel.CaDETModel;
+using DataSetExplorer.DataSets.Model;
+using DataSetExplorer.DataSets.Model.Repository;
+using DataSetExplorer.DataSetSerializer;
 
-namespace DataSetExplorer
+namespace DataSetExplorer.DataSets
 {
     public class FullDataSetFactory
     {
