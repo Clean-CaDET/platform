@@ -15,6 +15,7 @@ namespace DataSetExplorer.DataSets
 
         private readonly CaDETProject _cadetProject;
         private int _percentileOfProjectCovered = 100;
+        private int _numberOfProjectInstancesCovered;
 
         private readonly bool _includeClasses;
         private bool _randomizeClassList;
@@ -41,6 +42,12 @@ namespace DataSetExplorer.DataSets
         internal CaDETToDataSetProjectBuilder SetProjectExtractionPercentile(int percentile)
         {
             _percentileOfProjectCovered = percentile;
+            return this;
+        }
+
+        internal CaDETToDataSetProjectBuilder SetProjectInstancesExtractionNumber(int number)
+        {
+            _numberOfProjectInstancesCovered = number;
             return this;
         }
 
@@ -81,8 +88,8 @@ namespace DataSetExplorer.DataSets
 
             foreach (var smell in _codeSmells)
             {
-                if (_includeClasses) builtDataSetProject.AddCandidateInstance(new SmellCandidateInstances(smell, _instanceFilter.FilterInstances(smell, BuildClasses())));
-                if (_includeMembers) builtDataSetProject.AddCandidateInstance(new SmellCandidateInstances(smell, _instanceFilter.FilterInstances(smell, BuildMembers())));
+                if (_includeClasses) builtDataSetProject.AddCandidateInstance(new SmellCandidateInstances(smell, _instanceFilter.FilterInstances(smell, BuildClasses(), _numberOfProjectInstancesCovered)));
+                if (_includeMembers) builtDataSetProject.AddCandidateInstance(new SmellCandidateInstances(smell, _instanceFilter.FilterInstances(smell, BuildMembers(), _numberOfProjectInstancesCovered)));
             }
             return builtDataSetProject;
         }

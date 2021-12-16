@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CodeModel.CaDETModel.CodeItems;
 using System;
 using DataSetExplorer.DataSets.Model;
+using System.Linq;
 
 namespace DataSetExplorer.DataSets
 {
@@ -14,7 +15,7 @@ namespace DataSetExplorer.DataSets
             SmellFilters = smellFilters;
         }
 
-        public List<Instance> FilterInstances(CodeSmell codeSmell, List<Instance> instances)
+        public List<Instance> FilterInstances(CodeSmell codeSmell, List<Instance> instances, int numOfInstances)
         {
             var filteredInstances = new List<Instance>();
             var metricsThresholds = SmellFilters.Find(f => f.CodeSmell.Equals(codeSmell)).MetricsThresholds;
@@ -24,6 +25,8 @@ namespace DataSetExplorer.DataSets
                 if (!ValidSnippetTypeForSmell(i, codeSmell)) continue;
                 if (InstancePassesMetricThresholds(i, metricsThresholds)) filteredInstances.Add(i);
             }
+
+            if (numOfInstances != 0) filteredInstances = filteredInstances.Take(numOfInstances).ToList();
             return filteredInstances;
         }
 

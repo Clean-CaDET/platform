@@ -61,11 +61,11 @@ namespace DataSetExplorer.Controllers.Dataset
             var dataSetProject = _mapper.Map<DataSetProject>(data.Project);
             var smellFilters = _mapper.Map<List<SmellFilter>>(data.SmellFilters);
 
-            var result = _dataSetCreationService.AddProjectToDataSet(id, _gitClonePath, dataSetProject, smellFilters);
+            var result = _dataSetCreationService.AddProjectToDataSet(id, _gitClonePath, dataSetProject, smellFilters, data.BuildSettings);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Accepted(result.Value);
         }
-
+        
         [HttpGet]
         [Route("{id}/code-smells")]
         public IActionResult GetDataSetCodeSmells([FromRoute] int id)
