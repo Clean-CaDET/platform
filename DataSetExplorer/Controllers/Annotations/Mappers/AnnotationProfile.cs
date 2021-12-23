@@ -2,6 +2,7 @@
 using DataSetExplorer.DataSets.Model;
 using DataSetExplorer.Controllers.Annotations.DTOs;
 using System.Collections.Generic;
+using DataSetExplorer.Annotations.Model;
 
 namespace DataSetExplorer.Controllers.Annotations.Mappers
 {
@@ -12,6 +13,9 @@ namespace DataSetExplorer.Controllers.Annotations.Mappers
             CreateMap<AnnotationDTO, Annotation>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ConstructUsing(src => new Annotation(src.CodeSmell, src.Severity, new Annotator(src.AnnotatorId), CreateHeuristics(src.ApplicableHeuristics)));
+            CreateMap<CodeSmellDefinitionDTO, CodeSmellDefinition>();
+            CreateMap<HeuristicDTO, Heuristic>();
+            CreateMap<SeverityRangeDTO, SeverityRange>();
         }
 
         private List<SmellHeuristic> CreateHeuristics(List<SmellHeuristicDTO> heuristics)

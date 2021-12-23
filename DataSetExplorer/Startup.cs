@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using DataSetExplorer.AnnotationConsistency;
 using DataSetExplorer.Annotations;
+using DataSetExplorer.Annotations.Model.Repository;
 
 namespace DataSetExplorer
 {
@@ -45,6 +46,8 @@ namespace DataSetExplorer
             services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
 
             services.AddScoped<IAnnotationConsistencyService, AnnotationConsistencyService>();
+            services.AddScoped<IAnnotationSchemaService, AnnotationSchemaService>();
+            services.AddScoped<IAnnotationSchemaRepository, AnnotationSchemaDatabaseRepository>();
             services.AddScoped<FullDataSetFactory>();
         }
 
