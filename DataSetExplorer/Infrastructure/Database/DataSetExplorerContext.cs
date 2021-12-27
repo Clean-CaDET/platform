@@ -3,6 +3,7 @@ using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 
 namespace DataSetExplorer.Infrastructure.Database
@@ -27,7 +28,7 @@ namespace DataSetExplorer.Infrastructure.Database
                 .HasConversion(
                     m => JsonConvert.SerializeObject(m),
                     m => JsonConvert.DeserializeObject<Dictionary<CaDETMetric, double>>(m));
-            
+
             modelBuilder.Entity<CodeSmell>().HasOne<DataSet>().WithMany(d => d.SupportedCodeSmells)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -51,6 +52,14 @@ namespace DataSetExplorer.Infrastructure.Database
 
             modelBuilder.Entity<SmellHeuristic>().HasOne<Annotation>().WithMany(a => a.ApplicableHeuristics)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RelatedInstance>().HasOne<Instance>().WithMany(i => i.RelatedInstances)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder
+                .Entity<RelatedInstance>()
+                .Property(i => i.RelationType)
+                .HasConversion(new EnumToStringConverter<RelationType>());
         }
     }
 }

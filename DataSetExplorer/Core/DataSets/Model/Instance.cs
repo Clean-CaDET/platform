@@ -15,13 +15,15 @@ namespace DataSetExplorer.Core.DataSets.Model
         public SnippetType Type { get; private set; }
         public ISet<Annotation> Annotations { get; private set; }
         public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
+        public List<RelatedInstance> RelatedInstances { get; private set; }
 
-        internal Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures)
+        internal Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures, List<RelatedInstance> relatedInstances)
         {
             CodeSnippetId = codeSnippetId;
             Link = link;
             ProjectLink = projectLink;
             Type = type;
+            RelatedInstances = relatedInstances;
             
             Annotations = new HashSet<Annotation>();
             SetMetricFeatures(metricFeatures);
@@ -39,6 +41,8 @@ namespace DataSetExplorer.Core.DataSets.Model
             Annotations = new HashSet<Annotation>();
             MetricFeatures = new Dictionary<CaDETMetric, double>();
         }
+
+        public Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures) : this(codeSnippetId, link, projectLink, type, metricFeatures, null) { }
 
         private void SetMetricFeatures(Dictionary<CaDETMetric, double> metricFeatures)
         {

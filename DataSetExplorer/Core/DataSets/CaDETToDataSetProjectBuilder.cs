@@ -26,6 +26,7 @@ namespace DataSetExplorer.Core.DataSets
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
         private readonly List<CodeSmell> _codeSmells;
         private readonly InstanceFilter _instanceFilter;
+        private Dictionary<CaDETClass, Dictionary<CaDETClass, int>> _classReferences = new Dictionary<CaDETClass, Dictionary<CaDETClass, int>>();
 
         internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
         {
@@ -110,9 +111,85 @@ namespace DataSetExplorer.Core.DataSets
 
         private List<Instance> CaDETToDataSetProjectClasses(List<CaDETClass> cadetClasses)
         {
+            CreateReferencesMap(cadetClasses);
             return cadetClasses.Select(c => new Instance(
-                c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class, _cadetProject.GetMetricsForCodeSnippet(c.FullName)
-            )).ToList();
+                    c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class,
+                    _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindRelatedInstances(c)
+                )).ToList();
+        }
+
+        private void CreateReferencesMap(List<CaDETClass> cadetClasses)
+        {
+            foreach (var instance in cadetClasses)
+            {   
+                foreach (var reference in GetReferencedInstances(instance))
+                {
+                    AddReferenceToMap(reference, instance);
+                }
+            }
+        }
+
+        private static Dictionary<CaDETClass, int> GetReferencedInstances(CaDETClass c)
+        {
+            var referencedInstances = new List<CaDETClass>();
+            referencedInstances.AddRange(c.GetFieldLinkedTypes());
+            referencedInstances.AddRange(c.GetMethodInvocationsTypes());
+            referencedInstances.AddRange(c.GetMethodLinkedParameterTypes());
+            referencedInstances.AddRange(c.GetMethodLinkedReturnTypes());
+            referencedInstances.AddRange(c.GetMethodLinkedVariableTypes());
+
+            return CountReferences(referencedInstances);
+        }
+
+        private static Dictionary<CaDETClass, int> CountReferences(List<CaDETClass> referencedInstances)
+        {
+            var referencedInstancesAndCounter = new Dictionary<CaDETClass, int>();
+            foreach (var instance in referencedInstances)
+            {
+                if (!referencedInstancesAndCounter.ContainsKey(instance))
+                    referencedInstancesAndCounter.Add(instance, 1);
+                else referencedInstancesAndCounter[instance]++;
+            }
+            return referencedInstancesAndCounter;
+        }
+
+        private void AddReferenceToMap(KeyValuePair<CaDETClass, int> reference, CaDETClass instance)
+        {
+            if (_classReferences.ContainsKey(reference.Key))
+            {
+                _classReferences[reference.Key].Add(instance, reference.Value);
+                return;
+            }
+
+            var references = new Dictionary<CaDETClass, int>();
+            references.Add(instance, reference.Value);
+            _classReferences.Add(reference.Key, references);
+        }
+
+        private List<RelatedInstance> FindRelatedInstances(CaDETClass c)
+        {
+            var relatedInstances = new List<RelatedInstance>();
+            if (c.Parent != null) relatedInstances.Add(new RelatedInstance(c.Parent.FullName, GetCodeUrl(c.Parent.FullName), RelationType.Parent, 1));
+            relatedInstances.AddRange(FindReferencedInstances(c));
+            relatedInstances.AddRange(FindReferencesOnInstance(c));
+            return relatedInstances;
+        }
+
+        private List<RelatedInstance> FindReferencedInstances(CaDETClass c)
+        {
+            return GetReferencedInstances(c).Select(i => new RelatedInstance(i.Key.FullName,
+                GetCodeUrl(i.Key.FullName), RelationType.Referenced, i.Value)).ToList();
+        }
+
+        private List<RelatedInstance> FindReferencesOnInstance(CaDETClass c)
+        {
+            var referencesOnInstance = new Dictionary<CaDETClass, int>();
+            if (_classReferences.TryGetValue(c, out referencesOnInstance))
+            {
+                return referencesOnInstance.Select(i => new RelatedInstance(i.Key.FullName,
+                    GetCodeUrl(i.Key.FullName), RelationType.References, i.Value)).ToList();
+            }
+            return new List<RelatedInstance>();
         }
 
         private string GetCodeUrl(string snippetId)
@@ -145,7 +222,7 @@ namespace DataSetExplorer.Core.DataSets
         private List<Instance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
         {
             return cadetMembers.Select(m => new Instance(
-                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function, _cadetProject.GetMetricsForCodeSnippet(m.Signature())
+                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function, _cadetProject.GetMetricsForCodeSnippet(m.Signature()), null
             )).ToList();
         }
     }
