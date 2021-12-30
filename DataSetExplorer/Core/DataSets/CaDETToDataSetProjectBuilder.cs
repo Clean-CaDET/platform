@@ -26,7 +26,7 @@ namespace DataSetExplorer.Core.DataSets
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
         private readonly List<CodeSmell> _codeSmells;
         private readonly InstanceFilter _instanceFilter;
-        private Dictionary<CaDETClass, Dictionary<CaDETClass, int>> _classReferences = new Dictionary<CaDETClass, Dictionary<CaDETClass, int>>();
+        private Dictionary<CaDETClass, List<CoupledClassStrength>> _classCouplings = new Dictionary<CaDETClass, List<CoupledClassStrength>>();
 
         internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
         {
@@ -111,59 +111,60 @@ namespace DataSetExplorer.Core.DataSets
 
         private List<Instance> CaDETToDataSetProjectClasses(List<CaDETClass> cadetClasses)
         {
-            CreateReferencesMap(cadetClasses);
+            CreateCouplingMap(cadetClasses);
             return cadetClasses.Select(c => new Instance(
                     c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class,
                     _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindRelatedInstances(c)
                 )).ToList();
         }
 
-        private void CreateReferencesMap(List<CaDETClass> cadetClasses)
+        private void CreateCouplingMap(List<CaDETClass> cadetClasses)
         {
             foreach (var instance in cadetClasses)
             {   
-                foreach (var reference in GetReferencedInstances(instance))
+                foreach (var coupledClass in GetReferencedInstances(instance))
                 {
-                    AddReferenceToMap(reference, instance);
+                    AddCoupledClassToMap(coupledClass, instance);
                 }
             }
         }
 
-        private static Dictionary<CaDETClass, int> GetReferencedInstances(CaDETClass c)
+        private static List<CoupledClassStrength> GetReferencedInstances(CaDETClass referencingClass)
         {
             var referencedInstances = new List<CaDETClass>();
-            referencedInstances.AddRange(c.GetFieldLinkedTypes());
-            referencedInstances.AddRange(c.GetMethodInvocationsTypes());
-            referencedInstances.AddRange(c.GetMethodLinkedParameterTypes());
-            referencedInstances.AddRange(c.GetMethodLinkedReturnTypes());
-            referencedInstances.AddRange(c.GetMethodLinkedVariableTypes());
+            referencedInstances.AddRange(referencingClass.GetFieldLinkedTypes());
+            referencedInstances.AddRange(referencingClass.GetMethodInvocationsTypes());
+            referencedInstances.AddRange(referencingClass.GetMethodLinkedParameterTypes());
+            referencedInstances.AddRange(referencingClass.GetMethodLinkedReturnTypes());
+            referencedInstances.AddRange(referencingClass.GetMethodLinkedVariableTypes());
 
-            return CountReferences(referencedInstances);
+            return CountCouplingStrength(referencedInstances);
         }
 
-        private static Dictionary<CaDETClass, int> CountReferences(List<CaDETClass> referencedInstances)
+        private static List<CoupledClassStrength> CountCouplingStrength(List<CaDETClass> referencedInstances)
         {
-            var referencedInstancesAndCounter = new Dictionary<CaDETClass, int>();
+            var coupledClasses = new Dictionary<CaDETClass, int>();
             foreach (var instance in referencedInstances)
             {
-                if (!referencedInstancesAndCounter.ContainsKey(instance))
-                    referencedInstancesAndCounter.Add(instance, 1);
-                else referencedInstancesAndCounter[instance]++;
+                if (!coupledClasses.ContainsKey(instance))
+                    coupledClasses.Add(instance, 1);
+                else coupledClasses[instance]++;
             }
-            return referencedInstancesAndCounter;
+            
+            return coupledClasses.Select(coupledClass => new CoupledClassStrength(coupledClass.Key, coupledClass.Value)).ToList();
         }
 
-        private void AddReferenceToMap(KeyValuePair<CaDETClass, int> reference, CaDETClass instance)
+        private void AddCoupledClassToMap(CoupledClassStrength coupledClassStrength, CaDETClass instance)
         {
-            if (_classReferences.ContainsKey(reference.Key))
+            if (_classCouplings.ContainsKey(coupledClassStrength.CoupledClass))
             {
-                _classReferences[reference.Key].Add(instance, reference.Value);
+                _classCouplings[coupledClassStrength.CoupledClass].Add(new CoupledClassStrength(instance, coupledClassStrength.CouplingStrength));
                 return;
             }
 
-            var references = new Dictionary<CaDETClass, int>();
-            references.Add(instance, reference.Value);
-            _classReferences.Add(reference.Key, references);
+            var references = new List<CoupledClassStrength>();
+            references.Add(new CoupledClassStrength(instance, coupledClassStrength.CouplingStrength));
+            _classCouplings.Add(coupledClassStrength.CoupledClass, references);
         }
 
         private List<RelatedInstance> FindRelatedInstances(CaDETClass c)
@@ -171,23 +172,23 @@ namespace DataSetExplorer.Core.DataSets
             var relatedInstances = new List<RelatedInstance>();
             if (c.Parent != null) relatedInstances.Add(new RelatedInstance(c.Parent.FullName, GetCodeUrl(c.Parent.FullName), RelationType.Parent, 1));
             relatedInstances.AddRange(FindReferencedInstances(c));
-            relatedInstances.AddRange(FindReferencesOnInstance(c));
+            relatedInstances.AddRange(FindInstancesThatReference(c));
             return relatedInstances;
         }
 
-        private List<RelatedInstance> FindReferencedInstances(CaDETClass c)
+        private List<RelatedInstance> FindReferencedInstances(CaDETClass referencingClass)
         {
-            return GetReferencedInstances(c).Select(i => new RelatedInstance(i.Key.FullName,
-                GetCodeUrl(i.Key.FullName), RelationType.Referenced, i.Value)).ToList();
+            return GetReferencedInstances(referencingClass).Select(cc => new RelatedInstance(cc.CoupledClass.FullName,
+                GetCodeUrl(cc.CoupledClass.FullName), RelationType.Referenced, cc.CouplingStrength)).ToList();
         }
 
-        private List<RelatedInstance> FindReferencesOnInstance(CaDETClass c)
+        private List<RelatedInstance> FindInstancesThatReference(CaDETClass referencedClass)
         {
-            var referencesOnInstance = new Dictionary<CaDETClass, int>();
-            if (_classReferences.TryGetValue(c, out referencesOnInstance))
+            var instancesThatReference = new List<CoupledClassStrength>();
+            if (_classCouplings.TryGetValue(referencedClass, out instancesThatReference))
             {
-                return referencesOnInstance.Select(i => new RelatedInstance(i.Key.FullName,
-                    GetCodeUrl(i.Key.FullName), RelationType.References, i.Value)).ToList();
+                return instancesThatReference.Select(cc => new RelatedInstance(cc.CoupledClass.FullName,
+                    GetCodeUrl(cc.CoupledClass.FullName), RelationType.References, cc.CouplingStrength)).ToList();
             }
             return new List<RelatedInstance>();
         }

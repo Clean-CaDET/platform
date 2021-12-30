@@ -6,14 +6,14 @@
         public string CodeSnippetId { get; private set; }
         public string Link { get; private set; }
         public RelationType RelationType { get; private set; }
-        public int CouplingCounter { get; private set; }
+        public int CouplingStrength { get; private set; }
 
-        public RelatedInstance(string codeSnippetId, string link, RelationType relationType, int couplingCounter)
+        public RelatedInstance(string codeSnippetId, string link, RelationType relationType, int couplingStrength)
         {
             CodeSnippetId = codeSnippetId;
             Link = link;
             RelationType = relationType;
-            CouplingCounter = couplingCounter;
+            CouplingStrength = couplingStrength;
         }
 
         private RelatedInstance()
