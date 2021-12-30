@@ -1,6 +1,7 @@
-﻿using DataSetExplorer.ConsoleApp;
-using DataSetExplorer.Database;
-using DataSetExplorer.RepositoryAdapters;
+﻿using DataSetExplorer.Core.DataSets;
+using DataSetExplorer.Core.DataSetSerializer;
+using DataSetExplorer.Infrastructure.RepositoryAdapters;
+using DataSetExplorer.UI.ConsoleApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 

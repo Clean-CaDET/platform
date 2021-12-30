@@ -1,8 +1,8 @@
-﻿using DataSetExplorer.RepositoryAdapters;
-using Shouldly;
+﻿using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DataSetExplorer.Infrastructure.RepositoryAdapters;
 using Xunit;
 
 namespace DataSetExplorer.Tests.Integration

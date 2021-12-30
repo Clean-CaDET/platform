@@ -1,17 +1,15 @@
-﻿using DataSetExplorer.Database;
-using DataSetExplorer.DataSetBuilder;
-using DataSetExplorer.DataSetBuilder.Model.Repository;
-using DataSetExplorer.RepositoryAdapters;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DataSetExplorer.Core.AnnotationConsistency;
+using DataSetExplorer.Core.Annotations;
+using DataSetExplorer.Core.DataSets;
+using DataSetExplorer.Core.DataSets.Repository;
+using DataSetExplorer.Infrastructure.Database;
+using DataSetExplorer.Infrastructure.RepositoryAdapters;
 
 namespace DataSetExplorer
 {

@@ -1,9 +1,10 @@
-using DataSetExplorer.DataSetBuilder.Model;
-using DataSetExplorer.DataSetSerializer;
 using DataSetExplorer.Tests.DataFactories;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
+using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.DataSets.Model;
+using DataSetExplorer.Core.DataSetSerializer;
 using Xunit;
 
 namespace DataSetExplorer.Tests.Unit
