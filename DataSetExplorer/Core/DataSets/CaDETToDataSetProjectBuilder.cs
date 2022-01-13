@@ -114,7 +114,7 @@ namespace DataSetExplorer.Core.DataSets
             CreateCouplingMap(cadetClasses);
             return cadetClasses.Select(c => new Instance(
                     c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class,
-                    _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindRelatedInstances(c)
+                    _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindClassRelatedInstances(c)
                 )).ToList();
         }
 
@@ -167,7 +167,7 @@ namespace DataSetExplorer.Core.DataSets
             _classCouplings.Add(coupledClassStrength.CoupledClass, references);
         }
 
-        private List<RelatedInstance> FindRelatedInstances(CaDETClass c)
+        private List<RelatedInstance> FindClassRelatedInstances(CaDETClass c)
         {
             var relatedInstances = new List<RelatedInstance>();
             if (c.Parent != null) relatedInstances.Add(new RelatedInstance(c.Parent.FullName, GetCodeUrl(c.Parent.FullName), RelationType.Parent, 1));
@@ -223,8 +223,32 @@ namespace DataSetExplorer.Core.DataSets
         private List<Instance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
         {
             return cadetMembers.Select(m => new Instance(
-                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function, _cadetProject.GetMetricsForCodeSnippet(m.Signature()), null
+                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function, _cadetProject.GetMetricsForCodeSnippet(m.Signature()), FindMethodRelatedInstances(m)
             )).ToList();
+        }
+
+        private List<RelatedInstance> FindMethodRelatedInstances(CaDETMember m)
+        {
+            var relatedInstances = new List<RelatedInstance>();
+            relatedInstances.AddRange(FindReferencedInstances(m));
+            return relatedInstances;
+        }
+
+        private IEnumerable<RelatedInstance> FindReferencedInstances(CaDETMember referencingMember)
+        {
+            return GetReferencedInstances(referencingMember).Select(cc => new RelatedInstance(cc.CoupledClass.FullName,
+                GetCodeUrl(cc.CoupledClass.FullName), RelationType.Referenced, cc.CouplingStrength)).ToList();
+        }
+
+        private IEnumerable<CoupledClassStrength> GetReferencedInstances(CaDETMember referencingMember)
+        {
+            var referencedInstances = new List<CaDETClass>();
+            referencedInstances.AddRange(referencingMember.GetLinkedReturnTypes());
+            referencedInstances.AddRange(referencingMember.InvokedMethods.Select(m => m.Parent));
+            referencedInstances.AddRange(referencingMember.AccessedAccessors.Select(a => a.Parent));
+            referencedInstances.AddRange(referencingMember.AccessedFields.Select(f => f.Parent));
+
+            return CountCouplingStrength(referencedInstances);
         }
     }
 }
