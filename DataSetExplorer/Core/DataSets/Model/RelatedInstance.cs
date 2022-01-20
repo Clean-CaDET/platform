@@ -1,4 +1,5 @@
-﻿namespace DataSetExplorer.Core.DataSets.Model
+﻿using System.Collections.Generic;
+namespace DataSetExplorer.Core.DataSets.Model
 {
     public class RelatedInstance
     {
@@ -6,14 +7,14 @@
         public string CodeSnippetId { get; private set; }
         public string Link { get; private set; }
         public RelationType RelationType { get; private set; }
-        public int CouplingStrength { get; private set; }
+        public Dictionary<CouplingType, int> CouplingTypeAndStrength { get; private set; }
 
-        public RelatedInstance(string codeSnippetId, string link, RelationType relationType, int couplingStrength)
+        public RelatedInstance(string codeSnippetId, string link, RelationType relationType, Dictionary<CouplingType, int> couplingTypeAndStrength)
         {
             CodeSnippetId = codeSnippetId;
             Link = link;
             RelationType = relationType;
-            CouplingStrength = couplingStrength;
+            CouplingTypeAndStrength = couplingTypeAndStrength;
         }
 
         private RelatedInstance()

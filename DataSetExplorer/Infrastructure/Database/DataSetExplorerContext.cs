@@ -29,6 +29,12 @@ namespace DataSetExplorer.Infrastructure.Database
                     m => JsonConvert.SerializeObject(m),
                     m => JsonConvert.DeserializeObject<Dictionary<CaDETMetric, double>>(m));
 
+            modelBuilder.Entity<RelatedInstance>()
+                .Property(i => i.CouplingTypeAndStrength)
+                .HasConversion(
+                    m => JsonConvert.SerializeObject(m),
+                    m => JsonConvert.DeserializeObject<Dictionary<CouplingType, int>>(m));
+
             modelBuilder.Entity<CodeSmell>().HasOne<DataSet>().WithMany(d => d.SupportedCodeSmells)
                 .OnDelete(DeleteBehavior.Cascade);
 

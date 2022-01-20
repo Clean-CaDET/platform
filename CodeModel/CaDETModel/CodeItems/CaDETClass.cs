@@ -42,34 +42,49 @@ namespace CodeModel.CaDETModel.CodeItems
 
         public List<CaDETClass> GetFieldLinkedTypes()
         {
-            return Fields.SelectMany(f => f.GetLinkedTypes()).ToList();
+            var instances = Fields.SelectMany(f => f.GetLinkedTypes()).ToList();
+            RemoveThisClassFromList(instances);
+            return instances;
         }
 
         public List<CaDETClass> GetMethodLinkedReturnTypes()
         {
-            return Members.Where(m => m.Type is not CaDETMemberType.Constructor)
+            var instances = Members.Where(m => m.Type is not CaDETMemberType.Constructor)
                 .SelectMany(m => m.GetLinkedReturnTypes()).ToList();
+            RemoveThisClassFromList(instances);
+            return instances;
         }
 
         public List<CaDETClass> GetMethodLinkedVariableTypes()
         {
-            return Members.Where(m=> m.Type is not CaDETMemberType.Property)
+            var instances = Members.Where(m => m.Type is not CaDETMemberType.Property)
                 .SelectMany(m => m.Variables)
                 .SelectMany(v => v.GetLinkedTypes()).ToList();
+            RemoveThisClassFromList(instances);
+            return instances;
         }
 
         public List<CaDETClass> GetMethodLinkedParameterTypes()
         {
             var parameters = Members.SelectMany(m => m.Params).ToList();
-            return parameters.Select(p => p.Type)
-                   .Where(v => v.LinkedTypes != null)
-                   .SelectMany(v => v.LinkedTypes).ToList();
+            var instances = parameters.Select(p => p.Type)
+                .Where(v => v.LinkedTypes != null)
+                .SelectMany(v => v.LinkedTypes).ToList();
+            RemoveThisClassFromList(instances);
+            return instances;
         }
 
         public List<CaDETClass> GetMethodInvocationsTypes()
         {
             var invokedMethods = Members.SelectMany(m => m.InvokedMethods).ToList();
-            return invokedMethods.Select(m => m.Parent).ToList();
+            var instances = invokedMethods.Select(m => m.Parent).ToList();
+            RemoveThisClassFromList(instances);
+            return instances;
+        }
+
+        private void RemoveThisClassFromList(List<CaDETClass> classes)
+        {
+            classes.RemoveAll(c => c.FullName.Equals(FullName));
         }
 
         public CaDETMember FindMember(string name)
