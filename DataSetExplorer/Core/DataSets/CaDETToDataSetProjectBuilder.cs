@@ -258,19 +258,20 @@ namespace DataSetExplorer.Core.DataSets
 
         private IEnumerable<RelatedInstance> FindReferencedInstances(CaDETMember referencingMember)
         {
-            return GetReferencedInstances(referencingMember).Select(cc => new RelatedInstance(cc.CoupledClass.FullName,
-                GetCodeUrl(cc.CoupledClass.FullName), RelationType.Referenced, cc.CouplingStrength)).ToList();
+
+            var relatedInstances = new List<RelatedInstance>();
+            GetReferencedInstances(referencingMember).ForEach(cc => CoupledClassToRelatedInstance(relatedInstances, cc, RelationType.Referenced));
+            return relatedInstances;
         }
 
-        private IEnumerable<CoupledClassStrength> GetReferencedInstances(CaDETMember referencingMember)
+        private List<CoupledClassStrength> GetReferencedInstances(CaDETMember referencingMember)
         {
-            var referencedInstances = new List<CaDETClass>();
-            referencedInstances.AddRange(referencingMember.GetLinkedReturnTypes());
-            referencedInstances.AddRange(referencingMember.InvokedMethods.Select(m => m.Parent));
-            referencedInstances.AddRange(referencingMember.AccessedAccessors.Select(a => a.Parent));
-            referencedInstances.AddRange(referencingMember.AccessedFields.Select(f => f.Parent));
-
-            return CountCouplingStrength(referencedInstances);
+            var coupledClasses = new List<CoupledClassStrength>();
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.GetLinkedReturnTypes(), CouplingType.ReturnType));
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.InvokedMethods.Select(m => m.Parent).ToList(), CouplingType.MethodInvocation));
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.AccessedAccessors.Select(a => a.Parent).ToList(), CouplingType.AccessedAccessor));
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.AccessedFields.Select(f => f.Parent).ToList(), CouplingType.Parent));
+            return coupledClasses;
         }
     }
 }

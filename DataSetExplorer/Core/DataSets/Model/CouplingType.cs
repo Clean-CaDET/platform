@@ -7,6 +7,7 @@
         Parameter,
         ReturnType,
         Variable,
-        Parent
+        Parent,
+        AccessedAccessor
     }
 }

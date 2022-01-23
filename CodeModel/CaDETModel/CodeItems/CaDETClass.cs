@@ -42,9 +42,9 @@ namespace CodeModel.CaDETModel.CodeItems
 
         public List<CaDETClass> GetFieldLinkedTypes()
         {
-            var instances = Fields.SelectMany(f => f.GetLinkedTypes()).ToList();
-            RemoveThisClassFromList(instances);
-            return instances;
+            var cadetClasses = Fields.SelectMany(f => f.GetLinkedTypes()).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodLinkedReturnTypes()
