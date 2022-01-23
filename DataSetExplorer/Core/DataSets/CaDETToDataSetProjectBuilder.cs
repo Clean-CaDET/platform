@@ -258,7 +258,6 @@ namespace DataSetExplorer.Core.DataSets
 
         private IEnumerable<RelatedInstance> FindReferencedInstances(CaDETMember referencingMember)
         {
-
             var relatedInstances = new List<RelatedInstance>();
             GetReferencedInstances(referencingMember).ForEach(cc => CoupledClassToRelatedInstance(relatedInstances, cc, RelationType.Referenced));
             return relatedInstances;
