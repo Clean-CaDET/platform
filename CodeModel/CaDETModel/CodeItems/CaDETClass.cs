@@ -49,37 +49,37 @@ namespace CodeModel.CaDETModel.CodeItems
 
         public List<CaDETClass> GetMethodLinkedReturnTypes()
         {
-            var instances = Members.Where(m => m.Type is not CaDETMemberType.Constructor)
+            var cadetClasses = Members.Where(m => m.Type is not CaDETMemberType.Constructor)
                 .SelectMany(m => m.GetLinkedReturnTypes()).ToList();
-            RemoveThisClassFromList(instances);
-            return instances;
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodLinkedVariableTypes()
         {
-            var instances = Members.Where(m => m.Type is not CaDETMemberType.Property)
+            var cadetClasses = Members.Where(m => m.Type is not CaDETMemberType.Property)
                 .SelectMany(m => m.Variables)
                 .SelectMany(v => v.GetLinkedTypes()).ToList();
-            RemoveThisClassFromList(instances);
-            return instances;
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodLinkedParameterTypes()
         {
             var parameters = Members.SelectMany(m => m.Params).ToList();
-            var instances = parameters.Select(p => p.Type)
+            var cadetClasses = parameters.Select(p => p.Type)
                 .Where(v => v.LinkedTypes != null)
                 .SelectMany(v => v.LinkedTypes).ToList();
-            RemoveThisClassFromList(instances);
-            return instances;
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodInvocationsTypes()
         {
             var invokedMethods = Members.SelectMany(m => m.InvokedMethods).ToList();
-            var instances = invokedMethods.Select(m => m.Parent).ToList();
-            RemoveThisClassFromList(instances);
-            return instances;
+            var cadetClasses = invokedMethods.Select(m => m.Parent).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         private void RemoveThisClassFromList(List<CaDETClass> classes)

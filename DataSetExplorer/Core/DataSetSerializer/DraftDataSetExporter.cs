@@ -10,7 +10,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
 {
     class DraftDataSetExporter
     {
-        private readonly string _templatePath = "./DataSetSerializer/Template/New_Dataset_Template.xlsx";
+        private readonly string _templatePath = "./Core/DataSetSerializer/Template/New_Dataset_Template.xlsx";
         private string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;
