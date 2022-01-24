@@ -10,18 +10,20 @@ namespace DataSetExplorer.Core.Annotations.Model
         public int Severity { get; private set; }
         public List<SmellHeuristic> ApplicableHeuristics { get; private set; }
         public Annotator Annotator { get; set; }
+        public string Note { get; private set; }
 
-        public Annotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics) : 
-            this(new CodeSmell(instanceSmell), severity, annotator, applicableHeuristics)
+        public Annotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics, String note) : 
+            this(new CodeSmell(instanceSmell), severity, annotator, applicableHeuristics, note)
         {
         }
 
-        public Annotation(CodeSmell instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics)
+        public Annotation(CodeSmell instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics, String note)
         {
             InstanceSmell = instanceSmell;
             Severity = severity;
             Annotator = annotator;
             ApplicableHeuristics = applicableHeuristics;
+            Note = note;
             Validate();
         }
 
@@ -34,6 +36,7 @@ namespace DataSetExplorer.Core.Annotations.Model
             InstanceSmell = other.InstanceSmell;
             Severity = other.Severity;
             ApplicableHeuristics = other.ApplicableHeuristics;
+            Note = other.Note;
             Validate();
         }
 
