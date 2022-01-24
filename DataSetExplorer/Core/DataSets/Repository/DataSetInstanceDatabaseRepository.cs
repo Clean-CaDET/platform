@@ -25,6 +25,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
             var project = _dbContext.DataSetProjects
                 .Where(p => p.Id == projectId)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator);
             if (project == default) return new List<Instance>();
@@ -39,6 +40,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
             var project = _dbContext.DataSetProjects
                 .Where(p => p.Id == projectId)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics);

@@ -243,6 +243,7 @@ namespace CodeModel.CodeParsers.CSharp
                 if (!(m.Type is CaDETMemberType.Property))
                 {
                     m.Variables = LinkMethodVariables(classes, m);
+                    m.Params = LinkMethodParameters(classes, m);
                 }
 
                 if (!(m.Type is CaDETMemberType.Constructor))
@@ -265,6 +266,18 @@ namespace CodeModel.CodeParsers.CSharp
                 linkedVariables.Add(variable);
             }
             return linkedVariables;
+        }
+
+        private List<CaDETParameter> LinkMethodParameters(List<CaDETClass> classes, CaDETMember member)
+        {
+            List<CaDETParameter> linkedParameters = new List<CaDETParameter>();
+            foreach (var param in member.Params)
+            {
+                var paramTypes = GetTypes(classes, param.Type);
+                if (paramTypes != null) param.Type.LinkedTypes = paramTypes;
+                linkedParameters.Add(param);
+            }
+            return linkedParameters;
         }
 
         private List<CaDETClass> GetTypes(List<CaDETClass> classes, CaDETLinkedType type)
