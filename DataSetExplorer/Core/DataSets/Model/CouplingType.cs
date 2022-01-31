@@ -8,6 +8,7 @@
         ReturnType,
         Variable,
         Parent,
-        AccessedAccessor
+        AccessedAccessor,
+        AccessedField
     }
 }

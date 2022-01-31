@@ -42,7 +42,7 @@ namespace CodeModel.Serialization
             var retVal = new HashSet<string>();
             retVal.UnionWith(method.GetAccessedOwnFields().Select(f => f.Name));
             retVal.UnionWith(method.GetAccessedOwnAccessors().Select(a => a.Name));
-            retVal.UnionWith(method.InvokedMethods
+            retVal.UnionWith(method.InvokedMethods.Distinct()
                 .Where(i => i.Parent.Equals(method.Parent))
                 .Select(m => m.GetMethodNameWithParamTypes()));
             return retVal;

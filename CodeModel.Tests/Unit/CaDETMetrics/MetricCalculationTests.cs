@@ -144,7 +144,7 @@ namespace CodeModel.Tests.Unit.CaDETMetrics
             var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
 
             dataRange.Metrics[CaDETMetric.CBO].ShouldBe(2);
-            doctor.Metrics[CaDETMetric.CBO].ShouldBe(2);
+            doctor.Metrics[CaDETMetric.CBO].ShouldBe(1);
             doctorService.Metrics[CaDETMetric.CBO].ShouldBe(2);
         }
 

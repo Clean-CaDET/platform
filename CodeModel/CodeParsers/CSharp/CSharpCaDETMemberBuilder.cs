@@ -137,9 +137,9 @@ namespace CodeModel.CodeParsers.CSharp
             return new CaDETLinkedType() { FullType = type.ToString() };
         }
 
-        private ISet<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)
+        private List<CaDETMember> CalculateInvokedMethods(List<CaDETClass> allProjectClasses)
         {
-            ISet<CaDETMember> methods = new HashSet<CaDETMember>();
+            List<CaDETMember> methods = new List<CaDETMember>();
             var invokedMethods = _cSharpMember.DescendantNodes().OfType<InvocationExpressionSyntax>();
             foreach (var invoked in invokedMethods)
             {
@@ -165,9 +165,9 @@ namespace CodeModel.CodeParsers.CSharp
             return symbolInfo.CandidateSymbols.Length > 0 ? symbolInfo.CandidateSymbols.First() : null;
         }
 
-        private ISet<CaDETField> CalculateAccessedFields(List<CaDETClass> allProjectClasses)
+        private List<CaDETField> CalculateAccessedFields(List<CaDETClass> allProjectClasses)
         {
-            ISet<CaDETField> fields = new HashSet<CaDETField>();
+            List<CaDETField> fields = new List<CaDETField>();
             var accessedFields = _semanticModel.GetOperation(_cSharpMember).Descendants().OfType<IFieldReferenceOperation>();
             foreach (var field in accessedFields)
             {
@@ -193,10 +193,10 @@ namespace CodeModel.CodeParsers.CSharp
             return containingClass == null;
         }
 
-        private ISet<CaDETMember> CalculateAccessedAccessors(List<CaDETClass> allProjectClasses)
+        private List<CaDETMember> CalculateAccessedAccessors(List<CaDETClass> allProjectClasses)
         {
-            ISet<CaDETMember> accessors = new HashSet<CaDETMember>();
-            var accessedAccessors = _semanticModel.GetOperation(_cSharpMember).Descendants().OfType<IPropertyReferenceOperation>();
+            List<CaDETMember> accessors = new List<CaDETMember>();
+            var accessedAccessors = _semanticModel.GetOperation(_cSharpMember).Descendants().OfType<IPropertyReferenceOperation>(); //.DescendantTokens().OfType<IPropertyReferenceOperation>();
             foreach (var accessor in accessedAccessors)
             {
                 foreach (var projectClass in allProjectClasses)

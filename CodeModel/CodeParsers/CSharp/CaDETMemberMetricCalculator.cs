@@ -450,9 +450,9 @@ namespace CodeModel.CodeParsers.CSharp
 
         private static int CountAccessOfImportData(CaDETMember member)
         {
-            var totalAccessedExternalFields = member.AccessedFields.Count(f => !f.Parent.Equals(member.Parent));
-            var totalAccessedExternalAccessors = member.AccessedAccessors.Count(a => !a.Parent.Equals(member.Parent));
-            var totalUsedExternalMethods = member.InvokedMethods.Count(m => !m.Parent.Equals(member.Parent));
+            var totalAccessedExternalFields = member.AccessedFields.Distinct().Count(f => !f.Parent.Equals(member.Parent));
+            var totalAccessedExternalAccessors = member.AccessedAccessors.Distinct().Count(a => !a.Parent.Equals(member.Parent));
+            var totalUsedExternalMethods = member.InvokedMethods.Distinct().Count(m => !m.Parent.Equals(member.Parent));
 
             return totalAccessedExternalFields + totalAccessedExternalAccessors + totalUsedExternalMethods;
         }

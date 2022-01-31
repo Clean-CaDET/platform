@@ -137,6 +137,8 @@ namespace DataSetExplorer.Core.DataSets
             coupledClasses.AddRange(CountCouplingStrength(referencingClass.GetMethodLinkedParameterTypes(), CouplingType.Parameter));
             coupledClasses.AddRange(CountCouplingStrength(referencingClass.GetMethodLinkedReturnTypes(), CouplingType.ReturnType));
             coupledClasses.AddRange(CountCouplingStrength(referencingClass.GetMethodLinkedVariableTypes(), CouplingType.Variable));
+            coupledClasses.AddRange(CountCouplingStrength(referencingClass.GetAccessedAccessorsTypes(), CouplingType.AccessedAccessor));
+            coupledClasses.AddRange(CountCouplingStrength(referencingClass.GetAccessedFieldsTypes(), CouplingType.AccessedField));
             return coupledClasses;
         }
 
@@ -259,6 +261,13 @@ namespace DataSetExplorer.Core.DataSets
         private IEnumerable<RelatedInstance> FindReferencedInstances(CaDETMember referencingMember)
         {
             var relatedInstances = new List<RelatedInstance>();
+            var classParent = referencingMember.Parent.Parent;
+            if (classParent != null)
+            {
+                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+                couplingTypeAndSt.Add(CouplingType.Parent, 1);
+                relatedInstances.Add(new RelatedInstance(classParent.FullName, GetCodeUrl(classParent.FullName), RelationType.Parent, couplingTypeAndSt));
+            }
             GetReferencedInstances(referencingMember).ForEach(cc => CoupledClassToRelatedInstance(relatedInstances, cc, RelationType.Referenced));
             return relatedInstances;
         }
@@ -266,10 +275,12 @@ namespace DataSetExplorer.Core.DataSets
         private List<CoupledClassStrength> GetReferencedInstances(CaDETMember referencingMember)
         {
             var coupledClasses = new List<CoupledClassStrength>();
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.GetLinkedParamTypes(), CouplingType.Parameter));
             coupledClasses.AddRange(CountCouplingStrength(referencingMember.GetLinkedReturnTypes(), CouplingType.ReturnType));
-            coupledClasses.AddRange(CountCouplingStrength(referencingMember.InvokedMethods.Select(m => m.Parent).ToList(), CouplingType.MethodInvocation));
-            coupledClasses.AddRange(CountCouplingStrength(referencingMember.AccessedAccessors.Select(a => a.Parent).ToList(), CouplingType.AccessedAccessor));
-            coupledClasses.AddRange(CountCouplingStrength(referencingMember.AccessedFields.Select(f => f.Parent).ToList(), CouplingType.Parent));
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.GetLinkedVariableTypes(), CouplingType.Variable));
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.GetLinkedMethodInvocationTypes(), CouplingType.MethodInvocation));
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.GetLinkedAccessedAccessorTypes(), CouplingType.AccessedAccessor));
+            coupledClasses.AddRange(CountCouplingStrength(referencingMember.GetLinkedAccessedFieldTypes(), CouplingType.AccessedField));
             return coupledClasses;
         }
     }

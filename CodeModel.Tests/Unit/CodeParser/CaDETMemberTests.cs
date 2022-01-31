@@ -139,10 +139,9 @@ namespace CodeModel.Tests.Unit.CodeParser
             var logChecked = service.FindMember("LogChecked");
 
             overlapsWith.Variables.Count().ShouldBe(0);
-            logChecked.Variables.Count().ShouldBe(8);
+            logChecked.Variables.Count().ShouldBe(7);
 
             logChecked.Variables.Count(v => v.Name.Equals("test1")).ShouldBe(1);
-            logChecked.Variables.Count(v => v.Name.Equals("test")).ShouldBe(1);
             logChecked.Variables.Count(v => v.Name.Equals("a")).ShouldBe(1);
             logChecked.Variables.Count(v => v.Name.Equals("b")).ShouldBe(1);
             logChecked.Variables.Count(v => v.Name.Equals("c")).ShouldBe(1);
@@ -169,6 +168,95 @@ namespace CodeModel.Tests.Unit.CodeParser
             doctor.FindMember("TestFunction").GetLinkedReturnTypes().ShouldNotContain(otherDateRange);
             doctorService.FindMember("FindAvailableDoctor").GetLinkedReturnTypes().ShouldContain(doctor);
             doctorService.FindMember("FindAvailableDoctor").GetLinkedReturnTypes().ShouldNotContain(otherDoctor);
+        }
+
+        [Fact]
+        public void Checks_linked_param_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+
+            doctorService.FindMember("FindAvailableDoctor").GetLinkedParamTypes().ShouldContain(dateRange);
+            doctorService.FindMember("LogChecked").GetLinkedParamTypes().ShouldContain(doctor);
+            doctorService.FindMember("LogChecked").GetLinkedParamTypes().Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Checks_linked_variable_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var linkedVariableTypes = doctorService.FindMember("LogChecked").GetLinkedVariableTypes();
+
+            linkedVariableTypes.ShouldContain(doctor);
+            linkedVariableTypes.ShouldContain(dateRange);
+            linkedVariableTypes.Count.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Checks_linked_method_invocation_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var linkedMethodInvocationTypes = doctorService.FindMember("FindAvailableDoctor").GetLinkedMethodInvocationTypes();
+
+            linkedMethodInvocationTypes.ShouldNotContain(doctor);
+            linkedMethodInvocationTypes.ShouldNotContain(doctorService);
+            linkedMethodInvocationTypes.ShouldContain(dateRange);
+            linkedMethodInvocationTypes.Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Checks_linked_accessed_accessors_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+
+            var linkedAccessedAccessorsTypes = doctorService.FindMember("FindAvailableDoctor").GetLinkedAccessedAccessorTypes();
+            linkedAccessedAccessorsTypes.ShouldContain(doctor);
+            linkedAccessedAccessorsTypes.Count.ShouldBe(1);
+
+            linkedAccessedAccessorsTypes = doctorService.FindMember("LogChecked").GetLinkedAccessedAccessorTypes();
+            linkedAccessedAccessorsTypes.ShouldContain(doctor);
+            linkedAccessedAccessorsTypes.ShouldContain(dateRange);
+            linkedAccessedAccessorsTypes.Count.ShouldBe(5);
+            linkedAccessedAccessorsTypes.Count(c => c.Name.Equals("Doctor")).ShouldBe(3);
+            linkedAccessedAccessorsTypes.Count(c => c.Name.Equals("DateRange")).ShouldBe(2);
+        }
+
+        [Fact]
+        public void Checks_linked_accessed_fields_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            
+            var linkedAccessedFieldsTypes = doctorService.FindMember("FindAvailableDoctor").GetLinkedAccessedFieldTypes();
+            linkedAccessedFieldsTypes.ShouldContain(doctor);
+            linkedAccessedFieldsTypes.Count.ShouldBe(1);
         }
 
         [Fact]

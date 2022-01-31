@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CodeModel.CaDETModel.CodeItems
@@ -12,9 +13,9 @@ namespace CodeModel.CaDETModel.CodeItems
         public List<CaDETParameter> Params { get; internal set; }
         public List<CaDETModifier> Modifiers { get; internal set; }
         public Dictionary<CaDETMetric, double> Metrics { get; internal set; }
-        public ISet<CaDETMember> InvokedMethods { get; internal set; }
-        public ISet<CaDETMember> AccessedAccessors { get; internal set; }
-        public ISet<CaDETField> AccessedFields { get; internal set; }
+        public List<CaDETMember> InvokedMethods { get; internal set; }
+        public List<CaDETMember> AccessedAccessors { get; internal set; }
+        public List<CaDETField> AccessedFields { get; internal set; }
         public CaDETLinkedType ReturnType;
         public List<CaDETVariable> Variables { get; internal set; } = new List<CaDETVariable>();
 
@@ -61,7 +62,7 @@ namespace CodeModel.CaDETModel.CodeItems
         {
             List<CaDETField> accessedOwnFields = new List<CaDETField>();
 
-            foreach (var accessedOwnField in AccessedFields)
+            foreach (var accessedOwnField in AccessedFields.Distinct())
             {
                 if (accessedOwnField.Parent == Parent)
                 {
@@ -75,7 +76,7 @@ namespace CodeModel.CaDETModel.CodeItems
         public List<CaDETMember> GetAccessedOwnAccessors() {
             List<CaDETMember> accessedOwnAccessors = new List<CaDETMember>();
 
-            foreach (var accessedOwnAccessor in AccessedAccessors)
+            foreach (var accessedOwnAccessor in AccessedAccessors.Distinct())
             {
                 if (accessedOwnAccessor.Parent == Parent)
                 {
@@ -108,7 +109,49 @@ namespace CodeModel.CaDETModel.CodeItems
         public List<CaDETClass> GetLinkedReturnTypes()
         {
             if (ReturnType == null) return new List<CaDETClass>();
-            return ReturnType.LinkedTypes;
+            var returnTypes = ReturnType.LinkedTypes;
+            RemoveParentClassFromList(returnTypes, Parent);
+            return returnTypes;
+        }
+
+        public List<CaDETClass> GetLinkedParamTypes()
+        {
+            var paramTypes = Params.SelectMany(p => p.Type.LinkedTypes).ToList();
+            RemoveParentClassFromList(paramTypes, Parent);
+            return paramTypes;
+        }
+        
+        public List<CaDETClass> GetLinkedVariableTypes()
+        {
+            var variableTypes = Variables.SelectMany(v => v.Type.LinkedTypes).ToList();
+            RemoveParentClassFromList(variableTypes, Parent);
+            return variableTypes;
+        }
+
+        public List<CaDETClass> GetLinkedMethodInvocationTypes()
+        {
+            var methodInvocationTypes = InvokedMethods.Select(m => m.Parent).ToList();
+            RemoveParentClassFromList(methodInvocationTypes, Parent);
+            return methodInvocationTypes;
+        }
+
+        public List<CaDETClass> GetLinkedAccessedAccessorTypes()
+        {
+            var accessedAccessorTypes = AccessedAccessors.Select(m => m.Parent).ToList();
+            RemoveParentClassFromList(accessedAccessorTypes, Parent);
+            return accessedAccessorTypes;
+        }
+
+        public List<CaDETClass> GetLinkedAccessedFieldTypes()
+        {
+            var accessedFieldTypes = AccessedFields.Select(f => f.Parent).ToList();
+            RemoveParentClassFromList(accessedFieldTypes, Parent);
+            return accessedFieldTypes;
+        }
+
+        private void RemoveParentClassFromList(List<CaDETClass> classes, CaDETClass parentClass)
+        {
+            classes.RemoveAll(c => c.Equals(parentClass));
         }
     }
 }

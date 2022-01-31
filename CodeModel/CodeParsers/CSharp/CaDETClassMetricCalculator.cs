@@ -106,8 +106,8 @@ namespace CodeModel.CodeParsers.CSharp
 
         private static int CountOwnFieldAndAccessorAccessed(CaDETClass parsedClass, CaDETMember method)
         {
-            int counter = method.AccessedFields.Count(field => Enumerable.Contains(parsedClass.Fields, field));
-            counter += method.AccessedAccessors.Count(accessor => Enumerable.Contains(parsedClass.Members, accessor));
+            int counter = method.AccessedFields.Distinct().Count(field => Enumerable.Contains(parsedClass.Fields, field));
+            counter += method.AccessedAccessors.Distinct().Count(accessor => Enumerable.Contains(parsedClass.Members, accessor));
 
             return counter;
         }
@@ -152,7 +152,7 @@ namespace CodeModel.CodeParsers.CSharp
             foreach (var method in methods)
             {
                 int numberOfOwnFieldAndMethodsAccessed = CountOwnFieldAndAccessorAccessed(parsedClass, method);
-                numberOfOwnFieldAndMethodsAccessed += method.InvokedMethods.Count(method => Enumerable.Contains(parsedClass.Members, method));
+                numberOfOwnFieldAndMethodsAccessed += method.InvokedMethods.Distinct().Count(method => Enumerable.Contains(parsedClass.Members, method));
                 if (numberOfOwnFieldAndMethodsAccessed != 0)
                 {
                     counter++;
@@ -231,8 +231,8 @@ namespace CodeModel.CodeParsers.CSharp
 
             foreach (var member in parsedClass.Members)
             {
-                accessedExternalFields.UnionWith(member.AccessedFields.Where(f => !f.Parent.Equals(member.Parent)));
-                accessedExternalAccessors.UnionWith(member.AccessedAccessors.Where(a => !a.Parent.Equals(member.Parent)));
+                accessedExternalFields.UnionWith(member.AccessedFields.Distinct().Where(f => !f.Parent.Equals(member.Parent)));
+                accessedExternalAccessors.UnionWith(member.AccessedAccessors.Distinct().Where(a => !a.Parent.Equals(member.Parent)));
             }
 
             return accessedExternalAccessors.Count + accessedExternalFields.Count;
@@ -290,7 +290,7 @@ namespace CodeModel.CodeParsers.CSharp
             var invokedMethods = new HashSet<CaDETMember>();
             foreach (var member in parsedClass.Members)
             {
-                invokedMethods.UnionWith(member.InvokedMethods.ToList());
+                invokedMethods.UnionWith(member.InvokedMethods.Distinct().ToList());
             }
             return invokedMethods.Count();
         }
@@ -341,7 +341,7 @@ namespace CodeModel.CodeParsers.CSharp
 
             foreach (var member in parsedClass.Members)
             {
-                accessedExternalFields.UnionWith(member.AccessedFields.Where(f => !f.Parent.Equals(member.Parent)));
+                accessedExternalFields.UnionWith(member.AccessedFields.Distinct().Where(f => !f.Parent.Equals(member.Parent)));
             }
 
             return accessedExternalFields.Count;
@@ -418,7 +418,7 @@ namespace CodeModel.CodeParsers.CSharp
         private static int CountAccessedInheritatedFields(CaDETClass parsedClass)
         {
             var protectedParentFields = FindFieldsWithModifier(parsedClass.Parent.Fields, CaDETModifierValue.Protected);
-            var accessedFields = parsedClass.Members.SelectMany(m => m.AccessedFields);
+            var accessedFields = parsedClass.Members.SelectMany(m => m.AccessedFields.Distinct());
             var accessedInheritedFields = protectedParentFields.Select(f => f.Name).Intersect(accessedFields.Select(f => f.Name));
             return accessedInheritedFields.Count();
         }
@@ -426,8 +426,8 @@ namespace CodeModel.CodeParsers.CSharp
         private static int CountUsedInheritatedMethods(CaDETClass parsedClass)
         {
             var protectedParentMembers = FindMembersWithModifier(parsedClass.Parent.Members, CaDETModifierValue.Protected);
-            var invokedMethods = parsedClass.Members.SelectMany(m => m.InvokedMethods);
-            var accessedAccessors = parsedClass.Members.SelectMany(m => m.AccessedAccessors);
+            var invokedMethods = parsedClass.Members.SelectMany(m => m.InvokedMethods.Distinct());
+            var accessedAccessors = parsedClass.Members.SelectMany(m => m.AccessedAccessors.Distinct());
             var usedMethods = invokedMethods.Union(accessedAccessors);
             var usedInheritedMethods = protectedParentMembers.Select(m => m.Name).Intersect(usedMethods.Select(m => m.Name));
             return usedInheritedMethods.Count();
