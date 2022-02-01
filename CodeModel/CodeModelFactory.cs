@@ -24,29 +24,41 @@ namespace CodeModel
             return codeParser.Parse(multipleClassSourceCode);
         }
 
-        public CaDETProject CreateProject(string sourceCodeLocation)
+        public CaDETProject CreateProject(string sourceCodeLocation, List<string> foldersToIgnore)
         {
-            var allFiles = GetCodeFiles(sourceCodeLocation);
+            var allFiles = GetCodeFiles(sourceCodeLocation, foldersToIgnore);
             return CreateProject(allFiles.Select(File.ReadAllText));
         }
 
-        private string[] GetCodeFiles(string sourceCodeLocation)
+        public CaDETProject CreateProject(string sourceCodeLocation)
         {
-            return Directory.GetFiles(sourceCodeLocation, GetLanguageExtension(), SearchOption.AllDirectories);
+            return CreateProject(sourceCodeLocation, new List<string>());
         }
 
-        public CaDETProject CreateProjectWithCodeFileLinks(string sourceCodeLocation)
+        private string[] GetCodeFiles(string sourceCodeLocation, List<string> foldersToIgnore)
         {
-            var project = CreateProject(sourceCodeLocation);
-            project.CodeLinks = PopulateCodeLinks(sourceCodeLocation, project.Classes);
+            var allFiles = Directory.GetFiles(sourceCodeLocation, GetLanguageExtension(), SearchOption.AllDirectories).ToList();
+            foldersToIgnore.ForEach(folder => allFiles.RemoveAll(f => f.ToLower().Contains("\\" + folder.ToLower() + "\\")));
+            return allFiles.ToArray();
+        }
+        
+        public CaDETProject CreateProjectWithCodeFileLinks(string sourceCodeLocation, List<string> foldersToIgnore)
+        {
+            var project = CreateProject(sourceCodeLocation, foldersToIgnore);
+            project.CodeLinks = PopulateCodeLinks(sourceCodeLocation, project.Classes, foldersToIgnore);
             return project;
         }
+        
+        public CaDETProject CreateProjectWithCodeFileLinks(string repoFolder)
+        {
+            return CreateProjectWithCodeFileLinks(repoFolder, new List<string>());
+        }
 
-        public Dictionary<string, CodeLocationLink> PopulateCodeLinks(string basePath, List<CaDETClass> projectClasses)
+        public Dictionary<string, CodeLocationLink> PopulateCodeLinks(string basePath, List<CaDETClass> projectClasses, List<string> foldersToIgnore)
         {
             var codeLinks = new Dictionary<string, CodeLocationLink>();
 
-            var allFiles = GetCodeFiles(basePath);
+            var allFiles = GetCodeFiles(basePath, foldersToIgnore);
             foreach (var file in allFiles)
             {
                 var fileText = File.ReadAllText(file);
