@@ -107,7 +107,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                     var finalAnnotation = sheet.Cells["AD" + row].Text;
                     Instance instance = new Instance(codeSnippetId, projectLink);
                     // Dummy values for DataSetAnnotation constructor to pass validations (the final annotation is the only important parameter in this case).
-                    Annotation annotation = new Annotation(new CodeSmell("Large_Class"), int.Parse(finalAnnotation), new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") });
+                    Annotation annotation = new Annotation(new CodeSmell("Large_Class"), int.Parse(finalAnnotation), new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") }, "");
                     instance.AddAnnotation(annotation);
                     instances.Add(instance);
                 }
@@ -123,7 +123,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                 var annotatorId = int.Parse(sheet.Cells["C2"].Text);
                 var codeSmell = sheet.Cells["B2"].Text;
                 var heuristics = GetHeuristics(sheet, row);
-                return new Annotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics);
+                return new Annotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics, ""); // TODO - extract note from sheet
             }
             catch (InvalidOperationException e)
             {

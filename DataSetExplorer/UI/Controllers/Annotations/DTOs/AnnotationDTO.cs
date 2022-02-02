@@ -9,5 +9,6 @@ namespace DataSetExplorer.UI.Controllers.Annotations.DTOs
         public string CodeSmell { get; set; }
         public List<SmellHeuristicDTO> ApplicableHeuristics { get; set; }
         public int AnnotatorId { get; set; }
+        public string Note { get; set; }
     }
 }

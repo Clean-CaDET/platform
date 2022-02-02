@@ -24,7 +24,7 @@ namespace DataSetExplorer.Core.Annotations
             if (annotator == default) return Result.Fail<Annotation>($"Annotator with id: {annotatorId} does not exist.");
             var codeSmell = _dataSetAnnotationRepository.GetCodeSmell(annotation.InstanceSmell.Name);
             if (codeSmell == default) return Result.Fail<Annotation>($"CodeSmell with value: {annotation.InstanceSmell.Name} does not exist.");
-            annotation = new Annotation(codeSmell, annotation.Severity, annotator, annotation.ApplicableHeuristics);
+            annotation = new Annotation(codeSmell, annotation.Severity, annotator, annotation.ApplicableHeuristics, annotation.Note);
             instance.AddAnnotation(annotation);
             _dataSetInstanceRepository.Update(instance);
             return Result.Ok(annotation);
@@ -37,7 +37,7 @@ namespace DataSetExplorer.Core.Annotations
             if (annotation.Annotator.Id != annotatorId) return Result.Fail<Annotation>($"Only creator can update annotation.");
             var codeSmell = _dataSetAnnotationRepository.GetCodeSmell(changed.InstanceSmell.Name);
             if (codeSmell == default) return Result.Fail<Annotation>($"CodeSmell with value: {changed.InstanceSmell.Name} does not exist.");
-            annotation.Update(new Annotation(codeSmell, changed.Severity, annotation.Annotator, changed.ApplicableHeuristics));
+            annotation.Update(new Annotation(codeSmell, changed.Severity, annotation.Annotator, changed.ApplicableHeuristics, changed.Note));
             _dataSetAnnotationRepository.Update(annotation);
             return Result.Ok(annotation);
         }

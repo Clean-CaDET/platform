@@ -71,6 +71,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
             {
                 _sheet.Cells[2, 4 + (2 * i)].Value = smellHeuristics[i];
             }
+            _sheet.Cells[3, 4 + (smellHeuristics.Count * 2)].Value = "Note";
             return smellHeuristics;
         }
 
@@ -98,6 +99,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                     _sheet.Cells[row, 4 + (2 * index)].Value = "Yes";
                 }
                 PopulateNotApplicableAnnotations(smellHeuristics, row, annotation);
+                _sheet.Cells[row, 4 + (smellHeuristics.Count * 2)].Value = annotation.Note;
             }
         }
 

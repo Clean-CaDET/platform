@@ -11,7 +11,7 @@ namespace DataSetExplorer.UI.Controllers.Annotations.Mappers
         {
             CreateMap<AnnotationDTO, Annotation>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
-                .ConstructUsing(src => new Annotation(src.CodeSmell, src.Severity, new Annotator(src.AnnotatorId), CreateHeuristics(src.ApplicableHeuristics)));
+                .ConstructUsing(src => new Annotation(src.CodeSmell, src.Severity, new Annotator(src.AnnotatorId), CreateHeuristics(src.ApplicableHeuristics), src.Note));
         }
 
         private List<SmellHeuristic> CreateHeuristics(List<SmellHeuristicDTO> heuristics)
