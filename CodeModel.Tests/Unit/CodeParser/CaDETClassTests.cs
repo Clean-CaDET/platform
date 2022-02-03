@@ -113,5 +113,73 @@ namespace CodeModel.Tests.Unit.CodeParser
             doctor.IsDataClass().ShouldBeFalse();
             service.IsDataClass().ShouldBeFalse();
         }
+
+        [Fact]
+        public void Checks_linked_invoked_method_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var methodInvocationsTypes = doctorService.GetMethodInvocationsTypes();
+
+            methodInvocationsTypes.ShouldContain(dateRange);
+            methodInvocationsTypes.ShouldContain(doctor);
+            methodInvocationsTypes.Count.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Checks_linked_parameter_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var parameterTypes = doctorService.GetMethodLinkedParameterTypes();
+
+            parameterTypes.ShouldContain(dateRange);
+            parameterTypes.ShouldContain(doctor);
+            parameterTypes.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void Checks_linked_accessed_fields_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var accessedFieldTypes = doctorService.GetAccessedFieldsTypes();
+
+            accessedFieldTypes.ShouldContain(doctor);
+            accessedFieldTypes.ShouldNotContain(dateRange);
+            accessedFieldTypes.Count.ShouldBe(3);
+        }
+
+        [Fact]
+        public void Checks_linked_accessed_accessor_types()
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+
+            List<CaDETClass> classes = factory.CreateProject(TestDataFactory.GetMultipleClassTexts()).Classes;
+
+            var dateRange = classes.Find(c => c.Name.Equals("DateRange"));
+            var doctor = classes.Find(c => c.Name.Equals("Doctor"));
+            var doctorService = classes.Find(c => c.Name.Equals("DoctorService"));
+            var accessedAccessorTypes = doctorService.GetAccessedAccessorsTypes();
+
+            accessedAccessorTypes.ShouldContain(doctor);
+            accessedAccessorTypes.ShouldContain(dateRange);
+            accessedAccessorTypes.Count.ShouldBe(6);
+        }
     }
 }

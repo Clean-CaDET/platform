@@ -64,6 +64,24 @@ namespace CodeModel.CaDETModel.CodeItems
             return cadetClasses;
         }
 
+        public List<CaDETClass> GetAccessedAccessorsTypes()
+        {
+            var accessedAccessors = Members.Where(m => m.Type is not CaDETMemberType.Property)
+                .SelectMany(m => m.AccessedAccessors);
+            var cadetClasses = accessedAccessors.Select(a => a.Parent).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
+        }
+
+        public List<CaDETClass> GetAccessedFieldsTypes()
+        {
+            var accessedFields = Members.Where(m => m.Type is not CaDETMemberType.Property)
+                .SelectMany(m => m.AccessedFields);
+            var cadetClasses = accessedFields.Select(f => f.Parent).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
+        }
+
         public List<CaDETClass> GetMethodLinkedParameterTypes()
         {
             var parameters = Members.SelectMany(m => m.Params).ToList();
@@ -84,7 +102,7 @@ namespace CodeModel.CaDETModel.CodeItems
 
         private void RemoveThisClassFromList(List<CaDETClass> classes)
         {
-            classes.RemoveAll(c => c.FullName.Equals(FullName));
+            classes.RemoveAll(c => c.Equals(this));
         }
 
         public CaDETMember FindMember(string name)
