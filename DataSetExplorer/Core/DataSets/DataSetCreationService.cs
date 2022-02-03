@@ -96,7 +96,7 @@ namespace DataSetExplorer.Core.DataSets
         private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, codeSmells);
+            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, projectBuildSettings.IgnoredFolders, codeSmells);
             if (projectBuildSettings.RandomizeClassSelection) builder = builder.RandomizeClassSelection();
             if (projectBuildSettings.RandomizeMemberSelection) builder = builder.RandomizeMemberSelection();
             if (projectBuildSettings.NumOfInstancesType.Equals("Percentage")) return builder.SetProjectExtractionPercentile(projectBuildSettings.NumOfInstances).Build();

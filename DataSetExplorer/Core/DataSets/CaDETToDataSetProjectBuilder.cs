@@ -28,18 +28,18 @@ namespace DataSetExplorer.Core.DataSets
         private readonly InstanceFilter _instanceFilter;
         private readonly Dictionary<CaDETClass, List<CoupledClassStrength>> _classCouplings = new Dictionary<CaDETClass, List<CoupledClassStrength>>();
 
-        internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
+        internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, List<string> ignoredFolders, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
         {
             _instanceFilter = instanceFilter;
             _projectAndCommitUrl = projectAndCommitUrl;
             _projectName = projectName;
-            _cadetProject = new CodeModelFactory(language).CreateProjectWithCodeFileLinks(projectPath);
+            _cadetProject = new CodeModelFactory(language).CreateProjectWithCodeFileLinks(projectPath, ignoredFolders);
             _includeClasses = includeClasses;
             _includeMembers = includeMembers;
             _codeSmells = codeSmells;
         }
 
-        internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells): this(instanceFilter, projectAndCommitUrl, projectName, projectPath, LanguageEnum.CSharp, true, true, codeSmells) { }
+        internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, List<string> ignoredFolders, List<CodeSmell> codeSmells): this(instanceFilter, projectAndCommitUrl, projectName, projectPath, ignoredFolders, LanguageEnum.CSharp, true, true, codeSmells) { }
 
         internal CaDETToDataSetProjectBuilder SetProjectExtractionPercentile(int percentile)
         {
