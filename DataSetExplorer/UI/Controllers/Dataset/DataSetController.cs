@@ -39,7 +39,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         [Route("export")]
         public IActionResult ExportDataSet([FromBody] DraftDataSetExportDTO dataSetDTO)
         {
-            var dataSet = _dataSetCreationService.GetDataSet(dataSetDTO.Id).Value;
+            var dataSet = _dataSetCreationService.GetDataSetForExport(dataSetDTO.Id).Value;
             var exportPath = new DraftDataSetExporter(dataSetDTO.ExportPath).Export(dataSetDTO.AnnotatorId, dataSet);
             return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
         }
@@ -56,7 +56,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         }
 
         [HttpPost]
-        [Route("{id}/add-project")]
+        [Route("{id}/projects")]
         public IActionResult CreateDataSetProject([FromBody] ProjectCreationDTO data, [FromRoute] int id)
         {
             var dataSetProject = _mapper.Map<DataSetProject>(data.Project);
@@ -91,35 +91,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset
             var result = _dataSetCreationService.GetAllDataSets();
             return Ok(result.Value);
         }
-
-        [HttpGet]
-        [Route("project/{id}")]
-        public IActionResult GetDataSetProject([FromRoute] int id)
-        {
-            var result = _dataSetCreationService.GetDataSetProject(id);
-            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
-            return Ok(result.Value);
-        }
-
-        [HttpDelete]
-        [Route("project/{id}")]
-        public IActionResult DeleteDataSetProject([FromRoute] int id)
-        {
-            var result = _dataSetCreationService.DeleteDataSetProject(id);
-            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
-            return Ok(result.Value);
-        }
-
-        [HttpPut]
-        [Route("project/")]
-        public IActionResult UpdateDataSetProject([FromBody] ProjectUpdateDTO projectDto)
-        {
-            var project = _mapper.Map<DataSetProject>(projectDto);
-            var result = _dataSetCreationService.UpdateDataSetProject(project);
-            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
-            return Ok(result.Value);
-        }
-
+        
         [HttpDelete]
         [Route("{id}")]
         public IActionResult DeleteDataSet([FromRoute] int id)

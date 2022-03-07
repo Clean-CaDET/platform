@@ -10,7 +10,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
 {
     public class NewDataSetExporter
     {
-        private readonly string _templatePath = "./DataSetSerializer/Template/New_Dataset_Template.xlsx";
+        private readonly string _templatePath = "./Core/DataSetSerializer/Template/New_Dataset_Template.xlsx";
         private readonly string _exportPath;
         //TODO: ColumnHeuristicsModel should be repurposed as some kind of HeuristicCatalog and put into the domain layer
         private readonly ColumnHeuristicsModel _requiredSmells;

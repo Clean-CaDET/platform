@@ -2,6 +2,7 @@
 using System.Linq;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Infrastructure.Database;
+using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataSetExplorer.Core.DataSets.Repository
@@ -18,6 +19,36 @@ namespace DataSetExplorer.Core.DataSets.Repository
         public Instance GetDataSetInstance(int id)
         {
             return _dbContext.DataSetInstances.Include(i => i.Annotations).FirstOrDefault(i => i.Id == id);
+        }
+
+        public InstanceDTO GetInstanceWithRelatedInstances(int id)
+        {
+            var projects = _dbContext.DataSetProjects.Include(p => p.CandidateInstances)
+                .ThenInclude(c => c.Instances).ToList();
+            foreach (var project in projects)
+            {
+                foreach (var candidate in project.CandidateInstances.ToList())
+                {
+                    foreach (var instance in candidate.Instances.ToList())
+                    {
+                        if (instance.Id == id)
+                        {
+                            return new InstanceDTO(_dbContext.DataSetInstances
+                                .Include(i => i.RelatedInstances)
+                                .FirstOrDefault(i => i.Id == id), project.Id);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public Instance GetInstanceWithAnnotations(int id)
+        {
+            return _dbContext.DataSetInstances
+                .Include(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .FirstOrDefault(i => i.Id == id);
         }
 
         public IEnumerable<Instance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId)

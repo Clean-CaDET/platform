@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DataSetExplorer.UI.Controllers.Annotations
 {
-    [Route("api/annotation/")]
+    [Route("api/")]
     [ApiController]
     public class AnnotationController : ControllerBase
     {
@@ -29,27 +29,28 @@ namespace DataSetExplorer.UI.Controllers.Annotations
         }
 
         [HttpGet]
-        [Route("available-code-smells")]
+        [Route("annotation/available-code-smells")]
         public IActionResult GetAllCodeSmells()
         {
             return Ok(_configuration.GetSection("Annotating:AvailableCodeSmells").Get<IDictionary<string, string[]>>());
         }
 
         [HttpGet]
-        [Route("available-metrics")]
+        [Route("annotation/available-metrics")]
         public IActionResult GetAllMetrics()
         {
             return Ok(_configuration.GetSection("Annotating:AvailableMetrics").Get<IDictionary<string, string[]>>());
         }
 
         [HttpGet]
-        [Route("available-heuristics")]
+        [Route("annotation/available-heuristics")]
         public IActionResult GetAllAvailableHeuristics()
         {
             return Ok(_configuration.GetSection("Annotating:AvailableHeuristics").Get<IDictionary<string, string[]>>());
         }
 
         [HttpPost]
+        [Route("annotation/")]
         public IActionResult AddDataSetAnnotation([FromBody] AnnotationDTO annotation)
         {
             try 
@@ -67,7 +68,7 @@ namespace DataSetExplorer.UI.Controllers.Annotations
         }
 
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("annotation/update/{id}")]
         public IActionResult UpdateAnnotation([FromRoute] int id, [FromBody] AnnotationDTO annotation)
         {
             try
@@ -85,14 +86,14 @@ namespace DataSetExplorer.UI.Controllers.Annotations
         }
         
         [HttpGet]
-        [Route("requiring-additional-annotation/{id}")]
+        [Route("annotation/requiring-additional-annotation/{id}")]
         public IActionResult FindInstancesRequiringAdditionalAnnotation([FromRoute] int id)
         {
             return FindInstances(id, _dataSetAnalysisService.FindInstancesRequiringAdditionalAnnotation);
         }
 
         [HttpGet]
-        [Route("disagreeing-annotations/{id}")]
+        [Route("annotation/disagreeing-annotations/{id}")]
         public IActionResult FindInstancesWithAllDisagreeingAnnotations([FromRoute] int id)
         {
             return FindInstances(id, _dataSetAnalysisService.FindInstancesWithAllDisagreeingAnnotations);
@@ -102,6 +103,24 @@ namespace DataSetExplorer.UI.Controllers.Annotations
         {
             var result = searchCriteria(projectId);
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
+        [Route("annotation/instances/{id}")]
+        public IActionResult GetInstanceWithRelatedInstances([FromRoute] int id)
+        {
+            var result = _dataSetAnnotationService.GetInstanceWithRelatedInstances(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
+        [Route("instances/{id}/annotations")]
+        public IActionResult GetInstanceWithAnnotations([FromRoute] int id)
+        {
+            var result = _dataSetAnnotationService.GetInstanceWithAnnotations(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
     }

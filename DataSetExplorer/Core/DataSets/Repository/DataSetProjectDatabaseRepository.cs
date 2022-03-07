@@ -20,10 +20,9 @@ namespace DataSetExplorer.Core.DataSets.Repository
         public DataSetProject GetDataSetProject(int id)
         {
             return _dbContext.DataSetProjects
-                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
                 .FirstOrDefault(s => s.Id == id);
         }

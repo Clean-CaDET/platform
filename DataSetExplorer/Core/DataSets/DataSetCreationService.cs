@@ -10,6 +10,7 @@ using DataSetExplorer.Core.DataSetSerializer;
 using DataSetExplorer.Core.DataSetSerializer.ViewModel;
 using DataSetExplorer.Infrastructure.RepositoryAdapters;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
+using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
 using FluentResults;
 using LibGit2Sharp;
 
@@ -37,7 +38,7 @@ namespace DataSetExplorer.Core.DataSets
 
         public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
-            var initialDataSet = _dataSetRepository.GetDataSet(dataSetId);
+            var initialDataSet = _dataSetRepository.GetDataSetWithProjectsAndCodeSmells(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
             
             Task.Run(() => ProcessInitialDataSetProject(basePath, project, initialDataSet.SupportedCodeSmells, smellFilters, projectBuildSettings));
@@ -66,14 +67,21 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok("Data set created: " + excelFileName);
         }
 
-        public Result<DataSet> GetDataSet(int id)
+        public Result<DatasetDetailDTO> GetDataSet(int id)
         {
             var dataSet = _dataSetRepository.GetDataSet(id);
             if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
             return Result.Ok(dataSet);
         }
 
-        public Result<IEnumerable<DataSet>> GetAllDataSets()
+        public Result<DataSet> GetDataSetForExport(int id)
+        {
+            var dataSet = _dataSetRepository.GetDataSetForExport(id);
+            if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
+            return Result.Ok(dataSet);
+        }
+
+        public Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets()
         {
             var dataSets = _dataSetRepository.GetAll();
             return Result.Ok(dataSets);

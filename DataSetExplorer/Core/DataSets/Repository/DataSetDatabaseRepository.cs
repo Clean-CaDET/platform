@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper.Internal;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Infrastructure.Database;
+using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,25 +25,69 @@ namespace DataSetExplorer.Core.DataSets.Repository
             _dbContext.SaveChanges();
         }
 
-        public DataSet GetDataSet(int id)
+        public DatasetDetailDTO GetDataSet(int id)
+        {
+            var datasetSummary = GetDatasetSummary(id);
+            var projectsSummary = GetAllProjectsSummary(id);
+            if (datasetSummary == null || projectsSummary == null) return null;
+            return new DatasetDetailDTO(datasetSummary.Id, datasetSummary.Name, datasetSummary.ProjectsCount, projectsSummary);
+        }
+
+        public DataSet GetDataSetForExport(int id)
         {
             return _dbContext.DataSets
                 .Include(d => d.SupportedCodeSmells)
-                .Include(s=>s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
                 .FirstOrDefault(s => s.Id == id);
         }
 
-        public IEnumerable<DataSet> GetAll()
+        public DataSet GetDataSetWithProjectsAndCodeSmells(int id)
         {
             return _dbContext.DataSets
                 .Include(d => d.SupportedCodeSmells)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell);
+                .Include(s => s.Projects)
+                .FirstOrDefault(d => d.Id == id);
+        }
+
+        private List<ProjectSummaryDTO> GetAllProjectsSummary(int id)
+        {
+            var dataset = _dbContext.DataSets.FirstOrDefault(d => d.Id == id);
+            if (dataset == null) return null;
+            var projects = _dbContext.Entry(dataset).Collection(d => d.Projects).Query().ToList();
+            
+            var projectsSummary = new List<ProjectSummaryDTO>();
+            projects.ForAll(p => projectsSummary.Add(GetProjectSummary(p)));
+            return projectsSummary;
+        }
+
+        private ProjectSummaryDTO GetProjectSummary(DataSetProject project)
+        {
+            var projectInstancesCount = 0;
+            var smellCandidates = _dbContext.Entry(project).Collection(d => d.CandidateInstances).Query().ToList();
+            
+            foreach (var candidate in smellCandidates)
+            {
+                projectInstancesCount += _dbContext.Entry(candidate).Collection(d => d.Instances).Query().Count();
+            }
+            return new ProjectSummaryDTO(project.Id, project.Name, project.Url, project.State.ToString(),
+                projectInstancesCount);
+        }
+
+        public IEnumerable<DatasetSummaryDTO> GetAll()
+        {
+            var result = new List<DatasetSummaryDTO>();
+            _dbContext.DataSets.ToList().ForEach(d => result.Add(GetDatasetSummary(d.Id)));
+            return result;
+        }
+
+        private DatasetSummaryDTO GetDatasetSummary(int id)
+        {
+            var dataset = _dbContext.DataSets.FirstOrDefault(d => d.Id == id);
+            if (dataset == null) return null;
+            var projectsCount = _dbContext.Entry(dataset).Collection(d => d.Projects).Query().Count();
+            return new DatasetSummaryDTO(dataset.Id, dataset.Name, projectsCount);
         }
 
         public void Update(DataSet dataSet)
