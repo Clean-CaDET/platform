@@ -20,13 +20,13 @@ namespace DataSetExplorer.Core.DataSets
     {
         private readonly ICodeRepository _codeRepository;
         private readonly IDataSetRepository _dataSetRepository;
-        private readonly IDataSetProjectRepository _dataSetProjectRepository;
+        private readonly IProjectRepository _projectRepository;
 
-        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository, IDataSetProjectRepository dataSetProjectRepository)
+        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository, IProjectRepository projectRepository)
         {
             _codeRepository = codeRepository;
             _dataSetRepository = dataSetRepository;
-            _dataSetProjectRepository = dataSetProjectRepository;
+            _projectRepository = projectRepository;
         }
 
         public Result<DataSet> CreateEmptyDataSet(string dataSetName, List<CodeSmell> codeSmells)
@@ -69,7 +69,7 @@ namespace DataSetExplorer.Core.DataSets
 
         public Result<DatasetDetailDTO> GetDataSet(int id)
         {
-            var dataSet = _dataSetRepository.GetDataSet(id);
+            var dataSet = _dataSetRepository.Get(id);
             if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
             return Result.Ok(dataSet);
         }
@@ -89,7 +89,7 @@ namespace DataSetExplorer.Core.DataSets
 
         public Result<DataSetProject> GetDataSetProject(int id)
         {
-            var project = _dataSetProjectRepository.GetDataSetProject(id);
+            var project = _projectRepository.Get(id);
             if (project == default) return Result.Fail($"DataSetProject with id: {id} does not exist.");
             return Result.Ok(project);
         }
@@ -118,12 +118,12 @@ namespace DataSetExplorer.Core.DataSets
                 var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters, projectBuildSettings);
                 initialProject.CandidateInstances = project.CandidateInstances;
                 initialProject.Processed();
-                _dataSetProjectRepository.Update(initialProject);
+                _projectRepository.Update(initialProject);
             }
             catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
             {
                 initialProject.Failed();
-                _dataSetProjectRepository.Update(initialProject);
+                _projectRepository.Update(initialProject);
             }
         }
 
@@ -159,13 +159,13 @@ namespace DataSetExplorer.Core.DataSets
 
         public Result<DataSetProject> DeleteDataSetProject(int id)
         {
-            var project = _dataSetProjectRepository.Delete(id);
+            var project = _projectRepository.Delete(id);
             return Result.Ok(project);
         }
 
         public Result<DataSetProject> UpdateDataSetProject(DataSetProject project)
         {
-            var updatedProject = _dataSetProjectRepository.Update(project);
+            var updatedProject = _projectRepository.Update(project);
             return Result.Ok(updatedProject);
         }
     }

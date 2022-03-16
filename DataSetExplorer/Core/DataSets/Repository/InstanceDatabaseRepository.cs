@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
-    public class DataSetInstanceDatabaseRepository : IDataSetInstanceRepository
+    public class InstanceDatabaseRepository : IInstanceRepository
     {
         private readonly DataSetExplorerContext _dbContext;
 
-        public DataSetInstanceDatabaseRepository(DataSetExplorerContext dbContext)
+        public InstanceDatabaseRepository(DataSetExplorerContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Instance GetDataSetInstance(int id)
+        public Instance Get(int id)
         {
             return _dbContext.DataSetInstances.Include(i => i.Annotations).FirstOrDefault(i => i.Id == id);
         }

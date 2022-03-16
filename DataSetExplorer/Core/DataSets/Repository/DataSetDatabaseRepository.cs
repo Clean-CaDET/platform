@@ -25,30 +25,12 @@ namespace DataSetExplorer.Core.DataSets.Repository
             _dbContext.SaveChanges();
         }
 
-        public DatasetDetailDTO GetDataSet(int id)
+        public DatasetDetailDTO Get(int id)
         {
             var datasetSummary = GetDatasetSummary(id);
             var projectsSummary = GetProjectSummaries(id);
             if (datasetSummary == null || projectsSummary == null) return null;
             return new DatasetDetailDTO(datasetSummary.Id, datasetSummary.Name, datasetSummary.ProjectsCount, projectsSummary);
-        }
-
-        public DataSet GetDataSetForExport(int id)
-        {
-            return _dbContext.DataSets
-                .Include(d => d.SupportedCodeSmells)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
-                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
-                .FirstOrDefault(s => s.Id == id);
-        }
-
-        public DataSet GetDataSetWithProjectsAndCodeSmells(int id)
-        {
-            return _dbContext.DataSets
-                .Include(d => d.SupportedCodeSmells)
-                .Include(s => s.Projects)
-                .FirstOrDefault(d => d.Id == id);
         }
 
         private List<ProjectSummaryDTO> GetProjectSummaries(int id)
@@ -73,6 +55,24 @@ namespace DataSetExplorer.Core.DataSets.Repository
             }
             return new ProjectSummaryDTO(project.Id, project.Name, project.Url, project.State.ToString(),
                 projectInstancesCount);
+        }
+
+        public DataSet GetDataSetForExport(int id)
+        {
+            return _dbContext.DataSets
+                .Include(d => d.SupportedCodeSmells)
+                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(s => s.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .FirstOrDefault(s => s.Id == id);
+        }
+
+        public DataSet GetDataSetWithProjectsAndCodeSmells(int id)
+        {
+            return _dbContext.DataSets
+                .Include(d => d.SupportedCodeSmells)
+                .Include(s => s.Projects)
+                .FirstOrDefault(d => d.Id == id);
         }
 
         public IEnumerable<DatasetSummaryDTO> GetAll()

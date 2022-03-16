@@ -2,9 +2,9 @@
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
-    public interface IDataSetAnnotationRepository
+    public interface IAnnotationRepository
     {
-        Annotation GetDataSetAnnotation(int id);
+        Annotation Get(int id);
         Annotator GetAnnotator(int id);
         CodeSmell GetCodeSmell(string name);
         void Update(Annotation annotation);

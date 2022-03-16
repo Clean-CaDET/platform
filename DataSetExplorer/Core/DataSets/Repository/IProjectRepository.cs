@@ -3,10 +3,10 @@ using DataSetExplorer.Core.DataSets.Model;
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
-    public interface IDataSetProjectRepository
+    public interface IProjectRepository
     {
-        DataSetProject GetDataSetProject(int id);
-        IEnumerable<DataSetProject> GetDataSetProjects(IEnumerable<int> projectIds);
+        DataSetProject Get(int id);
+        IEnumerable<DataSetProject> GetAll(IEnumerable<int> projectIds);
         DataSetProject Update(DataSetProject dataSetProject);
         DataSetProject Delete(int id);
     }

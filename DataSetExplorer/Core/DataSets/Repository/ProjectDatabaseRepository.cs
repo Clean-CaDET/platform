@@ -7,17 +7,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
-    public class DataSetProjectDatabaseRepository : IDataSetProjectRepository
+    public class ProjectDatabaseRepository : IProjectRepository
     {
         private readonly DataSetExplorerContext _dbContext;
 
-        public DataSetProjectDatabaseRepository(IServiceScopeFactory serviceScopeFactory)
+        public ProjectDatabaseRepository(IServiceScopeFactory serviceScopeFactory)
         {
             var scope = serviceScopeFactory.CreateScope();
             _dbContext = scope.ServiceProvider.GetRequiredService<DataSetExplorerContext>();
         }
 
-        public DataSetProject GetDataSetProject(int id)
+        public DataSetProject Get(int id)
         {
             return _dbContext.DataSetProjects
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances)
@@ -27,7 +27,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
                 .FirstOrDefault(s => s.Id == id);
         }
 
-        public IEnumerable<DataSetProject> GetDataSetProjects(IEnumerable<int> projectIds)
+        public IEnumerable<DataSetProject> GetAll(IEnumerable<int> projectIds)
         {
             return _dbContext.DataSetProjects
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)

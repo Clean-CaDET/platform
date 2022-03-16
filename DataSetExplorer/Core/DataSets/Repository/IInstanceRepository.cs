@@ -4,9 +4,9 @@ using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
-    public interface IDataSetInstanceRepository
+    public interface IInstanceRepository
     {
-        Instance GetDataSetInstance(int id);
+        Instance Get(int id);
         InstanceDTO GetInstanceWithRelatedInstances(int id);
         IEnumerable<Instance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId);
         IEnumerable<Instance> GetAnnotatedInstances(int projectId);

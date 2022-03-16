@@ -11,9 +11,9 @@ namespace DataSetExplorer.Core.DataSets
 {
     public class FullDataSetFactory
     {
-        private readonly IDataSetInstanceRepository _instanceRepository;
+        private readonly IInstanceRepository _instanceRepository;
 
-        public FullDataSetFactory(IDataSetInstanceRepository instanceRepository)
+        public FullDataSetFactory(IInstanceRepository instanceRepository)
         {
             _instanceRepository = instanceRepository;
         }

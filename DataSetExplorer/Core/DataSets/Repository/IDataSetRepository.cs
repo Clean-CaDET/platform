@@ -7,7 +7,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
     public interface IDataSetRepository
     {
         void Create(DataSet dataSet);
-        DatasetDetailDTO GetDataSet(int id);
+        DatasetDetailDTO Get(int id);
         DataSet GetDataSetForExport(int id);
         DataSet GetDataSetWithProjectsAndCodeSmells(int id);
         IEnumerable<DatasetSummaryDTO> GetAll();
