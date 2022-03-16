@@ -7,6 +7,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
     {
         DataSetProject GetDataSetProject(int id);
         IEnumerable<DataSetProject> GetDataSetProjects(IEnumerable<int> projectIds);
-        void Update(DataSetProject dataSetProject);
+        DataSetProject Update(DataSetProject dataSetProject);
+        DataSetProject Delete(int id);
     }
 }

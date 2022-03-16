@@ -28,7 +28,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
         public DatasetDetailDTO GetDataSet(int id)
         {
             var datasetSummary = GetDatasetSummary(id);
-            var projectsSummary = GetAllProjectsSummary(id);
+            var projectsSummary = GetProjectSummaries(id);
             if (datasetSummary == null || projectsSummary == null) return null;
             return new DatasetDetailDTO(datasetSummary.Id, datasetSummary.Name, datasetSummary.ProjectsCount, projectsSummary);
         }
@@ -51,7 +51,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
                 .FirstOrDefault(d => d.Id == id);
         }
 
-        private List<ProjectSummaryDTO> GetAllProjectsSummary(int id)
+        private List<ProjectSummaryDTO> GetProjectSummaries(int id)
         {
             var dataset = _dbContext.DataSets.FirstOrDefault(d => d.Id == id);
             if (dataset == null) return null;
@@ -90,10 +90,11 @@ namespace DataSetExplorer.Core.DataSets.Repository
             return new DatasetSummaryDTO(dataset.Id, dataset.Name, projectsCount);
         }
 
-        public void Update(DataSet dataSet)
+        public DataSet Update(DataSet dataSet)
         {
-            _dbContext.Update(dataSet);
+            var updatedDataset = _dbContext.Update(dataSet).Entity;
             _dbContext.SaveChanges();
+            return updatedDataset;
         }
 
         public Dictionary<string, List<string>> GetDataSetCodeSmells(int id)
@@ -109,32 +110,11 @@ namespace DataSetExplorer.Core.DataSets.Repository
             return result;
         }
 
-        public DataSet DeleteDataSet(int id)
+        public DataSet Delete(int id)
         {
             var deletedDataset = _dbContext.DataSets.Remove(_dbContext.DataSets.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedDataset;
-        }
-
-        public DataSet UpdateDataSet(DataSet dataset)
-        {
-            var updatedDataset = _dbContext.Update(dataset).Entity;
-            _dbContext.SaveChanges();
-            return updatedDataset;
-        }
-
-        public DataSetProject DeleteDataSetProject(int id)
-        {
-            var deletedProject = _dbContext.DataSetProjects.Remove(_dbContext.DataSetProjects.Find(id)).Entity;
-            _dbContext.SaveChanges();
-            return deletedProject;
-        }
-        
-        public DataSetProject UpdateDataSetProject(DataSetProject project)
-        {
-            var updatedProject = _dbContext.Update(project).Entity;
-            _dbContext.SaveChanges();
-            return updatedProject;
         }
     }
 }

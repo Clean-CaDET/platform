@@ -11,11 +11,8 @@ namespace DataSetExplorer.Core.DataSets.Repository
         DataSet GetDataSetForExport(int id);
         DataSet GetDataSetWithProjectsAndCodeSmells(int id);
         IEnumerable<DatasetSummaryDTO> GetAll();
-        void Update(DataSet dataSet);
+        DataSet Update(DataSet dataSet);
         Dictionary<string, List<string>> GetDataSetCodeSmells(int id);
-        DataSet DeleteDataSet(int id);
-        DataSet UpdateDataSet(DataSet dataset);
-        DataSetProject DeleteDataSetProject(int id);
-        DataSetProject UpdateDataSetProject(DataSetProject project);
+        DataSet Delete(int id);
     }
 }

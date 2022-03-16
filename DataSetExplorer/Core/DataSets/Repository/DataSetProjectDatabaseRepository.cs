@@ -38,10 +38,18 @@ namespace DataSetExplorer.Core.DataSets.Repository
                 .Where(p => projectIds.Contains(p.Id));
         }
 
-        public void Update(DataSetProject dataSetProject)
+        public DataSetProject Update(DataSetProject dataSetProject)
         {
-            _dbContext.Update(dataSetProject);
+            var updatedProject = _dbContext.Update(dataSetProject).Entity;
             _dbContext.SaveChanges();
+            return updatedProject;
+        }
+        
+        public DataSetProject Delete(int id)
+        {
+            var deletedProject = _dbContext.DataSetProjects.Remove(_dbContext.DataSetProjects.Find(id)).Entity;
+            _dbContext.SaveChanges();
+            return deletedProject;
         }
     }
 }
