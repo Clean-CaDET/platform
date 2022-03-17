@@ -104,23 +104,5 @@ namespace DataSetExplorer.UI.Controllers.Annotations
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
-
-        [HttpGet]
-        [Route("instances/{projectId}/{id}")]
-        public IActionResult GetInstanceWithRelatedInstances([FromRoute] int projectId, [FromRoute] int id)
-        {
-            var result = _annotationService.GetInstanceWithRelatedInstances(projectId, id);
-            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
-            return Ok(result.Value);
-        }
-        
-        [HttpGet]
-        [Route("instances/{id}/annotations")]
-        public IActionResult GetInstanceWithAnnotations([FromRoute] int id)
-        {
-            var result = _annotationService.GetInstanceWithAnnotations(id);
-            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
-            return Ok(result.Value);
-        }
     }
 }

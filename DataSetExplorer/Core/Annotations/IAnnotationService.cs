@@ -9,7 +9,7 @@ namespace DataSetExplorer.Core.Annotations
     {
         Result<Annotation> AddAnnotation(Annotation annotation, int instanceId, int annotatorId);
         Result<Annotation> UpdateAnnotation(Annotation changed, int annotationId, int annotatorId);
-        Result<InstanceDTO> GetInstanceWithRelatedInstances(int projectId, int id);
+        Result<InstanceDTO> GetInstanceWithRelatedInstances(int id);
         Result<Instance> GetInstanceWithAnnotations(int id);
     }
 }

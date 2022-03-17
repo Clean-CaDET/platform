@@ -14,7 +14,6 @@ namespace DataSetExplorer.UI.Controllers.Dataset.DTOs
         public ISet<Annotation> Annotations { get; set; }
         public Dictionary<CaDETMetric, double> MetricFeatures { get; set; } 
         public List<RelatedInstance> RelatedInstances { get; set; }
-        public int ProjectId { get; set; }
 
         public InstanceDTO(Instance instance)
         {
