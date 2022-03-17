@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DataSetExplorer.UI.Controllers.Dataset
 {
-    [Route("api/dataset/")]
+    [Route("api/datasets/")]
     [ApiController]
     public class DataSetController : ControllerBase
     {
