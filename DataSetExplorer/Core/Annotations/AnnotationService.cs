@@ -44,10 +44,11 @@ namespace DataSetExplorer.Core.Annotations
             return Result.Ok(annotation);
         }
 
-        public Result<InstanceDTO> GetInstanceWithRelatedInstances(int id)
+        public Result<InstanceDTO> GetInstanceWithRelatedInstances(int projectId, int id)
         {
             var instance = _instanceRepository.GetInstanceWithRelatedInstances(id);
             if (instance == default) return Result.Fail($"Instance with id: {id} does not exist.");
+            instance.ProjectId = projectId;
             return Result.Ok(instance);
         }
 

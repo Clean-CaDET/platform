@@ -23,24 +23,9 @@ namespace DataSetExplorer.Core.DataSets.Repository
 
         public InstanceDTO GetInstanceWithRelatedInstances(int id)
         {
-            var projects = _dbContext.DataSetProjects.Include(p => p.CandidateInstances)
-                .ThenInclude(c => c.Instances).ToList();
-            foreach (var project in projects)
-            {
-                foreach (var candidate in project.CandidateInstances.ToList())
-                {
-                    foreach (var instance in candidate.Instances.ToList())
-                    {
-                        if (instance.Id == id)
-                        {
-                            return new InstanceDTO(_dbContext.DataSetInstances
-                                .Include(i => i.RelatedInstances)
-                                .FirstOrDefault(i => i.Id == id), project.Id);
-                        }
-                    }
-                }
-            }
-            return null;
+            return new InstanceDTO(_dbContext.DataSetInstances
+                .Include(i => i.RelatedInstances)
+                .FirstOrDefault(i => i.Id == id));
         }
 
         public Instance GetInstanceWithAnnotations(int id)

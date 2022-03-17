@@ -107,14 +107,14 @@ namespace DataSetExplorer.UI.Controllers.Annotations
         }
 
         [HttpGet]
-        [Route("annotation/instances/{id}")]
-        public IActionResult GetInstanceWithRelatedInstances([FromRoute] int id)
+        [Route("annotation/instances/{projectId}/{id}")]
+        public IActionResult GetInstanceWithRelatedInstances([FromRoute] int projectId, [FromRoute] int id)
         {
-            var result = _annotationService.GetInstanceWithRelatedInstances(id);
+            var result = _annotationService.GetInstanceWithRelatedInstances(projectId, id);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
-
+        
         [HttpGet]
         [Route("instances/{id}/annotations")]
         public IActionResult GetInstanceWithAnnotations([FromRoute] int id)

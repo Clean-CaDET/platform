@@ -16,7 +16,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset.DTOs
         public List<RelatedInstance> RelatedInstances { get; set; }
         public int ProjectId { get; set; }
 
-        public InstanceDTO(Instance instance, int projectId)
+        public InstanceDTO(Instance instance)
         {
             Id = instance.Id;
             CodeSnippetId = instance.CodeSnippetId;
@@ -25,7 +25,6 @@ namespace DataSetExplorer.UI.Controllers.Dataset.DTOs
             Annotations = instance.Annotations;
             MetricFeatures = instance.MetricFeatures;
             RelatedInstances = instance.RelatedInstances;
-            ProjectId = projectId;
         }
     }
 }
