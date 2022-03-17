@@ -1,4 +1,4 @@
-using DataSetExplorer.Core.Annotations;
+using DataSetExplorer.Core.DataSets;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DataSetExplorer.UI.Controllers.Dataset
@@ -7,18 +7,18 @@ namespace DataSetExplorer.UI.Controllers.Dataset
     [ApiController]
     public class InstanceController : ControllerBase
     {
-        private readonly IAnnotationService _annotationService;
+        private readonly IInstanceService _instanceService;
 
-        public InstanceController(IAnnotationService annotationService)
+        public InstanceController(IInstanceService instanceService)
         {
-            _annotationService = annotationService;
+            _instanceService = instanceService;
         }
 
         [HttpGet]
         [Route("{id}/related-instances")]
         public IActionResult GetInstanceWithRelatedInstances([FromRoute] int id)
         {
-            var result = _annotationService.GetInstanceWithRelatedInstances(id);
+            var result = _instanceService.GetInstanceWithRelatedInstances(id);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
@@ -27,7 +27,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         [Route("{id}/annotations")]
         public IActionResult GetInstanceWithAnnotations([FromRoute] int id)
         {
-            var result = _annotationService.GetInstanceWithAnnotations(id);
+            var result = _instanceService.GetInstanceWithAnnotations(id);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }

@@ -46,6 +46,8 @@ namespace DataSetExplorer
 
             services.AddScoped<IAnnotationConsistencyService, AnnotationConsistencyService>();
             services.AddScoped<FullDataSetFactory>();
+
+            services.AddScoped<IInstanceService, InstanceService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
