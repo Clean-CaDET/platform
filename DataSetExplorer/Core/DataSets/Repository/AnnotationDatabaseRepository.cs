@@ -14,7 +14,6 @@ namespace DataSetExplorer.Core.DataSets.Repository
             _dbContext = dbContext;
         }
 
-
         public Annotation Get(int id)
         {
             return _dbContext.DataSetAnnotations
