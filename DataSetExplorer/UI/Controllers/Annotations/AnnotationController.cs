@@ -11,20 +11,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace DataSetExplorer.UI.Controllers.Annotations
 {
-    [Route("api/annotation/")]
+    [Route("api/annotations/")]
     [ApiController]
     public class AnnotationController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly IDataSetAnnotationService _dataSetAnnotationService;
+        private readonly IAnnotationService _annotationService;
         private readonly IDataSetAnalysisService _dataSetAnalysisService;
 
-        public AnnotationController(IMapper mapper, IConfiguration configuration, IDataSetAnnotationService dataSetAnnotationService, IDataSetAnalysisService dataSetAnalysisService)
+        public AnnotationController(IMapper mapper, IConfiguration configuration, IAnnotationService annotationService, IDataSetAnalysisService dataSetAnalysisService)
         {
             _mapper = mapper;
             _configuration = configuration;
-            _dataSetAnnotationService = dataSetAnnotationService;
+            _annotationService = annotationService;
             _dataSetAnalysisService = dataSetAnalysisService;
         }
 
@@ -56,7 +56,7 @@ namespace DataSetExplorer.UI.Controllers.Annotations
             {
                 var authHeader = HttpContext.Request.Headers["Authorization"];
                 annotation.AnnotatorId = Int32.Parse(authHeader);
-                var result = _dataSetAnnotationService.AddDataSetAnnotation(_mapper.Map<Annotation>(annotation), annotation.InstanceId, annotation.AnnotatorId);
+                var result = _annotationService.AddAnnotation(_mapper.Map<Annotation>(annotation), annotation.InstanceId, annotation.AnnotatorId);
                 if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
                 return Ok(result.Value);
             }
@@ -74,7 +74,7 @@ namespace DataSetExplorer.UI.Controllers.Annotations
             {
                 var authHeader = HttpContext.Request.Headers["Authorization"];
                 annotation.AnnotatorId = Int32.Parse(authHeader);
-                var result = _dataSetAnnotationService.UpdateAnnotation(_mapper.Map<Annotation>(annotation), id, annotation.AnnotatorId);
+                var result = _annotationService.UpdateAnnotation(_mapper.Map<Annotation>(annotation), id, annotation.AnnotatorId);
                 if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
                 return Ok(result.Value);
             }

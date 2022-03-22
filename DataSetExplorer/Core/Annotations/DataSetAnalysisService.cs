@@ -12,10 +12,10 @@ namespace DataSetExplorer.Core.Annotations
 {
     public class DataSetAnalysisService : IDataSetAnalysisService
     {
-        private readonly IDataSetProjectRepository _dataSetProjectRepository;
-        public DataSetAnalysisService(IDataSetProjectRepository dataSetProjectRepository)
+        private readonly IProjectRepository _projectRepository;
+        public DataSetAnalysisService(IProjectRepository projectRepository)
         {
-            _dataSetProjectRepository = dataSetProjectRepository;
+            _projectRepository = projectRepository;
         }
 
         public Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects)
@@ -54,13 +54,13 @@ namespace DataSetExplorer.Core.Annotations
         
         public Result<List<SmellCandidateInstances>> FindInstancesWithAllDisagreeingAnnotations(int projectId)
         {
-            var project = _dataSetProjectRepository.GetDataSetProject(projectId);
+            var project = _projectRepository.Get(projectId);
             return Result.Ok(project.GetInstancesWithAllDisagreeingAnnotations());
         }
 
         public Result<List<SmellCandidateInstances>> FindInstancesRequiringAdditionalAnnotation(int projectId)
         {
-            var project = _dataSetProjectRepository.GetDataSetProject(projectId);
+            var project = _projectRepository.Get(projectId);
             return Result.Ok(project.GetInsufficientlyAnnotatedInstances());
         }
 

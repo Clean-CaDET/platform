@@ -3,6 +3,7 @@ using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Core.DataSetSerializer.ViewModel;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
+using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
 using FluentResults;
 
 namespace DataSetExplorer.Core.DataSets
@@ -13,8 +14,9 @@ namespace DataSetExplorer.Core.DataSets
         Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells, NewSpreadSheetColumnModel columnModel);
         Result<DataSet> CreateEmptyDataSet(string dataSetName, List<CodeSmell> codeSmells);
         Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings);
-        Result<DataSet> GetDataSet(int id);
-        Result<IEnumerable<DataSet>> GetAllDataSets();
+        Result<DatasetDetailDTO> GetDataSet(int id);
+        Result<DataSet> GetDataSetForExport(int id);
+        Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets();
         Result<DataSetProject> GetDataSetProject(int id);
         Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id);
         Result<DataSet> DeleteDataSet(int id);

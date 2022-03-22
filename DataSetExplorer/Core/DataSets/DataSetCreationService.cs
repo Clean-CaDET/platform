@@ -10,6 +10,7 @@ using DataSetExplorer.Core.DataSetSerializer;
 using DataSetExplorer.Core.DataSetSerializer.ViewModel;
 using DataSetExplorer.Infrastructure.RepositoryAdapters;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
+using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
 using FluentResults;
 using LibGit2Sharp;
 
@@ -19,13 +20,13 @@ namespace DataSetExplorer.Core.DataSets
     {
         private readonly ICodeRepository _codeRepository;
         private readonly IDataSetRepository _dataSetRepository;
-        private readonly IDataSetProjectRepository _dataSetProjectRepository;
+        private readonly IProjectRepository _projectRepository;
 
-        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository, IDataSetProjectRepository dataSetProjectRepository)
+        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository, IProjectRepository projectRepository)
         {
             _codeRepository = codeRepository;
             _dataSetRepository = dataSetRepository;
-            _dataSetProjectRepository = dataSetProjectRepository;
+            _projectRepository = projectRepository;
         }
 
         public Result<DataSet> CreateEmptyDataSet(string dataSetName, List<CodeSmell> codeSmells)
@@ -37,7 +38,7 @@ namespace DataSetExplorer.Core.DataSets
 
         public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
-            var initialDataSet = _dataSetRepository.GetDataSet(dataSetId);
+            var initialDataSet = _dataSetRepository.GetDataSetWithProjectsAndCodeSmells(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
             
             Task.Run(() => ProcessInitialDataSetProject(basePath, project, initialDataSet.SupportedCodeSmells, smellFilters, projectBuildSettings));
@@ -66,14 +67,21 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok("Data set created: " + excelFileName);
         }
 
-        public Result<DataSet> GetDataSet(int id)
+        public Result<DatasetDetailDTO> GetDataSet(int id)
         {
-            var dataSet = _dataSetRepository.GetDataSet(id);
+            var dataSet = _dataSetRepository.Get(id);
             if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
             return Result.Ok(dataSet);
         }
 
-        public Result<IEnumerable<DataSet>> GetAllDataSets()
+        public Result<DataSet> GetDataSetForExport(int id)
+        {
+            var dataSet = _dataSetRepository.GetDataSetForExport(id);
+            if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
+            return Result.Ok(dataSet);
+        }
+
+        public Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets()
         {
             var dataSets = _dataSetRepository.GetAll();
             return Result.Ok(dataSets);
@@ -81,7 +89,7 @@ namespace DataSetExplorer.Core.DataSets
 
         public Result<DataSetProject> GetDataSetProject(int id)
         {
-            var project = _dataSetProjectRepository.GetDataSetProject(id);
+            var project = _projectRepository.Get(id);
             if (project == default) return Result.Fail($"DataSetProject with id: {id} does not exist.");
             return Result.Ok(project);
         }
@@ -110,12 +118,12 @@ namespace DataSetExplorer.Core.DataSets
                 var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters, projectBuildSettings);
                 initialProject.CandidateInstances = project.CandidateInstances;
                 initialProject.Processed();
-                _dataSetProjectRepository.Update(initialProject);
+                _projectRepository.Update(initialProject);
             }
             catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
             {
                 initialProject.Failed();
-                _dataSetProjectRepository.Update(initialProject);
+                _projectRepository.Update(initialProject);
             }
         }
 
@@ -139,25 +147,25 @@ namespace DataSetExplorer.Core.DataSets
 
         public Result<DataSet> DeleteDataSet(int id)
         {
-            var dataset = _dataSetRepository.DeleteDataSet(id);
+            var dataset = _dataSetRepository.Delete(id);
             return Result.Ok(dataset);
         }
 
         public Result<DataSet> UpdateDataSet(DataSet dataset)
         {
-            var updatedDataset = _dataSetRepository.UpdateDataSet(dataset);
+            var updatedDataset = _dataSetRepository.Update(dataset);
             return Result.Ok(updatedDataset);
         }
 
         public Result<DataSetProject> DeleteDataSetProject(int id)
         {
-            var project = _dataSetRepository.DeleteDataSetProject(id);
+            var project = _projectRepository.Delete(id);
             return Result.Ok(project);
         }
 
         public Result<DataSetProject> UpdateDataSetProject(DataSetProject project)
         {
-            var updatedProject = _dataSetRepository.UpdateDataSetProject(project);
+            var updatedProject = _projectRepository.Update(project);
             return Result.Ok(updatedProject);
         }
     }

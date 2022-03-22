@@ -3,9 +3,9 @@ using FluentResults;
 
 namespace DataSetExplorer.Core.Annotations
 {
-    public interface IDataSetAnnotationService
+    public interface IAnnotationService
     {
-        Result<Annotation> AddDataSetAnnotation(Annotation annotation, int dataSetInstanceId, int annotatorId);
+        Result<Annotation> AddAnnotation(Annotation annotation, int instanceId, int annotatorId);
         Result<Annotation> UpdateAnnotation(Annotation changed, int annotationId, int annotatorId);
     }
 }

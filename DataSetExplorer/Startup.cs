@@ -36,16 +36,18 @@ namespace DataSetExplorer
             services.AddScoped<IDataSetCreationService, DataSetCreationService>();
             services.AddScoped<ICodeRepository, GitCodeRepository>();
             services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
-            services.AddScoped<IDataSetProjectRepository, DataSetProjectDatabaseRepository>();
+            services.AddScoped<IProjectRepository, ProjectDatabaseRepository>();
 
-            services.AddScoped<IDataSetAnnotationService, DataSetAnnotationService>();
-            services.AddScoped<IDataSetInstanceRepository, DataSetInstanceDatabaseRepository>();
-            services.AddScoped<IDataSetAnnotationRepository, DataSetAnnotationDatabaseRepository>();
+            services.AddScoped<IAnnotationService, AnnotationService>();
+            services.AddScoped<IInstanceRepository, InstanceDatabaseRepository>();
+            services.AddScoped<IAnnotationRepository, AnnotationDatabaseRepository>();
 
             services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
 
             services.AddScoped<IAnnotationConsistencyService, AnnotationConsistencyService>();
             services.AddScoped<FullDataSetFactory>();
+
+            services.AddScoped<IInstanceService, InstanceService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

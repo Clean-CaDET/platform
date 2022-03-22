@@ -2,22 +2,38 @@
 using System.Linq;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Infrastructure.Database;
+using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
-    public class DataSetInstanceDatabaseRepository : IDataSetInstanceRepository
+    public class InstanceDatabaseRepository : IInstanceRepository
     {
         private readonly DataSetExplorerContext _dbContext;
 
-        public DataSetInstanceDatabaseRepository(DataSetExplorerContext dbContext)
+        public InstanceDatabaseRepository(DataSetExplorerContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Instance GetDataSetInstance(int id)
+        public Instance Get(int id)
         {
             return _dbContext.DataSetInstances.Include(i => i.Annotations).FirstOrDefault(i => i.Id == id);
+        }
+
+        public InstanceDTO GetInstanceWithRelatedInstances(int id)
+        {
+            return new InstanceDTO(_dbContext.DataSetInstances
+                .Include(i => i.RelatedInstances)
+                .FirstOrDefault(i => i.Id == id));
+        }
+
+        public Instance GetInstanceWithAnnotations(int id)
+        {
+            return _dbContext.DataSetInstances
+                .Include(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .FirstOrDefault(i => i.Id == id);
         }
 
         public IEnumerable<Instance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId)

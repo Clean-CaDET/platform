@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DataSetExplorer.UI.Controllers.AnnotationConsistency
 {
-    [Route("api/annotation/consistency/")]
+    [Route("api/annotation-consistency/")]
     [ApiController]
     public class AnnotationConsistencyController : ControllerBase
     {

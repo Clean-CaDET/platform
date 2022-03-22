@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
-    public class DataSetAnnotationDatabaseRepository : IDataSetAnnotationRepository
+    public class AnnotationDatabaseRepository : IAnnotationRepository
     {
         private readonly DataSetExplorerContext _dbContext;
 
-        public DataSetAnnotationDatabaseRepository(DataSetExplorerContext dbContext)
+        public AnnotationDatabaseRepository(DataSetExplorerContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Annotation GetDataSetAnnotation(int id)
+        public Annotation Get(int id)
         {
             return _dbContext.DataSetAnnotations
                 .Include(a => a.Annotator)
