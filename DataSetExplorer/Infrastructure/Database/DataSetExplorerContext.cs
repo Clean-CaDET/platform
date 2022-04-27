@@ -39,7 +39,6 @@ namespace DataSetExplorer.Infrastructure.Database
                     m => JsonConvert.SerializeObject(m),
                     m => JsonConvert.DeserializeObject<Dictionary<CouplingType, int>>(m));
 
-            
             modelBuilder.Entity<CodeSmellHeuristic>().HasKey(ch => new { ch.CodeSmellDefinitionId, ch.HeuristicId });
 
             modelBuilder.Entity<CodeSmell>().HasOne<DataSet>().WithMany(d => d.SupportedCodeSmells)
