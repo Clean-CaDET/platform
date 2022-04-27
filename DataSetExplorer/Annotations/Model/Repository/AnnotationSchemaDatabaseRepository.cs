@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DataSetExplorer.Database;
+using DataSetExplorer.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataSetExplorer.Annotations.Model.Repository

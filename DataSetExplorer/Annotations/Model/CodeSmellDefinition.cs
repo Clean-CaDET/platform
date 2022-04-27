@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DataSetExplorer.DataSets.Model;
+using DataSetExplorer.Core.DataSets.Model;
 
 namespace DataSetExplorer.Annotations.Model
 {
