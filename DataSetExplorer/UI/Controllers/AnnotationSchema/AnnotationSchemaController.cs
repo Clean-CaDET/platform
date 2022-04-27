@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using DataSetExplorer.Core.AnnotationSchema;
+using DataSetExplorer.Core.AnnotationSchema.Model;
+using DataSetExplorer.UI.Controllers.AnnotationSchema.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using DataSetExplorer.Annotations;
-using DataSetExplorer.Annotations.Model;
-using DataSetExplorer.Controllers.Annotations.DTOs;
 
-namespace DataSetExplorer.Controllers.Annotations
+namespace DataSetExplorer.UI.Controllers.AnnotationSchema
 {
     [Route("api/annotation-schema/")]
     [ApiController]
@@ -53,12 +53,12 @@ namespace DataSetExplorer.Controllers.Annotations
 
         [HttpPost]
         [Route("code-smell-definition/{id}/heuristic")]
-        public IActionResult AddHeuristicsToCodeSmell([FromRoute] int id, [FromBody] List<HeuristicDTO> heuristicsDto)
+        public IActionResult AddHeuristicsToCodeSmell([FromRoute] int id, [FromBody] List<HeuristicDefinitionDTO> heuristicsDto)
         {
-            var heuristics = new List<Heuristic>();
+            var heuristics = new List<HeuristicDefinition>();
             foreach (var heuristic in heuristicsDto)
             {
-                heuristics.Add(_mapper.Map<Heuristic>(heuristic));
+                heuristics.Add(_mapper.Map<HeuristicDefinition>(heuristic));
             }
             var result = _annotationSchemaService.AddHeuristicsToCodeSmell(id, heuristics);
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
@@ -113,9 +113,9 @@ namespace DataSetExplorer.Controllers.Annotations
 
         [HttpPut]
         [Route("heuristic/{id}")]
-        public IActionResult UpdateHeuristic([FromRoute] int id, [FromBody] HeuristicDTO heuristicDto)
+        public IActionResult UpdateHeuristic([FromRoute] int id, [FromBody] HeuristicDefinitionDTO heuristicDto)
         {
-            var heuristic = _mapper.Map<Heuristic>(heuristicDto);
+            var heuristic = _mapper.Map<HeuristicDefinition>(heuristicDto);
             var result = _annotationSchemaService.UpdateHeuristic(id, heuristic);
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
@@ -132,9 +132,9 @@ namespace DataSetExplorer.Controllers.Annotations
 
         [HttpPost]
         [Route("heuristic")]
-        public IActionResult CreateHeuristic([FromBody] HeuristicDTO heuristicDto)
+        public IActionResult CreateHeuristic([FromBody] HeuristicDefinitionDTO heuristicDto)
         {
-            var heuristic = _mapper.Map<Heuristic>(heuristicDto);
+            var heuristic = _mapper.Map<HeuristicDefinition>(heuristicDto);
             var result = _annotationSchemaService.CreateHeuristic(heuristic);
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
             return Ok(result.Value);

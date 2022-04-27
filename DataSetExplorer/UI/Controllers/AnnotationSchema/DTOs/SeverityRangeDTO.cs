@@ -1,4 +1,4 @@
-﻿namespace DataSetExplorer.Controllers.Annotations.DTOs
+﻿namespace DataSetExplorer.UI.Controllers.AnnotationSchema.DTOs
 {
     public class SeverityRangeDTO
     {

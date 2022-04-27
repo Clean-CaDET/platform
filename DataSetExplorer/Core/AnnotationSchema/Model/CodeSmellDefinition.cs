@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DataSetExplorer.Core.DataSets.Model;
 
-namespace DataSetExplorer.Annotations.Model
+namespace DataSetExplorer.Core.AnnotationSchema.Model
 {
     public class CodeSmellDefinition
     {

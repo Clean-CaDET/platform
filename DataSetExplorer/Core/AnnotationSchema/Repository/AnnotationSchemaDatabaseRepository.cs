@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataSetExplorer.Annotations.Model.Repository
+namespace DataSetExplorer.Core.AnnotationSchema.Repository
 {
     public class AnnotationSchemaDatabaseRepository : IAnnotationSchemaRepository
     {
@@ -33,7 +34,7 @@ namespace DataSetExplorer.Annotations.Model.Repository
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<Heuristic> GetHeuristicsForCodeSmell(int id)
+        public IEnumerable<HeuristicDefinition> GetHeuristicsForCodeSmell(int id)
         {
             return _dbContext.Heuristics.Where(h => h.CodeSmellHeuristics.Any(ch => ch.CodeSmellDefinitionId == id));
         }
@@ -61,25 +62,25 @@ namespace DataSetExplorer.Annotations.Model.Repository
             return deletedCodeSmell;
         }
 
-        public IEnumerable<Heuristic> GetAllHeuristics()
+        public IEnumerable<HeuristicDefinition> GetAllHeuristics()
         {
             return _dbContext.Heuristics;
         }
 
-        public Heuristic DeleteHeuristic(int id)
+        public HeuristicDefinition DeleteHeuristic(int id)
         {
             var deletedHeuristic = _dbContext.Heuristics.Remove(_dbContext.Heuristics.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedHeuristic;
         }
 
-        public void SaveHeuristic(Heuristic heuristic)
+        public void SaveHeuristic(HeuristicDefinition heuristic)
         {
             _dbContext.Update(heuristic);
             _dbContext.SaveChanges();
         }
 
-        public Heuristic GetHeuristic(int id)
+        public HeuristicDefinition GetHeuristic(int id)
         {
             return _dbContext.Heuristics
                 .FirstOrDefault(h => h.Id == id);

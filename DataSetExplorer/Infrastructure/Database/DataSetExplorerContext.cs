@@ -5,7 +5,7 @@ using DataSetExplorer.Core.DataSets.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
-using DataSetExplorer.Annotations.Model;
+using DataSetExplorer.Core.AnnotationSchema.Model;
 
 namespace DataSetExplorer.Infrastructure.Database
 {
@@ -19,7 +19,7 @@ namespace DataSetExplorer.Infrastructure.Database
         public DbSet<DataSet> DataSets { get; set; }
         public DbSet<DataSetProject> DataSetProjects { get; set; }
         public DbSet<CodeSmellDefinition> CodeSmellDefinitions { get; set; }
-        public DbSet<Heuristic> Heuristics { get; set; }
+        public DbSet<HeuristicDefinition> Heuristics { get; set; }
         public DbSet<CodeSmellHeuristic> CodeSmellHeuristics { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
         {

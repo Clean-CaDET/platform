@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 
-namespace DataSetExplorer.Annotations.Model
+namespace DataSetExplorer.Core.AnnotationSchema.Model
 {
-    public class Heuristic
+    public class HeuristicDefinition
     {
         public int Id { get; private set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public ICollection<CodeSmellHeuristic> CodeSmellHeuristics { get; set; }
 
-        public Heuristic(string name, string description)
+        public HeuristicDefinition(string name, string description)
         {
             Name = name;
             Description = description;
         }
 
-        private Heuristic()
+        private HeuristicDefinition()
         {
         }
 
-        public void Update(Heuristic other)
+        public void Update(HeuristicDefinition other)
         {
             Name = other.Name;
             Description = other.Description;

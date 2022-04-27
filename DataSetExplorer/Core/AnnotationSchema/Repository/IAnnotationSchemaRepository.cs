@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using DataSetExplorer.Core.AnnotationSchema.Model;
 
-namespace DataSetExplorer.Annotations.Model.Repository
+namespace DataSetExplorer.Core.AnnotationSchema.Repository
 {
     public interface IAnnotationSchemaRepository
     {
@@ -8,12 +9,12 @@ namespace DataSetExplorer.Annotations.Model.Repository
         void SaveCodeSmellDefinition(CodeSmellDefinition codeSmellDefinition);
         IEnumerable<CodeSmellDefinition> GetAllCodeSmellDefinitions();
         CodeSmellDefinition DeleteCodeSmellDefinition(int id);
-        IEnumerable<Heuristic> GetAllHeuristics();
-        Heuristic DeleteHeuristic(int id);
-        void SaveHeuristic(Heuristic heuristic);
-        Heuristic GetHeuristic(int id);
+        IEnumerable<HeuristicDefinition> GetAllHeuristics();
+        HeuristicDefinition DeleteHeuristic(int id);
+        void SaveHeuristic(HeuristicDefinition heuristic);
+        HeuristicDefinition GetHeuristic(int id);
         void SaveCodeSmellHeuristic(CodeSmellHeuristic codeSmellHeuristic);
-        IEnumerable<Heuristic> GetHeuristicsForCodeSmell(int id);
+        IEnumerable<HeuristicDefinition> GetHeuristicsForCodeSmell(int id);
         CodeSmellHeuristic DeleteHeuristicFromCodeSmell(int smellId, int heuristicId);
     }
 }

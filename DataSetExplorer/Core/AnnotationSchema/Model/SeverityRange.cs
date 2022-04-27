@@ -1,4 +1,4 @@
-﻿namespace DataSetExplorer.Annotations.Model
+﻿namespace DataSetExplorer.Core.AnnotationSchema.Model
 {
     public class SeverityRange
     {

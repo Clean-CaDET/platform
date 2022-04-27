@@ -1,9 +1,9 @@
-﻿using DataSetExplorer.Annotations.Model;
-using DataSetExplorer.Annotations.Model.Repository;
+﻿using System.Collections.Generic;
+using DataSetExplorer.Core.AnnotationSchema.Model;
+using DataSetExplorer.Core.AnnotationSchema.Repository;
 using FluentResults;
-using System.Collections.Generic;
 
-namespace DataSetExplorer.Annotations
+namespace DataSetExplorer.Core.AnnotationSchema
 {
     public class AnnotationSchemaService : IAnnotationSchemaService
     {
@@ -27,7 +27,7 @@ namespace DataSetExplorer.Annotations
             return Result.Ok(codeSmellDefinition);
         }
         
-        public Result<IEnumerable<Heuristic>> AddHeuristicsToCodeSmell(int id, IEnumerable<Heuristic> heuristics)
+        public Result<IEnumerable<HeuristicDefinition>> AddHeuristicsToCodeSmell(int id, IEnumerable<HeuristicDefinition> heuristics)
         {
             var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinition(id);
             if (codeSmellDefinition == default) return Result.Fail($"Code smell definition with id: {id} does not exist.");
@@ -47,12 +47,12 @@ namespace DataSetExplorer.Annotations
             return Result.Ok(heuristics);
         }
         
-        public Result<IEnumerable<Heuristic>> GetHeuristicsForCodeSmell(int id)
+        public Result<IEnumerable<HeuristicDefinition>> GetHeuristicsForCodeSmell(int id)
         {
             var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinition(id);
             if (codeSmellDefinition == default) return Result.Fail($"Code smell definition with id: {id} does not exist.");
 
-            IEnumerable<Heuristic> heuristics = _annotationSchemaRepository.GetHeuristicsForCodeSmell(id);
+            IEnumerable<HeuristicDefinition> heuristics = _annotationSchemaRepository.GetHeuristicsForCodeSmell(id);
             return Result.Ok(heuristics);
         }
 
@@ -82,27 +82,27 @@ namespace DataSetExplorer.Annotations
             return Result.Ok(codeSmellDefinition);
         }
 
-        public Result<IEnumerable<Heuristic>> GetAllHeuristics()
+        public Result<IEnumerable<HeuristicDefinition>> GetAllHeuristics()
         {
             return Result.Ok(_annotationSchemaRepository.GetAllHeuristics());
         }
 
-        public Result<Heuristic> UpdateHeuristic(int id, Heuristic heuristic)
+        public Result<HeuristicDefinition> UpdateHeuristic(int id, HeuristicDefinition heuristic)
         {
             var existingHeuristic = _annotationSchemaRepository.GetHeuristic(id);
-            if (existingHeuristic == default) return Result.Fail<Heuristic>($"Heuristic with id: {id} does not exist.");
+            if (existingHeuristic == default) return Result.Fail<HeuristicDefinition>($"Heuristic with id: {id} does not exist.");
             existingHeuristic.Update(heuristic);
             _annotationSchemaRepository.SaveHeuristic(existingHeuristic);
             return Result.Ok(heuristic);
         }
 
-        public Result<Heuristic> DeleteHeuristic(int id)
+        public Result<HeuristicDefinition> DeleteHeuristic(int id)
         {
             var heuristic = _annotationSchemaRepository.DeleteHeuristic(id);
             return Result.Ok(heuristic);
         }
 
-        public Result<Heuristic> CreateHeuristic(Heuristic heuristic)
+        public Result<HeuristicDefinition> CreateHeuristic(HeuristicDefinition heuristic)
         {
             _annotationSchemaRepository.SaveHeuristic(heuristic);
             return Result.Ok(heuristic);
