@@ -21,9 +21,9 @@ namespace CodeModel.Tests.Integration
             conflict.Fields.ShouldContain(f => f.Name.Equals("ours"));
             conflict.Fields.ShouldContain(f => f.Name.Equals("theirs"));
             conflict.Members.ShouldContain(m =>
-                m.Name.Equals("Conflict") && m.Type.Equals(CaDETMemberType.Constructor) && m.AccessedFields.Count == 3);
+                m.Name.Equals("Conflict") && m.Type.Equals(CaDETMemberType.Constructor) && m.AccessedFields.Distinct().Count() == 3);
             conflict.Members.ShouldContain(m =>
-                m.Name.Equals("Equals") && m.Type.Equals(CaDETMemberType.Method) && m.AccessedFields.Count == 1);
+                m.Name.Equals("Equals") && m.Type.Equals(CaDETMemberType.Method) && m.AccessedFields.Distinct().Count() == 1);
             conflict.Metrics[CaDETMetric.CLOC].ShouldBe(108);
             conflict.Metrics[CaDETMetric.LCOM].ShouldBe(0.833);
             conflict.Metrics[CaDETMetric.NAD].ShouldBe(4);
@@ -44,7 +44,7 @@ namespace CodeModel.Tests.Integration
             handles.Fields.ShouldContain(f => f.Name.Equals("ptr"));
             handles.Members.ShouldContain(m => m.Name.Equals("Handle") && m.Type.Equals(CaDETMemberType.Property));
             handles.Members.ShouldContain(m => m.Name.Equals("Dispose") && m.Type.Equals(CaDETMemberType.Method)
-                                                                        && m.InvokedMethods.Count == 1 &&
+                                                                        && m.InvokedMethods.Distinct().Count() == 1 &&
                                                                         m.AccessedFields.Count == 0 &&
                                                                         m.AccessedAccessors.Count == 0);
             handles.Metrics[CaDETMetric.LCOM].ShouldBe(0.667);

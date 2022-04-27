@@ -29,7 +29,6 @@ namespace DoctorApp.Model
         {
             _doctors.Add(new Doctor("testName", "testMail"));
             DateTime test1 = TestDoc.TestProp.From;
-            DateTime test = _doctors[0].HolidayDates[0].From;
             var a = TestDoc.Name;
             var b = TestDoc.TestProp;
             var c = b.To;

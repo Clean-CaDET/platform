@@ -1,16 +1,17 @@
-﻿using DataSetExplorer.Database;
-using DataSetExplorer.DataSets;
-using DataSetExplorer.DataSets.Model.Repository;
-using DataSetExplorer.RepositoryAdapters;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using DataSetExplorer.AnnotationConsistency;
 using DataSetExplorer.Annotations;
 using DataSetExplorer.Annotations.Model.Repository;
+using DataSetExplorer.Core.AnnotationConsistency;
+using DataSetExplorer.Core.Annotations;
+using DataSetExplorer.Core.DataSets;
+using DataSetExplorer.Core.DataSets.Repository;
+using DataSetExplorer.Infrastructure.Database;
+using DataSetExplorer.Infrastructure.RepositoryAdapters;
 
 namespace DataSetExplorer
 {
@@ -37,11 +38,11 @@ namespace DataSetExplorer
             services.AddScoped<IDataSetCreationService, DataSetCreationService>();
             services.AddScoped<ICodeRepository, GitCodeRepository>();
             services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
-            services.AddScoped<IDataSetProjectRepository, DataSetProjectDatabaseRepository>();
+            services.AddScoped<IProjectRepository, ProjectDatabaseRepository>();
 
-            services.AddScoped<IDataSetAnnotationService, DataSetAnnotationService>();
-            services.AddScoped<IDataSetInstanceRepository, DataSetInstanceDatabaseRepository>();
-            services.AddScoped<IDataSetAnnotationRepository, DataSetAnnotationDatabaseRepository>();
+            services.AddScoped<IAnnotationService, AnnotationService>();
+            services.AddScoped<IInstanceRepository, InstanceDatabaseRepository>();
+            services.AddScoped<IAnnotationRepository, AnnotationDatabaseRepository>();
 
             services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
 
@@ -49,6 +50,8 @@ namespace DataSetExplorer
             services.AddScoped<IAnnotationSchemaService, AnnotationSchemaService>();
             services.AddScoped<IAnnotationSchemaRepository, AnnotationSchemaDatabaseRepository>();
             services.AddScoped<FullDataSetFactory>();
+
+            services.AddScoped<IInstanceService, InstanceService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

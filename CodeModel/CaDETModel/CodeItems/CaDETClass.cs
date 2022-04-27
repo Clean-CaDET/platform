@@ -42,34 +42,67 @@ namespace CodeModel.CaDETModel.CodeItems
 
         public List<CaDETClass> GetFieldLinkedTypes()
         {
-            return Fields.SelectMany(f => f.GetLinkedTypes()).ToList();
+            var cadetClasses = Fields.SelectMany(f => f.GetLinkedTypes()).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodLinkedReturnTypes()
         {
-            return Members.Where(m => m.Type is not CaDETMemberType.Constructor)
+            var cadetClasses = Members.Where(m => m.Type is not CaDETMemberType.Constructor)
                 .SelectMany(m => m.GetLinkedReturnTypes()).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodLinkedVariableTypes()
         {
-            return Members.Where(m=> m.Type is not CaDETMemberType.Property)
+            var cadetClasses = Members.Where(m => m.Type is not CaDETMemberType.Property)
                 .SelectMany(m => m.Variables)
                 .SelectMany(v => v.GetLinkedTypes()).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
+        }
+
+        public List<CaDETClass> GetAccessedAccessorsTypes()
+        {
+            var accessedAccessors = Members.Where(m => m.Type is not CaDETMemberType.Property)
+                .SelectMany(m => m.AccessedAccessors);
+            var cadetClasses = accessedAccessors.Select(a => a.Parent).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
+        }
+
+        public List<CaDETClass> GetAccessedFieldsTypes()
+        {
+            var accessedFields = Members.Where(m => m.Type is not CaDETMemberType.Property)
+                .SelectMany(m => m.AccessedFields);
+            var cadetClasses = accessedFields.Select(f => f.Parent).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodLinkedParameterTypes()
         {
             var parameters = Members.SelectMany(m => m.Params).ToList();
-            return parameters.Select(p => p.Type)
-                   .Where(v => v.LinkedTypes != null)
-                   .SelectMany(v => v.LinkedTypes).ToList();
+            var cadetClasses = parameters.Select(p => p.Type)
+                .Where(v => v.LinkedTypes != null)
+                .SelectMany(v => v.LinkedTypes).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
         }
 
         public List<CaDETClass> GetMethodInvocationsTypes()
         {
             var invokedMethods = Members.SelectMany(m => m.InvokedMethods).ToList();
-            return invokedMethods.Select(m => m.Parent).ToList();
+            var cadetClasses = invokedMethods.Select(m => m.Parent).ToList();
+            RemoveThisClassFromList(cadetClasses);
+            return cadetClasses;
+        }
+
+        private void RemoveThisClassFromList(List<CaDETClass> classes)
+        {
+            classes.RemoveAll(c => c.Equals(this));
         }
 
         public CaDETMember FindMember(string name)
