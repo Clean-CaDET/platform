@@ -19,8 +19,7 @@ namespace DataSetExplorer.Infrastructure.Database
         public DbSet<DataSet> DataSets { get; set; }
         public DbSet<DataSetProject> DataSetProjects { get; set; }
         public DbSet<CodeSmellDefinition> CodeSmellDefinitions { get; set; }
-        public DbSet<HeuristicDefinition> Heuristics { get; set; }
-        public DbSet<CodeSmellHeuristic> CodeSmellHeuristics { get; set; }
+        public DbSet<HeuristicDefinition> HeuristicDefinitions { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
         {
         }
@@ -38,8 +37,6 @@ namespace DataSetExplorer.Infrastructure.Database
                 .HasConversion(
                     m => JsonConvert.SerializeObject(m),
                     m => JsonConvert.DeserializeObject<Dictionary<CouplingType, int>>(m));
-
-            modelBuilder.Entity<CodeSmellHeuristic>().HasKey(ch => new { ch.CodeSmellDefinitionId, ch.HeuristicId });
 
             modelBuilder.Entity<CodeSmell>().HasOne<DataSet>().WithMany(d => d.SupportedCodeSmells)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -72,6 +69,9 @@ namespace DataSetExplorer.Infrastructure.Database
                 .Entity<RelatedInstance>()
                 .Property(i => i.RelationType)
                 .HasConversion(new EnumToStringConverter<RelationType>());
+
+            modelBuilder.Entity<HeuristicDefinition>().HasOne<CodeSmellDefinition>().WithMany(d => d.Heuristics)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder
                 .Entity<CodeSmellDefinition>()

@@ -11,13 +11,14 @@ namespace DataSetExplorer.Core.AnnotationSchema.Model
         public SnippetType SnippetType { get; set; }
         public SeverityRange SeverityRange { get; set; }
         public List<string> SeverityValues { get; set;  }
-        public ICollection<CodeSmellHeuristic> CodeSmellHeuristics { get; set; }
+        public List<HeuristicDefinition> Heuristics { get; set; }
 
         public CodeSmellDefinition(string name, string description, SnippetType snippetType)
         {
             Name = name;
             Description = description;
             SnippetType = snippetType;
+            Heuristics = new List<HeuristicDefinition>();
         }
 
         private CodeSmellDefinition()

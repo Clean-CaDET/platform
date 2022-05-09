@@ -27,39 +27,31 @@ namespace DataSetExplorer.Core.AnnotationSchema
             return Result.Ok(codeSmellDefinition);
         }
         
-        public Result<IEnumerable<HeuristicDefinition>> AddHeuristicsToCodeSmell(int id, IEnumerable<HeuristicDefinition> heuristics)
+        public Result<HeuristicDefinition> AddHeuristicToCodeSmell(int id, HeuristicDefinition heuristic)
         {
             var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinition(id);
             if (codeSmellDefinition == default) return Result.Fail($"Code smell definition with id: {id} does not exist.");
-            foreach (var h in heuristics)
-            {
-                var heuristic = _annotationSchemaRepository.GetHeuristic(h.Id);
-                if (heuristic == default) return Result.Fail($"Heuristic with id: {id} does not exist.");
-            }
-            
-            foreach (var h in heuristics)
-            {
-                var heuristic = _annotationSchemaRepository.GetHeuristic(h.Id);
-                var codeSmellHeuristic = new CodeSmellHeuristic(codeSmellDefinition, heuristic);
-                _annotationSchemaRepository.SaveCodeSmellHeuristic(codeSmellHeuristic);
-            }
 
-            return Result.Ok(heuristics);
+            codeSmellDefinition.Heuristics.Add(heuristic);
+            _annotationSchemaRepository.SaveCodeSmellDefinition(codeSmellDefinition);
+            return Result.Ok(heuristic);
         }
         
         public Result<IEnumerable<HeuristicDefinition>> GetHeuristicsForCodeSmell(int id)
         {
             var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinition(id);
             if (codeSmellDefinition == default) return Result.Fail($"Code smell definition with id: {id} does not exist.");
-
-            IEnumerable<HeuristicDefinition> heuristics = _annotationSchemaRepository.GetHeuristicsForCodeSmell(id);
-            return Result.Ok(heuristics);
+            return Result.Ok((IEnumerable<HeuristicDefinition>)codeSmellDefinition.Heuristics);
         }
 
-        public Result<CodeSmellHeuristic> DeleteHeuristicFromCodeSmell(int smellId, int heuristicId)
+        public Result<CodeSmellDefinition> DeleteHeuristicFromCodeSmell(int smellId, int heuristicId)
         {
-            var codeSmellHeuristic = _annotationSchemaRepository.DeleteHeuristicFromCodeSmell(smellId, heuristicId);
-            return Result.Ok(codeSmellHeuristic);
+            var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinition(smellId);
+            if (codeSmellDefinition == default) return Result.Fail($"Code smell definition with id: {smellId} does not exist.");
+
+            codeSmellDefinition.Heuristics.RemoveAt(codeSmellDefinition.Heuristics.FindIndex(h => h.Id == heuristicId));
+            _annotationSchemaRepository.SaveCodeSmellDefinition(codeSmellDefinition);
+            return Result.Ok(codeSmellDefinition);
         }
 
         public Result<IEnumerable<CodeSmellDefinition>> GetAllCodeSmellDefinitions()
@@ -82,30 +74,11 @@ namespace DataSetExplorer.Core.AnnotationSchema
             return Result.Ok(codeSmellDefinition);
         }
 
-        public Result<IEnumerable<HeuristicDefinition>> GetAllHeuristics()
+        public Result<HeuristicDefinition> UpdateHeuristicInCodeSmell(int id, HeuristicDefinition heuristic)
         {
-            return Result.Ok(_annotationSchemaRepository.GetAllHeuristics());
-        }
-
-        public Result<HeuristicDefinition> UpdateHeuristic(int id, HeuristicDefinition heuristic)
-        {
-            var existingHeuristic = _annotationSchemaRepository.GetHeuristic(id);
-            if (existingHeuristic == default) return Result.Fail<HeuristicDefinition>($"Heuristic with id: {id} does not exist.");
-            existingHeuristic.Update(heuristic);
-            _annotationSchemaRepository.SaveHeuristic(existingHeuristic);
-            return Result.Ok(heuristic);
-        }
-
-        public Result<HeuristicDefinition> DeleteHeuristic(int id)
-        {
-            var heuristic = _annotationSchemaRepository.DeleteHeuristic(id);
-            return Result.Ok(heuristic);
-        }
-
-        public Result<HeuristicDefinition> CreateHeuristic(HeuristicDefinition heuristic)
-        {
-            _annotationSchemaRepository.SaveHeuristic(heuristic);
-            return Result.Ok(heuristic);
+            var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinition(id);
+            codeSmellDefinition.Heuristics.RemoveAt(codeSmellDefinition.Heuristics.FindIndex(h => h.Id == heuristic.Id));
+            return AddHeuristicToCodeSmell(id, heuristic);
         }
     }
 }

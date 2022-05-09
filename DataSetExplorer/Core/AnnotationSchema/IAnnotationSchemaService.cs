@@ -11,12 +11,9 @@ namespace DataSetExplorer.Core.AnnotationSchema
         Result<IEnumerable<CodeSmellDefinition>> GetAllCodeSmellDefinitions();
         Result<CodeSmellDefinition> UpdateCodeSmellDefinition(int id, CodeSmellDefinition codeSmellDefinition);
         Result<CodeSmellDefinition> DeleteCodeSmellDefinition(int id);
-        Result<IEnumerable<HeuristicDefinition>> GetAllHeuristics(); 
-        Result<HeuristicDefinition> CreateHeuristic(HeuristicDefinition heuristic);
-        Result<HeuristicDefinition> UpdateHeuristic(int id, HeuristicDefinition heuristic);
-        Result<HeuristicDefinition> DeleteHeuristic(int id);
-        Result<IEnumerable<HeuristicDefinition>> AddHeuristicsToCodeSmell(int id, IEnumerable<HeuristicDefinition> heuristics);
+        Result<HeuristicDefinition> AddHeuristicToCodeSmell(int id, HeuristicDefinition heuristic);
         Result<IEnumerable<HeuristicDefinition>> GetHeuristicsForCodeSmell(int id);
-        Result<CodeSmellHeuristic> DeleteHeuristicFromCodeSmell(int smellId, int heuristicId);
+        Result<CodeSmellDefinition> DeleteHeuristicFromCodeSmell(int smellId, int heuristicId);
+        Result<HeuristicDefinition> UpdateHeuristicInCodeSmell(int id, HeuristicDefinition heuristic);
     }
 }

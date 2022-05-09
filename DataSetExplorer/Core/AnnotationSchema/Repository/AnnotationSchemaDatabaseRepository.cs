@@ -19,6 +19,7 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         {
             return _dbContext.CodeSmellDefinitions
                 .Include(c => c.SeverityRange)
+                .Include(c => c.Heuristics)
                 .FirstOrDefault(c => c.Id == id);
         }
         
@@ -26,27 +27,6 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         {
             _dbContext.Update(codeSmellDefinition);
             _dbContext.SaveChanges();
-        }
-
-        public void SaveCodeSmellHeuristic(CodeSmellHeuristic codeSmellHeuristic)
-        {
-            _dbContext.Add(codeSmellHeuristic);
-            _dbContext.SaveChanges();
-        }
-
-        public IEnumerable<HeuristicDefinition> GetHeuristicsForCodeSmell(int id)
-        {
-            return _dbContext.Heuristics.Where(h => h.CodeSmellHeuristics.Any(ch => ch.CodeSmellDefinitionId == id));
-        }
-        
-        public CodeSmellHeuristic DeleteHeuristicFromCodeSmell(int smellId, int heuristicId)
-        {
-            var codeSmellHeuristic = _dbContext.CodeSmellHeuristics
-                .First(ch => ch.CodeSmellDefinitionId == smellId && ch.HeuristicId == heuristicId);
-
-            _dbContext.Remove(codeSmellHeuristic);
-            _dbContext.SaveChanges();
-            return codeSmellHeuristic;
         }
 
         public IEnumerable<CodeSmellDefinition> GetAllCodeSmellDefinitions()
@@ -64,12 +44,12 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
 
         public IEnumerable<HeuristicDefinition> GetAllHeuristics()
         {
-            return _dbContext.Heuristics;
+            return _dbContext.HeuristicDefinitions;
         }
 
         public HeuristicDefinition DeleteHeuristic(int id)
         {
-            var deletedHeuristic = _dbContext.Heuristics.Remove(_dbContext.Heuristics.Find(id)).Entity;
+            var deletedHeuristic = _dbContext.HeuristicDefinitions.Remove(_dbContext.HeuristicDefinitions.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedHeuristic;
         }
@@ -82,7 +62,7 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
 
         public HeuristicDefinition GetHeuristic(int id)
         {
-            return _dbContext.Heuristics
+            return _dbContext.HeuristicDefinitions
                 .FirstOrDefault(h => h.Id == id);
         }
     }

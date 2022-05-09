@@ -13,8 +13,5 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         HeuristicDefinition DeleteHeuristic(int id);
         void SaveHeuristic(HeuristicDefinition heuristic);
         HeuristicDefinition GetHeuristic(int id);
-        void SaveCodeSmellHeuristic(CodeSmellHeuristic codeSmellHeuristic);
-        IEnumerable<HeuristicDefinition> GetHeuristicsForCodeSmell(int id);
-        CodeSmellHeuristic DeleteHeuristicFromCodeSmell(int smellId, int heuristicId);
     }
 }

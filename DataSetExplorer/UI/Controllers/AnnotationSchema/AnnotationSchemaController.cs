@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using DataSetExplorer.Core.AnnotationSchema;
 using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.UI.Controllers.AnnotationSchema.DTOs;
@@ -9,12 +8,12 @@ namespace DataSetExplorer.UI.Controllers.AnnotationSchema
 {
     [Route("api/annotation-schema/code-smells/")]
     [ApiController]
-    public class CodeSmellDefinitionController : ControllerBase
+    public class AnnotationSchemaController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IAnnotationSchemaService _annotationSchemaService;
 
-        public CodeSmellDefinitionController(IMapper mapper, IAnnotationSchemaService annotationSchemaService)
+        public AnnotationSchemaController(IMapper mapper, IAnnotationSchemaService annotationSchemaService)
         {
             _mapper = mapper;
             _annotationSchemaService = annotationSchemaService;
@@ -76,14 +75,10 @@ namespace DataSetExplorer.UI.Controllers.AnnotationSchema
 
         [HttpPost]
         [Route("{id}/heuristics")]
-        public IActionResult AddHeuristicsToCodeSmell([FromRoute] int id, [FromBody] List<HeuristicDefinitionDTO> heuristicsDto)
+        public IActionResult AddHeuristicToCodeSmell([FromRoute] int id, [FromBody] HeuristicDefinitionDTO heuristicDto)
         {
-            var heuristics = new List<HeuristicDefinition>();
-            foreach (var heuristic in heuristicsDto)
-            {
-                heuristics.Add(_mapper.Map<HeuristicDefinition>(heuristic));
-            }
-            var result = _annotationSchemaService.AddHeuristicsToCodeSmell(id, heuristics);
+            var heuristic = _mapper.Map<HeuristicDefinition>(heuristicDto);
+            var result = _annotationSchemaService.AddHeuristicToCodeSmell(id, heuristic);
             if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
@@ -93,6 +88,16 @@ namespace DataSetExplorer.UI.Controllers.AnnotationSchema
         public IActionResult RemoveHeuristicFromCodeSmell([FromRoute] int smellId, [FromRoute] int heuristicId)
         {
             var result = _annotationSchemaService.DeleteHeuristicFromCodeSmell(smellId, heuristicId);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpPut]
+        [Route("{id}/heuristics")]
+        public IActionResult UpdateHeuristicInCodeSmell([FromRoute] int id, [FromBody] HeuristicDefinitionDTO heuristicDto)
+        {
+            var heuristic = _mapper.Map<HeuristicDefinition>(heuristicDto);
+            var result = _annotationSchemaService.UpdateHeuristicInCodeSmell(id, heuristic);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
