@@ -9,7 +9,6 @@ namespace DataSetExplorer.Core.AnnotationSchema.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public SnippetType SnippetType { get; set; }
-        public SeverityRange SeverityRange { get; set; }
         public List<string> SeverityValues { get; set;  }
         public List<HeuristicDefinition> Heuristics { get; set; }
 
@@ -30,7 +29,6 @@ namespace DataSetExplorer.Core.AnnotationSchema.Model
             Name = other.Name;
             Description = other.Description;
             SnippetType = other.SnippetType;
-            SeverityRange = other.SeverityRange;
             SeverityValues = other.SeverityValues;
         }
 

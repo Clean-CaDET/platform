@@ -18,7 +18,6 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         public CodeSmellDefinition GetCodeSmellDefinition(int id)
         {
             return _dbContext.CodeSmellDefinitions
-                .Include(c => c.SeverityRange)
                 .Include(c => c.Heuristics)
                 .FirstOrDefault(c => c.Id == id);
         }
@@ -31,8 +30,7 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
 
         public IEnumerable<CodeSmellDefinition> GetAllCodeSmellDefinitions()
         {
-            return _dbContext.CodeSmellDefinitions
-                .Include(c => c.SeverityRange);
+            return _dbContext.CodeSmellDefinitions;
         }
 
         public CodeSmellDefinition DeleteCodeSmellDefinition(int id)
