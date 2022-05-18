@@ -7,13 +7,14 @@ namespace DataSetExplorer.Core.AnnotationSchema
     public interface IAnnotationSchemaService
     {
         Result<CodeSmellDefinition> GetCodeSmellDefinition(int id);
-        Result<CodeSmellDefinition> CreateCodeSmellDefinition(CodeSmellDefinition codeSmellDefinition);
         Result<IEnumerable<CodeSmellDefinition>> GetAllCodeSmellDefinitions();
+        Result<CodeSmellDefinition> CreateCodeSmellDefinition(CodeSmellDefinition codeSmellDefinition);
         Result<CodeSmellDefinition> UpdateCodeSmellDefinition(int id, CodeSmellDefinition codeSmellDefinition);
         Result<CodeSmellDefinition> DeleteCodeSmellDefinition(int id);
-        Result<HeuristicDefinition> AddHeuristicToCodeSmell(int id, HeuristicDefinition heuristic);
         Result<IEnumerable<HeuristicDefinition>> GetHeuristicsForCodeSmell(int id);
-        Result<CodeSmellDefinition> DeleteHeuristicFromCodeSmell(int smellId, int heuristicId);
+        Result<IDictionary<string, HeuristicDefinition[]>> GetHeuristicsForEachCodeSmell();
+        Result<HeuristicDefinition> AddHeuristicToCodeSmell(int id, HeuristicDefinition heuristic);
         Result<HeuristicDefinition> UpdateHeuristicInCodeSmell(int id, HeuristicDefinition heuristic);
+        Result<CodeSmellDefinition> DeleteHeuristicFromCodeSmell(int smellId, int heuristicId);
     }
 }

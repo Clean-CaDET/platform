@@ -73,6 +73,15 @@ namespace DataSetExplorer.UI.Controllers.AnnotationSchema
             return Ok(result.Value);
         }
 
+        [HttpGet]
+        [Route("heuristics")]
+        public IActionResult GetHeuristicsForEachCodeSmell()
+        {
+            var result = _annotationSchemaService.GetHeuristicsForEachCodeSmell();
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
         [HttpPost]
         [Route("{id}/heuristics")]
         public IActionResult AddHeuristicToCodeSmell([FromRoute] int id, [FromBody] HeuristicDefinitionDTO heuristicDto)

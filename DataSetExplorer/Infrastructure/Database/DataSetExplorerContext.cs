@@ -77,6 +77,10 @@ namespace DataSetExplorer.Infrastructure.Database
                 .Entity<CodeSmellDefinition>()
                 .Property(c => c.SnippetType)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<CodeSmellDefinition>(codeSmell => {
+                codeSmell.HasIndex(c => c.Name).IsUnique();
+            });
         }
     }
 }

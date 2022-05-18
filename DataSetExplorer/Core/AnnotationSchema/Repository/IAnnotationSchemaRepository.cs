@@ -6,12 +6,12 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
     public interface IAnnotationSchemaRepository
     {
         CodeSmellDefinition GetCodeSmellDefinition(int id);
-        void SaveCodeSmellDefinition(CodeSmellDefinition codeSmellDefinition);
         IEnumerable<CodeSmellDefinition> GetAllCodeSmellDefinitions();
+        void SaveCodeSmellDefinition(CodeSmellDefinition codeSmellDefinition);
         CodeSmellDefinition DeleteCodeSmellDefinition(int id);
-        IEnumerable<HeuristicDefinition> GetAllHeuristics();
-        HeuristicDefinition DeleteHeuristic(int id);
-        void SaveHeuristic(HeuristicDefinition heuristic);
         HeuristicDefinition GetHeuristic(int id);
+        IEnumerable<HeuristicDefinition> GetAllHeuristics();
+        void SaveHeuristic(HeuristicDefinition heuristic);
+        HeuristicDefinition DeleteHeuristic(int id);
     }
 }
