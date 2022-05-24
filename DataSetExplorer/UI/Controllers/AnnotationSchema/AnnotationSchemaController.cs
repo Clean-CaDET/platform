@@ -36,6 +36,15 @@ namespace DataSetExplorer.UI.Controllers.AnnotationSchema
             return Ok(result.Value);
         }
 
+        [HttpGet]
+        [Route("name/{name}")]
+        public IActionResult GetCodeSmellDefinitionByName([FromRoute] string name)
+        {
+            var result = _annotationSchemaService.GetCodeSmellDefinitionByName(name);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
         [HttpPost]
         public IActionResult CreateCodeSmellDefinition([FromBody] CodeSmellDefinitionDTO codeSmellDefinitionDto)
         {

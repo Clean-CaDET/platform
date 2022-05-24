@@ -7,6 +7,7 @@ namespace DataSetExplorer.Core.AnnotationSchema
     public interface IAnnotationSchemaService
     {
         Result<CodeSmellDefinition> GetCodeSmellDefinition(int id);
+        Result<CodeSmellDefinition> GetCodeSmellDefinitionByName(string name);
         Result<IEnumerable<CodeSmellDefinition>> GetAllCodeSmellDefinitions();
         Result<CodeSmellDefinition> CreateCodeSmellDefinition(CodeSmellDefinition codeSmellDefinition);
         Result<CodeSmellDefinition> UpdateCodeSmellDefinition(int id, CodeSmellDefinition codeSmellDefinition);

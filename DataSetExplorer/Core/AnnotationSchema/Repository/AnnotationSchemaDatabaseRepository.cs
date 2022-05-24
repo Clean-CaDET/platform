@@ -22,6 +22,13 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
                 .FirstOrDefault(c => c.Id == id);
         }
 
+        public CodeSmellDefinition GetCodeSmellDefinitionByName(string name)
+        {
+            return _dbContext.CodeSmellDefinitions
+                .Include(c => c.Heuristics)
+                .FirstOrDefault(c => c.Name.Equals(name));
+        }
+
         public IEnumerable<CodeSmellDefinition> GetAllCodeSmellDefinitions()
         {
             return _dbContext.CodeSmellDefinitions.ToList();

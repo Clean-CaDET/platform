@@ -22,6 +22,13 @@ namespace DataSetExplorer.Core.AnnotationSchema
             return Result.Ok(codeSmellDefinition);
         }
 
+        public Result<CodeSmellDefinition> GetCodeSmellDefinitionByName(string name)
+        {
+            var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinitionByName(name);
+            if (codeSmellDefinition == default) return Result.Fail($"Code smell definition with name: {name} does not exist.");
+            return Result.Ok(codeSmellDefinition);
+        }
+
         public Result<IEnumerable<CodeSmellDefinition>> GetAllCodeSmellDefinitions()
         {
             return Result.Ok(_annotationSchemaRepository.GetAllCodeSmellDefinitions());
