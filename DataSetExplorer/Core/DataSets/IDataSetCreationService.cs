@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Core.DataSetSerializer.ViewModel;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
@@ -18,7 +19,7 @@ namespace DataSetExplorer.Core.DataSets
         Result<DataSet> GetDataSetForExport(int id);
         Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets();
         Result<DataSetProject> GetDataSetProject(int id);
-        Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id);
+        Result<List<CodeSmell>> GetDataSetCodeSmells(int id);
         Result<DataSet> DeleteDataSet(int id);
         Result<DataSet> UpdateDataSet(DataSet dataset);
         Result<DataSetProject> DeleteDataSetProject(int id);

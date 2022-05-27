@@ -138,7 +138,7 @@ namespace DataSetExplorer.Core.DataSets
             return fileName;
         }
 
-        public Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id)
+        public Result<List<CodeSmell>> GetDataSetCodeSmells(int id)
         {
             var codeSmells = _dataSetRepository.GetDataSetCodeSmells(id);
             if (codeSmells == default) return Result.Fail($"DataSet with id: {id} does not exist.");

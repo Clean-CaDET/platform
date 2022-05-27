@@ -16,8 +16,8 @@ namespace DataSetExplorer.Tests.Unit
         {
             var codeSmells = new List<CodeSmell>
             {
-                new CodeSmell("Long_Method"),
-                new CodeSmell("Large_Class")
+                new CodeSmell("Long_Method", SnippetType.Function),
+                new CodeSmell("Large_Class", SnippetType.Class)
             };
             var dataSet = new DataSet("Test", codeSmells);
             ExcelImporter importer = new ExcelImporter(new ExcelFactory().GetTestDataFolder());

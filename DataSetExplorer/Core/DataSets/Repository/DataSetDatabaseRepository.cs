@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper.Internal;
+using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Infrastructure.Database;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
@@ -97,17 +98,11 @@ namespace DataSetExplorer.Core.DataSets.Repository
             return updatedDataset;
         }
 
-        public Dictionary<string, List<string>> GetDataSetCodeSmells(int id)
+        public List<CodeSmell> GetDataSetCodeSmells(int id)
         {
-            var result = new Dictionary<string, List<string>>();
             var dataSet = _dbContext.DataSets.Include(d => d.SupportedCodeSmells).FirstOrDefault(s => s.Id == id);
             if (dataSet == null) return null;
-
-            foreach (var smell in dataSet.SupportedCodeSmells)
-            {
-                result.Add(smell.Name, smell.RelevantSnippetTypes().Select(t => t.ToString()).ToList());
-            }
-            return result;
+            return dataSet.SupportedCodeSmells;
         }
 
         public DataSet Delete(int id)
