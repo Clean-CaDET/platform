@@ -29,8 +29,6 @@ namespace SmellDetector.Detectors.RuleEngines
         public PartialSmellDetectionReport FindIssues(List<CaDETClass> classes)
         {
             List<CaDETMember> methods = classes.SelectMany(c => c.Members).ToList();
-            
-
             var partialReport = new PartialSmellDetectionReport();
 
             foreach (var method in methods)
