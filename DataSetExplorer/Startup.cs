@@ -75,7 +75,7 @@ namespace DataSetExplorer
             string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "5432";
             string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "data-set-explorer-db";
             string user = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "postgres";
-            string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "super";
+            string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "admin";
             string integratedSecurity = Environment.GetEnvironmentVariable("DATABASE_INTEGRATED_SECURITY") ?? "false";
             string pooling = Environment.GetEnvironmentVariable("DATABASE_POOLING") ?? "true";
 

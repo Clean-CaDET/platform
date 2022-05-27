@@ -6,6 +6,8 @@ namespace SmellDetector.SmellModel
         LONG_PARAM_LISTS,
         GOD_CLASS,
         FEATURE_ENVY,
-        SHOTGUN_SURGERY
+        SHOTGUN_SURGERY,
+        DATA_CLASS,
+        REFUSED_BEQUEST
     }
 }
