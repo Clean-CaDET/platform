@@ -36,7 +36,7 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok(dataSet);
         }
 
-        public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
+        public Result<DataSetProject> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
             var initialDataSet = _dataSetRepository.GetDataSetWithProjectsAndCodeSmells(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
@@ -45,7 +45,7 @@ namespace DataSetExplorer.Core.DataSets
             initialDataSet.AddProject(project);
             
             _dataSetRepository.Update(initialDataSet);
-            return Result.Ok(initialDataSet);
+            return Result.Ok(project);
         }
 
         public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells)
