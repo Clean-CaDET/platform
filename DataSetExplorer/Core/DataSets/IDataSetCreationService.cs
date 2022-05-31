@@ -18,6 +18,7 @@ namespace DataSetExplorer.Core.DataSets
         Result<DatasetDetailDTO> GetDataSet(int id);
         Result<DataSet> GetDataSetForExport(int id);
         Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets();
+        Result<IEnumerable<DataSet>> GetDataSetsByCodeSmell(string codeSmellName);
         Result<DataSetProject> GetDataSetProject(int id);
         Result<List<CodeSmell>> GetDataSetCodeSmells(int id);
         Result<DataSet> DeleteDataSet(int id);

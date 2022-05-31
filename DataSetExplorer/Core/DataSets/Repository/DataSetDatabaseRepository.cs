@@ -72,7 +72,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
         {
             return _dbContext.DataSets
                 .Include(d => d.SupportedCodeSmells)
-                .Include(s => s.Projects)
+                .Include(d => d.Projects)
                 .FirstOrDefault(d => d.Id == id);
         }
 
@@ -80,6 +80,29 @@ namespace DataSetExplorer.Core.DataSets.Repository
         {
             var result = new List<DatasetSummaryDTO>();
             _dbContext.DataSets.ToList().ForEach(d => result.Add(GetDatasetSummary(d.Id)));
+            return result;
+        }
+
+        public IEnumerable<DataSet> GetAllByCodeSmell(string codeSmellName)
+        {
+            var datasets = _dbContext.DataSets
+                 .Include(d => d.SupportedCodeSmells)
+                 .Include(d => d.Projects)
+                    .ThenInclude(p => p.CandidateInstances)
+                    .ThenInclude(c => c.Instances)
+                    .ThenInclude(i => i.Annotations)
+                    .ThenInclude(a => a.Annotator)
+                 .Include(d => d.Projects)
+                    .ThenInclude(p => p.CandidateInstances)
+                    .ThenInclude(c => c.Instances)
+                    .ThenInclude(i => i.Annotations)
+                    .ThenInclude(a => a.ApplicableHeuristics);
+
+            var result = new List<DataSet>();
+            foreach(var dataset in datasets)
+            {
+                if (dataset.SupportedCodeSmells.Exists(s => s.Name.Equals(codeSmellName))) result.Add(dataset);
+            }
             return result;
         }
 

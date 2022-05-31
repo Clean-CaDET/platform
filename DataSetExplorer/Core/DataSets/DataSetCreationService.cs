@@ -87,6 +87,12 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok(dataSets);
         }
 
+        public Result<IEnumerable<DataSet>> GetDataSetsByCodeSmell(string codeSmellName)
+        {
+            var dataSets = _dataSetRepository.GetAllByCodeSmell(codeSmellName);
+            return Result.Ok(dataSets);
+        }
+
         public Result<DataSetProject> GetDataSetProject(int id)
         {
             var project = _projectRepository.Get(id);

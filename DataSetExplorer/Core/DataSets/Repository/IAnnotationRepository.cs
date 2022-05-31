@@ -8,5 +8,6 @@ namespace DataSetExplorer.Core.DataSets.Repository
         Annotator GetAnnotator(int id);
         CodeSmell GetCodeSmell(string name);
         void Update(Annotation annotation);
+        SmellHeuristic DeleteHeuristic(int id);
     }
 }

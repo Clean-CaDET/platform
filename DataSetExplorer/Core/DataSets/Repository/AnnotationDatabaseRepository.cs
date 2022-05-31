@@ -36,5 +36,12 @@ namespace DataSetExplorer.Core.DataSets.Repository
             _dbContext.Update(annotation);
             _dbContext.SaveChanges();
         }
+
+        public SmellHeuristic DeleteHeuristic(int id)
+        {
+            var deletedHeuristic = _dbContext.SmellHeuristics.Remove(_dbContext.SmellHeuristics.Find(id)).Entity;
+            _dbContext.SaveChanges();
+            return deletedHeuristic;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DataSetExplorer.Core.Annotations;
 using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.Core.AnnotationSchema.Repository;
 using FluentResults;
@@ -9,10 +10,13 @@ namespace DataSetExplorer.Core.AnnotationSchema
     public class AnnotationSchemaService : IAnnotationSchemaService
     {
         private readonly IAnnotationSchemaRepository _annotationSchemaRepository;
+        private readonly IAnnotationService _annotationService;
 
-        public AnnotationSchemaService(IAnnotationSchemaRepository annotationSchemaRepository)
+        public AnnotationSchemaService(IAnnotationSchemaRepository annotationSchemaRepository,
+            IAnnotationService annotationService)
         {
             _annotationSchemaRepository = annotationSchemaRepository;
+            _annotationService = annotationService;
         }
 
         public Result<CodeSmellDefinition> GetCodeSmellDefinition(int id)
@@ -96,8 +100,12 @@ namespace DataSetExplorer.Core.AnnotationSchema
             var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinition(smellId);
             if (codeSmellDefinition == default) return Result.Fail($"Code smell definition with id: {smellId} does not exist.");
 
+            var heuristic = codeSmellDefinition.Heuristics.Find(h => h.Id == heuristicId);
             codeSmellDefinition.Heuristics.RemoveAt(codeSmellDefinition.Heuristics.FindIndex(h => h.Id == heuristicId));
             _annotationSchemaRepository.SaveCodeSmellDefinition(codeSmellDefinition);
+
+            _annotationService.UpdateAnnotationsAfterHeuristicDeletion(codeSmellDefinition, heuristic);
+           
             return Result.Ok(codeSmellDefinition);
         }
     }
