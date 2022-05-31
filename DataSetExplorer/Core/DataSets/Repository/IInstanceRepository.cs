@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 
@@ -12,5 +13,6 @@ namespace DataSetExplorer.Core.DataSets.Repository
         IEnumerable<Instance> GetAnnotatedInstances(int projectId);
         void Update(Instance instance);
         Instance GetInstanceWithAnnotations(int id);
+        List<SmellCandidateInstances> DeleteCandidateInstancesBySmell(List<CodeSmell> codeSmells);
     }
 }

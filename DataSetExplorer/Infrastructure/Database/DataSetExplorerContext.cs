@@ -20,6 +20,7 @@ namespace DataSetExplorer.Infrastructure.Database
         public DbSet<DataSetProject> DataSetProjects { get; set; }
         public DbSet<CodeSmellDefinition> CodeSmellDefinitions { get; set; }
         public DbSet<HeuristicDefinition> HeuristicDefinitions { get; set; }
+        public DbSet<SmellCandidateInstances> SmellCandidateInstances { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
         {
         }

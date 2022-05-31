@@ -1,4 +1,6 @@
 ﻿using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.AnnotationSchema.Model;
+using System.Collections.Generic;
 
 namespace DataSetExplorer.Core.DataSets.Repository
 {
@@ -9,5 +11,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
         CodeSmell GetCodeSmell(string name);
         void Update(Annotation annotation);
         SmellHeuristic DeleteHeuristic(int id);
+        List<CodeSmell> GetCodeSmellsByDefinition(CodeSmellDefinition codeSmellDefinition);
+        void DeleteCodeSmells(List<CodeSmell> codeSmells);
     }
 }

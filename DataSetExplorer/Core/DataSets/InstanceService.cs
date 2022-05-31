@@ -1,3 +1,4 @@
+using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Core.DataSets.Repository;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
@@ -10,11 +11,14 @@ namespace DataSetExplorer.Core.DataSets
     {
         private readonly IInstanceRepository _instanceRepository;
         private readonly IDataSetCreationService _dataSetCreationService;
+        private readonly IAnnotationRepository _annotationRepository;
 
-        public InstanceService(IInstanceRepository instanceRepository, IDataSetCreationService dataSetCreationService)
+        public InstanceService(IInstanceRepository instanceRepository, IDataSetCreationService dataSetCreationService,
+            IAnnotationRepository annotationRepository)
         {
             _instanceRepository = instanceRepository;
             _dataSetCreationService = dataSetCreationService;
+            _annotationRepository = annotationRepository;
         }
 
         public Result<InstanceDTO> GetInstanceWithRelatedInstances(int id)
@@ -47,6 +51,14 @@ namespace DataSetExplorer.Core.DataSets
                 }
             }
             return Result.Ok(instances);
+        }
+
+        public Result<List<SmellCandidateInstances>> DeleteCandidateInstancesForSmell(CodeSmellDefinition codeSmellDefinition)
+        {
+            var codeSmells = _annotationRepository.GetCodeSmellsByDefinition(codeSmellDefinition);
+            var deletedCandidates = _instanceRepository.DeleteCandidateInstancesBySmell(codeSmells);
+            _annotationRepository.DeleteCodeSmells(codeSmells);
+            return Result.Ok(deletedCandidates);
         }
     }
 }

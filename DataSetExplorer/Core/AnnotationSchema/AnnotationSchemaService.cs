@@ -3,6 +3,7 @@ using System.Linq;
 using DataSetExplorer.Core.Annotations;
 using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.Core.AnnotationSchema.Repository;
+using DataSetExplorer.Core.DataSets;
 using FluentResults;
 
 namespace DataSetExplorer.Core.AnnotationSchema
@@ -11,12 +12,14 @@ namespace DataSetExplorer.Core.AnnotationSchema
     {
         private readonly IAnnotationSchemaRepository _annotationSchemaRepository;
         private readonly IAnnotationService _annotationService;
+        private readonly IInstanceService _instanceService;
 
         public AnnotationSchemaService(IAnnotationSchemaRepository annotationSchemaRepository,
-            IAnnotationService annotationService)
+            IAnnotationService annotationService, IInstanceService instanceService)
         {
             _annotationSchemaRepository = annotationSchemaRepository;
             _annotationService = annotationService;
+            _instanceService = instanceService;
         }
 
         public Result<CodeSmellDefinition> GetCodeSmellDefinition(int id)
@@ -56,6 +59,7 @@ namespace DataSetExplorer.Core.AnnotationSchema
         public Result<CodeSmellDefinition> DeleteCodeSmellDefinition(int id)
         {
             var codeSmellDefinition = _annotationSchemaRepository.DeleteCodeSmellDefinition(id);
+            _instanceService.DeleteCandidateInstancesForSmell(codeSmellDefinition);
             return Result.Ok(codeSmellDefinition);
         }
 

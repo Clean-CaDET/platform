@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +44,17 @@ namespace DataSetExplorer.Core.DataSets.Repository
             var deletedHeuristic = _dbContext.SmellHeuristics.Remove(_dbContext.SmellHeuristics.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedHeuristic;
+        }
+
+        public List<CodeSmell> GetCodeSmellsByDefinition(CodeSmellDefinition codeSmellDefinition)
+        {
+            return _dbContext.CodeSmells.Where(s => s.Name.Equals(codeSmellDefinition.Name)).ToList();
+        }
+
+        public void DeleteCodeSmells(List<CodeSmell> codeSmells)
+        {
+            _dbContext.CodeSmells.RemoveRange(codeSmells);
+            _dbContext.SaveChanges();
         }
     }
 }

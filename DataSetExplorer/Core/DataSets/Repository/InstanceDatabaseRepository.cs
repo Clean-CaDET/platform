@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Infrastructure.Database;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
@@ -72,6 +73,18 @@ namespace DataSetExplorer.Core.DataSets.Repository
         {
             _dbContext.Update(instance);
             _dbContext.SaveChanges();
+        }
+
+        public List<SmellCandidateInstances> DeleteCandidateInstancesBySmell(List<CodeSmell> codeSmells)
+        {
+            var candidatesToDelete = new List<SmellCandidateInstances>();
+            foreach (var codeSmell in codeSmells)
+            {
+                candidatesToDelete.AddRange(_dbContext.SmellCandidateInstances.Where(c => c.CodeSmell.Id == codeSmell.Id));
+            }
+            _dbContext.SmellCandidateInstances.RemoveRange(candidatesToDelete);
+            _dbContext.SaveChanges();
+            return candidatesToDelete;
         }
     }
 }

@@ -11,5 +11,6 @@ namespace DataSetExplorer.Core.DataSets
         Result<InstanceDTO> GetInstanceWithRelatedInstances(int id);
         Result<Instance> GetInstanceWithAnnotations(int id);
         Result<List<Instance>> GetInstancesForSmell(string codeSmellName);
+        Result<List<SmellCandidateInstances>> DeleteCandidateInstancesForSmell(CodeSmellDefinition codeSmellDefinition);
     }
 }
