@@ -66,7 +66,6 @@ namespace DataSetExplorer.UI.ConsoleApp
             Console.WriteLine("3. Check metrics significance for a single annotator");
             Console.WriteLine("4. Check metrics significance between annotators");
             Console.WriteLine("x. Exit\n");
-
         }
     }
 }

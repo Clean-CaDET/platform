@@ -25,8 +25,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
         /// The excel documents must be formatted following these guidelines https://github.com/Clean-CaDET/platform/wiki/Dataset-Explorer#building-your-dataset
         /// </summary>
         /// <param name="projectName">Name of the returned dataset project.</param>
-        /// <returns>A dataset project constructed from one or more excel documents.</returns>
-        
+        /// <returns>A dataset project constructed from one or more excel documents.</returns>    
         public DataSetProject Import(string projectName)
         {
             var project = new DataSetProject(projectName);
