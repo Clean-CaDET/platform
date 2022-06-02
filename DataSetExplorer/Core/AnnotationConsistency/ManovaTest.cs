@@ -11,8 +11,8 @@ namespace DataSetExplorer.Core.AnnotationConsistency
 {
     public class ManovaTest : IAnnotatorsConsistencyTester
     {
-        private readonly string _manovaScriptFile = "./AnnotationConsistency/scripts/manova_test.py";
-        private readonly string _pythonPath = "./AnnotationConsistency/venv/Scripts/python.exe";
+        private readonly string _manovaScriptFile = "./Core/AnnotationConsistency/scripts/manova_test.py";
+        private readonly string _pythonPath = "./Core/AnnotationConsistency/venv/Scripts/python.exe";
         private string _annotatedInstancesFile;
         private string _dependentVariable;
         private string _independentVariable;
