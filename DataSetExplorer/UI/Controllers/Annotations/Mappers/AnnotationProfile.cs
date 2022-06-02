@@ -16,6 +16,7 @@ namespace DataSetExplorer.UI.Controllers.Annotations.Mappers
                 .ConstructUsing(src => new Annotation(src.CodeSmell, src.Severity, new Annotator(src.AnnotatorId), CreateHeuristics(src.ApplicableHeuristics), src.Note));
             CreateMap<CodeSmellDefinitionDTO, CodeSmellDefinition>();
             CreateMap<HeuristicDefinitionDTO, HeuristicDefinition>();
+            CreateMap<SeverityDefinitionDTO, SeverityDefinition>();
         }
 
         private List<SmellHeuristic> CreateHeuristics(List<SmellHeuristicDTO> heuristics)

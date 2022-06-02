@@ -19,19 +19,19 @@ namespace DataSetExplorer.Core.DataSets.Repository
 
         public Instance Get(int id)
         {
-            return _dbContext.DataSetInstances.Include(i => i.Annotations).FirstOrDefault(i => i.Id == id);
+            return _dbContext.Instances.Include(i => i.Annotations).FirstOrDefault(i => i.Id == id);
         }
 
         public InstanceDTO GetInstanceWithRelatedInstances(int id)
         {
-            return new InstanceDTO(_dbContext.DataSetInstances
+            return new InstanceDTO(_dbContext.Instances
                 .Include(i => i.RelatedInstances)
                 .FirstOrDefault(i => i.Id == id));
         }
 
         public Instance GetInstanceWithAnnotations(int id)
         {
-            return _dbContext.DataSetInstances
+            return _dbContext.Instances
                 .Include(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
                 .FirstOrDefault(i => i.Id == id);

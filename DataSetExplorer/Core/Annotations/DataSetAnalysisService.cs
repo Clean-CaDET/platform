@@ -82,7 +82,7 @@ namespace DataSetExplorer.Core.Annotations
 
             try
             {
-                var classesGroupedBySeverity = new Dictionary<int, List<CaDETClass>>();
+                var classesGroupedBySeverity = new Dictionary<string, List<CaDETClass>>();
                 var annotatedInstances = LoadAnnotatedInstances(datasetPath);
 
                 foreach (var projectUrl in projects.Keys)
@@ -101,7 +101,7 @@ namespace DataSetExplorer.Core.Annotations
             }
         }
 
-        private static void GroupInstancesBySeverity(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedInstances, CaDETProject cadetProject)
+        private static void GroupInstancesBySeverity(Dictionary<string, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedInstances, CaDETProject cadetProject)
         {
             foreach (var instance in annotatedInstances)
             {

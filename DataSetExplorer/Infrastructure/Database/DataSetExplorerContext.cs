@@ -14,12 +14,13 @@ namespace DataSetExplorer.Infrastructure.Database
         public DbSet<Annotator> Annotators { get; set; }
         public DbSet<CodeSmell> CodeSmells { get; set; }
         public DbSet<SmellHeuristic> SmellHeuristics { get; set; }
-        public DbSet<Annotation> DataSetAnnotations { get; set; }
-        public DbSet<Instance> DataSetInstances { get; set; }
+        public DbSet<Annotation> Annotations { get; set; }
+        public DbSet<Instance> Instances { get; set; }
         public DbSet<DataSet> DataSets { get; set; }
         public DbSet<DataSetProject> DataSetProjects { get; set; }
         public DbSet<CodeSmellDefinition> CodeSmellDefinitions { get; set; }
         public DbSet<HeuristicDefinition> HeuristicDefinitions { get; set; }
+        public DbSet<SeverityDefinition> SeverityDefinitions { get; set; }
         public DbSet<SmellCandidateInstances> SmellCandidateInstances { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
         {
@@ -72,6 +73,9 @@ namespace DataSetExplorer.Infrastructure.Database
                 .HasConversion(new EnumToStringConverter<RelationType>());
 
             modelBuilder.Entity<HeuristicDefinition>().HasOne<CodeSmellDefinition>().WithMany(d => d.Heuristics)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SeverityDefinition>().HasOne<CodeSmellDefinition>().WithMany(d => d.Severities)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder

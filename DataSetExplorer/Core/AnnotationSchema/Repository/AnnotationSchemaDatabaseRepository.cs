@@ -19,6 +19,7 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         {
             return _dbContext.CodeSmellDefinitions
                 .Include(c => c.Heuristics)
+                .Include(c => c.Severities)
                 .FirstOrDefault(c => c.Id == id);
         }
 
@@ -26,6 +27,7 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         {
             return _dbContext.CodeSmellDefinitions
                 .Include(c => c.Heuristics)
+                .Include(c => c.Severities)
                 .FirstOrDefault(c => c.Name.Equals(name));
         }
 
@@ -69,6 +71,30 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
             var deletedHeuristic = _dbContext.HeuristicDefinitions.Remove(_dbContext.HeuristicDefinitions.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedHeuristic;
+        }
+
+        public SeverityDefinition GetSeverity(int id)
+        {
+            return _dbContext.SeverityDefinitions
+                .FirstOrDefault(s => s.Id == id);
+        }
+
+        public IEnumerable<SeverityDefinition> GetAllSeverities()
+        {
+            return _dbContext.SeverityDefinitions;
+        }
+
+        public void SaveSeverity(SeverityDefinition severity)
+        {
+            _dbContext.Update(severity);
+            _dbContext.SaveChanges();
+        }
+
+        public SeverityDefinition DeleteSeverity(int id)
+        {
+            var deletedSeverity = _dbContext.SeverityDefinitions.Remove(_dbContext.SeverityDefinitions.Find(id)).Entity;
+            _dbContext.SaveChanges();
+            return deletedSeverity;
         }
     }
 }

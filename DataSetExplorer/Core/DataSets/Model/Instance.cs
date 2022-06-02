@@ -92,14 +92,14 @@ namespace DataSetExplorer.Core.DataSets.Model
             return string.Join(",", list);
         }
 
-        public int GetFinalAnnotation()
+        public string GetFinalAnnotation()
         {
             var majorityVote = GetMajorityAnnotation();
-            if (majorityVote != null) return (int)majorityVote;
+            if (majorityVote != null) return majorityVote;
             return GetAnnotationFromMostExperiencedAnnotator();
         }
 
-        private int? GetMajorityAnnotation()
+        private string GetMajorityAnnotation()
         {
             var annotationsGroupedBySeverity = Annotations.GroupBy(a => a.Severity);
             if (HasMajoritySeverityVote(annotationsGroupedBySeverity))
@@ -112,14 +112,14 @@ namespace DataSetExplorer.Core.DataSets.Model
         }
 
         private bool HasMajoritySeverityVote(
-            IEnumerable<IGrouping<int, Annotation>> annotationsGroupedBySeverity)
+            IEnumerable<IGrouping<string, Annotation>> annotationsGroupedBySeverity)
         {
             var severityCounts = annotationsGroupedBySeverity.Select(group => group.Count());
             if (severityCounts.Count() == 1) return true;
             return severityCounts.Any(count => count != severityCounts.First());
         }
 
-        private int GetAnnotationFromMostExperiencedAnnotator()
+        private string GetAnnotationFromMostExperiencedAnnotator()
         {
             return Annotations.OrderBy(a => a.Annotator.Ranking).First().Severity;
         }

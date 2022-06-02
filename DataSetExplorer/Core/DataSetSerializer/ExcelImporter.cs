@@ -26,6 +26,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
         /// </summary>
         /// <param name="projectName">Name of the returned dataset project.</param>
         /// <returns>A dataset project constructed from one or more excel documents.</returns>
+        
         public DataSetProject Import(string projectName)
         {
             var project = new DataSetProject(projectName);
@@ -107,7 +108,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                     var finalAnnotation = sheet.Cells["AD" + row].Text;
                     Instance instance = new Instance(codeSnippetId, projectLink);
                     // Dummy values for DataSetAnnotation constructor to pass validations (the final annotation is the only important parameter in this case).
-                    Annotation annotation = new Annotation(new CodeSmell("Large_Class"), int.Parse(finalAnnotation), new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") }, "");
+                    Annotation annotation = new Annotation(new CodeSmell("Large_Class", SnippetType.Class), finalAnnotation, new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") }, "");
                     instance.AddAnnotation(annotation);
                     instances.Add(instance);
                 }
@@ -119,7 +120,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
         {
             try
             {
-                var smellSeverity = int.Parse(sheet.Cells["C" + row].Text);
+                var smellSeverity = sheet.Cells["C" + row].Text;
                 var annotatorId = int.Parse(sheet.Cells["C2"].Text);
                 var codeSmell = sheet.Cells["B2"].Text;
                 var heuristics = GetHeuristics(sheet, row);

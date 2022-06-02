@@ -7,24 +7,23 @@ namespace DataSetExplorer.Core.Annotations.Model
     {
         public int Id { get; private set; }
         public CodeSmell InstanceSmell { get; private set; }
-        public int Severity { get; private set; }
+        public string Severity { get; set; }
         public List<SmellHeuristic> ApplicableHeuristics { get; private set; }
         public Annotator Annotator { get; set; }
         public string Note { get; private set; }
-
-        public Annotation(string instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics, String note) : 
+        
+        public Annotation(string instanceSmell, string severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics, String note) : 
             this(new CodeSmell(instanceSmell), severity, annotator, applicableHeuristics, note)
         {
         }
 
-        public Annotation(CodeSmell instanceSmell, int severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics, String note)
+        public Annotation(CodeSmell instanceSmell, string severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics, String note)
         {
             InstanceSmell = instanceSmell;
             Severity = severity;
             Annotator = annotator;
             ApplicableHeuristics = applicableHeuristics;
             Note = note;
-            Validate();
         }
 
         private Annotation()
@@ -42,9 +41,7 @@ namespace DataSetExplorer.Core.Annotations.Model
 
         private void Validate()
         {
-            if (Severity < 0 || Severity > 3) throw new ArgumentException("Accepted severity ranges from 0 to 3, but was " + Severity);
             if (Annotator.Id == 0) throw new ArgumentException("Annotator ID is required.");
-            if (Severity > 0 && ApplicableHeuristics.Count < 1) throw new ArgumentException("Annotations made by " + Annotator.Id + " with severity " + Severity + " must have at least one applicable heuristic.");
         }
 
         public override int GetHashCode() => (Annotator.Id, InstanceSmell: InstanceSmell.Name).GetHashCode();

@@ -20,18 +20,7 @@ namespace DataSetExplorer.Core.AnnotationConsistency
 
         private delegate void PrepareTestDelegate(int id, List<Instance> instances, string codeSmell, List<CaDETMetric> metrics);
 
-        public Result<Dictionary<string, string>> TestConsistencyBetweenAnnotators(int severity, List<SmellCandidateInstances> instancesGroupedBySmells)
-        {
-            return Test(severity, instancesGroupedBySmells, PrepareDataForBetweenAnnotators);
-        }
-
-        public Result<Dictionary<string, string>> TestConsistencyOfSingleAnnotator(int annotatorId, List<SmellCandidateInstances> instancesGroupedBySmells)
-        {
-            return Test(annotatorId, instancesGroupedBySmells, PrepareDataForSingleAnnotator);
-        }
-
-        private Result<Dictionary<string, string>> Test(int id, List<SmellCandidateInstances> instancesGroupedBySmells,
-             PrepareTestDelegate prepareTest)
+        public Result<Dictionary<string, string>> TestConsistencyBetweenAnnotators(string severity, List<SmellCandidateInstances> instancesGroupedBySmells)
         {
             var results = new Dictionary<string, string>();
             foreach (var codeSmellGroup in instancesGroupedBySmells)
@@ -40,13 +29,28 @@ namespace DataSetExplorer.Core.AnnotationConsistency
                 var metrics = codeSmellGroup.Instances.First().MetricFeatures.Keys.ToList();
                 var instances = codeSmellGroup.Instances;
 
-                prepareTest(id, instances, codeSmell, metrics);
+                PrepareDataForBetweenAnnotators(severity, instances, codeSmell, metrics);
                 results[codeSmell] = StartProcess();
             }
             return Result.Ok(results);
         }
 
-        private void PrepareDataForBetweenAnnotators(int severity, List<Instance> instances, string codeSmell, List<CaDETMetric> metrics)
+        public Result<Dictionary<string, string>> TestConsistencyOfSingleAnnotator(int annotatorId, List<SmellCandidateInstances> instancesGroupedBySmells)
+        {
+            var results = new Dictionary<string, string>();
+            foreach (var codeSmellGroup in instancesGroupedBySmells)
+            {
+                var codeSmell = codeSmellGroup.CodeSmell.Name;
+                var metrics = codeSmellGroup.Instances.First().MetricFeatures.Keys.ToList();
+                var instances = codeSmellGroup.Instances;
+
+                PrepareDataForSingleAnnotator(annotatorId, instances, codeSmell, metrics);
+                results[codeSmell] = StartProcess();
+            }
+            return Result.Ok(results);
+        }
+
+        private void PrepareDataForBetweenAnnotators(string severity, List<Instance> instances, string codeSmell, List<CaDETMetric> metrics)
         {
             string exportedAnnotatorsFile = ExportAnnotatorsForSeverity(severity, instances, codeSmell);
             SetupTestArguments(exportedAnnotatorsFile, metrics, "Annotator");
@@ -57,7 +61,7 @@ namespace DataSetExplorer.Core.AnnotationConsistency
             SetupTestArguments(exportedAnnotationsFile, metrics, "Annotation");
         }
 
-        private string ExportAnnotatorsForSeverity(int severity, List<Instance> instances, string codeSmell)
+        private string ExportAnnotatorsForSeverity(string severity, List<Instance> instances, string codeSmell)
         {
             var exportedAnnotatorsFile = "SanityCheck_" + codeSmell + "_Severity_" + severity;
             var exporter = new AnnotationConsistencyByMetricsExporter(_annotatedInstancesFolderPath);

@@ -20,7 +20,7 @@ namespace DataSetExplorer.Core.Annotations.Model
         }
 
         public int Id { get; private set; }
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public SnippetType SnippetType { get; private set; }
 
         public override int GetHashCode()

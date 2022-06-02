@@ -65,5 +65,73 @@ namespace DataSetExplorer.Core.Annotations
                 _annotationRepository.DeleteHeuristic(appliedHeuristic.Id);
             }
         }
+
+        public Result UpdateAnnotationsAfterSeverityDeletion(CodeSmellDefinition codeSmellDefinition, SeverityDefinition severity)
+        {
+            foreach (var instance in _instanceService.GetInstancesForSmell(codeSmellDefinition.Name).Value)
+            {
+                DeleteAnnotationsWithDeletedSeverity(instance.Annotations, severity);
+            }
+            return Result.Ok();
+        }
+
+        private void DeleteAnnotationsWithDeletedSeverity(ISet<Annotation> annotations, SeverityDefinition severity)
+        {
+            foreach (var annotation in annotations)
+            {
+                if (annotation.Severity.Equals(severity.Value)) _annotationRepository.Delete(annotation.Id);
+            }
+        }
+
+        public Result UpdateAnnotationsAfterSeverityUpdate(CodeSmellDefinition codeSmellDefinition, SeverityDefinition severity, SeverityDefinition oldSeverity)
+        {
+            foreach (var instance in _instanceService.GetInstancesForSmell(codeSmellDefinition.Name).Value)
+            {
+                if (instance.Annotations.Count > 0) UpdateAnnotationsWithUpdatedSeverity(instance.Annotations, severity, oldSeverity);
+            }
+            return Result.Ok();
+        }
+
+        private void UpdateAnnotationsWithUpdatedSeverity(ISet<Annotation> annotations, SeverityDefinition severity, SeverityDefinition oldSeverity)
+        {
+            foreach (var annotation in annotations)
+            {
+                if (annotation.Severity.Equals(oldSeverity.Value))
+                {
+                    annotation.Severity = severity.Value;
+                    _annotationRepository.Update(annotation);
+                }
+            }
+        }
+
+        public Result UpdateAnnotationsAfterHeuristicUpdate(CodeSmellDefinition codeSmellDefinition, HeuristicDefinition heuristic, HeuristicDefinition oldHeuristic)
+        {
+            foreach (var instance in _instanceService.GetInstancesForSmell(codeSmellDefinition.Name).Value)
+            {
+                UpdateAnnotationsWithUpdatedHeuristic(instance.Annotations, heuristic, oldHeuristic);
+            }
+            return Result.Ok();
+        }
+
+        private void UpdateAnnotationsWithUpdatedHeuristic(ISet<Annotation> annotations, HeuristicDefinition heuristic, HeuristicDefinition oldHeuristic)
+        {
+            foreach (var annotation in annotations)
+            {
+                var appliedHeuristic = annotation.ApplicableHeuristics.Find(h => h.Description.Equals(oldHeuristic.Name));
+                if (appliedHeuristic == null) continue;
+                appliedHeuristic.Description = heuristic.Name;
+                _annotationRepository.UpdateAppliedHeuristic(appliedHeuristic);
+            }
+        }
+
+        public Result<List<CodeSmell>> GetCodeSmellsByDefinition(CodeSmellDefinition codeSmellDefinition)
+        {
+            return Result.Ok(_annotationRepository.GetCodeSmellsByDefinition(codeSmellDefinition));
+        }
+
+        public Result<CodeSmell> UpdateCodeSmell(CodeSmell codeSmell)
+        {
+            return Result.Ok(_annotationRepository.UpdateCodeSmell(codeSmell));
+        }
     }
 }

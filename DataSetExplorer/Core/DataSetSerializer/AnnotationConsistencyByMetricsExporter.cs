@@ -28,7 +28,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
             Serialize(fileName);
         }
 
-        public void ExportAnnotatorsForSeverity(int severity, List<Instance> instances,
+        public void ExportAnnotatorsForSeverity(string severity, List<Instance> instances,
             string fileName)
         {
             InitializeExcelSheet(_multipleAnnotatorsTemplatePath);
@@ -53,14 +53,14 @@ namespace DataSetExplorer.Core.DataSetSerializer
             }
         }
 
-        private void PopulateTemplateForSeverity(int severity, List<Instance> instances)
+        private void PopulateTemplateForSeverity(string severity, List<Instance> instances)
         {
             var j = 0;
             foreach (var instance in instances)
             {
                 foreach (var annotation in instance.Annotations)
                 {
-                    if (annotation.Severity == severity)
+                    if (annotation.Severity.Equals(severity))
                     {
                         _sheet.Cells[2 + j, 1].Value = annotation.Annotator.Id;
                         PopulateMetrics(instance.MetricFeatures, 2 + j, 2);

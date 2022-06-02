@@ -119,5 +119,52 @@ namespace DataSetExplorer.UI.Controllers.AnnotationSchema
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
+
+        [HttpGet]
+        [Route("{id}/severities")]
+        public IActionResult GetSeveritiesForCodeSmell([FromRoute] int id)
+        {
+            var result = _annotationSchemaService.GetSeveritiesForCodeSmell(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
+        [Route("severities")]
+        public IActionResult GetSeveritiesForEachCodeSmell()
+        {
+            var result = _annotationSchemaService.GetSeveritiesForEachCodeSmell();
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpPost]
+        [Route("{id}/severities")]
+        public IActionResult AddSeverityToCodeSmell([FromRoute] int id, [FromBody] SeverityDefinitionDTO severityDto)
+        {
+            var severity = _mapper.Map<SeverityDefinition>(severityDto);
+            var result = _annotationSchemaService.AddSeverityToCodeSmell(id, severity);
+            if (result.IsFailed) return NotFound(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpDelete]
+        [Route("{smellId}/severities/{severityId}")]
+        public IActionResult RemoveSeverityFromCodeSmell([FromRoute] int smellId, [FromRoute] int severityId)
+        {
+            var result = _annotationSchemaService.DeleteSeverityFromCodeSmell(smellId, severityId);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpPut]
+        [Route("{id}/severities")]
+        public IActionResult UpdateSeverityInCodeSmell([FromRoute] int id, [FromBody] SeverityDefinitionDTO severityDTO)
+        {
+            var severity = _mapper.Map<SeverityDefinition>(severityDTO);
+            var result = _annotationSchemaService.UpdateSeverityInCodeSmell(id, severity);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
     }
 }

@@ -1,24 +1,24 @@
 ﻿namespace DataSetExplorer.Core.AnnotationSchema.Model
 {
-    public class HeuristicDefinition
+    public class SeverityDefinition
     {
         public int Id { get; private set; }
-        public string Name { get; set; }
+        public string Value { get; set; }
         public string Description { get; set; }
 
-        public HeuristicDefinition(string name, string description)
+        public SeverityDefinition(string value, string description)
         {
-            Name = name;
+            Value = value;
             Description = description;
         }
 
-        private HeuristicDefinition()
+        private SeverityDefinition()
         {
         }
 
-        public void Update(HeuristicDefinition other)
+        public void Update(SeverityDefinition other)
         {
-            Name = other.Name;
+            Value = other.Value;
             Description = other.Description;
         }
     }

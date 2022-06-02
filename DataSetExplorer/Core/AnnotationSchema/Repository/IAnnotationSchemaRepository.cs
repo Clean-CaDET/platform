@@ -14,5 +14,9 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         IEnumerable<HeuristicDefinition> GetAllHeuristics();
         void SaveHeuristic(HeuristicDefinition heuristic);
         HeuristicDefinition DeleteHeuristic(int id);
+        SeverityDefinition GetSeverity(int id);
+        IEnumerable<SeverityDefinition> GetAllSeverities();
+        void SaveSeverity(SeverityDefinition severity);
+        SeverityDefinition DeleteSeverity(int id);
     }
 }

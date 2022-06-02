@@ -9,7 +9,7 @@ namespace DataSetExplorer.Core.AnnotationSchema.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public SnippetType SnippetType { get; set; }
-        public List<string> SeverityValues { get; set;  }
+        public List<SeverityDefinition> Severities { get; set;  }
         public List<HeuristicDefinition> Heuristics { get; set; }
 
         public CodeSmellDefinition(string name, string description, SnippetType snippetType)
@@ -18,6 +18,7 @@ namespace DataSetExplorer.Core.AnnotationSchema.Model
             Description = description;
             SnippetType = snippetType;
             Heuristics = new List<HeuristicDefinition>();
+            Severities = new List<SeverityDefinition>();
         }
 
         private CodeSmellDefinition()
@@ -29,7 +30,6 @@ namespace DataSetExplorer.Core.AnnotationSchema.Model
             Name = other.Name;
             Description = other.Description;
             SnippetType = other.SnippetType;
-            SeverityValues = other.SeverityValues;
         }
 
         public override int GetHashCode()
