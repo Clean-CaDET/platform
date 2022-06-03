@@ -39,7 +39,7 @@ namespace DataSetExplorer.UI.ConsoleApp
                     CreateDataSet();
                     break;
                 case "2":
-                    new DataSetAnalysisSubmenu(new DataSetAnalysisService(null)).AnalyzeDataSet();
+                    new DataSetAnalysisSubmenu(new DataSetAnalysisService(null, null)).AnalyzeDataSet();
                     break;
                 case "3":
                     ExportDataSet();

@@ -13,9 +13,11 @@ namespace DataSetExplorer.Core.Annotations
     public class DataSetAnalysisService : IDataSetAnalysisService
     {
         private readonly IProjectRepository _projectRepository;
-        public DataSetAnalysisService(IProjectRepository projectRepository)
+        private readonly IAnnotationRepository _annotationRepository;
+        public DataSetAnalysisService(IProjectRepository projectRepository, IAnnotationRepository annotationRepository)
         {
             _projectRepository = projectRepository;
+            _annotationRepository = annotationRepository;
         }
 
         public Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects)
@@ -66,13 +68,13 @@ namespace DataSetExplorer.Core.Annotations
 
         private DataSetProject LoadDataSetProject(string folder, string projectName)
         {
-            var importer = new ExcelImporter(folder);
+            var importer = new ExcelImporter(folder, _annotationRepository);
             return importer.Import(projectName);
         }
 
         private List<Instance> LoadAnnotatedInstances(string datasetPath)
         {
-            var importer = new ExcelImporter(datasetPath);
+            var importer = new ExcelImporter(datasetPath, _annotationRepository);
             return importer.ImportAnnotatedInstancesFromDataSet(datasetPath);
         }
 

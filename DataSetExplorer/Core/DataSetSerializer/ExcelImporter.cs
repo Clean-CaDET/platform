@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
+using DataSetExplorer.Core.DataSets.Repository;
 using OfficeOpenXml;
 
 namespace DataSetExplorer.Core.DataSetSerializer
@@ -13,10 +14,17 @@ namespace DataSetExplorer.Core.DataSetSerializer
         private const int StartingInstanceRow = 4;
         private const int StartingHeuristicColumn = 4;
         private readonly string _sourceFolder;
+        private readonly IAnnotationRepository _annotationRepository;
 
         public ExcelImporter(string sourceFolder)
         {
             _sourceFolder = sourceFolder;
+        }
+
+        public ExcelImporter(string sourceFolder, IAnnotationRepository annotationRepository)
+        {
+            _sourceFolder = sourceFolder;
+            _annotationRepository = annotationRepository;
         }
 
         /// <summary>
@@ -33,7 +41,8 @@ namespace DataSetExplorer.Core.DataSetSerializer
             var sheets = GetWorksheets(GetExcelDocuments());
             foreach (var excelWorksheet in sheets)
             {
-                project.AddCandidateInstance(new SmellCandidateInstances(new CodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
+                if (_annotationRepository != null) project.AddCandidateInstance(new SmellCandidateInstances(_annotationRepository.GetCodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
+                else project.AddCandidateInstance(new SmellCandidateInstances(new CodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
             }
             
             return project;
@@ -115,15 +124,16 @@ namespace DataSetExplorer.Core.DataSetSerializer
             return instances;
         }
 
-        private static Annotation GetAnnotation(ExcelWorksheet sheet, int row)
+        private Annotation GetAnnotation(ExcelWorksheet sheet, int row)
         {
             try
             {
                 var smellSeverity = sheet.Cells["C" + row].Text;
                 var annotatorId = int.Parse(sheet.Cells["C2"].Text);
-                var codeSmell = sheet.Cells["B2"].Text;
+                var codeSmellName = sheet.Cells["B2"].Text;
                 var heuristics = GetHeuristics(sheet, row);
-                return new Annotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics, ""); // TODO - extract note from sheet
+                if (_annotationRepository != null) return new Annotation(_annotationRepository.GetCodeSmell(codeSmellName), smellSeverity, new Annotator(annotatorId), heuristics, ""); // TODO - extract note from sheet
+                return new Annotation(codeSmellName, smellSeverity, new Annotator(annotatorId), heuristics, ""); // TODO - extract note from sheet
             }
             catch (InvalidOperationException e)
             {

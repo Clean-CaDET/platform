@@ -11,7 +11,7 @@ namespace DataSetExplorer.Core.Annotations.Model
         public List<SmellHeuristic> ApplicableHeuristics { get; private set; }
         public Annotator Annotator { get; set; }
         public string Note { get; private set; }
-        
+
         public Annotation(string instanceSmell, string severity, Annotator annotator, List<SmellHeuristic> applicableHeuristics, String note) : 
             this(new CodeSmell(instanceSmell), severity, annotator, applicableHeuristics, note)
         {

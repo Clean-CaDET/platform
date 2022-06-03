@@ -12,10 +12,12 @@ namespace DataSetExplorer.Core.DataSets
     public class FullDataSetFactory
     {
         private readonly IInstanceRepository _instanceRepository;
+        private readonly IAnnotationRepository _annotationRepository;
 
-        public FullDataSetFactory(IInstanceRepository instanceRepository)
+        public FullDataSetFactory(IInstanceRepository instanceRepository, IAnnotationRepository annotationRepository)
         {
             _instanceRepository = instanceRepository;
+            _annotationRepository = annotationRepository;
         }
 
         public FullDataSetFactory() { }
@@ -28,7 +30,7 @@ namespace DataSetExplorer.Core.DataSets
                 CodeModelFactory factory = new CodeModelFactory();
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(projectSourceLocation);
 
-                var importer = new ExcelImporter(projects[projectSourceLocation]);
+                var importer = new ExcelImporter(projects[projectSourceLocation], _annotationRepository);
                 var annotatedCandidates = importer.Import(projectSourceLocation).CandidateInstances.ToList();
 
                 LoadAnnotators(annotators, annotatedCandidates);
@@ -73,7 +75,8 @@ namespace DataSetExplorer.Core.DataSets
             var instancesBySmell = instances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Name);
             foreach (var group in instancesBySmell)
             {
-                candidateInstances.Add(new SmellCandidateInstances(new CodeSmell(group.Key), group.ToList()));
+                if (_annotationRepository != null) candidateInstances.Add(new SmellCandidateInstances(_annotationRepository.GetCodeSmell(group.Key), group.ToList()));
+                else candidateInstances.Add(new SmellCandidateInstances(new CodeSmell(group.Key), group.ToList()));
             }
             return candidateInstances;
         }
