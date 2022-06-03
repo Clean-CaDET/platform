@@ -27,7 +27,6 @@ namespace DataSetExplorer.UI.ConsoleApp
                 chosenOption = ConsoleIO.GetAnswerOnQuestion("Your option: ");
                 Console.Clear();
                 ProcessChosenOption(chosenOption);
-
             } while (!chosenOption.Equals("x"));
         }
 
