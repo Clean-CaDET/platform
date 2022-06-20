@@ -6,17 +6,17 @@ using System.Linq;
 using System;
 namespace SmellDetector.Detectors.RuleEngines
 {
-    public class RefuseBequestMetricRuleEngine : IDetector
+    public class RefusedBequestMetricRuleEngine : IDetector
     {
         private readonly List<Rule> _rules;
-        public RefuseBequestMetricRuleEngine()
+        public RefusedBequestMetricRuleEngine()
         {
             Rule rule1 = new Rule("",
                                    new AndCriteria(
                                             new MetricCriteria(CaDETMetric.BUR, OperationEnum.LESS_THAN, 1/3),
                                             new MetricCriteria(CaDETMetric.NMD_NAD, OperationEnum.GREATER_THAN, 2)
                                        ),
-                                    SmellType.REFUSE_BEQUEST);
+                                    SmellType.REFUSED_BEQUEST);
             _rules = new List<Rule>();
             _rules.Add(rule1);
         }
