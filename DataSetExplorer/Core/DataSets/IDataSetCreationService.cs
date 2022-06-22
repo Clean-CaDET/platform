@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.CommunityDetection.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Core.DataSetSerializer.ViewModel;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
@@ -23,5 +24,6 @@ namespace DataSetExplorer.Core.DataSets
         Result<DataSet> UpdateDataSet(DataSet dataset);
         Result<DataSetProject> DeleteDataSetProject(int id);
         Result<DataSetProject> UpdateDataSetProject(DataSetProject project);
+        Result<Dictionary<string, int>> ExportCommunities(Graph Graph);
     }
 }

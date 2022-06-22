@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using CodeModel.CodeParsers.CSharp.Exceptions;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.CommunityDetection.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Core.DataSets.Repository;
 using DataSetExplorer.Core.DataSetSerializer;
@@ -13,6 +15,8 @@ using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
 using FluentResults;
 using LibGit2Sharp;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace DataSetExplorer.Core.DataSets
 {
@@ -21,12 +25,14 @@ namespace DataSetExplorer.Core.DataSets
         private readonly ICodeRepository _codeRepository;
         private readonly IDataSetRepository _dataSetRepository;
         private readonly IProjectRepository _projectRepository;
+        private readonly IConfiguration _configuration;
 
-        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository, IProjectRepository projectRepository)
+        public DataSetCreationService(ICodeRepository codeRepository, IDataSetRepository dataSetRepository, IProjectRepository projectRepository, IConfiguration configuration)
         {
             _codeRepository = codeRepository;
             _dataSetRepository = dataSetRepository;
             _projectRepository = projectRepository;
+            _configuration = configuration;
         }
 
         public Result<DataSet> CreateEmptyDataSet(string dataSetName, List<CodeSmell> codeSmells)
@@ -40,7 +46,7 @@ namespace DataSetExplorer.Core.DataSets
         {
             var initialDataSet = _dataSetRepository.GetDataSetWithProjectsAndCodeSmells(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
-            
+
             Task.Run(() => ProcessInitialDataSetProject(basePath, project, initialDataSet.SupportedCodeSmells, smellFilters, projectBuildSettings));
             initialDataSet.AddProject(project);
             
@@ -104,7 +110,7 @@ namespace DataSetExplorer.Core.DataSets
         private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, projectBuildSettings.IgnoredFolders, codeSmells);
+            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, projectBuildSettings.foldersToIgnore, codeSmells);
             if (projectBuildSettings.RandomizeClassSelection) builder = builder.RandomizeClassSelection();
             if (projectBuildSettings.RandomizeMemberSelection) builder = builder.RandomizeMemberSelection();
             if (projectBuildSettings.NumOfInstancesType.Equals("Percentage")) return builder.SetProjectExtractionPercentile(projectBuildSettings.NumOfInstances).Build();
@@ -113,18 +119,18 @@ namespace DataSetExplorer.Core.DataSets
 
         private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
-            try
-            {
+            //try
+            //{
                 var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters, projectBuildSettings);
                 initialProject.CandidateInstances = project.CandidateInstances;
                 initialProject.Processed();
                 _projectRepository.Update(initialProject);
-            }
-            catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
-            {
+            //}
+            //catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
+            //{
                 initialProject.Failed();
                 _projectRepository.Update(initialProject);
-            }
+            //}
         }
 
         private string ExportToExcel(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)
@@ -167,6 +173,54 @@ namespace DataSetExplorer.Core.DataSets
         {
             var updatedProject = _projectRepository.Update(project);
             return Result.Ok(updatedProject);
+        }
+
+        public Result<Dictionary<string, int>> ExportCommunities(Graph Graph)
+        {
+            string python = _configuration.GetValue<string>("CommunityDetection:PythonPath");
+            string script = _configuration.GetValue<string>("CommunityDetection:CommunityScriptPath");
+            string nodesAndLinksPath = _configuration.GetValue<string>("CommunityDetection:CommunityNodesAndLinksPath");
+            SerializeNodesAndLinks(Graph, nodesAndLinksPath);
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = python,
+                Arguments = $"{script} {nodesAndLinksPath}/nodes.json {nodesAndLinksPath}/links.json {Graph.Algorithm}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            Process process = Process.Start(startInfo);
+            StreamReader reader = process.StandardOutput;
+            return Result.Ok(ExtractCommunitiesFromScript(reader));
+        }
+
+        private void SerializeNodesAndLinks(Graph Graph, string nodesAndLinksPath)
+        {
+            var nodes = new { nodes = Graph.Nodes };
+            var links = new { links = Graph.Links };
+            var nodesSerialized = JsonConvert.SerializeObject(nodes);
+            var linksSerialized = JsonConvert.SerializeObject(links);
+            File.WriteAllText($"{nodesAndLinksPath}/nodes.json", nodesSerialized);
+            File.WriteAllText($"{nodesAndLinksPath}/links.json", linksSerialized);
+        }
+
+        private Dictionary<string, int> ExtractCommunitiesFromScript(StreamReader reader)
+        {
+            Dictionary<string, int> communities = new Dictionary<string, int>();
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                int idx = line.LastIndexOf(" ");
+                if (idx != -1)
+                {
+                    try
+                    {
+                        communities.Add(line[..idx].ToString(), int.Parse(line[(idx + 1)..].ToString()));
+                    }
+                    catch (Exception e) {}
+                }
+            }
+            return communities;
         }
     }
 }

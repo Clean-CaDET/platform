@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 using LibGit2Sharp;
 
 namespace DataSetExplorer.Infrastructure.RepositoryAdapters

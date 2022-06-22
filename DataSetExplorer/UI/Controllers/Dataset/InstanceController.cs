@@ -1,3 +1,5 @@
+using CodeModel;
+using CodeModel.Serialization;
 using DataSetExplorer.Core.DataSets;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +32,19 @@ namespace DataSetExplorer.UI.Controllers.Dataset
             var result = _instanceService.GetInstanceWithAnnotations(id);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
+        }
+
+        [HttpGet]
+        [Route("{id}/cohesion-graph")]
+        public IActionResult GetCohesionGraphForInstance([FromRoute] int id)
+        {
+            var result = _instanceService.GetInstanceWithAnnotations(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            var LoadedFile = _instanceService.GetFileFromGit(result.Value.Link);
+            var exporter = new ClassCohesionGraphExporter();
+            var project = new CodeModelFactory().CreateProject(new []{ LoadedFile });
+            var actualClass = project.Classes;
+            return Ok(exporter.GetJSON(actualClass[0]));
         }
     }
 }

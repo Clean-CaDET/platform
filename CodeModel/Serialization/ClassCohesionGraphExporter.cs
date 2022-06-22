@@ -14,6 +14,11 @@ namespace CodeModel.Serialization
             SaveToJSON(graph, filePath);
         }
 
+        public Dictionary<string, Dictionary<string, bool>> GetJSON(CaDETClass caDetClass)
+        {
+            return GetClassCohesionGraph(caDetClass);
+        }
+
         internal Dictionary<string, Dictionary<string, bool>> GetClassCohesionGraph(CaDETClass caDetClass)
         {
             var methods = caDetClass.Members.Where(m => m.Type == CaDETMemberType.Method).ToList();
