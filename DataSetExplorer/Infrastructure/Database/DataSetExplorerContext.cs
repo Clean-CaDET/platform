@@ -22,6 +22,8 @@ namespace DataSetExplorer.Infrastructure.Database
         public DbSet<HeuristicDefinition> HeuristicDefinitions { get; set; }
         public DbSet<SeverityDefinition> SeverityDefinitions { get; set; }
         public DbSet<SmellCandidateInstances> SmellCandidateInstances { get; set; }
+        public DbSet<GraphInstance> GraphInstances { get; set; }
+        public DbSet<GraphRelatedInstance> GraphRelatedInstances { get; set; }
         public DataSetExplorerContext(DbContextOptions<DataSetExplorerContext> options) : base(options)
         {
         }
@@ -35,6 +37,12 @@ namespace DataSetExplorer.Infrastructure.Database
                     m => JsonConvert.DeserializeObject<Dictionary<CaDETMetric, double>>(m));
 
             modelBuilder.Entity<RelatedInstance>()
+                .Property(i => i.CouplingTypeAndStrength)
+                .HasConversion(
+                    m => JsonConvert.SerializeObject(m),
+                    m => JsonConvert.DeserializeObject<Dictionary<CouplingType, int>>(m));
+
+            modelBuilder.Entity<GraphRelatedInstance>()
                 .Property(i => i.CouplingTypeAndStrength)
                 .HasConversion(
                     m => JsonConvert.SerializeObject(m),
@@ -55,6 +63,9 @@ namespace DataSetExplorer.Infrastructure.Database
             modelBuilder.Entity<SmellCandidateInstances>().HasOne<DataSetProject>().WithMany(p => p.CandidateInstances)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<GraphInstance>().HasOne<DataSetProject>().WithMany(p => p.GraphInstances)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Instance>().HasOne<SmellCandidateInstances>().WithMany(c => c.Instances)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -65,6 +76,9 @@ namespace DataSetExplorer.Infrastructure.Database
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RelatedInstance>().HasOne<Instance>().WithMany(i => i.RelatedInstances)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GraphRelatedInstance>().HasOne<GraphInstance>().WithMany(i => i.RelatedInstances)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder

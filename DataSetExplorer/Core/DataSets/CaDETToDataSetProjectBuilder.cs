@@ -87,6 +87,7 @@ namespace DataSetExplorer.Core.DataSets
         internal DataSetProject Build()
         {
             var builtDataSetProject = new DataSetProject(_projectName, _projectAndCommitUrl);
+            builtDataSetProject.GraphInstances = CaDETToGraphClasses(_cadetProject.Classes);
 
             foreach (var smell in _codeSmells)
             {
@@ -94,6 +95,89 @@ namespace DataSetExplorer.Core.DataSets
                 if (_includeMembers) builtDataSetProject.AddCandidateInstance(new SmellCandidateInstances(smell, _instanceFilter.FilterInstances(smell, BuildMembers(), _numberOfProjectInstancesCovered)));
             }
             return builtDataSetProject;
+        }
+
+        private List<GraphInstance> CaDETToGraphClasses(List<CaDETClass> cadetClasses)
+        {
+            return cadetClasses.Select(c => new GraphInstance(
+                    c.FullName, GetCodeUrl(c.FullName), FindGraphClassRelatedInstances(c))).ToList();
+        }
+
+        private List<GraphRelatedInstance> FindGraphClassRelatedInstances(CaDETClass c)
+        {
+            var relatedInstances = new List<GraphRelatedInstance>();
+            if (c.Parent != null)
+            {
+                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+                couplingTypeAndSt.Add(CouplingType.Parent, 1);
+                relatedInstances.Add(new GraphRelatedInstance(c.Parent.FullName, couplingTypeAndSt));
+            }
+            relatedInstances.AddRange(FindReferencedGraphInstances(c));
+            relatedInstances.AddRange(FindGraphInstancesThatReference(c));
+            return relatedInstances;
+        }
+
+        private List<GraphRelatedInstance> FindReferencedGraphInstances(CaDETClass referencingClass)
+        {
+            var relatedInstances = new List<GraphRelatedInstance>();
+            GetReferencedInstances(referencingClass).ForEach(cc => CoupledClassToGraphRelatedInstance(relatedInstances, cc));
+            return relatedInstances;
+        }
+
+        private void CoupledClassToGraphRelatedInstance(List<GraphRelatedInstance> relatedInstances, CoupledClassStrength cc)
+        {
+            var index = relatedInstances.FindIndex(i => i.CodeSnippetId.Equals(cc.CoupledClass.FullName));
+            if (index != -1)
+            {
+                try
+                {
+                    relatedInstances[index].CouplingTypeAndStrength.Add(cc.CouplingType, cc.CouplingStrength);
+                }
+                catch (Exception e)
+                {
+                    relatedInstances[index].CouplingTypeAndStrength[cc.CouplingType] += cc.CouplingStrength;
+                }
+            }
+            else
+            {
+                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+                couplingTypeAndSt.Add(cc.CouplingType, cc.CouplingStrength);
+                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, couplingTypeAndSt));
+            }
+        }
+
+        private List<GraphRelatedInstance> FindGraphInstancesThatReference(CaDETClass referencedClass)
+        {
+            if (_classCouplings.TryGetValue(referencedClass, out var instancesThatReference))
+            {
+                var relatedInstances = new List<GraphRelatedInstance>();
+                instancesThatReference.ForEach(cc =>
+                    CoupledClassToGraphRelatedInstance(relatedInstances, cc, RelationType.References));
+                return relatedInstances;
+            }
+            return new List<GraphRelatedInstance>();
+        }
+
+        private void CoupledClassToGraphRelatedInstance(List<GraphRelatedInstance> relatedInstances, CoupledClassStrength cc, RelationType relationType)
+        {
+            var index = relatedInstances.FindIndex(i => i.CodeSnippetId.Equals(cc.CoupledClass.FullName));
+            if (index != -1)
+            {
+                try
+                {
+                    relatedInstances[index].CouplingTypeAndStrength.Add(cc.CouplingType, cc.CouplingStrength);
+                }
+                catch (Exception e)
+                {
+                    relatedInstances[index].CouplingTypeAndStrength[cc.CouplingType] += cc.CouplingStrength;
+                }
+            }
+            else
+            {
+                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+                couplingTypeAndSt.Add(cc.CouplingType, cc.CouplingStrength);
+                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, couplingTypeAndSt));
+            }
         }
 
         private List<Instance> BuildClasses()

@@ -9,6 +9,7 @@ namespace DataSetExplorer.Core.DataSets.Model
         public string Name { get; private set; }
         public string Url { get; private set; }
         public HashSet<SmellCandidateInstances> CandidateInstances { get; internal set; }
+        public List<GraphInstance> GraphInstances { get; internal set; }
         public ProjectState State { get; private set; }
 
         internal DataSetProject(string name, string url)

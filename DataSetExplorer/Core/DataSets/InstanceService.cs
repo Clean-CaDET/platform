@@ -11,15 +11,13 @@ namespace DataSetExplorer.Core.DataSets
     public class InstanceService : IInstanceService
     {
         private readonly IInstanceRepository _instanceRepository;
-        private readonly IProjectRepository _projectRepository;
         private readonly IDataSetCreationService _dataSetCreationService;
         private readonly IAnnotationRepository _annotationRepository;
 
         public InstanceService(IInstanceRepository instanceRepository, IDataSetCreationService dataSetCreationService,
-            IAnnotationRepository annotationRepository, IProjectRepository projectRepository)
+            IAnnotationRepository annotationRepository)
         {
             _instanceRepository = instanceRepository;
-            _projectRepository = projectRepository;
             _dataSetCreationService = dataSetCreationService;
             _annotationRepository = annotationRepository;
         }

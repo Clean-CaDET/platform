@@ -129,6 +129,7 @@ namespace DataSetExplorer.Core.DataSets
             {
                 var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters, projectBuildSettings);
                 initialProject.CandidateInstances = project.CandidateInstances;
+                initialProject.GraphInstances = project.GraphInstances;
                 initialProject.Processed();
                 _projectRepository.Update(initialProject);
             }
