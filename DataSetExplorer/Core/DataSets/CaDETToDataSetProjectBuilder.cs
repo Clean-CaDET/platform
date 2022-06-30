@@ -20,7 +20,7 @@ namespace DataSetExplorer.Core.DataSets
 
         private readonly bool _includeClasses;
         private bool _randomizeClassList;
-        
+
         private readonly bool _includeMembers;
         private bool _randomizeMemberList;
         private CaDETMemberType[] _acceptedMemberTypes = {CaDETMemberType.Constructor, CaDETMemberType.Method};
@@ -194,7 +194,13 @@ namespace DataSetExplorer.Core.DataSets
             var index = relatedInstances.FindIndex(i => i.CodeSnippetId.Equals(cc.CoupledClass.FullName));
             if (index != -1)
             {
-                relatedInstances[index].CouplingTypeAndStrength.Add(cc.CouplingType, cc.CouplingStrength);
+                try
+                {
+                    relatedInstances[index].CouplingTypeAndStrength.Add(cc.CouplingType, cc.CouplingStrength);
+                } catch(Exception e)
+                {
+                    relatedInstances[index].CouplingTypeAndStrength[cc.CouplingType] += cc.CouplingStrength;
+                }
             }
             else
             {

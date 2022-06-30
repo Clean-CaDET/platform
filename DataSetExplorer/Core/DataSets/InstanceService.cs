@@ -4,19 +4,22 @@ using DataSetExplorer.Core.DataSets.Repository;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using FluentResults;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace DataSetExplorer.Core.DataSets
 {
     public class InstanceService : IInstanceService
     {
         private readonly IInstanceRepository _instanceRepository;
+        private readonly IProjectRepository _projectRepository;
         private readonly IDataSetCreationService _dataSetCreationService;
         private readonly IAnnotationRepository _annotationRepository;
 
         public InstanceService(IInstanceRepository instanceRepository, IDataSetCreationService dataSetCreationService,
-            IAnnotationRepository annotationRepository)
+            IAnnotationRepository annotationRepository, IProjectRepository projectRepository)
         {
             _instanceRepository = instanceRepository;
+            _projectRepository = projectRepository;
             _dataSetCreationService = dataSetCreationService;
             _annotationRepository = annotationRepository;
         }
@@ -59,6 +62,19 @@ namespace DataSetExplorer.Core.DataSets
             var deletedCandidates = _instanceRepository.DeleteCandidateInstancesBySmell(codeSmells);
             _annotationRepository.DeleteCodeSmells(codeSmells);
             return Result.Ok(deletedCandidates);
+        }
+
+        public string GetFileFromGit(string url)
+        {
+            string rawUrl = "https://raw.githubusercontent.com/" + url.Split("https://github.com/")[1];
+            rawUrl = rawUrl.Replace("/tree", "");
+
+            var client = new HttpClient();
+            using HttpResponseMessage response = client.GetAsync(rawUrl).Result;
+            using HttpContent content = response.Content;
+            var data = content.ReadAsStringAsync().Result;
+
+            return data;
         }
     }
 }

@@ -1,9 +1,15 @@
 ﻿using AutoMapper;
+using DataSetExplorer.Core.CommunityDetection.Model;
 using DataSetExplorer.Core.DataSets;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 
 namespace DataSetExplorer.UI.Controllers.Dataset
 {
@@ -48,6 +54,13 @@ namespace DataSetExplorer.UI.Controllers.Dataset
             var result = _dataSetCreationService.UpdateDataSetProject(project);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
+        }
+
+        [HttpPost]
+        [Route("community-detection")]
+        public IActionResult GetCommunities([FromBody] Graph Graph)
+        {
+            return Ok(_dataSetCreationService.ExportCommunities(Graph).Value);
         }
     }
 }

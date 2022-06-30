@@ -41,6 +41,7 @@ namespace CodeModel.CodeParsers.CSharp
                 [CaDETMetric.WOC] = CountWeightOfClass(parsedClass),
                 [CaDETMetric.NOPA] = CountPublicAttributes(parsedClass),
                 [CaDETMetric.NOPP] = CountPublicProperties(parsedClass.Members),
+                [CaDETMetric.NOPA_NOPP] = CountPublicAttributes(parsedClass) + CountPublicProperties(parsedClass.Members),
                 [CaDETMetric.WMCNAMM] = GetWMCOfNotAccessorOrMuttatorMethods(parsedClass),
                 [CaDETMetric.BUR] = GetBaseClassUsageRatio(parsedClass),
                 [CaDETMetric.BOvR] = GetBaseClassOverridingRatio(parsedClass),

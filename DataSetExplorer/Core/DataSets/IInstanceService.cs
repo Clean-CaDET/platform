@@ -12,5 +12,6 @@ namespace DataSetExplorer.Core.DataSets
         Result<Instance> GetInstanceWithAnnotations(int id);
         Result<List<Instance>> GetInstancesForSmell(string codeSmellName);
         Result<List<SmellCandidateInstances>> DeleteCandidateInstancesForSmell(CodeSmellDefinition codeSmellDefinition);
+        public string GetFileFromGit(string url);
     }
 }

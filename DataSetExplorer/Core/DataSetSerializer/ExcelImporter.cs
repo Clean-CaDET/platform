@@ -66,7 +66,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
             return sheets;
         }
 
-        private static List<Instance> ExtractInstances(ExcelWorksheet sheet)
+        private List<Instance> ExtractInstances(ExcelWorksheet sheet)
         {
             var instances = new List<Instance>();
             for (var row = StartingInstanceRow; row <= sheet.Dimension.End.Row; row++)

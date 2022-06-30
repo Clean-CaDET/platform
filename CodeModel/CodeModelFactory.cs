@@ -39,6 +39,7 @@ namespace CodeModel
         {
             var allFiles = Directory.GetFiles(sourceCodeLocation, GetLanguageExtension(), SearchOption.AllDirectories).ToList();
             if (ignoredFolders != null) ignoredFolders.ForEach(folder => allFiles.RemoveAll(f => f.ToLower().Contains("\\" + folder.ToLower() + "\\")));
+            if (ignoredFolders != null) ignoredFolders.ForEach(folder => allFiles.RemoveAll(f => f.ToLower().Contains("/" + folder.ToLower() + "/")));
             return allFiles.ToArray();
         }
         

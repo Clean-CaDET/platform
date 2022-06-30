@@ -21,6 +21,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
         {
             return _dbContext.DataSetProjects
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances)
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)

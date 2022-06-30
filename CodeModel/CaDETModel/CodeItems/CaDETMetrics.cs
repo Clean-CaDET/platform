@@ -145,6 +145,11 @@
         NOPP,
 
         /// <summary>
+        /// NOPA_NOPP: Number Of Public Attributes and properties
+        /// </summary>
+        NOPA_NOPP,
+
+        /// <summary>
         /// WMCNAMM: Weighted Methods Count of Not Accessor or Mutator Methods
         /// </summary>
         WMCNAMM,
