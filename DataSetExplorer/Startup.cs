@@ -36,6 +36,7 @@ namespace DataSetExplorer
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
 
             services.AddScoped<IDataSetCreationService, DataSetCreationService>();
+            services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ICodeRepository, GitCodeRepository>();
             services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
             services.AddScoped<IProjectRepository, ProjectDatabaseRepository>();

@@ -5,11 +5,6 @@ using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 
 namespace DataSetExplorer.UI.Controllers.Dataset
 {
@@ -21,11 +16,14 @@ namespace DataSetExplorer.UI.Controllers.Dataset
 
         private readonly IMapper _mapper;
         private readonly IDataSetCreationService _dataSetCreationService;
+        private readonly IProjectService _projectService;
 
-        public ProjectController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration)
+        public ProjectController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration,
+            IProjectService projectService)
         {
             _mapper = mapper;
             _dataSetCreationService = creationService;
+            _projectService = projectService;
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
         
@@ -61,6 +59,15 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         public IActionResult GetCommunities([FromBody] Graph Graph)
         {
             return Ok(_dataSetCreationService.ExportCommunities(Graph).Value);
+        }
+
+        [HttpGet]
+        [Route("{id}/graph")]
+        public IActionResult GetProjectWithGraphInstances([FromRoute] int id)
+        {
+            var result = _projectService.GetProjectWithGraphInstances(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
         }
     }
 }

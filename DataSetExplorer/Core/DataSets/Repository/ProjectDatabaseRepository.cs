@@ -20,7 +20,6 @@ namespace DataSetExplorer.Core.DataSets.Repository
         public DataSetProject Get(int id)
         {
             return _dbContext.DataSetProjects
-                .Include(p => p.GraphInstances).ThenInclude(i => i.RelatedInstances)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.RelatedInstances)
                 .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations)
@@ -52,6 +51,13 @@ namespace DataSetExplorer.Core.DataSets.Repository
             var deletedProject = _dbContext.DataSetProjects.Remove(_dbContext.DataSetProjects.Find(id)).Entity;
             _dbContext.SaveChanges();
             return deletedProject;
+        }
+
+        public DataSetProject GetProjectWithGraphInstances(int id)
+        {
+            return _dbContext.DataSetProjects
+                .Include(p => p.GraphInstances).ThenInclude(i => i.RelatedInstances)
+                .FirstOrDefault(p => p.Id == id);
         }
     }
 }
