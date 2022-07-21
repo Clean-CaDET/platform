@@ -86,6 +86,11 @@ namespace DataSetExplorer.Infrastructure.Database
                 .Property(i => i.RelationType)
                 .HasConversion(new EnumToStringConverter<RelationType>());
 
+            modelBuilder
+                .Entity<GraphRelatedInstance>()
+                .Property(i => i.RelationType)
+                .HasConversion(new EnumToStringConverter<RelationType>());
+
             modelBuilder.Entity<HeuristicDefinition>().HasOne<CodeSmellDefinition>().WithMany(d => d.Heuristics)
                 .OnDelete(DeleteBehavior.Cascade);
 
