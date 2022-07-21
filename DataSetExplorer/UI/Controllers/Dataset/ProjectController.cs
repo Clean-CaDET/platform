@@ -17,13 +17,15 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         private readonly IMapper _mapper;
         private readonly IDataSetCreationService _dataSetCreationService;
         private readonly IProjectService _projectService;
+        private readonly IGraphInstanceService _graphInstanceService;
 
         public ProjectController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration,
-            IProjectService projectService)
+            IProjectService projectService, IGraphInstanceService graphInstanceService)
         {
             _mapper = mapper;
             _dataSetCreationService = creationService;
             _projectService = projectService;
+            _graphInstanceService = graphInstanceService;
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
         
@@ -66,6 +68,15 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         public IActionResult GetProjectWithGraphInstances([FromRoute] int id)
         {
             var result = _projectService.GetProjectWithGraphInstances(id);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
+
+        [HttpGet]
+        [Route("{projectId}/instances/{instanceId}/graph")]
+        public IActionResult GetGraphNeighboursInstances([FromRoute] int projectId, [FromRoute] int instanceId)
+        {
+            var result = _graphInstanceService.GetGraphInstanceWithRelatedInstances(projectId, instanceId);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
