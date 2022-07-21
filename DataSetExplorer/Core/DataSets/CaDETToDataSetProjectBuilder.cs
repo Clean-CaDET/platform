@@ -99,6 +99,7 @@ namespace DataSetExplorer.Core.DataSets
 
         private List<GraphInstance> CaDETToGraphClasses(List<CaDETClass> cadetClasses)
         {
+            CreateCouplingMap(cadetClasses);
             return cadetClasses.Select(c => new GraphInstance(
                     c.FullName, GetCodeUrl(c.FullName), FindGraphClassRelatedInstances(c))).ToList();
         }
@@ -107,10 +108,10 @@ namespace DataSetExplorer.Core.DataSets
         {
             var relatedInstances = new List<GraphRelatedInstance>();
             if (c.Parent != null)
-            {
-                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
-                couplingTypeAndSt.Add(CouplingType.Parent, 1);
-                relatedInstances.Add(new GraphRelatedInstance(c.Parent.FullName, couplingTypeAndSt));
+            { 
+                var couplingTypeAndStrength = new Dictionary<CouplingType, int>();
+                couplingTypeAndStrength.Add(CouplingType.Parent, 1);
+                relatedInstances.Add(new GraphRelatedInstance(c.Parent.FullName, RelationType.Parent, couplingTypeAndStrength));
             }
             relatedInstances.AddRange(FindReferencedGraphInstances(c));
             relatedInstances.AddRange(FindGraphInstancesThatReference(c));
@@ -142,7 +143,7 @@ namespace DataSetExplorer.Core.DataSets
             {
                 var couplingTypeAndSt = new Dictionary<CouplingType, int>();
                 couplingTypeAndSt.Add(cc.CouplingType, cc.CouplingStrength);
-                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, couplingTypeAndSt));
+                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, RelationType.Referenced, couplingTypeAndSt));
             }
         }
 
@@ -174,9 +175,9 @@ namespace DataSetExplorer.Core.DataSets
             }
             else
             {
-                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
-                couplingTypeAndSt.Add(cc.CouplingType, cc.CouplingStrength);
-                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, couplingTypeAndSt));
+                var couplingTypeAndStrength = new Dictionary<CouplingType, int>();
+                couplingTypeAndStrength.Add(cc.CouplingType, cc.CouplingStrength);
+                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, RelationType.References, couplingTypeAndStrength));
             }
         }
 
@@ -195,7 +196,6 @@ namespace DataSetExplorer.Core.DataSets
 
         private List<Instance> CaDETToDataSetProjectClasses(List<CaDETClass> cadetClasses)
         {
-            CreateCouplingMap(cadetClasses);
             return cadetClasses.Select(c => new Instance(
                     c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class,
                     _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindClassRelatedInstances(c)
