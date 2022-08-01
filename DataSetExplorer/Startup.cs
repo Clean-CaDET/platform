@@ -53,6 +53,9 @@ namespace DataSetExplorer
             services.AddScoped<FullDataSetFactory>();
 
             services.AddScoped<IInstanceService, InstanceService>();
+
+            services.AddScoped<IGraphInstanceService, GraphInstanceService>();
+            services.AddScoped<IGraphInstanceRepository, GraphInstanceRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

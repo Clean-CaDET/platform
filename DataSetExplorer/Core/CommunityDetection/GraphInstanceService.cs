@@ -22,5 +22,12 @@ namespace DataSetExplorer.Core.DataSets
             if (graphInstance == default) return Result.Fail($"Project with id: {projectId} or instance with id: {instanceId} does not exist.");
             return Result.Ok(graphInstance);
         }
+
+        public Result<GraphInstance> GetGraphInstanceWithRelatedInstances(int projectId, string instanceCodeSnippetId)
+        {
+            var graphInstance = _graphInstanceRepository.GetGraphInstanceWithRelatedInstances(projectId, instanceCodeSnippetId);
+            if (graphInstance == default) return Result.Fail($"Project with id: {projectId} or instance with codeSnippetId: {instanceCodeSnippetId} does not exist.");
+            return Result.Ok(graphInstance);
+        }
     }
 }

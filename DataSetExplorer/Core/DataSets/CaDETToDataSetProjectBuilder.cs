@@ -111,7 +111,7 @@ namespace DataSetExplorer.Core.DataSets
             { 
                 var couplingTypeAndStrength = new Dictionary<CouplingType, int>();
                 couplingTypeAndStrength.Add(CouplingType.Parent, 1);
-                relatedInstances.Add(new GraphRelatedInstance(c.Parent.FullName, RelationType.Parent, couplingTypeAndStrength));
+                relatedInstances.Add(new GraphRelatedInstance(c.Parent.FullName, RelationType.Parent, couplingTypeAndStrength, GetCodeUrl(c.Parent.FullName)));
             }
             relatedInstances.AddRange(FindReferencedGraphInstances(c));
             relatedInstances.AddRange(FindGraphInstancesThatReference(c));
@@ -143,7 +143,7 @@ namespace DataSetExplorer.Core.DataSets
             {
                 var couplingTypeAndSt = new Dictionary<CouplingType, int>();
                 couplingTypeAndSt.Add(cc.CouplingType, cc.CouplingStrength);
-                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, RelationType.Referenced, couplingTypeAndSt));
+                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, RelationType.Referenced, couplingTypeAndSt, GetCodeUrl(cc.CoupledClass.FullName)));
             }
         }
 
@@ -177,7 +177,7 @@ namespace DataSetExplorer.Core.DataSets
             {
                 var couplingTypeAndStrength = new Dictionary<CouplingType, int>();
                 couplingTypeAndStrength.Add(cc.CouplingType, cc.CouplingStrength);
-                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, RelationType.References, couplingTypeAndStrength));
+                relatedInstances.Add(new GraphRelatedInstance(cc.CoupledClass.FullName, RelationType.References, couplingTypeAndStrength, GetCodeUrl(cc.CoupledClass.FullName)));
             }
         }
 

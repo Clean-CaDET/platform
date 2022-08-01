@@ -80,5 +80,14 @@ namespace DataSetExplorer.UI.Controllers.Dataset
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
         }
+
+        [HttpGet]
+        [Route("{projectId}/instances/{instanceCodeSnippetId}/graph-extended")]
+        public IActionResult GetGraphNeighboursInstances([FromRoute] int projectId, [FromRoute] string instanceCodeSnippetId)
+        {
+            var result = _graphInstanceService.GetGraphInstanceWithRelatedInstances(projectId, instanceCodeSnippetId);
+            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
+            return Ok(result.Value);
+        }
     }
 }
