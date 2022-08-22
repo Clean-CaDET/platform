@@ -12,6 +12,7 @@ using DataSetExplorer.Core.DataSets;
 using DataSetExplorer.Core.DataSets.Repository;
 using DataSetExplorer.Infrastructure.Database;
 using DataSetExplorer.Infrastructure.RepositoryAdapters;
+using DataSetExplorer.Core.DataSetSerializer;
 
 namespace DataSetExplorer
 {
@@ -46,7 +47,7 @@ namespace DataSetExplorer
             services.AddScoped<IAnnotationRepository, AnnotationDatabaseRepository>();
 
             services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
-
+            
             services.AddScoped<IAnnotationConsistencyService, AnnotationConsistencyService>();
             services.AddScoped<IAnnotationSchemaService, AnnotationSchemaService>();
             services.AddScoped<IAnnotationSchemaRepository, AnnotationSchemaDatabaseRepository>();
@@ -56,6 +57,9 @@ namespace DataSetExplorer
 
             services.AddScoped<IGraphInstanceService, GraphInstanceService>();
             services.AddScoped<IGraphInstanceRepository, GraphInstanceRepository>();
+                
+            services.AddScoped<IDataSetExportationService, DataSetExportationService>();
+            services.AddScoped<IDraftDataSetExportationService, DraftDataSetExportationService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

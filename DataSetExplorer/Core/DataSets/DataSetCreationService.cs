@@ -80,13 +80,6 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok(dataSet);
         }
 
-        public Result<DataSet> GetDataSetForExport(int id)
-        {
-            var dataSet = _dataSetRepository.GetDataSetForExport(id);
-            if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
-            return Result.Ok(dataSet);
-        }
-
         public Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets()
         {
             var dataSets = _dataSetRepository.GetAll();

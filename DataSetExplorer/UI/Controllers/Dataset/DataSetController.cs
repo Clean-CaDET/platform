@@ -18,11 +18,14 @@ namespace DataSetExplorer.UI.Controllers.Dataset
 
         private readonly IMapper _mapper;
         private readonly IDataSetCreationService _dataSetCreationService;
+        private readonly IDataSetExportationService _dataSetExportationService;
 
-        public DataSetController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration)
+        public DataSetController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration,
+            IDataSetExportationService exportationService)
         {
             _mapper = mapper;
             _dataSetCreationService = creationService;
+            _dataSetExportationService = exportationService;
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
 
@@ -39,8 +42,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         [Route("export")]
         public IActionResult ExportDataSet([FromBody] DraftDataSetExportDTO dataSetDTO)
         {
-            var dataSet = _dataSetCreationService.GetDataSetForExport(dataSetDTO.Id).Value;
-            var exportPath = new DraftDataSetExporter(dataSetDTO.ExportPath).Export(dataSetDTO.AnnotatorId, dataSet);
+            var exportPath = _dataSetExportationService.ExportDraft(dataSetDTO);
             return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
         }
 

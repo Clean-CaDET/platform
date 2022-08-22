@@ -16,7 +16,6 @@ namespace DataSetExplorer.Core.DataSets
         Result<DataSet> CreateEmptyDataSet(string dataSetName, List<CodeSmell> codeSmells);
         Result<DataSetProject> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings);
         Result<DatasetDetailDTO> GetDataSet(int id);
-        Result<DataSet> GetDataSetForExport(int id);
         Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets();
         Result<IEnumerable<DataSet>> GetDataSetsByCodeSmell(string codeSmellName);
         Result<DataSetProject> GetDataSetProject(int id);
