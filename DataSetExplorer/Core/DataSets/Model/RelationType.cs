@@ -4,6 +4,7 @@
     {
         Referenced,
         References,
-        Parent
+        Parent,
+        BelongsTo
     }
 }

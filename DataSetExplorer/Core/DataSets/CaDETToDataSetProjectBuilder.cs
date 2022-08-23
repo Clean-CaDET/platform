@@ -351,10 +351,15 @@ namespace DataSetExplorer.Core.DataSets
         private IEnumerable<RelatedInstance> FindReferencedInstances(CaDETMember referencingMember)
         {
             var relatedInstances = new List<RelatedInstance>();
+
+            var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+            couplingTypeAndSt.Add(CouplingType.BelongsTo, 1);
+            relatedInstances.Add(new RelatedInstance(referencingMember.Parent.FullName, GetCodeUrl(referencingMember.Parent.FullName), RelationType.BelongsTo, couplingTypeAndSt));
+
             var classParent = referencingMember.Parent.Parent;
             if (classParent != null)
             {
-                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+                couplingTypeAndSt = new Dictionary<CouplingType, int>();
                 couplingTypeAndSt.Add(CouplingType.Parent, 1);
                 relatedInstances.Add(new RelatedInstance(classParent.FullName, GetCodeUrl(classParent.FullName), RelationType.Parent, couplingTypeAndSt));
             }
