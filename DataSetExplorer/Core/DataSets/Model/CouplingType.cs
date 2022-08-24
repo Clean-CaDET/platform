@@ -10,6 +10,7 @@
         Parent,
         AccessedAccessor,
         AccessedField,
-        BelongsTo
+        BelongsTo,
+        Subclass
     }
 }

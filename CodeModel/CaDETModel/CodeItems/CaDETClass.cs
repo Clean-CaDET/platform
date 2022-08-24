@@ -27,6 +27,7 @@ namespace CodeModel.CaDETModel.CodeItems
         public List<CaDETMember> Members { get; internal set; }
         public List<CaDETField> Fields { get; internal set; }
         public Dictionary<CaDETMetric, double> Metrics { get; set; }
+        public List<CaDETClass> Subclasses { get; set; }
 
         public CaDETClass(string name)
         {

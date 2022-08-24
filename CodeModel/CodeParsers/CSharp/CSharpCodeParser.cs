@@ -196,6 +196,7 @@ namespace CodeModel.CodeParsers.CSharp
             foreach (var c in classes)
             {
                 c.Parent = LinkParent(classes, c.Parent);
+                c.Subclasses = LinkSubclasses(classes, c);
                 var outerClass = LinkOuterClass(classes, c.ContainerName);
                 if (outerClass != null)
                 {
@@ -218,6 +219,19 @@ namespace CodeModel.CodeParsers.CSharp
             if (parent.Name.Equals("object")) return null;
             return classes.FirstOrDefault(c => c.FullName.Equals(parent.Name));
         }
+
+        private List<CaDETClass> LinkSubclasses(List<CaDETClass> classes, CaDETClass c)
+        {
+            var subclasses = new List<CaDETClass>();
+            foreach(var subclass in classes)
+            {
+                if (subclass.Parent == null) continue;
+                if (subclass.Parent.FullName != null && subclass.Parent.FullName.Equals(c.FullName)) subclasses.Add(subclass);
+                else if (subclass.Parent.Name != null &&  subclass.Parent.Name.Equals(c.FullName)) subclasses.Add(subclass);
+            }
+            return subclasses;
+        }
+
         private static CaDETClass LinkOuterClass(List<CaDETClass> classes, string containerName)
         {
             return classes.FirstOrDefault(c => c.FullName.Equals(containerName));

@@ -5,6 +5,7 @@
         Referenced,
         References,
         Parent,
-        BelongsTo
+        BelongsTo,
+        Subclass
     }
 }

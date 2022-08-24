@@ -113,9 +113,20 @@ namespace DataSetExplorer.Core.DataSets
                 couplingTypeAndStrength.Add(CouplingType.Parent, 1);
                 relatedInstances.Add(new GraphRelatedInstance(c.Parent.FullName, RelationType.Parent, couplingTypeAndStrength, GetCodeUrl(c.Parent.FullName)));
             }
+            AddSubclassesToGraphRelatedInstances(c.Subclasses, relatedInstances);
             relatedInstances.AddRange(FindReferencedGraphInstances(c));
             relatedInstances.AddRange(FindGraphInstancesThatReference(c));
             return relatedInstances;
+        }
+
+        private void AddSubclassesToGraphRelatedInstances(List<CaDETClass> subclasses, List<GraphRelatedInstance> relatedInstances)
+        {
+            foreach (var subclass in subclasses)
+            {
+                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+                couplingTypeAndSt.Add(CouplingType.Subclass, 1);
+                relatedInstances.Add(new GraphRelatedInstance(subclass.FullName, RelationType.Subclass, couplingTypeAndSt, GetCodeUrl(subclass.FullName)));
+            }
         }
 
         private List<GraphRelatedInstance> FindReferencedGraphInstances(CaDETClass referencingClass)
@@ -261,9 +272,20 @@ namespace DataSetExplorer.Core.DataSets
                 couplingTypeAndSt.Add(CouplingType.Parent, 1);
                 relatedInstances.Add(new RelatedInstance(c.Parent.FullName, GetCodeUrl(c.Parent.FullName), RelationType.Parent, couplingTypeAndSt));
             }
+            AddSubclassesToRelatedInstances(c.Subclasses, relatedInstances);
             relatedInstances.AddRange(FindReferencedInstances(c));
             relatedInstances.AddRange(FindInstancesThatReference(c));
             return relatedInstances;
+        }
+
+        private void AddSubclassesToRelatedInstances(List<CaDETClass> subclasses, List<RelatedInstance> relatedInstances)
+        {
+            foreach (var subclass in subclasses)
+            {
+                var couplingTypeAndSt = new Dictionary<CouplingType, int>();
+                couplingTypeAndSt.Add(CouplingType.Subclass, 1);
+                relatedInstances.Add(new RelatedInstance(subclass.FullName, GetCodeUrl(subclass.FullName), RelationType.Subclass, couplingTypeAndSt));
+            }
         }
 
         private List<RelatedInstance> FindReferencedInstances(CaDETClass referencingClass)
