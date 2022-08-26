@@ -20,7 +20,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
                 .Include(p => p.GraphInstances).ThenInclude(i => i.RelatedInstances)
                 .FirstOrDefault(p => p.Id == projectId).GraphInstances;
 
-            return graphInstances.Find(i => i.CodeSnippetId == codeSnippetId);
+            return graphInstances.Find(i => i.CodeSnippetId.Equals(codeSnippetId));
         }
     }
 }
