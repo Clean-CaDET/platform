@@ -29,7 +29,7 @@ namespace DataSetExplorer.UI.ConsoleApp
             foreach (string line in lines)
             {
                 string[] columns = line.Split(',');
-                annotators.Add(new Annotator(int.Parse(columns[0]), columns[1], int.Parse(columns[2]), int.Parse(columns[3])));
+                annotators.Add(new Annotator(int.Parse(columns[0]), columns[1], columns[2], int.Parse(columns[3]), int.Parse(columns[4])));
             }
             return annotators;
         }

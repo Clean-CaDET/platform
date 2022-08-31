@@ -13,6 +13,8 @@ using DataSetExplorer.Core.DataSets.Repository;
 using DataSetExplorer.Infrastructure.Database;
 using DataSetExplorer.Infrastructure.RepositoryAdapters;
 using DataSetExplorer.Core.DataSetSerializer;
+using DataSetExplorer.Core.Auth;
+using DataSetExplorer.Core.Auth.Repository;
 
 namespace DataSetExplorer
 {
@@ -60,6 +62,8 @@ namespace DataSetExplorer
                 
             services.AddScoped<IDataSetExportationService, DataSetExportationService>();
             services.AddScoped<IDraftDataSetExportationService, DraftDataSetExportationService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -38,9 +38,9 @@ namespace DataSetExplorer.Tests.Unit
 
             var annotators = new List<Annotator>()
             {
-                new Annotator(1, "Nikola Luburic", 6, 1),
-                new Annotator(2, "Simona Prokic", 2, 2),
-                new Annotator(3, "Katarina-Glorija Grujic", 2, 3)
+                new Annotator(1, "Nikola Luburic", "nikola.luburic@uns.ac.rs", 6, 1),
+                new Annotator(2, "Simona Prokic", "simona.prokic@uns.ac.rs", 2, 2),
+                new Annotator(3, "Katarina-Glorija Grujic", "katarina.glorija@uns.ac.rs", 2, 3)
             };
             JoinInstancesAndAnnotators(distinctClasses.ToList(), annotators);
 

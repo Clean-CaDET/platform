@@ -110,6 +110,9 @@ namespace DataSetExplorer.Infrastructure.Database
             modelBuilder.Entity<CodeSmellDefinition>(codeSmell => {
                 codeSmell.HasIndex(c => c.Name).IsUnique();
             });
+            modelBuilder.Entity<Annotator>(annotator => {
+                annotator.HasIndex(a => a.Email).IsUnique();
+            });
         }
     }
 }
