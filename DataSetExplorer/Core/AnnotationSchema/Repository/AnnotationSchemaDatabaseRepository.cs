@@ -48,53 +48,5 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
             _dbContext.SaveChanges();
             return deletedCodeSmell;
         }
-
-        public HeuristicDefinition GetHeuristic(int id)
-        {
-            return _dbContext.HeuristicDefinitions
-                .FirstOrDefault(h => h.Id == id);
-        }
-
-        public IEnumerable<HeuristicDefinition> GetAllHeuristics()
-        {
-            return _dbContext.HeuristicDefinitions;
-        }
-
-        public void SaveHeuristic(HeuristicDefinition heuristic)
-        {
-            _dbContext.Update(heuristic);
-            _dbContext.SaveChanges();
-        }
-
-        public HeuristicDefinition DeleteHeuristic(int id)
-        {
-            var deletedHeuristic = _dbContext.HeuristicDefinitions.Remove(_dbContext.HeuristicDefinitions.Find(id)).Entity;
-            _dbContext.SaveChanges();
-            return deletedHeuristic;
-        }
-
-        public SeverityDefinition GetSeverity(int id)
-        {
-            return _dbContext.SeverityDefinitions
-                .FirstOrDefault(s => s.Id == id);
-        }
-
-        public IEnumerable<SeverityDefinition> GetAllSeverities()
-        {
-            return _dbContext.SeverityDefinitions;
-        }
-
-        public void SaveSeverity(SeverityDefinition severity)
-        {
-            _dbContext.Update(severity);
-            _dbContext.SaveChanges();
-        }
-
-        public SeverityDefinition DeleteSeverity(int id)
-        {
-            var deletedSeverity = _dbContext.SeverityDefinitions.Remove(_dbContext.SeverityDefinitions.Find(id)).Entity;
-            _dbContext.SaveChanges();
-            return deletedSeverity;
-        }
     }
 }

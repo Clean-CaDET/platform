@@ -10,13 +10,5 @@ namespace DataSetExplorer.Core.AnnotationSchema.Repository
         IEnumerable<CodeSmellDefinition> GetAllCodeSmellDefinitions();
         void SaveCodeSmellDefinition(CodeSmellDefinition codeSmellDefinition);
         CodeSmellDefinition DeleteCodeSmellDefinition(int id);
-        HeuristicDefinition GetHeuristic(int id);
-        IEnumerable<HeuristicDefinition> GetAllHeuristics();
-        void SaveHeuristic(HeuristicDefinition heuristic);
-        HeuristicDefinition DeleteHeuristic(int id);
-        SeverityDefinition GetSeverity(int id);
-        IEnumerable<SeverityDefinition> GetAllSeverities();
-        void SaveSeverity(SeverityDefinition severity);
-        SeverityDefinition DeleteSeverity(int id);
     }
 }
