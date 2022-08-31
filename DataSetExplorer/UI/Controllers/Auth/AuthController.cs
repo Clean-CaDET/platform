@@ -22,7 +22,7 @@ namespace DataSetExplorer.UI.Controllers.Auth
         [HttpPost]
         public IActionResult RegisterAnnotator([FromBody] AnnotatorDTO annotatorDTO)
         {
-            var annotator = _authService.RegisterAnnotator(_mapper.Map<Annotator>(annotatorDTO));
+            var annotator = _authService.Save(_mapper.Map<Annotator>(annotatorDTO));
             return Ok(annotator);
         }
 
@@ -38,6 +38,15 @@ namespace DataSetExplorer.UI.Controllers.Auth
         public IActionResult GetAnnotatorById([FromRoute] int id)
         {
             return Ok(_authService.GetAnnotatorById(id).Value);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public IActionResult UpdateAnnotator([FromRoute] int id, [FromBody] AnnotatorDTO annotatorDTO)
+        {
+            var annotator = _mapper.Map<Annotator>(annotatorDTO);
+            annotator.Id = id;
+            return Ok(_authService.Save(annotator).Value);
         }
     }
 }

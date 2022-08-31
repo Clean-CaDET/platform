@@ -13,10 +13,9 @@ namespace DataSetExplorer.Core.Auth
             _authRepository = authRepository;
         }
 
-        public Result<Annotator> RegisterAnnotator(Annotator annotator)
+        public Result<Annotator> Save(Annotator annotator)
         {
-            _authRepository.RegisterAnnotator(annotator);
-            return Result.Ok(annotator);
+            return Result.Ok(_authRepository.Save(annotator));
         }
 
         public Result<Annotator> GetAnnotatorByEmail(string email)

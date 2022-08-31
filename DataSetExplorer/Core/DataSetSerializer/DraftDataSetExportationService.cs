@@ -101,8 +101,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                     _sheet.Cells[3, 4 + (2 * index)].Value = "Applicable?";
                     _sheet.Cells[row, 4 + (2 * index)].Value = "Yes";
                     _sheet.Cells[3, 4 + (2 * index) + 1].Value = "Reasoning";
-                    _sheet.Cells[row, 4 + (2 * index) + 1].Value = applicableHeuristic.ReasonForApplicability;
-                    
+                    _sheet.Cells[row, 4 + (2 * index) + 1].Value = applicableHeuristic.ReasonForApplicability;  
                 }
                 PopulateNotApplicableAnnotations(smellHeuristics, row, annotation);
                 _sheet.Cells[row, 4 + (smellHeuristics.Count * 2)].Value = annotation.Note;

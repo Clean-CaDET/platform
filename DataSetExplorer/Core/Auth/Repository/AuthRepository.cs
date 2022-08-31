@@ -14,16 +14,17 @@ namespace DataSetExplorer.Core.Auth.Repository
             _dbContext = dbContext;
         }
 
-        public void RegisterAnnotator(Annotator annotator)
+        public Annotator Save(Annotator annotator)
         {
             _dbContext.Update(annotator);
             try
             {
                 _dbContext.SaveChanges();
+                return annotator;
             }
             catch (DbUpdateException e)
             {
-                return;
+                return null;
             }
         }
 

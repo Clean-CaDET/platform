@@ -4,15 +4,13 @@ namespace DataSetExplorer.Core.Annotations.Model
 {
     public class Annotator
     {
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
         public int YearsOfExperience { get; private set; }
         public int Ranking { get; private set; }
 
-        public Annotator() {
-            
-        }
+        public Annotator() {}
 
         public Annotator(int id)
         {
