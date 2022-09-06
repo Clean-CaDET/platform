@@ -51,7 +51,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                 _sheet = _excelFile.Workbook.Worksheets[i];
                 PopulateBasicInfo(annotatorId, project, candidate);
                 var smellHeuristics = PopulateSmellHeuristics(candidate);
-                PopulateAnnotatedInstances(candidate, smellHeuristics);
+                PopulateAnnotatedInstances(candidate, smellHeuristics, annotatorId);
                 Serialize(project.Name + annotatorId);
                 i++;
             }
@@ -77,7 +77,8 @@ namespace DataSetExplorer.Core.DataSetSerializer
             return smellHeuristics;
         }
 
-        private void PopulateAnnotatedInstances(SmellCandidateInstances candidate, List<HeuristicDefinition> smellHeuristics)
+        private void PopulateAnnotatedInstances(SmellCandidateInstances candidate, List<HeuristicDefinition> smellHeuristics,
+            int annotatorId)
         {
             var row = 4;
             foreach (var instance in candidate.Instances)
@@ -85,15 +86,17 @@ namespace DataSetExplorer.Core.DataSetSerializer
                 if (instance.Annotations.Count == 0) continue;
                 _sheet.Cells[row, 1].Value = instance.CodeSnippetId;
                 _sheet.Cells[row, 2].Value = instance.Link;
-                PopulateAnnotations(smellHeuristics, row, instance);
+                PopulateAnnotations(smellHeuristics, row, instance, annotatorId);
                 row++;
             }
         }
 
-        private void PopulateAnnotations(List<HeuristicDefinition> smellHeuristics, int row, Instance instance)
+        private void PopulateAnnotations(List<HeuristicDefinition> smellHeuristics, int row, Instance instance,
+            int annotatorId)
         {
             foreach (var annotation in instance.Annotations)
             {
+                if (annotation.Annotator.Id != annotatorId) continue;
                 _sheet.Cells[row, 3].Value = annotation.Severity;
                 foreach (var applicableHeuristic in annotation.ApplicableHeuristics)
                 {
