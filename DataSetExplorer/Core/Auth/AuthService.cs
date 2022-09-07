@@ -1,6 +1,7 @@
 using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.Auth.Repository;
 using FluentResults;
+using System.Collections.Generic;
 
 namespace DataSetExplorer.Core.Auth
 {
@@ -26,6 +27,11 @@ namespace DataSetExplorer.Core.Auth
         public Result<Annotator> GetAnnotatorById(int id)
         {
             return Result.Ok(_authRepository.GetAnnotatorById(id));
+        }
+
+        public Result<List<Annotator>> GetAll()
+        {
+            return Result.Ok(_authRepository.GetAll());
         }
     }
 }

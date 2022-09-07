@@ -62,6 +62,7 @@ namespace DataSetExplorer
                 
             services.AddScoped<IDataSetExportationService, DataSetExportationService>();
             services.AddScoped<IDraftDataSetExportationService, DraftDataSetExportationService>();
+            services.AddScoped<ICompleteDataSetExportationService, CompleteDataSetExportationService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAuthRepository, AuthRepository>();
         }

@@ -26,6 +26,14 @@ namespace DataSetExplorer.Core.Annotations.Model
             Ranking = ranking;
         }
 
+        public Annotator(int id, string name, int yearsOfExperience, int ranking)
+        {
+            Id = id;
+            Name = name;
+            YearsOfExperience = yearsOfExperience;
+            Ranking = ranking;
+        }
+
         public override bool Equals(object obj)
         {
             return Equals(obj as Annotator);

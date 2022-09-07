@@ -13,11 +13,14 @@ namespace DataSetExplorer.Core.DataSets
     {
         private readonly IInstanceRepository _instanceRepository;
         private readonly IAnnotationRepository _annotationRepository;
+        private readonly IProjectService _projectService;
 
-        public FullDataSetFactory(IInstanceRepository instanceRepository, IAnnotationRepository annotationRepository)
+        public FullDataSetFactory(IInstanceRepository instanceRepository, IAnnotationRepository annotationRepository,
+            IProjectService projectService)
         {
             _instanceRepository = instanceRepository;
             _annotationRepository = annotationRepository;
+            _projectService = projectService;
         }
 
         public FullDataSetFactory() { }
@@ -38,6 +41,37 @@ namespace DataSetExplorer.Core.DataSets
                 AddInstancesToCandidates(allAnnotatedInstances, FillInstancesWithMetrics(annotatedCandidates, project));
             }
             return allAnnotatedInstances;
+        }
+
+        public List<SmellCandidateInstances> GetAnnotatedInstancesGroupedBySmells(int datasetId, List<Annotator> annotators, string[] annotationsFilesPaths)
+        {
+            var allAnnotatedInstances = new List<SmellCandidateInstances>();
+            var projects = _projectService.GetAllByDatasetId(datasetId).Value;
+
+            foreach (var project in projects)
+            {
+                AddInstancesToCandidates(allAnnotatedInstances, project.CandidateInstances.ToList());
+                var importer = new ExcelImporter(_annotationRepository);
+                foreach (var annotationsFilePath in annotationsFilesPaths)
+                {
+                    var importedProject = importer.ImportAnnotationsFile(annotationsFilePath);
+                    if (importedProject.Url.Equals(project.Url)) JoinAnnotations(project, importedProject);
+                }
+            }
+            return allAnnotatedInstances;
+        }
+
+        private void JoinAnnotations(DataSetProject project, DataSetProject importedProject)
+        {
+            foreach(var candidate in project.CandidateInstances)
+            {
+                var importedCandidate = importedProject.CandidateInstances.First(c => c.CodeSmell.Name.Equals(candidate.CodeSmell.Name));
+                foreach (var importedInstance in importedCandidate.Instances)
+                {
+                    var instance = candidate.Instances.Find(x => x.Link.Equals(importedInstance.Link));
+                    importedInstance.Annotations.ToList().ForEach(a => instance.AddAnnotation(a));
+                }
+            }
         }
 
         private static void AddInstancesToCandidates(List<SmellCandidateInstances> allAnnotatedInstances, List<SmellCandidateInstances> annotatedInstances)

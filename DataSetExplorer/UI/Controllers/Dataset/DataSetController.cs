@@ -39,10 +39,18 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         }
 
         [HttpPost]
-        [Route("export")]
-        public IActionResult ExportDataSet([FromBody] DraftDataSetExportDTO dataSetDTO)
+        [Route("export-draft")]
+        public IActionResult ExportDraftDataSet([FromBody] DraftDataSetExportDTO dataSetDTO)
         {
             var exportPath = _dataSetExportationService.ExportDraft(dataSetDTO);
+            return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
+        }
+
+        [HttpPost]
+        [Route("{id}/export-complete")]
+        public IActionResult ExportCompleteDataSet([FromRoute] int id, [FromBody] CompleteDataSetExportDTO dataSetDTO)
+        { 
+            var exportPath = _dataSetExportationService.ExportComplete(id, dataSetDTO);
             return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
         }
 

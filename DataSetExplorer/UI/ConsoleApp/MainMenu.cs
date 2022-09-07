@@ -67,11 +67,11 @@ namespace DataSetExplorer.UI.ConsoleApp
 
         private void ExportDataSet()
         {
-            var projects = DataSetIO.GetProjects("local repo folder and annotations folder");
+            /*var projects = DataSetIO.GetProjects("local repo folder and annotations folder");
             var annotators = DataSetIO.GetAnnotators();
             string outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
             Result<string> result = _dataSetExportationService.Export(projects, annotators, outputPath);
-            Console.Write(result.ToString());
+            Console.Write(result);*/
         }
 
         private static void WriteMenuWithOptions()

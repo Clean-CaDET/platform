@@ -3,29 +3,31 @@ using System.IO;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.AnnotationSchema.Model;
+using DataSetExplorer.Core.AnnotationSchema.Repository;
 using DataSetExplorer.Core.DataSets.Model;
-using DataSetExplorer.Core.DataSetSerializer.ViewModel;
 using OfficeOpenXml;
 
 namespace DataSetExplorer.Core.DataSetSerializer
 {
-    class CompleteDataSetExporter
+    class CompleteDataSetExportationService: ICompleteDataSetExportationService
     {
         private readonly string _dataSetWithAnnotationsTemplatePath = "./Core/DataSetSerializer/Template/Complete_Dataset_With_Annotations_Template.xlsx";
         private readonly string _dataSetWithHeuristicsTemplatePath = "./Core/DataSetSerializer/Template/Complete_Dataset_With_Heuristics_Template.xlsx";
         private readonly string _dataSetWithMetricsTemplatePath = "./Core/DataSetSerializer/Template/Complete_Dataset_With_Metrics_Template.xlsx";
-        private readonly string _exportPath;
+        private string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;
-        private readonly ColumnHeuristicsModel _requiredSmells = new ColumnHeuristicsModel();
+        private readonly IAnnotationSchemaRepository _annotationSchemaRepository;
 
-        public CompleteDataSetExporter(string exportPath)
+        public CompleteDataSetExportationService(IAnnotationSchemaRepository annotationSchemaRepository)
         {
-            _exportPath = exportPath;
+            _annotationSchemaRepository = annotationSchemaRepository;
         }
 
-        public void Export(List<Instance> dataSetInstances, string smell, string fileName)
+        public void Export(string outputPath, List<Instance> dataSetInstances, string smell, string fileName)
         {
+            _exportPath = outputPath;
             ExportDataSetWithAnnotations(dataSetInstances, fileName);
             ExportDataSetWithMetrics(dataSetInstances, fileName);
             ExportDataSetWithHeuristics(dataSetInstances, smell, fileName);
@@ -160,7 +162,8 @@ namespace DataSetExplorer.Core.DataSetSerializer
 
         private void PopulateHeuristicsHeader(List<Instance> instances, string smell, List<Annotator> annotators)
         {
-            var smellHeuristics = _requiredSmells.GetHeuristicsByCodeSmellName(smell);
+            var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinitionByName(smell);
+            var smellHeuristics = _annotationSchemaRepository.GetCodeSmellDefinition(codeSmellDefinition.Id).Heuristics.ToList();
             var numOfHeuristics = smellHeuristics.Count();
 
             _sheet.Cells[1, 2, 1, 1 + (numOfHeuristics * annotators.Count)].Merge = true;
@@ -173,7 +176,8 @@ namespace DataSetExplorer.Core.DataSetSerializer
 
         private void PopulateHeuristics(List<Annotation> annotations, int row, List<Annotator> annotators, string smell)
         {
-            var smellHeuristics = _requiredSmells.GetHeuristicsByCodeSmellName(smell);
+            var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinitionByName(smell);
+            var smellHeuristics = _annotationSchemaRepository.GetCodeSmellDefinition(codeSmellDefinition.Id).Heuristics.ToList();
             var numOfHeuristics = smellHeuristics.Count();
             for (int i = 0; i < annotations.Count(); i++)
             {
@@ -188,28 +192,40 @@ namespace DataSetExplorer.Core.DataSetSerializer
             }
         }
 
-        private void PopulateHeuristicValues(List<string> smellHeuristics, List<SmellHeuristic> applicableHeuristics, int row, int annotationNum)
+        private void PopulateHeuristicValues(List<HeuristicDefinition> smellHeuristics, List<SmellHeuristic> applicableHeuristics, int row, int annotationNum)
         {
             var numOfHeuristics = smellHeuristics.Count();
             applicableHeuristics = GetCodeSmellHeuristicsForExport(smellHeuristics, applicableHeuristics);
 
-            for (var i = 0; i < applicableHeuristics.Count(); i++)
+            for (var i = 0; i < smellHeuristics.Count(); i++)
             {
-                _sheet.Cells[4, 2 + (numOfHeuristics * annotationNum) + i].Value = applicableHeuristics[i].Description;
+                _sheet.Cells[4, 2 + (numOfHeuristics * annotationNum) + i].Value = smellHeuristics[i].Name;
                 _sheet.Cells[3, 2 + (numOfHeuristics * annotationNum), 3, 1 + (numOfHeuristics * annotationNum) + numOfHeuristics].Merge = true;
                 _sheet.Cells[3, 2 + (numOfHeuristics * annotationNum)].Value = "Heuristics";
+            }
+
+            if (applicableHeuristics.Count == 0)
+            {
+                for (var i = 0; i < smellHeuristics.Count(); i++)
+                {
+                    _sheet.Cells[row, 2 + (numOfHeuristics * annotationNum) + i].Value = "FALSE";
+                }
+            }
+
+            for (var i = 0; i < applicableHeuristics.Count(); i++)
+            {
                 _sheet.Cells[row, 2 + (numOfHeuristics * annotationNum) + i].Value = applicableHeuristics[i].IsApplicable;
             }
         }
         
-        private List<SmellHeuristic> GetCodeSmellHeuristicsForExport(List<string> heuristics, List<SmellHeuristic> applicableHeuristics)
+        private List<SmellHeuristic> GetCodeSmellHeuristicsForExport(List<HeuristicDefinition> heuristics, List<SmellHeuristic> applicableHeuristics)
         {
             var heuristicsForExport = new List<SmellHeuristic>();
             foreach (var heuristic in heuristics)
             {
                 foreach (var applicableHeur in applicableHeuristics)
                 {
-                    if (heuristic.Equals(applicableHeur.Description)) {
+                    if (heuristic.Name.Equals(applicableHeur.Description)) {
                         heuristicsForExport.Add(applicableHeur);
                         break;
                     }

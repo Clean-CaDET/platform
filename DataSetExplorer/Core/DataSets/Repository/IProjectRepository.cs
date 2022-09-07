@@ -10,5 +10,6 @@ namespace DataSetExplorer.Core.DataSets.Repository
         DataSetProject Update(DataSetProject dataSetProject);
         DataSetProject Delete(int id);
         DataSetProject GetProjectWithGraphInstances(int id);
+        List<DataSetProject> GetAllByDatasetId(int datasetId);
     }
 }

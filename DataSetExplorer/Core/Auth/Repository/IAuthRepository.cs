@@ -1,4 +1,5 @@
 ﻿using DataSetExplorer.Core.Annotations.Model;
+using System.Collections.Generic;
 
 namespace DataSetExplorer.Core.Auth.Repository
 {
@@ -7,5 +8,6 @@ namespace DataSetExplorer.Core.Auth.Repository
         Annotator Save(Annotator annotator);
         Annotator GetAnnotatorByEmail(string email);
         Annotator GetAnnotatorById(int id);
+        List<Annotator> GetAll();
     }
 }

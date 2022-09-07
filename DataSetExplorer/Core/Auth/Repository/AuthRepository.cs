@@ -1,6 +1,7 @@
 ﻿using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataSetExplorer.Core.Auth.Repository
@@ -38,6 +39,11 @@ namespace DataSetExplorer.Core.Auth.Repository
         {
             return _dbContext.Annotators
                 .FirstOrDefault(a => a.Id == id);
+        }
+
+        public List<Annotator> GetAll()
+        {
+            return _dbContext.Annotators.ToList();
         }
     }
 }

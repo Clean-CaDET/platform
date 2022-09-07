@@ -7,7 +7,8 @@ namespace DataSetExplorer.Core.DataSetSerializer
 {
     public interface IDataSetExportationService
     {
-        public Result<string> Export(IDictionary<string, string> projects, List<Annotator> annotators, string outputPath);
+        public Result<string> Export(int datasetId, string[] annotationsFilesPaths, string outputPath);
         public Result<string> ExportDraft(DraftDataSetExportDTO dataSetDTO);
+        public Result<string> ExportComplete(int datasetId, CompleteDataSetExportDTO dataSetDTO);
     }
 }

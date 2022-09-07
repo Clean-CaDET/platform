@@ -27,6 +27,11 @@ namespace DataSetExplorer.Core.DataSetSerializer
             _annotationRepository = annotationRepository;
         }
 
+        public ExcelImporter(IAnnotationRepository annotationRepository)
+        {
+            _annotationRepository = annotationRepository;
+        }
+
         /// <summary>
         /// This logic is highly dependent on the appropriate excel file structure.
         /// It examines excel documents in the sourceFolder directory and its subdirectories.
@@ -64,6 +69,21 @@ namespace DataSetExplorer.Core.DataSetSerializer
             }
 
             return sheets;
+        }
+
+        internal DataSetProject ImportAnnotationsFile(string annotationsFilePath)
+        {
+            var project = new DataSetProject();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var sheets = new ExcelPackage(new FileInfo(annotationsFilePath)).Workbook.Worksheets;
+            foreach (var excelWorksheet in sheets)
+            {
+                project.AddCandidateInstance(new SmellCandidateInstances(_annotationRepository.GetCodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
+                project.Url = excelWorksheet.Cells["A2"].Text;
+            }
+
+            return project;
         }
 
         private List<Instance> ExtractInstances(ExcelWorksheet sheet)
