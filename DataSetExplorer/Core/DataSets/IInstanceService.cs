@@ -8,6 +8,8 @@ namespace DataSetExplorer.Core.DataSets
 {
     public interface IInstanceService
     {
+        Result<Dictionary<string, List<Instance>>> GetAllByDatasetId(int datasetId);
+        Result<Dictionary<string, List<Instance>>> GetAllByProjectId(int projectId);
         Result<InstanceDTO> GetInstanceWithRelatedInstances(int id);
         Result<Instance> GetInstanceWithAnnotations(int id);
         Result<List<Instance>> GetInstancesForSmell(string codeSmellName);

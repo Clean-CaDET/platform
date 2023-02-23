@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataSetExplorer.Core.CommunityDetection.Model;
 using DataSetExplorer.Core.DataSets;
+using DataSetExplorer.Core.CleanCodeAnalysis;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,16 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         private readonly IDataSetCreationService _dataSetCreationService;
         private readonly IProjectService _projectService;
         private readonly IGraphInstanceService _graphInstanceService;
+        private readonly ICleanCodeAnalysisService _cleanCodeAnalysisService;
 
         public ProjectController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration,
-            IProjectService projectService, IGraphInstanceService graphInstanceService)
+            IProjectService projectService, IGraphInstanceService graphInstanceService, ICleanCodeAnalysisService cleanCodeAnalysisService)
         {
             _mapper = mapper;
             _dataSetCreationService = creationService;
             _projectService = projectService;
             _graphInstanceService = graphInstanceService;
+            _cleanCodeAnalysisService = cleanCodeAnalysisService;
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
         
@@ -88,6 +91,14 @@ namespace DataSetExplorer.UI.Controllers.Dataset
             var result = _graphInstanceService.GetGraphInstanceWithRelatedInstances(projectId, instanceCodeSnippetId);
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Ok(result.Value);
+        }
+
+        [HttpPost]
+        [Route("{id}/export-clean-code-analysis")]
+        public IActionResult ExportCleanCodeAnalysis([FromRoute] int id, [FromBody] CleanCodeAnalysisDTO analysisExportOptions)
+        {
+            var exportPath = _cleanCodeAnalysisService.ExportProjectAnalysis(id, analysisExportOptions).Value;
+            return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
         }
     }
 }

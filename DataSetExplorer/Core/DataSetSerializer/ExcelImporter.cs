@@ -86,6 +86,13 @@ namespace DataSetExplorer.Core.DataSetSerializer
             return project;
         }
 
+        internal string GetProjectUrl(string annotationsFilePath)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var sheets = new ExcelPackage(new FileInfo(annotationsFilePath)).Workbook.Worksheets;
+            return sheets[0].Cells["A2"].Text;
+        }
+
         private List<Instance> ExtractInstances(ExcelWorksheet sheet)
         {
             var instances = new List<Instance>();

@@ -22,6 +22,20 @@ namespace DataSetExplorer.Core.DataSets
             _annotationRepository = annotationRepository;
         }
 
+        public Result<Dictionary<string, List<Instance>>> GetAllByDatasetId(int datasetId)
+        {
+            var instances = _instanceRepository.GetAllByDatasetId(datasetId);
+            if (instances == default) return Result.Fail($"Dataset with id: {datasetId} does not exist.");
+            return Result.Ok(instances);
+        }
+
+        public Result<Dictionary<string, List<Instance>>> GetAllByProjectId(int projectId)
+        {
+            var instances = _instanceRepository.GetAllByProjectId(projectId);
+            if (instances == default) return Result.Fail($"Project with id: {projectId} does not exist.");
+            return Result.Ok(instances);
+        }
+
         public Result<InstanceDTO> GetInstanceWithRelatedInstances(int id)
         {
             var instance = _instanceRepository.GetInstanceWithRelatedInstances(id);

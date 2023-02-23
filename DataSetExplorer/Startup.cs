@@ -15,6 +15,7 @@ using DataSetExplorer.Infrastructure.RepositoryAdapters;
 using DataSetExplorer.Core.DataSetSerializer;
 using DataSetExplorer.Core.Auth;
 using DataSetExplorer.Core.Auth.Repository;
+using DataSetExplorer.Core.CleanCodeAnalysis;
 
 namespace DataSetExplorer
 {
@@ -54,7 +55,8 @@ namespace DataSetExplorer
             services.AddScoped<IAnnotationSchemaService, AnnotationSchemaService>();
             services.AddScoped<IAnnotationSchemaRepository, AnnotationSchemaDatabaseRepository>();
             services.AddScoped<FullDataSetFactory>();
-
+            
+            services.AddScoped<ICleanCodeAnalysisService, CleanCodeAnalysisService>();
             services.AddScoped<IInstanceService, InstanceService>();
 
             services.AddScoped<IGraphInstanceService, GraphInstanceService>();

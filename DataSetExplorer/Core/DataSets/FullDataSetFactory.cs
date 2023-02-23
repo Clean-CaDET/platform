@@ -54,8 +54,11 @@ namespace DataSetExplorer.Core.DataSets
                 var importer = new ExcelImporter(_annotationRepository);
                 foreach (var annotationsFilePath in annotationsFilesPaths)
                 {
-                    var importedProject = importer.ImportAnnotationsFile(annotationsFilePath);
-                    if (importedProject.Url.Equals(project.Url)) JoinAnnotations(project, importedProject);
+                    if (project.Url.Equals(importer.GetProjectUrl(annotationsFilePath)))
+                    {
+                        var importedProject = importer.ImportAnnotationsFile(annotationsFilePath);
+                        if (importedProject.Url.Equals(project.Url)) JoinAnnotations(project, importedProject);
+                    }
                 }
             }
             return allAnnotatedInstances;

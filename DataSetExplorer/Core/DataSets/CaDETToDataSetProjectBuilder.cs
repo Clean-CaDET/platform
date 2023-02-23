@@ -6,6 +6,7 @@ using CodeModel.CaDETModel;
 using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
+using DataSetExplorer.Core.CleanCodeAnalysis.Model;
 
 namespace DataSetExplorer.Core.DataSets
 {
@@ -27,6 +28,7 @@ namespace DataSetExplorer.Core.DataSets
         private readonly List<CodeSmell> _codeSmells;
         private readonly InstanceFilter _instanceFilter;
         private readonly Dictionary<CaDETClass, List<CoupledClassStrength>> _classCouplings = new Dictionary<CaDETClass, List<CoupledClassStrength>>();
+        private readonly List<Identifier> _cleanClassNaming = new List<Identifier>();
 
         internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, List<string> ignoredFolders, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
         {
@@ -209,8 +211,19 @@ namespace DataSetExplorer.Core.DataSets
         {
             return cadetClasses.Select(c => new Instance(
                     c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class,
-                    _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindClassRelatedInstances(c)
+                    _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindClassRelatedInstances(c), FindAllIdentifiers(c)
                 )).ToList();
+        }
+
+        private List<Identifier> FindAllIdentifiers(CaDETClass cadetClass)
+        {
+            var identifiers = new List<Identifier>();
+            identifiers.Add(new Identifier(cadetClass.Name, IdentifierType.Class));
+            cadetClass.Fields.ForEach(field => identifiers.Add(new Identifier(field.Name, IdentifierType.Field)));
+            cadetClass.Members.ForEach(member => identifiers.Add(new Identifier(member.Name, IdentifierType.Member)));
+            cadetClass.Members.ForEach(member => member.Variables.ForEach(variable => identifiers.Add(new Identifier(variable.Name, IdentifierType.Variable))));
+            cadetClass.Members.ForEach(member => member.Params.ForEach(param => identifiers.Add(new Identifier(param.Name, IdentifierType.Parameter))));
+            return identifiers;
         }
 
         private void CreateCouplingMap(List<CaDETClass> cadetClasses)
@@ -359,7 +372,8 @@ namespace DataSetExplorer.Core.DataSets
         private List<Instance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
         {
             return cadetMembers.Select(m => new Instance(
-                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function, _cadetProject.GetMetricsForCodeSnippet(m.Signature()), FindMethodRelatedInstances(m)
+                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function,
+                _cadetProject.GetMetricsForCodeSnippet(m.Signature()), FindMethodRelatedInstances(m)
             )).ToList();
         }
 
