@@ -5,6 +5,7 @@ using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using FluentResults;
 using OfficeOpenXml;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 
 namespace DataSetExplorer.Core.CleanCodeAnalysis
@@ -107,18 +108,20 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
             instances.RemoveAll(i => i.Type.Equals(SnippetType.Class));
             for (var i = 0; i < instances.Count; i++)
             {
-                var row = 3 + i;
-                _sheet.Cells[row, 1].Value = instances[i].CodeSnippetId;
-                _sheet.Cells[row, 2].Value = instances[i].Link;
+                var row = 5 + i;
+                PopulateInstanceInfo(row, instances[i]);
 
-                _sheet.Cells[2, 3].Value = CaDETMetric.MLOC;
-                _sheet.Cells[row, 3].Value = instances[i].MetricFeatures[CaDETMetric.MLOC];
+                PopulateMetrics(row, 3, CaDETMetric.MLOC, 15, 25, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 3, instances.Count + 4, 3), _sheet.Cells[3, 3].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 3, instances.Count + 4, 3), _sheet.Cells[2, 3].Value, Color.Yellow);
 
-                _sheet.Cells[2, 4].Value = CaDETMetric.CYCLO_SWITCH;
-                _sheet.Cells[row, 4].Value = instances[i].MetricFeatures[CaDETMetric.CYCLO_SWITCH];
+                PopulateMetrics(row, 4, CaDETMetric.CYCLO_SWITCH, 6, 12, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 4, instances.Count + 4, 4), _sheet.Cells[3, 4].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 4, instances.Count + 4, 4), _sheet.Cells[2, 4].Value, Color.Yellow);
 
-                _sheet.Cells[2, 5].Value = CaDETMetric.MMNB;
-                _sheet.Cells[row, 5].Value = instances[i].MetricFeatures[CaDETMetric.MMNB];
+                PopulateMetrics(row, 5, CaDETMetric.MMNB, 4, 6, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 5, instances.Count + 4, 5), _sheet.Cells[3, 5].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 5, instances.Count + 4, 5), _sheet.Cells[2, 5].Value, Color.Yellow);
             }
         }
 
@@ -141,28 +144,54 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
             instances.RemoveAll(i => i.Type.Equals(SnippetType.Function));
             for (var i = 0; i < instances.Count; i++)
             {
-                var row = 3 + i;
-                _sheet.Cells[row, 1].Value = instances[i].CodeSnippetId;
-                _sheet.Cells[row, 2].Value = instances[i].Link;
+                var row = 5 + i;
+                PopulateInstanceInfo(row, instances[i]);
 
-                _sheet.Cells[2, 3].Value = CaDETMetric.CLOC;
-                _sheet.Cells[row, 3].Value = instances[i].MetricFeatures[CaDETMetric.CLOC];
+                PopulateMetrics(row, 3, CaDETMetric.CLOC, 80, 150, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 3, instances.Count + 4, 3), _sheet.Cells[3, 3].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 3, instances.Count + 4, 3), _sheet.Cells[2, 3].Value, Color.Yellow);
 
-                _sheet.Cells[2, 4].Value = CaDETMetric.WMC;
-                _sheet.Cells[row, 4].Value = instances[i].MetricFeatures[CaDETMetric.WMC];
+                PopulateMetrics(row, 4, CaDETMetric.WMC, 15, 25, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 4, instances.Count + 4, 4), _sheet.Cells[3, 4].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 4, instances.Count + 4, 4), _sheet.Cells[2, 4].Value, Color.Yellow);
 
-                _sheet.Cells[2, 5].Value = CaDETMetric.NAD;
-                _sheet.Cells[row, 5].Value = instances[i].MetricFeatures[CaDETMetric.NAD];
+                PopulateMetrics(row, 5, CaDETMetric.NAD, 10, 15, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 5, instances.Count + 4, 5), _sheet.Cells[3, 5].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 5, instances.Count + 4, 5), _sheet.Cells[2, 5].Value, Color.Yellow);
 
-                _sheet.Cells[2, 6].Value = CaDETMetric.NMD;
-                _sheet.Cells[row, 6].Value = instances[i].MetricFeatures[CaDETMetric.NMD];
+                PopulateMetrics(row, 6, CaDETMetric.NMD, 12, 16, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 6, instances.Count + 4, 6), _sheet.Cells[3, 6].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 6, instances.Count + 4, 6), _sheet.Cells[2, 6].Value, Color.Yellow);
 
-                _sheet.Cells[2, 7].Value = CaDETMetric.CBO;
-                _sheet.Cells[row, 7].Value = instances[i].MetricFeatures[CaDETMetric.CBO];
+                PopulateMetrics(row, 7, CaDETMetric.CBO, 8, 12, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 7, instances.Count + 4, 7), _sheet.Cells[3, 7].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 7, instances.Count + 4, 7), _sheet.Cells[2, 7].Value, Color.Yellow);
 
-                _sheet.Cells[2, 8].Value = CaDETMetric.DIT;
-                _sheet.Cells[row, 8].Value = instances[i].MetricFeatures[CaDETMetric.DIT];
+                PopulateMetrics(row, 8, CaDETMetric.DIT, 3, 5, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 8, instances.Count + 4, 8), _sheet.Cells[3, 8].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 8, instances.Count + 4, 8), _sheet.Cells[2, 8].Value, Color.Yellow);
             }
+        }
+
+        private void PopulateInstanceInfo(int row, Instance instance)
+        {
+            _sheet.Cells[row, 1].Value = instance.CodeSnippetId;
+            _sheet.Cells[row, 2].Value = instance.Link;
+        }
+
+        private void PopulateMetrics(int row, int column, CaDETMetric metric, int suspiciousValue, int criticalValue, Instance instance)
+        {
+            _sheet.Cells[2, column].Value = suspiciousValue;
+            _sheet.Cells[3, column].Value = criticalValue;
+            _sheet.Cells[4, column].Value = metric;
+            _sheet.Cells[row, column].Value = instance.MetricFeatures[metric];
+        }
+
+        private void SetConditionalFormatting(ExcelAddress excelAddress, object formula, Color color)
+        {
+            var cf = _sheet.ConditionalFormatting.AddGreaterThan(excelAddress);
+            cf.Formula = formula.ToString();
+            cf.Style.Fill.BackgroundColor.Color = color;
         }
 
         private void Serialize(string fileName)
