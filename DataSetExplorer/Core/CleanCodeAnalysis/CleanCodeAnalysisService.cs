@@ -8,6 +8,7 @@ using OfficeOpenXml;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace DataSetExplorer.Core.CleanCodeAnalysis
 {
@@ -56,25 +57,48 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
             return Result.Ok(analysisOptions.ExportPath);
         }
 
-        private void ExportCleanNamesAnalysis(Dictionary<string, List<Instance>> instances)
+        private void ExportCleanNamesAnalysis(Dictionary<string, List<Instance>> projectsAndInstances)
         {
-            if (instances == default) return;
+            if (projectsAndInstances == default) return;
 
-            foreach (var projectName in instances.Keys)
+            foreach (var projectAndInstances in projectsAndInstances)
             {
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 _excelFile = new ExcelPackage(new FileInfo(_cleanNamesAnalysisTemplatePath));
                 _sheet = _excelFile.Workbook.Worksheets[0];
-                FilterInstances(instances[projectName]);
-                PopulateCleanNamesTemplate(instances[projectName]);
-                Serialize(projectName + "_CleanNames");
+
+                FilterInstances(projectAndInstances.Value);
+                var instancesAndIdentifiers = GetInstancesAndIdentifiers(projectAndInstances.Value);
+                PopulateCleanNamesTemplate(projectAndInstances.Value, instancesAndIdentifiers);
+                Serialize(projectAndInstances.Key + "_CleanNames");
             }
         }
 
         private void FilterInstances(List<Instance> instances)
         {
             RemoveFunctions(instances);
-            
+        }
+
+        private Dictionary<int, Dictionary<string, List<IdentifierType>>> GetInstancesAndIdentifiers(List<Instance> instances)
+        {
+            Dictionary<int, Dictionary<string, List<IdentifierType>>> instanceIdentifiers = new Dictionary<int, Dictionary<string, List<IdentifierType>>>();    
+            foreach (var instance in instances)
+            {
+                Dictionary<string, List<IdentifierType>> identifierTypes = new Dictionary<string, List<IdentifierType>>();
+                instance.Identifiers.ForEach(ident => AddTypeForIdentifier(ident, identifierTypes));
+                instanceIdentifiers.Add(instance.Id, identifierTypes);
+            }
+            return instanceIdentifiers;
+        }
+
+        private void AddTypeForIdentifier(Identifier identifier, Dictionary<string, List<IdentifierType>> identifierTypes)
+        {
+            if (identifierTypes.ContainsKey(identifier.Name)) identifierTypes[identifier.Name].Add(identifier.Type);
+            else
+            {
+                identifierTypes.Add(identifier.Name, new List<IdentifierType>());
+                identifierTypes[identifier.Name].Add(identifier.Type);
+            }
         }
 
         private void RemoveFunctions(List<Instance> instances)
@@ -82,7 +106,7 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
             instances.RemoveAll(i => i.Type.Equals(SnippetType.Function));
         }
 
-        private void PopulateCleanNamesTemplate(List<Instance> instances)
+        private void PopulateCleanNamesTemplate(List<Instance> instances, Dictionary<int, Dictionary<string, List<IdentifierType>>> instancesAndIdentifiers)
         {
             var identifierCount = 0;
             for (var i = 0; i < instances.Count; i++)
@@ -91,14 +115,36 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
                 _sheet.Cells[row, 1].Value = instances[i].CodeSnippetId;
                 _sheet.Cells[row, 2].Value = instances[i].Link;
 
-                instances[i].Identifiers.Sort((x, y) => x.Type.CompareTo(y.Type));
-                for (var j = 0; j < instances[i].Identifiers.Count; j++)
-                {
-                    _sheet.Cells[row + j, 3].Value = instances[i].Identifiers[j].Name;
-                    _sheet.Cells[row + j, 4].Value = instances[i].Identifiers[j].Type.ToString();
-                }
-                identifierCount += instances[i].Identifiers.Count;
+                var identifiersAndTypes = instancesAndIdentifiers[instances[i].Id];
+                PopulateIdentifiers(row, identifiersAndTypes);
+                identifierCount += identifiersAndTypes.Count;
             }
+        }
+
+        private void PopulateIdentifiers(int row, Dictionary<string, List<IdentifierType>> identifiersAndTypes)
+        {
+            var j = 0;
+            foreach (var identifierAndType in identifiersAndTypes)
+            {
+                _sheet.Cells[row + j, 3].Value = identifierAndType.Key;
+                PopulateIdentifierTypes(row, j, identifierAndType.Value);
+                j++;
+            }
+        }
+
+        private void PopulateIdentifierTypes(int row, int j, List<IdentifierType> types)
+        {
+            Dictionary<string, int> typeOccurrence = CountTypeOccurrence(types);
+            _sheet.Cells[row + j, 4].Value = "";
+            foreach (var occurrence in typeOccurrence)
+            {
+                _sheet.Cells[row + j, 4].Value += occurrence.Value + "x " + occurrence.Key + "; ";
+            }
+        }
+
+        private static Dictionary<string, int> CountTypeOccurrence(List<IdentifierType> types)
+        {
+            return types.GroupBy(t => t.ToString()).ToDictionary(t => t.Key, t => t.Count());
         }
 
         private void ExportCleanFunctionsAnalysis(Dictionary<string, List<Instance>> instances)
