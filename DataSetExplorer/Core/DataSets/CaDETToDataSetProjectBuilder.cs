@@ -28,7 +28,6 @@ namespace DataSetExplorer.Core.DataSets
         private readonly List<CodeSmell> _codeSmells;
         private readonly InstanceFilter _instanceFilter;
         private readonly Dictionary<CaDETClass, List<CoupledClassStrength>> _classCouplings = new Dictionary<CaDETClass, List<CoupledClassStrength>>();
-        private readonly List<Identifier> _cleanClassNaming = new List<Identifier>();
 
         internal CaDETToDataSetProjectBuilder(InstanceFilter instanceFilter, string projectAndCommitUrl, string projectName, string projectPath, List<string> ignoredFolders, LanguageEnum language, bool includeClasses, bool includeMembers, List<CodeSmell> codeSmells)
         {

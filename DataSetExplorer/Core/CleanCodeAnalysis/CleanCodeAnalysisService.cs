@@ -67,16 +67,11 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
                 _excelFile = new ExcelPackage(new FileInfo(_cleanNamesAnalysisTemplatePath));
                 _sheet = _excelFile.Workbook.Worksheets[0];
 
-                FilterInstances(projectAndInstances.Value);
+                RemoveFunctions(projectAndInstances.Value);
                 var instancesAndIdentifiers = GetInstancesAndIdentifiers(projectAndInstances.Value);
                 PopulateCleanNamesTemplate(projectAndInstances.Value, instancesAndIdentifiers);
                 Serialize(projectAndInstances.Key + "_CleanNames");
             }
-        }
-
-        private void FilterInstances(List<Instance> instances)
-        {
-            RemoveFunctions(instances);
         }
 
         private Dictionary<int, Dictionary<string, List<IdentifierType>>> GetInstancesAndIdentifiers(List<Instance> instances)
@@ -170,24 +165,52 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
 
         private void PopulateCleanFunctionsTemplate(List<Instance> instances)
         {
-            instances.RemoveAll(i => i.Type.Equals(SnippetType.Class));
+            instances = FilterInstances(instances);
             for (var i = 0; i < instances.Count; i++)
             {
                 var row = 5 + i;
                 PopulateInstanceInfo(row, instances[i]);
 
-                PopulateMetrics(row, 3, CaDETMetric.MLOC, 15, 25, instances[i]);
+                PopulateMetrics(row, 3, CaDETMetric.MELOC, 15, 25, instances[i]);
                 SetConditionalFormatting(new ExcelAddress(5, 3, instances.Count + 4, 3), _sheet.Cells[3, 3].Value, Color.Red);
                 SetConditionalFormatting(new ExcelAddress(5, 3, instances.Count + 4, 3), _sheet.Cells[2, 3].Value, Color.Yellow);
 
-                PopulateMetrics(row, 4, CaDETMetric.CYCLO_SWITCH, 6, 12, instances[i]);
+                PopulateMetrics(row, 4, CaDETMetric.CYCLO_SWITCH, 5, 12, instances[i]);
                 SetConditionalFormatting(new ExcelAddress(5, 4, instances.Count + 4, 4), _sheet.Cells[3, 4].Value, Color.Red);
                 SetConditionalFormatting(new ExcelAddress(5, 4, instances.Count + 4, 4), _sheet.Cells[2, 4].Value, Color.Yellow);
-
-                PopulateMetrics(row, 5, CaDETMetric.MMNB, 4, 6, instances[i]);
+                
+                PopulateMetrics(row, 5, CaDETMetric.MNOL, 2, 4, instances[i]);
                 SetConditionalFormatting(new ExcelAddress(5, 5, instances.Count + 4, 5), _sheet.Cells[3, 5].Value, Color.Red);
                 SetConditionalFormatting(new ExcelAddress(5, 5, instances.Count + 4, 5), _sheet.Cells[2, 5].Value, Color.Yellow);
+
+                PopulateMetrics(row, 6, CaDETMetric.NOP, 3, 6, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 6, instances.Count + 4, 6), _sheet.Cells[3, 6].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 6, instances.Count + 4, 6), _sheet.Cells[2, 6].Value, Color.Yellow);
+                
+                PopulateMetrics(row, 7, CaDETMetric.MNOC, 2, 4, instances[i]);
+                SetConditionalFormatting(new ExcelAddress(5, 7, instances.Count + 4, 7), _sheet.Cells[3, 7].Value, Color.Red);
+                SetConditionalFormatting(new ExcelAddress(5, 7, instances.Count + 4, 7), _sheet.Cells[2, 7].Value, Color.Yellow);
             }
+        }
+
+        private List<Instance> FilterInstances(List<Instance> instances)
+        {
+            instances.RemoveAll(i => i.Type.Equals(SnippetType.Class));
+            return RemoveConstructors(instances);
+        }
+
+        private List<Instance> RemoveConstructors(List<Instance> instances)
+        {
+            var instancesWithoutConstructors = new List<Instance>();
+            foreach (Instance instance in instances)
+            {
+                var snippetPartsWithoutParams = instance.CodeSnippetId.Split("(")[0];
+                var snippetParts = snippetPartsWithoutParams.Split(".");
+                var methodName = snippetParts.Last();
+                var className = snippetParts[snippetParts.Length - 2];
+                if (!methodName.Equals(className)) instancesWithoutConstructors.Add(instance);
+            }
+            return instancesWithoutConstructors;
         }
 
         private void ExportCleanClassesAnalysis(Dictionary<string, List<Instance>> instances)
