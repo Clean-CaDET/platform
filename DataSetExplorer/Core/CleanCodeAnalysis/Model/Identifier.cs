@@ -20,8 +20,9 @@
     {
         Class,
         Field,
-        Member,
         Variable,
-        Parameter
+        Parameter,
+        Property,
+        Method
     }
 }

@@ -218,11 +218,18 @@ namespace DataSetExplorer.Core.DataSets
         private List<Identifier> FindAllIdentifiers(CaDETClass cadetClass)
         {
             var identifiers = new List<Identifier>();
+            
             identifiers.Add(new Identifier(cadetClass.Name, IdentifierType.Class));
             cadetClass.Fields.ForEach(field => identifiers.Add(new Identifier(field.Name, IdentifierType.Field)));
-            cadetClass.Members.ForEach(member => identifiers.Add(new Identifier(member.Name, IdentifierType.Member)));
             cadetClass.Members.ForEach(member => member.Variables.ForEach(variable => identifiers.Add(new Identifier(variable.Name, IdentifierType.Variable))));
             cadetClass.Members.ForEach(member => member.Params.ForEach(param => identifiers.Add(new Identifier(param.Name, IdentifierType.Parameter))));
+
+            var properties = cadetClass.Members.FindAll(member => member.Type.Equals(CaDETMemberType.Property));
+            properties.ForEach(property => identifiers.Add(new Identifier(property.Name, IdentifierType.Property)));
+
+            var methods = cadetClass.Members.FindAll(member => member.Type.Equals(CaDETMemberType.Method));
+            methods.ForEach(method => identifiers.Add(new Identifier(method.Name, IdentifierType.Method)));
+
             return identifiers;
         }
 

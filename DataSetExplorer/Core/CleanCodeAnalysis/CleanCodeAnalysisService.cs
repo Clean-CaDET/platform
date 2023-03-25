@@ -74,26 +74,12 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
         private void FilterInstances(List<Instance> instances)
         {
             RemoveFunctions(instances);
-            RemoveConstructors(instances);   
+            
         }
 
         private void RemoveFunctions(List<Instance> instances)
         {
             instances.RemoveAll(i => i.Type.Equals(SnippetType.Function));
-        }
-
-        private void RemoveConstructors(List<Instance> instances)
-        {
-            foreach(var instance in instances)
-            {
-                var classIdentifier = instance.Identifiers.Find(i => i.Type.Equals(IdentifierType.Class));
-                instance.Identifiers.RemoveAll(i => IsConstructor(i, classIdentifier));
-            }
-        }
-
-        private static bool IsConstructor(Identifier i, Identifier classIdentifier)
-        {
-            return i.Name.Equals(classIdentifier.Name) && i.Type.Equals(IdentifierType.Member);
         }
 
         private void PopulateCleanNamesTemplate(List<Instance> instances)
