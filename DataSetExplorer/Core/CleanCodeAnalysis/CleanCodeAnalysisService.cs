@@ -116,16 +116,23 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
                 _sheet.Cells[row, 2].Value = instances[i].Link;
 
                 var identifiersAndTypes = instancesAndIdentifiers[instances[i].Id];
-                PopulateIdentifiers(row, identifiersAndTypes);
+                var mainIdentifier = instances[i].Identifiers.Find(i => i.Type.Equals(IdentifierType.Class));
+                PopulateIdentifiers(row, mainIdentifier, identifiersAndTypes);
                 identifierCount += identifiersAndTypes.Count;
             }
         }
 
-        private void PopulateIdentifiers(int row, Dictionary<string, List<IdentifierType>> identifiersAndTypes)
+        private void PopulateIdentifiers(int row, Identifier mainIdentifier, Dictionary<string, List<IdentifierType>> identifiersAndTypes)
         {
             var j = 0;
+
+            _sheet.Cells[row + j, 3].Value = mainIdentifier.Name;
+            _sheet.Cells[row + j, 4].Value = mainIdentifier.Type.ToString();
+            j++;
+
             foreach (var identifierAndType in identifiersAndTypes)
             {
+                if (identifierAndType.Key.Equals(mainIdentifier.Name)) continue;
                 _sheet.Cells[row + j, 3].Value = identifierAndType.Key;
                 PopulateIdentifierTypes(row, j, identifierAndType.Value);
                 j++;
