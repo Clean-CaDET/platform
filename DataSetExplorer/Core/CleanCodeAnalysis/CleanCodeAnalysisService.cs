@@ -1,4 +1,5 @@
 ﻿using CodeModel.CaDETModel.CodeItems;
+using DataSetExplorer.Core.CleanCodeAnalysis.Model;
 using DataSetExplorer.Core.DataSets;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
@@ -64,15 +65,40 @@ namespace DataSetExplorer.Core.CleanCodeAnalysis
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 _excelFile = new ExcelPackage(new FileInfo(_cleanNamesAnalysisTemplatePath));
                 _sheet = _excelFile.Workbook.Worksheets[0];
+                FilterInstances(instances[projectName]);
                 PopulateCleanNamesTemplate(instances[projectName]);
                 Serialize(projectName + "_CleanNames");
             }
         }
 
+        private void FilterInstances(List<Instance> instances)
+        {
+            RemoveFunctions(instances);
+            RemoveConstructors(instances);   
+        }
+
+        private void RemoveFunctions(List<Instance> instances)
+        {
+            instances.RemoveAll(i => i.Type.Equals(SnippetType.Function));
+        }
+
+        private void RemoveConstructors(List<Instance> instances)
+        {
+            foreach(var instance in instances)
+            {
+                var classIdentifier = instance.Identifiers.Find(i => i.Type.Equals(IdentifierType.Class));
+                instance.Identifiers.RemoveAll(i => IsConstructor(i, classIdentifier));
+            }
+        }
+
+        private static bool IsConstructor(Identifier i, Identifier classIdentifier)
+        {
+            return i.Name.Equals(classIdentifier.Name) && i.Type.Equals(IdentifierType.Member);
+        }
+
         private void PopulateCleanNamesTemplate(List<Instance> instances)
         {
             var identifierCount = 0;
-            instances.RemoveAll(i => i.Type.Equals(SnippetType.Function));
             for (var i = 0; i < instances.Count; i++)
             {
                 var row = 3 + i + identifierCount;
