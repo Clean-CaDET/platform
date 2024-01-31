@@ -12,16 +12,18 @@ namespace CodeModel
     public class CodeModelFactory
     {
         private readonly LanguageEnum _language;
+        private readonly bool _includePartial;
 
-        public CodeModelFactory(LanguageEnum language = LanguageEnum.CSharp)
+        public CodeModelFactory(LanguageEnum language = LanguageEnum.CSharp, bool includePartial = false)
         {
             _language = language;
+            _includePartial = includePartial;
         }
 
         public CaDETProject CreateProject(IEnumerable<string> multipleClassSourceCode)
         {
             ICodeParser codeParser = SimpleParserFactory.CreateParser(_language);
-            return codeParser.Parse(multipleClassSourceCode);
+            return _includePartial ? codeParser.ParseWithPartial(multipleClassSourceCode) : codeParser.Parse(multipleClassSourceCode);
         }
 
         public CaDETProject CreateProject(string sourceCodeLocation, List<string> ignoredFolders)

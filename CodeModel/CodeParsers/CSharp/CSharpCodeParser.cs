@@ -27,8 +27,16 @@ namespace CodeModel.CodeParsers.CSharp
         public CaDETProject Parse(IEnumerable<string> sourceCode)
         {
             var syntaxErrors = LoadSyntaxTrees(sourceCode);
-            var parsedClasses = ParseClasses();
+            var parsedClasses = ParseClasses(false);
             ValidateUniqueFullNameForNonPartial(parsedClasses);
+            parsedClasses = ConnectCaDETGraph(parsedClasses);
+            return new CaDETProject(LanguageEnum.CSharp, CalculateMetrics(parsedClasses), syntaxErrors);
+        }
+
+        public CaDETProject ParseWithPartial(IEnumerable<string> sourceCode)
+        {
+            var syntaxErrors = LoadSyntaxTrees(sourceCode);
+            var parsedClasses = ParseClasses(true);
             parsedClasses = ConnectCaDETGraph(parsedClasses);
             return new CaDETProject(LanguageEnum.CSharp, CalculateMetrics(parsedClasses), syntaxErrors);
         }
@@ -47,7 +55,7 @@ namespace CodeModel.CodeParsers.CSharp
 
             return syntaxErrors;
         }
-        private List<CaDETClass> ParseClasses()
+        private List<CaDETClass> ParseClasses(bool includePartial)
         {
             List<CaDETClass> builtClasses = new List<CaDETClass>();
             foreach (var ast in _compilation.SyntaxTrees)
@@ -59,7 +67,7 @@ namespace CodeModel.CodeParsers.CSharp
                 {
                     try
                     {
-                        ValidateNoPartialModifier(node);
+                        if(!includePartial) ValidateNoPartialModifier(node);
                         ValidateNoStructParent(node);
                         builtClasses.Add(ParseClass(semanticModel, node));
                     }
