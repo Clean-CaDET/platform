@@ -14,10 +14,10 @@ namespace CodeModel
         private readonly LanguageEnum _language;
         private readonly bool _includePartial;
 
-        public CodeModelFactory(LanguageEnum language = LanguageEnum.CSharp, bool includePartial = false)
+        public CodeModelFactory(bool includePartial = false, LanguageEnum language = LanguageEnum.CSharp)
         {
-            _language = language;
             _includePartial = includePartial;
+            _language = language;
         }
 
         public CaDETProject CreateProject(IEnumerable<string> multipleClassSourceCode)
