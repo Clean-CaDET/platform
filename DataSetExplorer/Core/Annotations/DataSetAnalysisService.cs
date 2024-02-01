@@ -13,9 +13,11 @@ namespace DataSetExplorer.Core.Annotations
     public class DataSetAnalysisService : IDataSetAnalysisService
     {
         private readonly IProjectRepository _projectRepository;
-        public DataSetAnalysisService(IProjectRepository projectRepository)
+        private readonly IAnnotationRepository _annotationRepository;
+        public DataSetAnalysisService(IProjectRepository projectRepository, IAnnotationRepository annotationRepository)
         {
             _projectRepository = projectRepository;
+            _annotationRepository = annotationRepository;
         }
 
         public Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects)
@@ -66,13 +68,13 @@ namespace DataSetExplorer.Core.Annotations
 
         private DataSetProject LoadDataSetProject(string folder, string projectName)
         {
-            var importer = new ExcelImporter(folder);
+            var importer = new ExcelImporter(folder, _annotationRepository);
             return importer.Import(projectName);
         }
 
         private List<Instance> LoadAnnotatedInstances(string datasetPath)
         {
-            var importer = new ExcelImporter(datasetPath);
+            var importer = new ExcelImporter(datasetPath, _annotationRepository);
             return importer.ImportAnnotatedInstancesFromDataSet(datasetPath);
         }
 
@@ -82,7 +84,7 @@ namespace DataSetExplorer.Core.Annotations
 
             try
             {
-                var classesGroupedBySeverity = new Dictionary<int, List<CaDETClass>>();
+                var classesGroupedBySeverity = new Dictionary<string, List<CaDETClass>>();
                 var annotatedInstances = LoadAnnotatedInstances(datasetPath);
 
                 foreach (var projectUrl in projects.Keys)
@@ -101,7 +103,7 @@ namespace DataSetExplorer.Core.Annotations
             }
         }
 
-        private static void GroupInstancesBySeverity(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedInstances, CaDETProject cadetProject)
+        private static void GroupInstancesBySeverity(Dictionary<string, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedInstances, CaDETProject cadetProject)
         {
             foreach (var instance in annotatedInstances)
             {

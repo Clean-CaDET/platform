@@ -20,7 +20,8 @@ namespace DataSetExplorer.UI.Controllers.Annotations
         private readonly IAnnotationService _annotationService;
         private readonly IDataSetAnalysisService _dataSetAnalysisService;
 
-        public AnnotationController(IMapper mapper, IConfiguration configuration, IAnnotationService annotationService, IDataSetAnalysisService dataSetAnalysisService)
+        public AnnotationController(IMapper mapper, IConfiguration configuration, IAnnotationService annotationService,
+            IDataSetAnalysisService dataSetAnalysisService)
         {
             _mapper = mapper;
             _configuration = configuration;
@@ -29,24 +30,10 @@ namespace DataSetExplorer.UI.Controllers.Annotations
         }
 
         [HttpGet]
-        [Route("available-code-smells")]
-        public IActionResult GetAllCodeSmells()
-        {
-            return Ok(_configuration.GetSection("Annotating:AvailableCodeSmells").Get<IDictionary<string, string[]>>());
-        }
-
-        [HttpGet]
         [Route("available-metrics")]
         public IActionResult GetAllMetrics()
         {
             return Ok(_configuration.GetSection("Annotating:AvailableMetrics").Get<IDictionary<string, string[]>>());
-        }
-
-        [HttpGet]
-        [Route("available-heuristics")]
-        public IActionResult GetAllAvailableHeuristics()
-        {
-            return Ok(_configuration.GetSection("Annotating:AvailableHeuristics").Get<IDictionary<string, string[]>>());
         }
 
         [HttpPost]

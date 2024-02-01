@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.AnnotationSchema.Model;
 using DataSetExplorer.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +18,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
 
         public Annotation Get(int id)
         {
-            return _dbContext.DataSetAnnotations
+            return _dbContext.Annotations
                 .Include(a => a.Annotator)
                 .Include(a => a.ApplicableHeuristics)
                 .FirstOrDefault(a => a.Id == id);
@@ -35,6 +37,44 @@ namespace DataSetExplorer.Core.DataSets.Repository
         {
             _dbContext.Update(annotation);
             _dbContext.SaveChanges();
+        }
+
+        public Annotation Delete(int id)
+        {
+            var deleted = _dbContext.Annotations.Remove(_dbContext.Annotations.Find(id)).Entity;
+            _dbContext.SaveChanges();
+            return deleted;
+        }
+
+        public SmellHeuristic DeleteHeuristic(int id)
+        {
+            var deletedHeuristic = _dbContext.SmellHeuristics.Remove(_dbContext.SmellHeuristics.Find(id)).Entity;
+            _dbContext.SaveChanges();
+            return deletedHeuristic;
+        }
+
+        public List<CodeSmell> GetCodeSmellsByDefinition(CodeSmellDefinition codeSmellDefinition)
+        {
+            return _dbContext.CodeSmells.Where(s => s.Name.Equals(codeSmellDefinition.Name)).ToList();
+        }
+
+        public void DeleteCodeSmells(List<CodeSmell> codeSmells)
+        {
+            _dbContext.CodeSmells.RemoveRange(codeSmells);
+            _dbContext.SaveChanges();
+        }
+
+        public void UpdateAppliedHeuristic(SmellHeuristic heuristic)
+        {
+            _dbContext.Update(heuristic);
+            _dbContext.SaveChanges();
+        }
+
+        public CodeSmell UpdateCodeSmell(CodeSmell codeSmell)
+        {
+            var updated = _dbContext.Update(codeSmell).Entity;
+            _dbContext.SaveChanges();
+            return updated;
         }
     }
 }

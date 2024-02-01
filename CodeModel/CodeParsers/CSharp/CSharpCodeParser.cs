@@ -27,8 +27,16 @@ namespace CodeModel.CodeParsers.CSharp
         public CaDETProject Parse(IEnumerable<string> sourceCode)
         {
             var syntaxErrors = LoadSyntaxTrees(sourceCode);
-            var parsedClasses = ParseClasses();
+            var parsedClasses = ParseClasses(false);
             ValidateUniqueFullNameForNonPartial(parsedClasses);
+            parsedClasses = ConnectCaDETGraph(parsedClasses);
+            return new CaDETProject(LanguageEnum.CSharp, CalculateMetrics(parsedClasses), syntaxErrors);
+        }
+
+        public CaDETProject ParseWithPartial(IEnumerable<string> sourceCode)
+        {
+            var syntaxErrors = LoadSyntaxTrees(sourceCode);
+            var parsedClasses = ParseClasses(true);
             parsedClasses = ConnectCaDETGraph(parsedClasses);
             return new CaDETProject(LanguageEnum.CSharp, CalculateMetrics(parsedClasses), syntaxErrors);
         }
@@ -47,7 +55,7 @@ namespace CodeModel.CodeParsers.CSharp
 
             return syntaxErrors;
         }
-        private List<CaDETClass> ParseClasses()
+        private List<CaDETClass> ParseClasses(bool includePartial)
         {
             List<CaDETClass> builtClasses = new List<CaDETClass>();
             foreach (var ast in _compilation.SyntaxTrees)
@@ -59,7 +67,7 @@ namespace CodeModel.CodeParsers.CSharp
                 {
                     try
                     {
-                        ValidateNoPartialModifier(node);
+                        if(!includePartial) ValidateNoPartialModifier(node);
                         ValidateNoStructParent(node);
                         builtClasses.Add(ParseClass(semanticModel, node));
                     }
@@ -196,6 +204,7 @@ namespace CodeModel.CodeParsers.CSharp
             foreach (var c in classes)
             {
                 c.Parent = LinkParent(classes, c.Parent);
+                c.Subclasses = LinkSubclasses(classes, c);
                 var outerClass = LinkOuterClass(classes, c.ContainerName);
                 if (outerClass != null)
                 {
@@ -218,6 +227,19 @@ namespace CodeModel.CodeParsers.CSharp
             if (parent.Name.Equals("object")) return null;
             return classes.FirstOrDefault(c => c.FullName.Equals(parent.Name));
         }
+
+        private List<CaDETClass> LinkSubclasses(List<CaDETClass> classes, CaDETClass c)
+        {
+            var subclasses = new List<CaDETClass>();
+            foreach(var subclass in classes)
+            {
+                if (subclass.Parent == null) continue;
+                if (subclass.Parent.FullName != null && subclass.Parent.FullName.Equals(c.FullName)) subclasses.Add(subclass);
+                else if (subclass.Parent.Name != null &&  subclass.Parent.Name.Equals(c.FullName)) subclasses.Add(subclass);
+            }
+            return subclasses;
+        }
+
         private static CaDETClass LinkOuterClass(List<CaDETClass> classes, string containerName)
         {
             return classes.FirstOrDefault(c => c.FullName.Equals(containerName));

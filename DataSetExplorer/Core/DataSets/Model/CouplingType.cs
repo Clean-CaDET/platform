@@ -9,6 +9,8 @@
         Variable,
         Parent,
         AccessedAccessor,
-        AccessedField
+        AccessedField,
+        BelongsTo,
+        Subclass
     }
 }

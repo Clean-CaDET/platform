@@ -6,10 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using DataSetExplorer.Core.AnnotationConsistency;
 using DataSetExplorer.Core.Annotations;
+using DataSetExplorer.Core.AnnotationSchema;
+using DataSetExplorer.Core.AnnotationSchema.Repository;
 using DataSetExplorer.Core.DataSets;
 using DataSetExplorer.Core.DataSets.Repository;
 using DataSetExplorer.Infrastructure.Database;
 using DataSetExplorer.Infrastructure.RepositoryAdapters;
+using DataSetExplorer.Core.DataSetSerializer;
+using DataSetExplorer.Core.Auth;
+using DataSetExplorer.Core.Auth.Repository;
+using DataSetExplorer.Core.CleanCodeAnalysis;
 
 namespace DataSetExplorer
 {
@@ -34,6 +40,7 @@ namespace DataSetExplorer
                 opt.UseNpgsql(CreateConnectionStringFromEnvironment()));
 
             services.AddScoped<IDataSetCreationService, DataSetCreationService>();
+            services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ICodeRepository, GitCodeRepository>();
             services.AddScoped<IDataSetRepository, DataSetDatabaseRepository>();
             services.AddScoped<IProjectRepository, ProjectDatabaseRepository>();
@@ -43,11 +50,23 @@ namespace DataSetExplorer
             services.AddScoped<IAnnotationRepository, AnnotationDatabaseRepository>();
 
             services.AddScoped<IDataSetAnalysisService, DataSetAnalysisService>();
-
+            
             services.AddScoped<IAnnotationConsistencyService, AnnotationConsistencyService>();
+            services.AddScoped<IAnnotationSchemaService, AnnotationSchemaService>();
+            services.AddScoped<IAnnotationSchemaRepository, AnnotationSchemaDatabaseRepository>();
             services.AddScoped<FullDataSetFactory>();
-
+            
+            services.AddScoped<ICleanCodeAnalysisService, CleanCodeAnalysisService>();
             services.AddScoped<IInstanceService, InstanceService>();
+
+            services.AddScoped<IGraphInstanceService, GraphInstanceService>();
+            services.AddScoped<IGraphInstanceRepository, GraphInstanceRepository>();
+                
+            services.AddScoped<IDataSetExportationService, DataSetExportationService>();
+            services.AddScoped<IDraftDataSetExportationService, DraftDataSetExportationService>();
+            services.AddScoped<ICompleteDataSetExportationService, CompleteDataSetExportationService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

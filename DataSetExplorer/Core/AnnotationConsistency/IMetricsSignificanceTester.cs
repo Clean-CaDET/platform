@@ -8,6 +8,6 @@ namespace DataSetExplorer.Core.AnnotationConsistency
     {
         public Result<Dictionary<string, Dictionary<string, string>>> TestForSingleAnnotator(int annotatorId, List<SmellCandidateInstances> instancesGroupedBySmells);
 
-        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(int severity, List<SmellCandidateInstances> instancesGroupedBySmells);
+        public Result<Dictionary<string, Dictionary<string, string>>> TestBetweenAnnotators(string severity, List<SmellCandidateInstances> instancesGroupedBySmells);
     }
 }

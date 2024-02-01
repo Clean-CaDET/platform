@@ -42,7 +42,7 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok(dataSet);
         }
 
-        public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
+        public Result<DataSetProject> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
             var initialDataSet = _dataSetRepository.GetDataSetWithProjectsAndCodeSmells(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
@@ -51,7 +51,7 @@ namespace DataSetExplorer.Core.DataSets
             initialDataSet.AddProject(project);
             
             _dataSetRepository.Update(initialDataSet);
-            return Result.Ok(initialDataSet);
+            return Result.Ok(project);
         }
 
         public Result<string> CreateDataSetSpreadsheet(string dataSetName, string basePath, IDictionary<string, string> projects, List<CodeSmell> codeSmells)
@@ -80,16 +80,15 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok(dataSet);
         }
 
-        public Result<DataSet> GetDataSetForExport(int id)
-        {
-            var dataSet = _dataSetRepository.GetDataSetForExport(id);
-            if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
-            return Result.Ok(dataSet);
-        }
-
         public Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets()
         {
             var dataSets = _dataSetRepository.GetAll();
+            return Result.Ok(dataSets);
+        }
+
+        public Result<IEnumerable<DataSet>> GetDataSetsByCodeSmell(string codeSmellName)
+        {
+            var dataSets = _dataSetRepository.GetAllByCodeSmell(codeSmellName);
             return Result.Ok(dataSets);
         }
 
@@ -110,7 +109,7 @@ namespace DataSetExplorer.Core.DataSets
         private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, projectBuildSettings.foldersToIgnore, codeSmells);
+            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, projectBuildSettings.IgnoredFolders, codeSmells);
             if (projectBuildSettings.RandomizeClassSelection) builder = builder.RandomizeClassSelection();
             if (projectBuildSettings.RandomizeMemberSelection) builder = builder.RandomizeMemberSelection();
             if (projectBuildSettings.NumOfInstancesType.Equals("Percentage")) return builder.SetProjectExtractionPercentile(projectBuildSettings.NumOfInstances).Build();
@@ -119,18 +118,19 @@ namespace DataSetExplorer.Core.DataSets
 
         private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
-            //try
-            //{
+            try
+            {
                 var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters, projectBuildSettings);
                 initialProject.CandidateInstances = project.CandidateInstances;
+                initialProject.GraphInstances = project.GraphInstances;
                 initialProject.Processed();
                 _projectRepository.Update(initialProject);
-            //}
-            //catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
-            //{
+            }
+            catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
+            {
                 initialProject.Failed();
                 _projectRepository.Update(initialProject);
-            //}
+            }
         }
 
         private string ExportToExcel(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)
@@ -144,7 +144,7 @@ namespace DataSetExplorer.Core.DataSets
             return fileName;
         }
 
-        public Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id)
+        public Result<List<CodeSmell>> GetDataSetCodeSmells(int id)
         {
             var codeSmells = _dataSetRepository.GetDataSetCodeSmells(id);
             if (codeSmells == default) return Result.Fail($"DataSet with id: {id} does not exist.");

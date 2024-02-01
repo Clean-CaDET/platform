@@ -2,28 +2,29 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.AnnotationSchema.Model;
+using DataSetExplorer.Core.AnnotationSchema.Repository;
 using DataSetExplorer.Core.DataSets.Model;
-using DataSetExplorer.Core.DataSetSerializer.ViewModel;
 using OfficeOpenXml;
 
 namespace DataSetExplorer.Core.DataSetSerializer
 {
-    class DraftDataSetExporter
+    public class DraftDataSetExportationService : IDraftDataSetExportationService
     {
         private readonly string _templatePath = "./Core/DataSetSerializer/Template/New_Dataset_Template.xlsx";
         private string _exportPath;
         private ExcelPackage _excelFile;
         private ExcelWorksheet _sheet;
-        private readonly ColumnHeuristicsModel _requiredSmells = new();
+        private readonly IAnnotationSchemaRepository _annotationSchemaRepository;
 
-        public DraftDataSetExporter(string exportPath)
+        public DraftDataSetExportationService(IAnnotationSchemaRepository annotationSchemaRepository)
         {
-            _exportPath = exportPath;
+            _annotationSchemaRepository = annotationSchemaRepository;
         }
 
-        public string Export(int annotatorId, DataSet dataSet)
+        public string Export(string exportPath, int annotatorId, DataSet dataSet)
         {
-            _exportPath += dataSet.Name + "/";
+            _exportPath = exportPath + dataSet.Name + "/";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             foreach (var project in dataSet.Projects)
             {
@@ -50,7 +51,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                 _sheet = _excelFile.Workbook.Worksheets[i];
                 PopulateBasicInfo(annotatorId, project, candidate);
                 var smellHeuristics = PopulateSmellHeuristics(candidate);
-                PopulateAnnotatedInstances(candidate, smellHeuristics);
+                PopulateAnnotatedInstances(candidate, smellHeuristics, annotatorId);
                 Serialize(project.Name + annotatorId);
                 i++;
             }
@@ -64,18 +65,20 @@ namespace DataSetExplorer.Core.DataSetSerializer
             _sheet.Cells[2, 3].Value = annotatorId;
         }
 
-        private List<string> PopulateSmellHeuristics(SmellCandidateInstances candidate)
+        private List<HeuristicDefinition> PopulateSmellHeuristics(SmellCandidateInstances candidate)
         {
-            var smellHeuristics = _requiredSmells.GetHeuristicsByCodeSmellName(candidate.CodeSmell.Name);
+            var codeSmellDefinition = _annotationSchemaRepository.GetCodeSmellDefinitionByName(candidate.CodeSmell.Name);
+            var smellHeuristics = _annotationSchemaRepository.GetCodeSmellDefinition(codeSmellDefinition.Id).Heuristics.ToList();
             for (var i = 0; i < smellHeuristics.Count; i++)
             {
-                _sheet.Cells[2, 4 + (2 * i)].Value = smellHeuristics[i];
+                _sheet.Cells[2, 4 + (2 * i)].Value = smellHeuristics[i].Name;
             }
             _sheet.Cells[3, 4 + (smellHeuristics.Count * 2)].Value = "Note";
             return smellHeuristics;
         }
 
-        private void PopulateAnnotatedInstances(SmellCandidateInstances candidate, List<string> smellHeuristics)
+        private void PopulateAnnotatedInstances(SmellCandidateInstances candidate, List<HeuristicDefinition> smellHeuristics,
+            int annotatorId)
         {
             var row = 4;
             foreach (var instance in candidate.Instances)
@@ -83,34 +86,41 @@ namespace DataSetExplorer.Core.DataSetSerializer
                 if (instance.Annotations.Count == 0) continue;
                 _sheet.Cells[row, 1].Value = instance.CodeSnippetId;
                 _sheet.Cells[row, 2].Value = instance.Link;
-                PopulateAnnotations(smellHeuristics, row, instance);
+                PopulateAnnotations(smellHeuristics, row, instance, annotatorId);
                 row++;
             }
         }
 
-        private void PopulateAnnotations(List<string> smellHeuristics, int row, Instance instance)
+        private void PopulateAnnotations(List<HeuristicDefinition> smellHeuristics, int row, Instance instance,
+            int annotatorId)
         {
             foreach (var annotation in instance.Annotations)
             {
+                if (annotation.Annotator.Id != annotatorId) continue;
                 _sheet.Cells[row, 3].Value = annotation.Severity;
                 foreach (var applicableHeuristic in annotation.ApplicableHeuristics)
                 {
-                    var index = smellHeuristics.FindIndex(h => h.Equals(applicableHeuristic.Description));
+                    var index = smellHeuristics.FindIndex(h => h.Name.Equals(applicableHeuristic.Description));
+                    _sheet.Cells[3, 4 + (2 * index)].Value = "Applicable?";
                     _sheet.Cells[row, 4 + (2 * index)].Value = "Yes";
+                    _sheet.Cells[3, 4 + (2 * index) + 1].Value = "Reasoning";
+                    _sheet.Cells[row, 4 + (2 * index) + 1].Value = applicableHeuristic.ReasonForApplicability;  
                 }
                 PopulateNotApplicableAnnotations(smellHeuristics, row, annotation);
                 _sheet.Cells[row, 4 + (smellHeuristics.Count * 2)].Value = annotation.Note;
             }
         }
 
-        private void PopulateNotApplicableAnnotations(List<string> smellHeuristics, int row, Annotation annotation)
+        private void PopulateNotApplicableAnnotations(List<HeuristicDefinition> smellHeuristics, int row, Annotation annotation)
         {
             var notApplicableHeuristics =
-                smellHeuristics.Except(annotation.ApplicableHeuristics.ConvertAll(h => h.Description));
+                smellHeuristics.ConvertAll(h => h.Name).Except(annotation.ApplicableHeuristics.ConvertAll(h => h.Description));
             foreach (var heuristic in notApplicableHeuristics)
             {
-                var index = smellHeuristics.FindIndex(h => h.Equals(heuristic));
+                var index = smellHeuristics.FindIndex(h => h.Name.Equals(heuristic));
                 _sheet.Cells[row, 4 + (2 * index)].Value = "No";
+                _sheet.Cells[3, 4 + (2 * index)].Value = "Applicable?";
+                _sheet.Cells[3, 4 + (2 * index) + 1].Value = "Reasoning";
             }
         }
 

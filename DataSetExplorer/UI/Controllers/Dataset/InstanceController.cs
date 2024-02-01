@@ -35,7 +35,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         }
 
         [HttpGet]
-        [Route("{id}/cohesion-graph")]
+        [Route("{id}/class-cohesion-graph")]
         public IActionResult GetCohesionGraphForInstance([FromRoute] int id)
         {
             var result = _instanceService.GetInstanceWithAnnotations(id);
