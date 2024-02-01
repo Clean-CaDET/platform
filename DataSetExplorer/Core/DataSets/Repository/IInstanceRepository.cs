@@ -8,6 +8,10 @@ namespace DataSetExplorer.Core.DataSets.Repository
     public interface IInstanceRepository
     {
         Instance Get(int id);
+        Dictionary<string, List<Instance>> GetInstancesWithIdentifiersByDatasetId(int datasetId);
+        Dictionary<string, List<Instance>> GetInstancesWithIdentifiersByProjectId(int projectId);
+        Dictionary<string, List<Instance>> GetInstancesByDatasetId(int datasetId);
+        Dictionary<string, List<Instance>> GetInstancesByProjectId(int projectId);
         InstanceDTO GetInstanceWithRelatedInstances(int id);
         IEnumerable<Instance> GetInstancesAnnotatedByAnnotator(int projectId, int? annotatorId);
         IEnumerable<Instance> GetAnnotatedInstances(int projectId);

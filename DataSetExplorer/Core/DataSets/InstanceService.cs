@@ -22,6 +22,34 @@ namespace DataSetExplorer.Core.DataSets
             _annotationRepository = annotationRepository;
         }
 
+        public Result<Dictionary<string, List<Instance>>> GetInstancesWithIdentifiersByDatasetId(int datasetId)
+        {
+            var instances = _instanceRepository.GetInstancesWithIdentifiersByDatasetId(datasetId);
+            if (instances == default) return Result.Fail($"Dataset with id: {datasetId} does not exist.");
+            return Result.Ok(instances);
+        }
+
+        public Result<Dictionary<string, List<Instance>>> GetInstancesWithIdentifiersByProjectId(int projectId)
+        {
+            var instances = _instanceRepository.GetInstancesWithIdentifiersByProjectId(projectId);
+            if (instances == default) return Result.Fail($"Project with id: {projectId} does not exist.");
+            return Result.Ok(instances);
+        }
+
+        public Result<Dictionary<string, List<Instance>>> GetInstancesByDatasetId(int datasetId)
+        {
+            var instances = _instanceRepository.GetInstancesByDatasetId(datasetId);
+            if (instances == default) return Result.Fail($"Dataset with id: {datasetId} does not exist.");
+            return Result.Ok(instances);
+        }
+
+        public Result<Dictionary<string, List<Instance>>> GetInstancesByProjectId(int projectId)
+        {
+            var instances = _instanceRepository.GetInstancesByProjectId(projectId);
+            if (instances == default) return Result.Fail($"Project with id: {projectId} does not exist.");
+            return Result.Ok(instances);
+        }
+
         public Result<InstanceDTO> GetInstanceWithRelatedInstances(int id)
         {
             var instance = _instanceRepository.GetInstanceWithRelatedInstances(id);

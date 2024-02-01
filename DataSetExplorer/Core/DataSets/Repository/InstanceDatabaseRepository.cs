@@ -22,6 +22,63 @@ namespace DataSetExplorer.Core.DataSets.Repository
             return _dbContext.Instances.Include(i => i.Annotations).FirstOrDefault(i => i.Id == id);
         }
 
+        public Dictionary<string, List<Instance>> GetInstancesWithIdentifiersByDatasetId(int datasetId)
+        {
+            var instances = new Dictionary<string, List<Instance>>();
+            var dataset = _dbContext.DataSets
+                .Include(d => d.Projects)
+                .ThenInclude(p => p.CandidateInstances)
+                .ThenInclude(c => c.Instances)
+                .ThenInclude(i => i.Identifiers)
+                .FirstOrDefault(d => d.Id == datasetId);
+            if (dataset == default) return null;
+
+            foreach(var project in dataset.Projects)
+                instances.Add(project.Name, project.CandidateInstances.SelectMany(c => c.Instances).ToList());
+            
+            return instances;
+        }
+
+        public Dictionary<string, List<Instance>> GetInstancesWithIdentifiersByProjectId(int projectId)
+        {
+            var instances = new Dictionary<string, List<Instance>>();
+            var project = _dbContext.DataSetProjects
+                .Include(p => p.CandidateInstances)
+                .ThenInclude(c => c.Instances)
+                .ThenInclude(i => i.Identifiers)
+                .FirstOrDefault(p => p.Id == projectId);
+            if (project == default) return null;
+
+            instances.Add(project.Name, project.CandidateInstances.SelectMany(c => c.Instances).ToList());
+            return instances;
+        }
+
+        public Dictionary<string, List<Instance>> GetInstancesByDatasetId(int datasetId)
+        {
+            var instances = new Dictionary<string, List<Instance>>();
+            var dataset = _dbContext.DataSets
+                .Include(d => d.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances)
+                .FirstOrDefault(d => d.Id == datasetId);
+            if (dataset == default) return null;
+
+            foreach (var project in dataset.Projects)
+                instances.Add(project.Name, project.CandidateInstances.SelectMany(c => c.Instances).ToList());
+
+            return instances;
+        }
+
+        public Dictionary<string, List<Instance>> GetInstancesByProjectId(int projectId)
+        {
+            var instances = new Dictionary<string, List<Instance>>();
+            var project = _dbContext.DataSetProjects
+                .Include(p => p.CandidateInstances).ThenInclude(c => c.Instances)
+                .FirstOrDefault(p => p.Id == projectId);
+            if (project == default) return null;
+
+            instances.Add(project.Name, project.CandidateInstances.SelectMany(c => c.Instances).ToList());
+            return instances;
+        }
+
         public InstanceDTO GetInstanceWithRelatedInstances(int id)
         {
             return new InstanceDTO(_dbContext.Instances

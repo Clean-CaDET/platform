@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using DataSetExplorer.Core.Annotations.Model;
-using DataSetExplorer.UI.Controllers.Dataset.DTOs;
+﻿using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using FluentResults;
 
 namespace DataSetExplorer.Core.DataSetSerializer

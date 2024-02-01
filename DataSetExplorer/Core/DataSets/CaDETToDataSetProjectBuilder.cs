@@ -6,6 +6,7 @@ using CodeModel.CaDETModel;
 using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
+using DataSetExplorer.Core.CleanCodeAnalysis.Model;
 
 namespace DataSetExplorer.Core.DataSets
 {
@@ -209,8 +210,29 @@ namespace DataSetExplorer.Core.DataSets
         {
             return cadetClasses.Select(c => new Instance(
                     c.FullName, GetCodeUrl(c.FullName), _projectAndCommitUrl, SnippetType.Class,
-                    _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindClassRelatedInstances(c)
+                    _cadetProject.GetMetricsForCodeSnippet(c.FullName), FindClassRelatedInstances(c), FindAllIdentifiers(c)
                 )).ToList();
+        }
+
+        private List<Identifier> FindAllIdentifiers(CaDETClass cadetClass)
+        {
+            var identifiers = new List<Identifier>();
+            
+            identifiers.Add(new Identifier(cadetClass.Name, IdentifierType.Class));
+            cadetClass.Fields.ForEach(field => identifiers.Add(new Identifier(field.Name, IdentifierType.Field)));
+
+            var properties = cadetClass.Members.FindAll(member => member.Type.Equals(CaDETMemberType.Property));
+            properties.ForEach(property => identifiers.Add(new Identifier(property.Name, IdentifierType.Property)));
+
+            var methods = cadetClass.Members.FindAll(member => member.Type.Equals(CaDETMemberType.Method));
+
+            foreach (var method in methods)
+            {
+                identifiers.Add(new Identifier(method.Name, IdentifierType.Method));
+                method.Params.ForEach(param => identifiers.Add(new Identifier(param.Name, IdentifierType.Parameter)));
+                method.Variables.ForEach(variable => identifiers.Add(new Identifier(variable.Name, IdentifierType.Variable)));
+            }
+            return identifiers;
         }
 
         private void CreateCouplingMap(List<CaDETClass> cadetClasses)
@@ -359,7 +381,8 @@ namespace DataSetExplorer.Core.DataSets
         private List<Instance> CaDETToDataSetFunction(List<CaDETMember> cadetMembers)
         {
             return cadetMembers.Select(m => new Instance(
-                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function, _cadetProject.GetMetricsForCodeSnippet(m.Signature()), FindMethodRelatedInstances(m)
+                m.Signature(), GetCodeUrl(m.Signature()), _projectAndCommitUrl, SnippetType.Function,
+                _cadetProject.GetMetricsForCodeSnippet(m.Signature()), FindMethodRelatedInstances(m)
             )).ToList();
         }
 

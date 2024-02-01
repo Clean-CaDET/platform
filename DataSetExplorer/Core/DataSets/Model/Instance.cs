@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeModel.CaDETModel.CodeItems;
 using DataSetExplorer.Core.Annotations.Model;
+using DataSetExplorer.Core.CleanCodeAnalysis.Model;
 
 namespace DataSetExplorer.Core.DataSets.Model
 {
@@ -16,15 +17,32 @@ namespace DataSetExplorer.Core.DataSets.Model
         public ISet<Annotation> Annotations { get; private set; }
         public Dictionary<CaDETMetric, double> MetricFeatures { get; internal set; } // TODO: Expand and replace with the IFeature if a new feature type is introduced
         public List<RelatedInstance> RelatedInstances { get; private set; }
+        public List<Identifier> Identifiers { get; private set; }
 
-        internal Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, double> metricFeatures, List<RelatedInstance> relatedInstances)
+       internal Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric, 
+            double> metricFeatures, List<RelatedInstance> relatedInstances, List<Identifier> identifiers)
         {
             CodeSnippetId = codeSnippetId;
             Link = link;
             ProjectLink = projectLink;
             Type = type;
             RelatedInstances = relatedInstances;
+            Identifiers = identifiers;
             
+            Annotations = new HashSet<Annotation>();
+            SetMetricFeatures(metricFeatures);
+            Validate();
+        }
+
+        internal Instance(string codeSnippetId, string link, string projectLink, SnippetType type, Dictionary<CaDETMetric,
+            double> metricFeatures, List<RelatedInstance> relatedInstances)
+        {
+            CodeSnippetId = codeSnippetId;
+            Link = link;
+            ProjectLink = projectLink;
+            Type = type;
+            RelatedInstances = relatedInstances;
+
             Annotations = new HashSet<Annotation>();
             SetMetricFeatures(metricFeatures);
             Validate();
@@ -121,6 +139,7 @@ namespace DataSetExplorer.Core.DataSets.Model
 
         private string GetAnnotationFromMostExperiencedAnnotator()
         {
+            if (Annotations.Count == 0) return "0";
             return Annotations.OrderBy(a => a.Annotator.Ranking).First().Severity;
         }
 
