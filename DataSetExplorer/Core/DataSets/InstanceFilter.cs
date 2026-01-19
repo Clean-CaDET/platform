@@ -10,7 +10,7 @@ namespace DataSetExplorer.Core.DataSets
     internal class InstanceFilter
     {
         public List<SmellFilter> SmellFilters { get; }
-
+        
         public InstanceFilter(List<SmellFilter> smellFilters)
         {
             SmellFilters = smellFilters;
@@ -18,7 +18,6 @@ namespace DataSetExplorer.Core.DataSets
 
         public List<Instance> FilterInstances(CodeSmell codeSmell, List<Instance> instances, int numOfInstances)
         {
-            if (SmellFilters.Count == 0) return instances;
             var filteredInstances = new List<Instance>();
             var metricsThresholds = SmellFilters.Find(f => f.CodeSmell.Equals(codeSmell)).MetricsThresholds;
 
@@ -34,7 +33,7 @@ namespace DataSetExplorer.Core.DataSets
 
         private static bool ValidSnippetTypeForSmell(Instance instance, CodeSmell codeSmell)
         {
-            return codeSmell.SnippetType.Equals(instance.Type);
+            return codeSmell.RelevantSnippetTypes()[0].ToString().Equals(instance.Type.ToString());
         }
 
         private static bool InstancePassesMetricThresholds(Instance instance, List<MetricThresholds> metricsThreholds)

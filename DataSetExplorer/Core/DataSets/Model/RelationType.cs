@@ -4,8 +4,6 @@
     {
         Referenced,
         References,
-        Parent,
-        BelongsTo,
-        Subclass
+        Parent
     }
 }

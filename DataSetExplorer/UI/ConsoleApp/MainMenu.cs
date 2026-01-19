@@ -27,6 +27,7 @@ namespace DataSetExplorer.UI.ConsoleApp
                 chosenOption = ConsoleIO.GetAnswerOnQuestion("Your option: ");
                 Console.Clear();
                 ProcessChosenOption(chosenOption);
+
             } while (!chosenOption.Equals("x"));
         }
 
@@ -38,7 +39,7 @@ namespace DataSetExplorer.UI.ConsoleApp
                     CreateDataSet();
                     break;
                 case "2":
-                    new DataSetAnalysisSubmenu(new DataSetAnalysisService(null, null)).AnalyzeDataSet();
+                    new DataSetAnalysisSubmenu(new DataSetAnalysisService(null)).AnalyzeDataSet();
                     break;
                 case "3":
                     ExportDataSet();
@@ -67,11 +68,11 @@ namespace DataSetExplorer.UI.ConsoleApp
 
         private void ExportDataSet()
         {
-            /*var projects = DataSetIO.GetProjects("local repo folder and annotations folder");
+            var projects = DataSetIO.GetProjects("local repo folder and annotations folder");
             var annotators = DataSetIO.GetAnnotators();
             string outputPath = ConsoleIO.GetAnswerOnQuestion("Enter output folder path: ");
             Result<string> result = _dataSetExportationService.Export(projects, annotators, outputPath);
-            Console.Write(result);*/
+            Console.Write(result.ToString());
         }
 
         private static void WriteMenuWithOptions()

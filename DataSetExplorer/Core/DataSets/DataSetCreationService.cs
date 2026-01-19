@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using CodeModel.CodeParsers.CSharp.Exceptions;
 using DataSetExplorer.Core.Annotations.Model;
@@ -16,10 +15,8 @@ using DataSetExplorer.UI.Controllers.Dataset.DTOs;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
 using FluentResults;
 using LibGit2Sharp;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using OfficeOpenXml;
 
 namespace DataSetExplorer.Core.DataSets
 {
@@ -45,7 +42,7 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok(dataSet);
         }
 
-        public Result<DataSetProject> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
+        public Result<DataSet> AddProjectToDataSet(int dataSetId, string basePath, DataSetProject project, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
             var initialDataSet = _dataSetRepository.GetDataSetWithProjectsAndCodeSmells(dataSetId);
             if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
@@ -54,77 +51,6 @@ namespace DataSetExplorer.Core.DataSets
             initialDataSet.AddProject(project);
             
             _dataSetRepository.Update(initialDataSet);
-            return Result.Ok(project);
-        }
-
-        public Result<DataSet> ImportProjectsToDataSet(int dataSetId, string basePath, IFormFile projectsFile, List<SmellFilter> smellFilters)
-        {
-            var initialDataSet = _dataSetRepository.GetDataSetWithProjectsAndCodeSmells(dataSetId);
-            if (initialDataSet == default) return Result.Fail($"DataSet with id: {dataSetId} does not exist.");
-
-            // Validate file exists
-            if (projectsFile == null || projectsFile.Length == 0)
-                return Result.Fail("Excel file was not uploaded or is empty.");
-
-            if (!Path.GetExtension(projectsFile.FileName)
-                .Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-                return Result.Fail("Only .xlsx files are supported.");
-
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-            // Use using statement for proper resource disposal
-            using (var stream = projectsFile.OpenReadStream())
-            using (var package = new ExcelPackage(stream))
-            {
-                var sheets = package.Workbook.Worksheets;
-
-                // Validate worksheets exist
-                if (sheets == null || sheets.Count == 0)
-                    return Result.Fail("Excel file contains no worksheets. Please ensure the file has at least one worksheet with project data.");
-
-                // Validate first worksheet exists
-                var worksheet = sheets[0];
-                if (worksheet == null)
-                    return Result.Fail("First worksheet is null or inaccessible.");
-
-                // Process rows
-                for (int i = 0; i < 100; i++)
-                {
-                    string rowNumber = (i + 2).ToString();
-                    string group = worksheet.Cells["A" + rowNumber].Text;
-                    if (group == null || group == "") break;
-
-                    string team = worksheet.Cells["B" + rowNumber].Text;
-                    string projectUrl = worksheet.Cells["C" + rowNumber].Text;
-
-                    // Validate required fields
-                    if (string.IsNullOrWhiteSpace(projectUrl))
-                    {
-                        Console.WriteLine($"Warning: Row {rowNumber} has no project URL, skipping.");
-                        continue;
-                    }
-
-                    if (!projectUrl.Contains("/tree/"))
-                    {
-                        Console.WriteLine($"Warning: Row {rowNumber} URL '{projectUrl}' does not contain '/tree/', skipping.");
-                        continue;
-                    }
-
-                    List<string> ignoredFolders =
-                       worksheet.Cells["D" + rowNumber].Text?
-                           .Split(";", StringSplitOptions.RemoveEmptyEntries)
-                           .ToList()
-                       ?? new List<string>();
-
-                    DataSetProject project = new DataSetProject(group + "." + team, projectUrl);
-                    ProjectBuildSettingsDTO projectBuildSettings = new ProjectBuildSettingsDTO(ignoredFolders);
-                    ProcessInitialDataSetProject(basePath, project, initialDataSet.SupportedCodeSmells, smellFilters, projectBuildSettings);
-                    initialDataSet.AddProject(project);
-
-                    _dataSetRepository.Update(initialDataSet);
-                }
-            }
-
             return Result.Ok(initialDataSet);
         }
 
@@ -154,15 +80,16 @@ namespace DataSetExplorer.Core.DataSets
             return Result.Ok(dataSet);
         }
 
+        public Result<DataSet> GetDataSetForExport(int id)
+        {
+            var dataSet = _dataSetRepository.GetDataSetForExport(id);
+            if (dataSet == default) return Result.Fail($"DataSet with id: {id} does not exist.");
+            return Result.Ok(dataSet);
+        }
+
         public Result<IEnumerable<DatasetSummaryDTO>> GetAllDataSets()
         {
             var dataSets = _dataSetRepository.GetAll();
-            return Result.Ok(dataSets);
-        }
-
-        public Result<IEnumerable<DataSet>> GetDataSetsByCodeSmell(string codeSmellName)
-        {
-            var dataSets = _dataSetRepository.GetAllByCodeSmell(codeSmellName);
             return Result.Ok(dataSets);
         }
 
@@ -175,18 +102,15 @@ namespace DataSetExplorer.Core.DataSets
 
         private DataSetProject CreateDataSetProject(string basePath, string projectName, string projectAndCommitUrl, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
-            var gitFolderPath = Path.Combine(basePath, projectName);
-            var gitUser = _configuration.GetValue<string>("GitCredentials:User");
-            var gitToken = _configuration.GetValue<string>("GitCredentials:Token");
-            var environmentType = _configuration.GetValue<string>("Environment:Type");
-            _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath, gitUser, gitToken, environmentType);
+            var gitFolderPath = basePath + projectName + Path.DirectorySeparatorChar + "git";
+            _codeRepository.SetupRepository(projectAndCommitUrl, gitFolderPath);
             return CreateDataSetProjectFromRepository(projectAndCommitUrl, projectName, gitFolderPath, codeSmells, smellFilters, projectBuildSettings);
         }
 
         private static DataSetProject CreateDataSetProjectFromRepository(string projectAndCommitUrl, string projectName, string projectPath, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
             //TODO: Introduce Director as a separate class and insert through DI.
-            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, projectBuildSettings.IgnoredFolders, codeSmells);
+            var builder = new CaDETToDataSetProjectBuilder(new InstanceFilter(smellFilters), projectAndCommitUrl, projectName, projectPath, projectBuildSettings.foldersToIgnore, codeSmells);
             if (projectBuildSettings.RandomizeClassSelection) builder = builder.RandomizeClassSelection();
             if (projectBuildSettings.RandomizeMemberSelection) builder = builder.RandomizeMemberSelection();
             if (projectBuildSettings.NumOfInstancesType.Equals("Percentage")) return builder.SetProjectExtractionPercentile(projectBuildSettings.NumOfInstances).Build();
@@ -195,24 +119,18 @@ namespace DataSetExplorer.Core.DataSets
 
         private void ProcessInitialDataSetProject(string basePath, DataSetProject initialProject, List<CodeSmell> codeSmells, List<SmellFilter> smellFilters, ProjectBuildSettingsDTO projectBuildSettings)
         {
-            try
-            {
+            //try
+            //{
                 var project = CreateDataSetProject(basePath, initialProject.Name, initialProject.Url, codeSmells, smellFilters, projectBuildSettings);
                 initialProject.CandidateInstances = project.CandidateInstances;
-                initialProject.GraphInstances = project.GraphInstances;
                 initialProject.Processed();
                 _projectRepository.Update(initialProject);
-            }
-            catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
-            {
-                // Log the error for debugging
-                Console.WriteLine($"Error processing project {initialProject.Name}: {e.Message}");
-                Console.WriteLine($"Stack trace: {e.StackTrace}");
-
-                // Mark project as failed
+            //}
+            //catch (Exception e) when (e is LibGit2SharpException || e is NonUniqueFullNameException)
+            //{
                 initialProject.Failed();
                 _projectRepository.Update(initialProject);
-            }
+            //}
         }
 
         private string ExportToExcel(string basePath, string projectName, NewSpreadSheetColumnModel columnModel, DataSet dataSet)
@@ -226,7 +144,7 @@ namespace DataSetExplorer.Core.DataSets
             return fileName;
         }
 
-        public Result<List<CodeSmell>> GetDataSetCodeSmells(int id)
+        public Result<Dictionary<string, List<string>>> GetDataSetCodeSmells(int id)
         {
             var codeSmells = _dataSetRepository.GetDataSetCodeSmells(id);
             if (codeSmells == default) return Result.Fail($"DataSet with id: {id} does not exist.");

@@ -12,15 +12,10 @@ namespace DataSetExplorer.Core.DataSets
     public class FullDataSetFactory
     {
         private readonly IInstanceRepository _instanceRepository;
-        private readonly IAnnotationRepository _annotationRepository;
-        private readonly IProjectService _projectService;
 
-        public FullDataSetFactory(IInstanceRepository instanceRepository, IAnnotationRepository annotationRepository,
-            IProjectService projectService)
+        public FullDataSetFactory(IInstanceRepository instanceRepository)
         {
             _instanceRepository = instanceRepository;
-            _annotationRepository = annotationRepository;
-            _projectService = projectService;
         }
 
         public FullDataSetFactory() { }
@@ -30,10 +25,10 @@ namespace DataSetExplorer.Core.DataSets
             var allAnnotatedInstances = new List<SmellCandidateInstances>();
             foreach (var projectSourceLocation in projects.Keys)
             {
-                CodeModelFactory factory = new CodeModelFactory(true);
+                CodeModelFactory factory = new CodeModelFactory();
                 CaDETProject project = factory.CreateProjectWithCodeFileLinks(projectSourceLocation);
 
-                var importer = new ExcelImporter(projects[projectSourceLocation], _annotationRepository);
+                var importer = new ExcelImporter(projects[projectSourceLocation]);
                 var annotatedCandidates = importer.Import(projectSourceLocation).CandidateInstances.ToList();
 
                 LoadAnnotators(annotators, annotatedCandidates);
@@ -41,52 +36,6 @@ namespace DataSetExplorer.Core.DataSets
                 AddInstancesToCandidates(allAnnotatedInstances, FillInstancesWithMetrics(annotatedCandidates, project));
             }
             return allAnnotatedInstances;
-        }
-
-        public List<SmellCandidateInstances> GetAnnotatedInstancesGroupedBySmells(int datasetId, List<Annotator> annotators, string[] annotationsFilesPaths)
-        {
-            var allAnnotatedInstances = new List<SmellCandidateInstances>();
-            var projects = _projectService.GetAllByDatasetId(datasetId).Value;
-
-            foreach (var project in projects)
-            {
-                AddInstancesToCandidates(allAnnotatedInstances, project.CandidateInstances.ToList());
-                var importer = new ExcelImporter(_annotationRepository);
-                foreach (var annotationsFilePath in annotationsFilesPaths)
-                {
-                    if (project.Url.Equals(importer.GetProjectUrl(annotationsFilePath)))
-                    {
-                        var importedProject = importer.ImportAnnotationsFile(annotationsFilePath);
-                        if (importedProject.Url.Equals(project.Url)) JoinAnnotations(project, importedProject);
-                    }
-                }
-            }
-            return allAnnotatedInstances;
-        }
-
-        private void JoinAnnotations(DataSetProject project, DataSetProject importedProject)
-        {
-            foreach(var candidate in project.CandidateInstances)
-            {
-                var importedCandidate = importedProject.CandidateInstances.First(c => c.CodeSmell.Name.Equals(candidate.CodeSmell.Name));
-                foreach (var importedInstance in importedCandidate.Instances)
-                {
-                    var instance = candidate.Instances.Find(x => x.Link.Equals(importedInstance.Link));
-                    if (instance != null)
-                    {
-                        foreach (var existingAnnotation in instance.Annotations)
-                        {
-                            if (AnnotationExists(importedInstance, existingAnnotation)) return;
-                        }
-                        instance.AddAnnotation(importedInstance.Annotations.First());
-                    }
-                }
-            }
-        }
-
-        private static bool AnnotationExists(Instance importedInstance, Annotation existingAnnotation)
-        {
-            return existingAnnotation.Annotator.Id == importedInstance.Annotations.First().Annotator.Id;
         }
 
         private static void AddInstancesToCandidates(List<SmellCandidateInstances> allAnnotatedInstances, List<SmellCandidateInstances> annotatedInstances)
@@ -124,8 +73,7 @@ namespace DataSetExplorer.Core.DataSets
             var instancesBySmell = instances.GroupBy(i => i.Annotations.ToList()[0].InstanceSmell.Name);
             foreach (var group in instancesBySmell)
             {
-                if (_annotationRepository != null) candidateInstances.Add(new SmellCandidateInstances(_annotationRepository.GetCodeSmell(group.Key), group.ToList()));
-                else candidateInstances.Add(new SmellCandidateInstances(new CodeSmell(group.Key), group.ToList()));
+                candidateInstances.Add(new SmellCandidateInstances(new CodeSmell(group.Key), group.ToList()));
             }
             return candidateInstances;
         }

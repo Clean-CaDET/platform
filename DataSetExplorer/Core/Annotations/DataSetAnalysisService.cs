@@ -13,11 +13,9 @@ namespace DataSetExplorer.Core.Annotations
     public class DataSetAnalysisService : IDataSetAnalysisService
     {
         private readonly IProjectRepository _projectRepository;
-        private readonly IAnnotationRepository _annotationRepository;
-        public DataSetAnalysisService(IProjectRepository projectRepository, IAnnotationRepository annotationRepository)
+        public DataSetAnalysisService(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
-            _annotationRepository = annotationRepository;
         }
 
         public Result<string> FindInstancesWithAllDisagreeingAnnotations(IDictionary<string, string> projects)
@@ -68,23 +66,23 @@ namespace DataSetExplorer.Core.Annotations
 
         private DataSetProject LoadDataSetProject(string folder, string projectName)
         {
-            var importer = new ExcelImporter(folder, _annotationRepository);
+            var importer = new ExcelImporter(folder);
             return importer.Import(projectName);
         }
 
         private List<Instance> LoadAnnotatedInstances(string datasetPath)
         {
-            var importer = new ExcelImporter(datasetPath, _annotationRepository);
+            var importer = new ExcelImporter(datasetPath);
             return importer.ImportAnnotatedInstancesFromDataSet(datasetPath);
         }
 
         public Result<string> ExportMembersFromAnnotatedClasses(IDictionary<string, string> projects, string datasetPath, string outputFolder)
         {
-            CodeModelFactory factory = new CodeModelFactory(true);
+            CodeModelFactory factory = new CodeModelFactory();
 
             try
             {
-                var classesGroupedBySeverity = new Dictionary<string, List<CaDETClass>>();
+                var classesGroupedBySeverity = new Dictionary<int, List<CaDETClass>>();
                 var annotatedInstances = LoadAnnotatedInstances(datasetPath);
 
                 foreach (var projectUrl in projects.Keys)
@@ -103,7 +101,7 @@ namespace DataSetExplorer.Core.Annotations
             }
         }
 
-        private static void GroupInstancesBySeverity(Dictionary<string, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedInstances, CaDETProject cadetProject)
+        private static void GroupInstancesBySeverity(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedInstances, CaDETProject cadetProject)
         {
             foreach (var instance in annotatedInstances)
             {

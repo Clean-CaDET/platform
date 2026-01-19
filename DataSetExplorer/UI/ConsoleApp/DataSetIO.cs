@@ -29,9 +29,7 @@ namespace DataSetExplorer.UI.ConsoleApp
             foreach (string line in lines)
             {
                 string[] columns = line.Split(',');
-                if (columns.Length == 4) annotators.Add(new Annotator(int.Parse(columns[0]), columns[1], int.Parse(columns[2]), int.Parse(columns[3])));
-                else annotators.Add(new Annotator(int.Parse(columns[0]), columns[1], columns[2], int.Parse(columns[3]), int.Parse(columns[4])));
-
+                annotators.Add(new Annotator(int.Parse(columns[0]), int.Parse(columns[1]), int.Parse(columns[2])));
             }
             return annotators;
         }

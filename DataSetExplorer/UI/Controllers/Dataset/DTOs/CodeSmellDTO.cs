@@ -3,6 +3,5 @@
     public class CodeSmellDTO
     {
         public string Name { get; set; }
-        public string SnippetType { get; set; }
     }
 }

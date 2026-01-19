@@ -7,9 +7,8 @@ namespace DataSetExplorer.Core.DataSets.Model
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
-        public string Url { get; set; }
+        public string Url { get; private set; }
         public HashSet<SmellCandidateInstances> CandidateInstances { get; internal set; }
-        public List<GraphInstance> GraphInstances { get; internal set; }
         public ProjectState State { get; private set; }
 
         internal DataSetProject(string name, string url)
@@ -21,11 +20,6 @@ namespace DataSetExplorer.Core.DataSets.Model
         }
 
         public DataSetProject(string name) : this(name, null) { }
-
-        public DataSetProject()
-        {
-            CandidateInstances = new HashSet<SmellCandidateInstances>();
-        }
 
         internal void AddCandidateInstance(SmellCandidateInstances newCandidate)
         {

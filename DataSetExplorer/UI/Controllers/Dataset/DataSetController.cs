@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Core.DataSetSerializer;
-using DataSetExplorer.Core.CleanCodeAnalysis;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 namespace DataSetExplorer.UI.Controllers.Dataset
 {
@@ -24,16 +18,11 @@ namespace DataSetExplorer.UI.Controllers.Dataset
 
         private readonly IMapper _mapper;
         private readonly IDataSetCreationService _dataSetCreationService;
-        private readonly IDataSetExportationService _dataSetExportationService;
-        private readonly ICleanCodeAnalysisService _cleanCodeAnalysisService;
 
-        public DataSetController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration,
-            IDataSetExportationService exportationService, ICleanCodeAnalysisService cleanCodeAnalysisService)
+        public DataSetController(IMapper mapper, IDataSetCreationService creationService, IConfiguration configuration)
         {
             _mapper = mapper;
             _dataSetCreationService = creationService;
-            _dataSetExportationService = exportationService;
-            _cleanCodeAnalysisService = cleanCodeAnalysisService;   
             _gitClonePath = configuration.GetValue<string>("Workspace:GitClonePath");
         }
 
@@ -47,26 +36,11 @@ namespace DataSetExplorer.UI.Controllers.Dataset
         }
 
         [HttpPost]
-        [Route("export-draft")]
-        public IActionResult ExportDraftDataSet([FromBody] DraftDataSetExportDTO dataSetDTO)
+        [Route("export")]
+        public IActionResult ExportDataSet([FromBody] DraftDataSetExportDTO dataSetDTO)
         {
-            var exportPath = _dataSetExportationService.ExportDraft(dataSetDTO);
-            return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
-        }
-
-        [HttpPost]
-        [Route("{id}/export-complete")]
-        public IActionResult ExportCompleteDataSet([FromRoute] int id, [FromBody] CompleteDataSetExportDTO dataSetDTO)
-        { 
-            var exportPath = _dataSetExportationService.ExportComplete(id, dataSetDTO);
-            return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
-        }
-
-        [HttpPost]
-        [Route("{id}/export-clean-code-analysis")]
-        public IActionResult ExportCleanCodeAnalysis([FromRoute] int id, [FromBody] CleanCodeAnalysisDTO dataSetDTO)
-        {
-            var exportPath = _cleanCodeAnalysisService.ExportDatasetAnalysis(id, dataSetDTO).Value;
+            var dataSet = _dataSetCreationService.GetDataSetForExport(dataSetDTO.Id).Value;
+            var exportPath = new DraftDataSetExporter(dataSetDTO.ExportPath).Export(dataSetDTO.AnnotatorId, dataSet);
             return Ok(new FluentResults.Result().WithSuccess("Successfully exported to " + exportPath));
         }
 
@@ -92,18 +66,7 @@ namespace DataSetExplorer.UI.Controllers.Dataset
             if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
             return Accepted(result.Value);
         }
-
-
-        [HttpPost]
-        [Route("{id}/importProjects")]
-        public IActionResult ImportProjects([FromForm] ImportProjectsDTO data, [FromRoute] int id)
-        {
-            var smellFilters = _mapper.Map<List<SmellFilter>>(data.SmellFilters);
-            var result = _dataSetCreationService.ImportProjectsToDataSet(id, _gitClonePath, data.File, smellFilters);
-            if (result.IsFailed) return BadRequest(new { message = result.Reasons[0].Message });
-            return Accepted(result.Value);
-        }
-
+        
         [HttpGet]
         [Route("{id}/code-smells")]
         public IActionResult GetDataSetCodeSmells([FromRoute] int id)
