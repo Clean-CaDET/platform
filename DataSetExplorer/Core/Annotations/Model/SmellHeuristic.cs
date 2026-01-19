@@ -3,7 +3,7 @@
     public class SmellHeuristic
     {
         public int Id { get; private set; }
-        public string Description { get; private set; }
+        public string Description { get; set; }
         public bool IsApplicable { get; private set; }
         public string ReasonForApplicability { get; private set; }
 

@@ -16,8 +16,8 @@ namespace DataSetExplorer.Tests.Unit
         {
             var codeSmells = new List<CodeSmell>
             {
-                new CodeSmell("Long_Method"),
-                new CodeSmell("Large_Class")
+                new CodeSmell("Long_Method", SnippetType.Function),
+                new CodeSmell("Large_Class", SnippetType.Class)
             };
             var dataSet = new DataSet("Test", codeSmells);
             ExcelImporter importer = new ExcelImporter(new ExcelFactory().GetTestDataFolder());
@@ -38,9 +38,9 @@ namespace DataSetExplorer.Tests.Unit
 
             var annotators = new List<Annotator>()
             {
-                new Annotator(1, 6, 1),
-                new Annotator(2, 2, 2),
-                new Annotator(3, 2, 3)
+                new Annotator(1, "Nikola Luburic", "nikola.luburic@uns.ac.rs", 6, 1),
+                new Annotator(2, "Simona Prokic", "simona.prokic@uns.ac.rs", 2, 2),
+                new Annotator(3, "Katarina-Glorija Grujic", "katarina.glorija@uns.ac.rs", 2, 3)
             };
             JoinInstancesAndAnnotators(distinctClasses.ToList(), annotators);
 

@@ -16,7 +16,7 @@ namespace DataSetExplorer.Core.AnnotationConsistency
             _fullDataSetFactory = fullDataSetFactory;
         }
 
-        public Result<string> CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int severity, IDictionary<string, string> projects, List<Annotator> annotators)
+        public Result<string> CheckMetricsSignificanceBetweenAnnotatorsForSeverity(string severity, IDictionary<string, string> projects, List<Annotator> annotators)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projects, annotators, annotatorId: null);
             IMetricsSignificanceTester tester = new AnovaTest();
@@ -42,7 +42,7 @@ namespace DataSetExplorer.Core.AnnotationConsistency
             return Result.Ok();
         }
 
-        public Result<string> CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int severity, IDictionary<string, string> projects, List<Annotator> annotators)
+        public Result<string> CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(string severity, IDictionary<string, string> projects, List<Annotator> annotators)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projects, annotators, annotatorId: null);
             IAnnotatorsConsistencyTester tester = new ManovaTest();
@@ -67,7 +67,7 @@ namespace DataSetExplorer.Core.AnnotationConsistency
             return tester.TestConsistencyOfSingleAnnotator(annotatorId, instancesGroupedBySmells);
         }
 
-        public Result<Dictionary<string, string>> CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int projectId, int severity)
+        public Result<Dictionary<string, string>> CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(int projectId, string severity)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projectId, annotatorId: null);
             IAnnotatorsConsistencyTester tester = new ManovaTest();
@@ -81,7 +81,7 @@ namespace DataSetExplorer.Core.AnnotationConsistency
             return tester.TestForSingleAnnotator(annotatorId, instancesGroupedBySmells);
         }
 
-        public Result<Dictionary<string, Dictionary<string, string>>> CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int projectId, int severity)
+        public Result<Dictionary<string, Dictionary<string, string>>> CheckMetricsSignificanceBetweenAnnotatorsForSeverity(int projectId, string severity)
         {
             var instancesGroupedBySmells = _fullDataSetFactory.GetAnnotatedInstancesGroupedBySmells(projectId, annotatorId: null);
             IMetricsSignificanceTester tester = new AnovaTest();

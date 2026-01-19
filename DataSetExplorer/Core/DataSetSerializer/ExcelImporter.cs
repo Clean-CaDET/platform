@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
+using DataSetExplorer.Core.DataSets.Repository;
 using OfficeOpenXml;
 
 namespace DataSetExplorer.Core.DataSetSerializer
@@ -13,10 +14,22 @@ namespace DataSetExplorer.Core.DataSetSerializer
         private const int StartingInstanceRow = 4;
         private const int StartingHeuristicColumn = 4;
         private readonly string _sourceFolder;
+        private readonly IAnnotationRepository _annotationRepository;
 
         public ExcelImporter(string sourceFolder)
         {
             _sourceFolder = sourceFolder;
+        }
+
+        public ExcelImporter(string sourceFolder, IAnnotationRepository annotationRepository)
+        {
+            _sourceFolder = sourceFolder;
+            _annotationRepository = annotationRepository;
+        }
+
+        public ExcelImporter(IAnnotationRepository annotationRepository)
+        {
+            _annotationRepository = annotationRepository;
         }
 
         /// <summary>
@@ -25,7 +38,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
         /// The excel documents must be formatted following these guidelines https://github.com/Clean-CaDET/platform/wiki/Dataset-Explorer#building-your-dataset
         /// </summary>
         /// <param name="projectName">Name of the returned dataset project.</param>
-        /// <returns>A dataset project constructed from one or more excel documents.</returns>
+        /// <returns>A dataset project constructed from one or more excel documents.</returns>    
         public DataSetProject Import(string projectName)
         {
             var project = new DataSetProject(projectName);
@@ -33,7 +46,8 @@ namespace DataSetExplorer.Core.DataSetSerializer
             var sheets = GetWorksheets(GetExcelDocuments());
             foreach (var excelWorksheet in sheets)
             {
-                project.AddCandidateInstance(new SmellCandidateInstances(new CodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
+                if (_annotationRepository != null) project.AddCandidateInstance(new SmellCandidateInstances(_annotationRepository.GetCodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
+                else project.AddCandidateInstance(new SmellCandidateInstances(new CodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
             }
             
             return project;
@@ -57,7 +71,29 @@ namespace DataSetExplorer.Core.DataSetSerializer
             return sheets;
         }
 
-        private static List<Instance> ExtractInstances(ExcelWorksheet sheet)
+        internal DataSetProject ImportAnnotationsFile(string annotationsFilePath)
+        {
+            var project = new DataSetProject();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var sheets = new ExcelPackage(new FileInfo(annotationsFilePath)).Workbook.Worksheets;
+            foreach (var excelWorksheet in sheets)
+            {
+                project.AddCandidateInstance(new SmellCandidateInstances(_annotationRepository.GetCodeSmell(excelWorksheet.Name), ExtractInstances(excelWorksheet)));
+                project.Url = excelWorksheet.Cells["A2"].Text;
+            }
+
+            return project;
+        }
+
+        internal string GetProjectUrl(string annotationsFilePath)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var sheets = new ExcelPackage(new FileInfo(annotationsFilePath)).Workbook.Worksheets;
+            return sheets[0].Cells["A2"].Text;
+        }
+
+        private List<Instance> ExtractInstances(ExcelWorksheet sheet)
         {
             var instances = new List<Instance>();
             for (var row = StartingInstanceRow; row <= sheet.Dimension.End.Row; row++)
@@ -107,7 +143,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
                     var finalAnnotation = sheet.Cells["AD" + row].Text;
                     Instance instance = new Instance(codeSnippetId, projectLink);
                     // Dummy values for DataSetAnnotation constructor to pass validations (the final annotation is the only important parameter in this case).
-                    Annotation annotation = new Annotation(new CodeSmell("Large_Class"), int.Parse(finalAnnotation), new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") }, "");
+                    Annotation annotation = new Annotation(new CodeSmell("Large_Class", SnippetType.Class), finalAnnotation, new Annotator(1), new List<SmellHeuristic>() { new SmellHeuristic("", true, "") }, "");
                     instance.AddAnnotation(annotation);
                     instances.Add(instance);
                 }
@@ -115,15 +151,16 @@ namespace DataSetExplorer.Core.DataSetSerializer
             return instances;
         }
 
-        private static Annotation GetAnnotation(ExcelWorksheet sheet, int row)
+        private Annotation GetAnnotation(ExcelWorksheet sheet, int row)
         {
             try
             {
-                var smellSeverity = int.Parse(sheet.Cells["C" + row].Text);
+                var smellSeverity = sheet.Cells["C" + row].Text;
                 var annotatorId = int.Parse(sheet.Cells["C2"].Text);
-                var codeSmell = sheet.Cells["B2"].Text;
+                var codeSmellName = sheet.Cells["B2"].Text;
                 var heuristics = GetHeuristics(sheet, row);
-                return new Annotation(codeSmell, smellSeverity, new Annotator(annotatorId), heuristics, ""); // TODO - extract note from sheet
+                if (_annotationRepository != null) return new Annotation(_annotationRepository.GetCodeSmell(codeSmellName), smellSeverity, new Annotator(annotatorId), heuristics, ""); // TODO - extract note from sheet
+                return new Annotation(codeSmellName, smellSeverity, new Annotator(annotatorId), heuristics, ""); // TODO - extract note from sheet
             }
             catch (InvalidOperationException e)
             {

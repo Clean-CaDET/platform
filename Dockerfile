@@ -1,70 +1,47 @@
 # syntax=docker/dockerfile:1
 
-FROM python as python
-RUN python -m venv /venv
-RUN /venv/bin/python -m pip install networkx
-RUN /venv/bin/python -m pip install infomap
-
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine3.12 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
- 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-ENV PROJECT=DataSetExplorer
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "${PROJECT}/${PROJECT}.csproj" && \
-    dotnet build "${PROJECT}/${PROJECT}.csproj" -c Release
- 
-FROM build AS publish
-ENV PROJECT=DataSetExplorer
-RUN dotnet publish "${PROJECT}/${PROJECT}.csproj" -c Release -o /app/publish
+WORKDIR /src
+RUN dotnet restore ./DataSetExplorer/DataSetExplorer.csproj
+RUN dotnet build DataSetExplorer/DataSetExplorer.csproj -c Release
 
-FROM base AS final
+FROM build AS publish
+RUN dotnet publish DataSetExplorer/DataSetExplorer.csproj -c Release -o /app/publish
+
 ENV ASPNETCORE_URLS=http://*:$PORT
+FROM base AS final
 COPY --from=publish /app .
 WORKDIR /app/publish
-COPY ./scripts/community_calculation.py ./Core/CommunityDetection/scripts
-RUN apk add build-base
-RUN apk add python3-dev
-ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
-RUN pip3 install networkx
-RUN pip3 install infomap
 CMD ["dotnet", "DataSetExplorer.dll"]
 
-FROM build AS migration-base
-RUN PATH="$PATH:/root/.dotnet/tools"; \
-    dotnet tool install --global dotnet-ef
 
-
-# Following stages require to be run in network where database is running
-# and currently BuildKit does not support running container during build
-# in a custom network: https://github.com/moby/moby/issues/40379.
-# Workaround is to build image and run the container from that image
-# in desired network.
+FROM build as migration-base
+ENV PATH="$PATH:/root/.dotnet/tools"
+RUN dotnet tool install --global dotnet-ef --version 5.0.6
 
 FROM migration-base AS execute-migration
 
-ENV PROJECT=DataSetExplorer
+ENV STARTUP_PROJECT=DataSetExplorer
 ENV MIGRATION=init
+ENV DATABASE_SCHEMA=""
 ENV DATABASE_HOST=""
 ENV DATABASE_PASSWORD=""
 ENV DATABASE_USERNAME=""
-ENV DATABASE_SCHEMA=""
 
-CMD PATH="$PATH:/root/.dotnet/tools"; \
-    dotnet-ef migrations add ${MIGRATION} \
-        -p "${PROJECT}/${PROJECT}.csproj" \
-        --configuration Release && \ 
-    dotnet-ef database update ${MIGRATION} \
-        -p "${PROJECT}/${PROJECT}.csproj" \
+CMD PATH="$PATH:/root/.dotnet/tools" \
+    dotnet-ef migrations add "${MIGRATION}-dse" \
+        -s "${STARTUP_PROJECT}/${STARTUP_PROJECT}.csproj" \
+        -p "${STARTUP_PROJECT}/${STARTUP_PROJECT}.csproj" \
+        -c "DataSetExplorerContext" \
+        --configuration Release && \
+    PATH="$PATH:/root/.dotnet/tools" \   
+    dotnet-ef database update "${MIGRATION}-dse" \
+        -s "${STARTUP_PROJECT}/${STARTUP_PROJECT}.csproj" \
+        -p "${STARTUP_PROJECT}/${STARTUP_PROJECT}.csproj" \
+        -c "DataSetExplorerContext" \
         --configuration Release
-
-
-FROM migration-base AS generate-schema
-RUN PATH="$PATH:/root/.dotnet/tools"; \
-    dotnet-ef dbcontext script \
-        -p "${PROJECT}/${PROJECT}.csproj" \
-        -o sql/init.sql

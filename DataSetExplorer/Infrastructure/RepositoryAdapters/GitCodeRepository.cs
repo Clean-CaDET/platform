@@ -1,17 +1,18 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using LibGit2Sharp;
 
 namespace DataSetExplorer.Infrastructure.RepositoryAdapters
 {
     public class GitCodeRepository : ICodeRepository
     {
-        public void CloneRepository(string url, string projectPath)
+        public void CloneRepository(string url, string projectPath, string gitUser, string gitToken)
         {
-            if(Directory.Exists(projectPath)) DeleteDirectory(projectPath);
+            CloneOptions co = new CloneOptions();
+            co.CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials { Username = gitUser, Password = gitToken };
+
+            if (Directory.Exists(projectPath)) DeleteDirectory(projectPath);
             Directory.CreateDirectory(projectPath);
-            Repository.Clone(url, projectPath);
+            Repository.Clone(url, projectPath, co);
         }
 
         public void CheckoutCommit(string commitHash, string projectPath)
@@ -19,11 +20,13 @@ namespace DataSetExplorer.Infrastructure.RepositoryAdapters
             Commands.Checkout(new Repository(projectPath), commitHash);
         }
 
-        public void SetupRepository(string urlWithCommitHash, string projectPath)
+        public void SetupRepository(string urlWithCommitHash, string projectPath, string gitUser, string gitToken, string environmentType)
         {
             var urlParts = urlWithCommitHash.Split("/tree/");
             var projectUrl = urlParts[0] + ".git";
-            CloneRepository(projectUrl, projectPath);
+
+            // Always clone repository regardless of environment
+            CloneRepository(projectUrl, projectPath, gitUser, gitToken);
 
             var commitHash = urlParts[1];
             CheckoutCommit(commitHash, projectPath);

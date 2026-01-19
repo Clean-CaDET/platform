@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  dataset-explorer:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: final
+    ports:
+        - "51834:51834"
+    restart: on-failure
+    networks:
+      - application
+      - database
+    environment:
+      - ASPNETCORE_URLS=http://+:51834
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
+      - DATABASE_PASSWORD=password
+      - DATABASE_USERNAME=postgres
+      - DATABASE_SCHEMA=dataset-explorer
+      - DATASET_EXPLORER_CORS_ORIGINS=/etc/dataset-explorer/cors.txt
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500m"
+        max-file: "6"
+    depends_on:
+      - database
+  database:
+    image: postgres:${POSTGRES_VERSION-13}
+    restart: always
+    networks:
+      - database
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: dataset-explorer
+    volumes:
+      - type: volume
+        source: database-data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./dataset-explorer-init-data.sql
+        target: /tmp/dataset-explorer-init.sql
+    ports:
+      - "5432:5432"
+
+volumes:
+  database-data:
+    name: dataset-explorer
+
+networks:
+  public:
+    name: public
+    driver: bridge
+  application:
+    name: application
+    driver: bridge
+  database:
+    name: database
+    driver: bridge

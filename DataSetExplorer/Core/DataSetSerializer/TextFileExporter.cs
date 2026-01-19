@@ -56,7 +56,7 @@ namespace DataSetExplorer.Core.DataSetSerializer
             WriteToFile(sb.ToString(), fileName);
         }
 
-        internal void ExportMembersFromAnnotatedClasses(Dictionary<int, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedClasses)
+        internal void ExportMembersFromAnnotatedClasses(Dictionary<string, List<CaDETClass>> classesGroupedBySeverity, List<Instance> annotatedClasses)
         {
             foreach (var severity in classesGroupedBySeverity.Keys)
             {

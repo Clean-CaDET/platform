@@ -30,16 +30,16 @@ namespace DataSetExplorer.UI.ConsoleApp
                         if (annotatorId.HasValue) _annotationConsistencyService.CheckAnnotationConsistencyForAnnotator(annotatorId.Value, projects, annotators);
                         break;
                     case "2":
-                        var severityId = GetId("Severity");
-                        if (severityId.HasValue) _annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(severityId.Value, projects, annotators);
+                        var severity = ConsoleIO.GetAnswerOnQuestion("Severity: ");
+                        if (!severity.Equals("")) _annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(severity, projects, annotators);
                         break;
                     case "3":
                         annotatorId = GetId("Annotator");
                         if (annotatorId.HasValue) _annotationConsistencyService.CheckMetricsSignificanceInAnnotationsForAnnotator(annotatorId.Value, projects, annotators);
                         break;
                     case "4":
-                        severityId = GetId("Severity");
-                        if (severityId.HasValue) _annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(severityId.Value, projects, annotators);
+                        severity = ConsoleIO.GetAnswerOnQuestion("Severity: ");
+                        if (!severity.Equals("")) _annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(severity, projects, annotators);
                         break;
                     case "x":
                         break;
@@ -66,7 +66,6 @@ namespace DataSetExplorer.UI.ConsoleApp
             Console.WriteLine("3. Check metrics significance for a single annotator");
             Console.WriteLine("4. Check metrics significance between annotators");
             Console.WriteLine("x. Exit\n");
-
         }
     }
 }

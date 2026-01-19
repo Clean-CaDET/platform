@@ -230,3 +230,29 @@ docker-compose --env-file config/keycloak-env.conf \
 
 Previous command completely destroys infrastructure. If data needs to be kept remove the `-v` option.
 Keep in mind that if data are not removed there is no need to run migration and data ingestion.
+
+
+
+_________________________________________________________________
+
+BE
+Requirements:
+- .NET SDK 5 (https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
+- Visual Studio 2022 with ".NET desktop development" and "ASP.NET and web development" workloads
+
+Steps:
+1. Clone the repository
+2. Open the solution in VS
+3. Run as IIS Express
+
+
+DB
+Requirements:
+- postgreSQL
+ - select pgAdmin 4 in setup
+ - set password "super" for postgres superuser
+ - set port 5432
+
+Steps:
+1. Open pgAdmin 4
+2. Click on Servers, PostgreSQL N, Databases -> Right click and Create Database -> Set name of database data-set-explorer-db -> Right click on new database and Restore, choose custom, Filename choose dse-db-schema

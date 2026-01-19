@@ -24,7 +24,7 @@ namespace DataSetExplorer
         private static void CreateConsoleUI()
         {
             new MainMenu(
-                new DataSetExportationService(new FullDataSetFactory()),
+                new DataSetExportationService(new FullDataSetFactory(), null, null, null, null),
                 new DataSetCreationService(new GitCodeRepository(), null, null, null))
                 .Run();
         }

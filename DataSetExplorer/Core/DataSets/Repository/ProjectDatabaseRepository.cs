@@ -52,5 +52,23 @@ namespace DataSetExplorer.Core.DataSets.Repository
             _dbContext.SaveChanges();
             return deletedProject;
         }
+
+        public DataSetProject GetProjectWithGraphInstances(int id)
+        {
+            return _dbContext.DataSetProjects
+                .Include(p => p.GraphInstances).ThenInclude(i => i.RelatedInstances)
+                .FirstOrDefault(p => p.Id == id);
+        }
+
+        public List<DataSetProject> GetAllByDatasetId(int datasetId)
+        {
+            return _dbContext.DataSets
+                .Include(d => d.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances)
+                .Include(d => d.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.Annotator)
+                .Include(d => d.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.ApplicableHeuristics)
+                .Include(d => d.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.Instances).ThenInclude(i => i.Annotations).ThenInclude(a => a.InstanceSmell)
+                .Include(d => d.Projects).ThenInclude(p => p.CandidateInstances).ThenInclude(c => c.CodeSmell)
+                .FirstOrDefault(d => d.Id == datasetId).Projects.ToList();
+        }
     }
 }

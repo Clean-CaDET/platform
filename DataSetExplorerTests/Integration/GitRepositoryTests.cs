@@ -16,7 +16,7 @@ namespace DataSetExplorer.Tests.Integration
         {
             ICodeRepository gitAdapter = new GitCodeRepository();
 
-            gitAdapter.CloneRepository("https://github.com/clean-cadet-ftn/git-test-repo.git", GetTestPath());
+            gitAdapter.CloneRepository("https://github.com/clean-cadet-ftn/git-test-repo.git", GetTestPath(), "","");
 
             GitDirectoryExists().ShouldBeTrue();
         }

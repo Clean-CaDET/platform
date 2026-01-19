@@ -24,7 +24,7 @@ namespace DataSetExplorer.UI.Controllers.AnnotationConsistency
 
         [HttpGet]
         [Route("annotators/{projectId}/{severity}")]
-        public IActionResult GetAnnotationConsistencyBetweenAnnotatorsForSeverity([FromRoute] int projectId, [FromRoute] int severity)
+        public IActionResult GetAnnotationConsistencyBetweenAnnotatorsForSeverity([FromRoute] int projectId, [FromRoute] string severity)
         {
             var result = _annotationConsistencyService.CheckAnnotationConsistencyBetweenAnnotatorsForSeverity(projectId, severity);
             return Ok(result.Value);
@@ -40,7 +40,7 @@ namespace DataSetExplorer.UI.Controllers.AnnotationConsistency
 
         [HttpGet]
         [Route("metrics/annotators/{projectId}/{severity}")]
-        public IActionResult GetMetricsSignificanceBetweenAnnotatorsForSeverity([FromRoute] int projectId, [FromRoute] int severity)
+        public IActionResult GetMetricsSignificanceBetweenAnnotatorsForSeverity([FromRoute] int projectId, [FromRoute] string severity)
         {
             var result = _annotationConsistencyService.CheckMetricsSignificanceBetweenAnnotatorsForSeverity(projectId, severity);
             return Ok(result.Value);

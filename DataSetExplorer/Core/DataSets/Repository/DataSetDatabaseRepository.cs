@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper.Internal;
+using DataSetExplorer.Core.Annotations.Model;
 using DataSetExplorer.Core.DataSets.Model;
 using DataSetExplorer.Infrastructure.Database;
 using DataSetExplorer.UI.Controllers.Dataset.DTOs.Summary;
@@ -71,7 +72,7 @@ namespace DataSetExplorer.Core.DataSets.Repository
         {
             return _dbContext.DataSets
                 .Include(d => d.SupportedCodeSmells)
-                .Include(s => s.Projects)
+                .Include(d => d.Projects)
                 .FirstOrDefault(d => d.Id == id);
         }
 
@@ -79,6 +80,29 @@ namespace DataSetExplorer.Core.DataSets.Repository
         {
             var result = new List<DatasetSummaryDTO>();
             _dbContext.DataSets.ToList().ForEach(d => result.Add(GetDatasetSummary(d.Id)));
+            return result;
+        }
+
+        public IEnumerable<DataSet> GetAllByCodeSmell(string codeSmellName)
+        {
+            var datasets = _dbContext.DataSets
+                 .Include(d => d.SupportedCodeSmells)
+                 .Include(d => d.Projects)
+                    .ThenInclude(p => p.CandidateInstances)
+                    .ThenInclude(c => c.Instances)
+                    .ThenInclude(i => i.Annotations)
+                    .ThenInclude(a => a.Annotator)
+                 .Include(d => d.Projects)
+                    .ThenInclude(p => p.CandidateInstances)
+                    .ThenInclude(c => c.Instances)
+                    .ThenInclude(i => i.Annotations)
+                    .ThenInclude(a => a.ApplicableHeuristics);
+
+            var result = new List<DataSet>();
+            foreach(var dataset in datasets)
+            {
+                if (dataset.SupportedCodeSmells.Exists(s => s.Name.Equals(codeSmellName))) result.Add(dataset);
+            }
             return result;
         }
 
@@ -97,17 +121,11 @@ namespace DataSetExplorer.Core.DataSets.Repository
             return updatedDataset;
         }
 
-        public Dictionary<string, List<string>> GetDataSetCodeSmells(int id)
+        public List<CodeSmell> GetDataSetCodeSmells(int id)
         {
-            var result = new Dictionary<string, List<string>>();
             var dataSet = _dbContext.DataSets.Include(d => d.SupportedCodeSmells).FirstOrDefault(s => s.Id == id);
             if (dataSet == null) return null;
-
-            foreach (var smell in dataSet.SupportedCodeSmells)
-            {
-                result.Add(smell.Name, smell.RelevantSnippetTypes().Select(t => t.ToString()).ToList());
-            }
-            return result;
+            return dataSet.SupportedCodeSmells;
         }
 
         public DataSet Delete(int id)
