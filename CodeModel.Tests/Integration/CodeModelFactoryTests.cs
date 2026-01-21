@@ -75,6 +75,17 @@ namespace CodeModel.Tests.Integration
         }
 
         [Fact]
+        public void Create_code_model_with_links_with_partial_classes()
+        {
+            CodeModelFactory factory = new CodeModelFactory(true);
+            var project = factory.CreateProjectWithCodeFileLinks("C:/sdataset-partial");
+
+            var projectClassesAndMembersCount = project.Classes.Count + project.Classes.Sum(c => c.Members.Count);
+
+            project.CodeLinks.Count.ShouldBe(projectClassesAndMembersCount);
+        }
+
+        [Fact]
         public void Create_code_model_with_links_on_large_repo()
         {
             CodeModelFactory factory = new CodeModelFactory();
@@ -92,6 +103,28 @@ namespace CodeModel.Tests.Integration
             project.CodeLinks.TryGetValue("LibGit2Sharp.MergeTreeOptions.MergeTreeOptions()", out locationLink);
             locationLink.StartLoC.ShouldBe(15);
             locationLink.EndLoC.ShouldBe(16);
+        }
+
+        [Theory]
+        //[InlineData("C:\\temp\\challenge-sandbox\\start\\01. Structural Cohesion")]
+        //[InlineData("C:\\temp\\challenge-sandbox\\end\\01. structural")]
+        //[InlineData("C:\\temp\\challenge-sandbox\\start\\03. Coupling\\Employees")]
+        //[InlineData("C:\\temp\\challenge-sandbox\\end\\03. coupling employee")]
+        //[InlineData("C:\\temp\\challenge-sandbox\\start\\03. Coupling\\Rental")]
+        //[InlineData("C:\\temp\\challenge-sandbox\\end\\03. coupling rental")]
+        //[InlineData("C:\\temp\\challenge-sandbox\\start\\04. SRP\\Achievements")]
+        //[InlineData("C:\\temp\\challenge-sandbox\\end\\04. srp achievements")]
+        [InlineData("C:\\temp\\challenge-sandbox\\start\\04. SRP\\Books")]
+        [InlineData("C:\\temp\\challenge-sandbox\\end\\04. srp books")]
+        public void Create_code_model(string folderLocation)
+        {
+            CodeModelFactory factory = new CodeModelFactory();
+            var project = factory.CreateProjectWithCodeFileLinks(folderLocation);
+
+            var classes = project.Classes;
+            var members = project.Classes.SelectMany(c => c.Members);
+
+            var firstClassMetrics = classes.First().Metrics;
         }
     }
 }

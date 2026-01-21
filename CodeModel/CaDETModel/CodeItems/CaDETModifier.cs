@@ -1,5 +1,4 @@
-﻿using CodeModel.CodeParsers.CSharp.Exceptions;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace CodeModel.CaDETModel.CodeItems
 {
@@ -27,7 +26,7 @@ namespace CodeModel.CaDETModel.CodeItems
                 "const" => CaDETModifierValue.Const,
                 "async" => CaDETModifierValue.Async,
                 "volatile" => CaDETModifierValue.Volatile,
-                "partial" => throw new PartialIsNotSupportedException(),
+                "partial" => CaDETModifierValue.Partial,
                 _ => throw new InvalidEnumArgumentException(modifier)
             };
         }

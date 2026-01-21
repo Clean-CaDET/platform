@@ -17,7 +17,7 @@ namespace CodeModel
         {
             if (_cache.TryGetValue(repoAndCommitUrl, out CaDETProject cacheEntry)) return cacheEntry;
 
-            cacheEntry = new CodeModelFactory(language).CreateProjectWithCodeFileLinks(repoFolder);
+            cacheEntry = new CodeModelFactory(false, language).CreateProjectWithCodeFileLinks(repoFolder);
 
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {

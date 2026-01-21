@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/Clean-CaDET/platform/tree/master/CodeModel</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
